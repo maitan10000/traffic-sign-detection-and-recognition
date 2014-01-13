@@ -1,0 +1,18 @@
+login
+register *
+active account 
+deactive acount
+train new traffic sign *
+modify traffic sign *
+train traffic sign from exsiting DB
+add to favourite *
+remove from favourite 
+view history *
+delete history <---
+search auto *
+search manually *
+send rport 
+view report
+delete report 
+config system *
+make stastistic *
