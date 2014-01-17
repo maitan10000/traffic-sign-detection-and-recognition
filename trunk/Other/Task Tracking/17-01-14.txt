@@ -1,0 +1,28 @@
+﻿Guest
+- Search auto: mobile, web - Tan
+- Search manually: mobile, web - Tan
+
+User:
+- Add favorites: m, b - Phong
+- Remove favorites: m, b - Phong
+- Delete history: m,b  - Tan
+- Report wrong information:m, b - Nghia
+- Report wrong recongize: m, b - Nghia
+
+Staff:
+- Import form file - Phong
+- Add traffic sign - Tuan
+- Edit traffic sign - Phong
+- Export to file - Tuan
+- View report - Nghia
+- View list report - Nghia
+- Delete report - Nghia
+
+Admin:
+- Create staff account - Tuan
+
+
+Truoc 8h CN
+
+ Tuan sua prototype
+ Nghia Cuoi ngay thu 2
