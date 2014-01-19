@@ -4,7 +4,7 @@ Export to file: Sua lai tieu de usecase, sua lai phan trigger,
 Create staff account: chuyen sang tieng Viet
 
 PhongBV
-Add favorites: alternative tach ra, moi cai la moi bang,
+Add favorites: alternative tach ra, moi cai la moi bang, phongbv - (alternative 1 thay the cho ca? step 1 va step 2 chu khong phai la co 2 alternative)
 ImportFromFile, edit traffic sign: chua dat vi tri xay ra exception
 
 NghiaHD
@@ -15,3 +15,17 @@ Report wrong recognize: nut report nam trong trang auto search result page
 Delete report: main scenario chua hoang thanh cong viec delete
 
 p/s: ai review may cai usecase cua tui voi
+
+-- TanMV review by Phongbv
++ Trong alternative scenario, neu da viet là alternative scenario 1, alternative scenario 2.... thi trong cot dau tien
+sua lai tu` "No" --> "Step"
++Usecase: "Search manually using mobile application" step 3 trong main scenario trung` voi step 2 trong alternative scenario
+cho nen phai xoa cai step 2 trong alternative scenario di. (Aternative dat tai step nao` trong main scenario thi` no se
+thay the cho chinh' step do' thoi, chu' khong phai la thay the tu` step do cho den' het').
++ usecase search auto in web nhung viet nham cho use case delete history roi`.
++ "Search auto in mobile application" trong main scenario, step 1 "User select search auto item " sua lai thanh user select
+"Nhan dien bien bao" item. Voi lai la khi chon nhan dien bien bao, chua chuyen sang giao dien chup anh ngay ma chuyen sang
+giao dien # de user lua chon la nhan dien bang chup anh hay la upload anh?
+Alternative Scenario step 1 - 2 hinh nhu viet nham cua exceptio
++ "Delete history using mobile application" do la ung dung mobile nen khong co dien tich de ma hien button "xoa'" o? moi~ 
+hang`, mà thay vao` do la` select and hold in 1 second to show popup menu -> select xoa'
