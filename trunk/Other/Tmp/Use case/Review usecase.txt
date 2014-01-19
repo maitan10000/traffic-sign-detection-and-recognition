@@ -1,0 +1,17 @@
+TuanTL
+Add traffic sign: nham actor, chua bat exception khi nhap du lieu, khi thanh cong phai thong bao bang message
+Export to file: Sua lai tieu de usecase, sua lai phan trigger, 
+Create staff account: chuyen sang tieng Viet
+
+PhongBV
+Add favorites: alternative tach ra, moi cai la moi bang,
+ImportFromFile, edit traffic sign: chua dat vi tri xay ra exception
+
+NghiaHD
+View report, report: chinh lai mau, mau khong dung chuan, thieu alternative,
+ exption, relationship, bussiness ko dung vi tri
+Report wrong infomration: nut report nam trong traffic sign information page,
+Report wrong recognize: nut report nam trong trang auto search result page
+Delete report: main scenario chua hoang thanh cong viec delete
+
+p/s: ai review may cai usecase cua tui voi
