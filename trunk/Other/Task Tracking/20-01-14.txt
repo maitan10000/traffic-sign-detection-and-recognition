@@ -1,0 +1,11 @@
+﻿Sua usecase: 
+Moi nguoi copy report 3 ra ngoai va tu sua lai usecase cua minh. 
+Luu y: sua lai nhung nhung case co ten minh tren nguoi lam, nho chuyen thanh tieng Viet het,
+van con nhung usecase ko dung tieng Viet.
+
+Ngay mai hop tai thu vien, 9h30 de tong hop usecase lan cuoi truoc khi review
+
+ Tuan sua prototype
+ Nghia Cuoi ngay thu 2
+
+p/s: toi nay nho nop report 2 tren cms
