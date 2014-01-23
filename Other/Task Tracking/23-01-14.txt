@@ -1,0 +1,13 @@
+Cong viec trong tet
+
+Tuan: Dung giao dien
+
+Phong: Dung giao dien
+
+Tan: Code core
+
+Nghia: 
+ - Tim hieu cong nghe webservice
+ - Demo phan login
+ - Tim hieu lap trinh java tuong tac voi linux console application
+ - Demo tuong tac voi terminal: list file
