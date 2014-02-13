@@ -7,16 +7,13 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import sample.DTO.CategoryDTO;
+import sample.utility.DBConnect;
 
 public class LoadCategoryService {
 	public CategoryDTO[] loadCategory(){
 		Connection con = null;
 	     try{
-	         String userName = "root";
-	         String pass = "123";
-	         String url = "jdbc:mysql://127.0.0.1:3306/cpdb";
-	         Class.forName("com.mysql.jdbc.Driver").newInstance();
-	         con = DriverManager.getConnection(url, userName, pass);	         
+	    	 con = DBConnect.DBConnect();  	         
 	         String sql = "Select * from cpdb.category";
 	         PreparedStatement stm = con.prepareStatement(sql);	         
 	         ResultSet rs = stm.executeQuery();
@@ -33,7 +30,7 @@ public class LoadCategoryService {
 
 	     }catch( Exception e){
 	         e.printStackTrace();
-	     }
+	     }	     
 		return null;
 
 		

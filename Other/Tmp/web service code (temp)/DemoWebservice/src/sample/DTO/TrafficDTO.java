@@ -66,6 +66,14 @@ public class TrafficDTO implements Serializable{
 		categoryID = this.categoryID;
 		trafficID = this.categoryName;
 	}
-	
+	public TrafficDTO(String trafficID, String name, String image,
+			String information, String pennaltyfee) {
+		trafficID = this.trafficid;
+		name = this.name;
+		image = this.image;
+		information = this.information;
+		pennaltyfee = this.pennaltyfee;
+		
+	}
 
 }
