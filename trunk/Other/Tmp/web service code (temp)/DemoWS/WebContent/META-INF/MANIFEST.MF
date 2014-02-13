@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Class-Path: DemoWebservice.jar
+Build-Jdk: 1.6.0_22
+Built-By: sagara
+Created-By: Apache Maven
+Archiver-Version: Plexus Archiver
+
