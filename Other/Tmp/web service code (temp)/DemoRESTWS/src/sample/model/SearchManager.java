@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 
+
 import sample.dto.TrafficInfoDTO;
 import sample.utility.DBConnect;
-
 import sample.utility.SearchByCateID;
+import sample.utility.SearchByName;
 
 public class SearchManager {
 	public ArrayList<TrafficInfoDTO> search(String categoryID)throws Exception {
@@ -24,4 +25,17 @@ public class SearchManager {
 		return traffic;
 	}
 
+	public ArrayList<TrafficInfoDTO> searchByName(String name)throws Exception {
+		ArrayList<TrafficInfoDTO> traffic = null;
+		try {
+			    DBConnect database= new DBConnect();
+			    Connection connection = database.Get_Connection();
+			    SearchByName tmp = new SearchByName();
+				traffic= tmp.searchByName(connection, name);
+		
+		} catch (Exception e) {
+			throw e;
+		}
+		return traffic;
+	}
 }
