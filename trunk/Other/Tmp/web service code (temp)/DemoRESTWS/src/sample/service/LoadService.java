@@ -15,6 +15,9 @@ import sample.tranformer.TranformerJSON;
 
 @Path("/Webservice")
 public class LoadService {
+	
+	//Method Webservice
+	// Method get list Category	
 	@GET
 	@Path("/GetResult")
 	@Produces("application/json")
@@ -69,6 +72,27 @@ public class LoadService {
 	ArrayList<TrafficInfoDTO> trafficData = null;
 	SearchManager smn = new SearchManager();
 	trafficData = smn.searchByName(name);
+	result = TrafficInfoTrans.Traffic(trafficData);		
+	}
+	catch (Exception e)
+	{
+	e.printStackTrace();
+	}
+	return result;
+	}
+	
+	
+	@GET
+	@Path("/ViewDetail")
+	@Produces("application/json")
+	public String viewDetal(@QueryParam("id") String trafficID)
+	{
+	String result = null;
+	try 
+	{
+	ArrayList<TrafficInfoDTO> trafficData = null;
+	SearchManager smn = new SearchManager();
+	trafficData = smn.viewDetail(trafficID);
 	result = TrafficInfoTrans.Traffic(trafficData);		
 	}
 	catch (Exception e)
