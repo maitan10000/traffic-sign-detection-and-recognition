@@ -63,7 +63,8 @@ CREATE TABLE `favorite` (
   KEY `trafficIDfk_idx` (`trafficID`),
   CONSTRAINT `userIDfk` FOREIGN KEY (`userID`) REFERENCES `account` (`userID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `trafficIDfk` FOREIGN KEY (`trafficID`) REFERENCES `trafficinformation` (`trafficID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;CREATE TABLE `result` (
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+CREATE TABLE `result` (
   `resultID` int(11) NOT NULL,
   `uploadedImage` varchar(45) DEFAULT NULL,
   `listTraffic` varchar(45) DEFAULT NULL,
