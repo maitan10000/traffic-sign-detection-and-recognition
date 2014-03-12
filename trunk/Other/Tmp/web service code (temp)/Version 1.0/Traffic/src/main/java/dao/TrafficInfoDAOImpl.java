@@ -118,8 +118,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (stm != null) {
 				try {
 					stm.close();

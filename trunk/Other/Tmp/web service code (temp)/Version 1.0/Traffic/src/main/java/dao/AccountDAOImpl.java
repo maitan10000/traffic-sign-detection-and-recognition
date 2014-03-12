@@ -43,7 +43,7 @@ public class AccountDAOImpl implements AccountDAO {
 					.prepareStatement("SELECT * FROM account WHERE userID = ? AND password = ?");
 			ps.setString(1, userID);
 			ps.setString(2, password);
-			ps.execute();			
+			return ps.execute();			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
