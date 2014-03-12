@@ -798,4 +798,23 @@ public class Service {
 		return Response.status(200).entity("Unsuccessfull").build();
 
 	}
+	
+	//Search Report By Type
+	
+	@GET
+	@Path("/SearchReportByType")
+	@Produces("application/json")
+	public String searchReport(@QueryParam("type") int  type) {
+		String result = null;
+		try {
+			ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
+			ReportDAO reportDAO = new ReportDAOImpl();
+			reportData = reportDAO.searchReportByType(type);
+			Gson gson = new Gson();
+			result = gson.toJson(reportData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
 }
