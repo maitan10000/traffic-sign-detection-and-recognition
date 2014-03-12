@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dto.FavoriteDTO;
+import dto.FavoriteJSON;
 
 public class FavoriteDAOImpl implements FavoriteDAO {
 
@@ -102,18 +103,20 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		return false;
 	}
 
-	public ArrayList<FavoriteDTO> listFavorite(String creator) {
-		ArrayList<FavoriteDTO> favoriteData = new ArrayList<FavoriteDTO>();
+	public ArrayList<FavoriteJSON> listFavorite(String creator) {
+		ArrayList<FavoriteJSON> favoriteData = new ArrayList<FavoriteJSON>();
 		try {
 			Connection connection = BaseDAO.getConnect();
 			PreparedStatement ps = connection
-					.prepareStatement("SELECT trafficID FROM favorite WHERE creator = ? AND isActive = ?");
+					.prepareStatement("SELECT fa.trafficID,t.name, t.image from favorite as fa, trafficinformation as t where fa.creator = ? AND fa.trafficID = t.trafficID AND fa.isActive=?");
 			ps.setString(1, creator);
 			ps.setBoolean(2, true);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				FavoriteDTO favoriteObj = new FavoriteDTO();
-				favoriteObj.setTrafficID(rs.getString("trafficID"));							
+				FavoriteJSON favoriteObj = new FavoriteJSON();
+				favoriteObj.setTrafficID(rs.getString("trafficID"));
+				favoriteObj.setName(rs.getString("name"));
+				favoriteObj.setImage(rs.getString("image"));
 				favoriteData.add(favoriteObj);
 			}
 			return favoriteData;
