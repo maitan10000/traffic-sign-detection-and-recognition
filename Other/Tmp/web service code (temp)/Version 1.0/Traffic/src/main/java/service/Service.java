@@ -29,6 +29,7 @@ import utility.GlobalValue;
 import utility.Helper;
 import dto.AccountDTO;
 import dto.FavoriteDTO;
+import dto.FavoriteJSON;
 import dto.LocateObj;
 import dto.ResultDTO;
 import dto.ResultInput;
@@ -682,7 +683,7 @@ public class Service {
 	public String loadFavorite(@QueryParam("creator") String creator) {
 		String result = null;
 		try {
-			ArrayList<FavoriteDTO> favorData = null;
+			ArrayList<FavoriteJSON> favorData = null;
 			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
 			favorData = favoriteDAO.listFavorite(creator);
 			Gson gson = new Gson();
