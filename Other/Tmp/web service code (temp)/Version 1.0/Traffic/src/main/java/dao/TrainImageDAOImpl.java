@@ -12,9 +12,11 @@ import dto.TrainImageDTO;
 public class TrainImageDAOImpl implements TrainImageDAO {
 
 	public String getTrafficInfoID(String imageName) {
+		Connection connection = null;
+		PreparedStatement stm = null;
 		try {
-			Connection connection = BaseDAO.getConnect();
-			PreparedStatement stm = connection
+			connection = BaseDAO.getConnect();
+			stm = connection
 					.prepareStatement("SELECT trafficID FROM trainimage WHERE imageName = ?");
 			stm.setString(1, imageName);
 			ResultSet rs = stm.executeQuery();
@@ -24,6 +26,23 @@ public class TrainImageDAOImpl implements TrainImageDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		return "";
 	}

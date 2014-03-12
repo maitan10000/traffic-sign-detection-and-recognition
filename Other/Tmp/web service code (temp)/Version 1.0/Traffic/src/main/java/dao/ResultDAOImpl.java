@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import dto.ResultDTO;
 
 public class ResultDAOImpl implements ResultDAO {
@@ -86,5 +87,30 @@ public class ResultDAOImpl implements ResultDAO {
 		}
 		return false;
 
+	}
+
+	public ArrayList<ResultDTO> searchByCreator(String creator) {
+		ArrayList<ResultDTO> resultData = new ArrayList<ResultDTO>();
+		try {
+			Connection connection = BaseDAO.getConnect();
+			PreparedStatement ps = connection
+					.prepareStatement("SELECT resultID,uploadedImage,listTraffic,creator,createDate FROM result WHERE creator=?");
+			ps.setString(1, creator);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				ResultDTO resultObject = new ResultDTO();
+				resultObject.setResultID(rs.getInt("resultID"));
+				resultObject.setUploadedImage(rs.getString("uploadedImage"));
+				resultObject.setListTraffic(rs.getString("listTraffic"));
+				resultObject.setCreator(rs.getString("creator"));
+				resultObject.setCreateDate(rs.getDate("createDate"));				
+
+				resultData.add(resultObject);
+			}
+			return resultData;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

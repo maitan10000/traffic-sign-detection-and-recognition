@@ -28,7 +28,6 @@ public class AccountDAOImpl implements AccountDAO {
 			ps.setString(6, "user");		
 			ps.setBoolean(7, false);
 			ps.executeUpdate();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,9 +12,11 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 
 	public ArrayList<TrafficInfoDTO> searchByCateID(int cateID) {
 		ArrayList<TrafficInfoDTO> cateData = new ArrayList<TrafficInfoDTO>();
+		Connection connection = null;
+		PreparedStatement stm = null;
 		try {
-			Connection connection = BaseDAO.getConnect();
-			PreparedStatement stm = connection
+			connection = BaseDAO.getConnect();
+			stm = connection
 					.prepareStatement("SELECT trafficID,name,image FROM trafficinformation WHERE categoryID = ?");
 			stm.setInt(1, cateID);
 			ResultSet rs = stm.executeQuery();
@@ -28,6 +30,23 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			return cateData;
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 
 		return null;
@@ -35,9 +54,11 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 
 	public ArrayList<TrafficInfoDTO> searchByName(String name) {
 		ArrayList<TrafficInfoDTO> trafficData = new ArrayList<TrafficInfoDTO>();
+		Connection connection = null;
+		PreparedStatement stm = null;
 		try {
-			Connection connection = BaseDAO.getConnect();
-			PreparedStatement stm = connection
+			connection = BaseDAO.getConnect();
+			stm = connection
 					.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ?");
 			stm.setString(1, "%" + name + "%");
 			ResultSet rs = stm.executeQuery();
@@ -54,14 +75,33 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			return trafficData;
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		return null;
 	}
 
 	public TrafficInfoDTO viewDetail(String id) {
+		Connection connection = null;
+		PreparedStatement stm = null;
 		try {
-			Connection connection = BaseDAO.getConnect();
-			PreparedStatement stm = connection
+			connection = BaseDAO.getConnect();
+			stm = connection
 					.prepareStatement("SELECT trafficID, name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE trafficID = ?");
 			stm.setString(1, id);
 			ResultSet rs = stm.executeQuery();
@@ -78,6 +118,24 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		return null;
 	}
