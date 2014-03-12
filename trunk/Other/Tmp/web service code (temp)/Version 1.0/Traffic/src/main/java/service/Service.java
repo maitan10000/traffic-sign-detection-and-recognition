@@ -652,20 +652,23 @@ public class Service {
 	@Path("/AddFavorite")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response addFavorite(@FormDataParam("creator") String creator,
-			@FormDataParam("trafficID") String trafficID,
-			@FormDataParam("createDate") Date createDate) {
+			@FormDataParam("trafficID") String trafficID)
+			{
 		try {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
-			favoriteObj.setTrafficID(trafficID);
-			favoriteObj.setCreateDate(createDate);
+			favoriteObj.setTrafficID(trafficID);			
 			favoriteObj.setIsActive(true);
 
 			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
 			int result = favoriteDAO.add(favoriteObj);
-			String msg = "Successfull";
-			return Response.status(200).entity(msg).build();
-
+			System.out.println(result);
+			if (result != 0) {
+				String msg = "Successfull";
+				return Response.status(200).entity(msg).build();
+			} else {
+				return Response.status(200).entity("Unsuccessfull").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -676,7 +679,7 @@ public class Service {
 	@GET
 	@Path("/ListFavorite")
 	@Produces("application/json")
-	public String loadFavorite(String creator) {
+	public String loadFavorite(@QueryParam("creator") String creator) {
 		String result = null;
 		try {
 			ArrayList<FavoriteDTO> favorData = null;
@@ -684,7 +687,6 @@ public class Service {
 			favorData = favoriteDAO.listFavorite(creator);
 			Gson gson = new Gson();
 			return gson.toJson(favorData);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -711,7 +713,7 @@ public class Service {
 			accountObj.setRole("user");
 
 			AccountDAO accountDAO = new AccountDAOImpl();
-			String result = accountDAO.addAccount(accountObj);
+			String result = accountDAO.addAccount(accountObj);			
 			return Response.status(200).entity(result).build();
 
 		} catch (Exception e) {
@@ -733,11 +735,32 @@ public class Service {
 			accountObj.setPassword(password);
 			AccountDAO accountDAO = new AccountDAOImpl();
 			Boolean result = accountDAO.getAccount(accountObj);
+			if(result.equals(true)){
+				return Response.status(200).entity("Successfull").build();
+			}else{
+				return Response.status(200).entity("Unsuccessfull").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Successfull").build();
+		return Response.status(200).entity("Unsuccessfull").build();
 
+	}
+	@GET
+	@Path("/ViewHistory")
+	@Produces("application/json")
+	public String viewHistory(@QueryParam("creator") String creator) {
+		String result = null;
+		try {
+			ArrayList<ResultDTO> resultData = null;
+			ResultDAO resultDAO = new ResultDAOImpl();
+			resultData = resultDAO.searchByCreator(creator);
+			Gson gson = new Gson();
+			result = gson.toJson(resultData);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 }
