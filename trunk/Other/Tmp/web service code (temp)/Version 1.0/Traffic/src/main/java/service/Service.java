@@ -29,7 +29,7 @@ import utility.GlobalValue;
 import utility.Helper;
 import dto.AccountDTO;
 import dto.FavoriteDTO;
-import dto.FavoriteJSON;
+//import dto.FavoriteJSON;
 import dto.LocateObj;
 import dto.ReportDTO;
 import dto.ResultDTO;
@@ -69,8 +69,8 @@ import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import dao.FavoriteDAO;
 import dao.FavoriteDAOImpl;
-import dao.ReportDAO;
-import dao.ReportDAOImpl;
+//import dao.ReportDAO;
+//import dao.ReportDAOImpl;
 import dao.ResultDAO;
 import dao.ResultDAOImpl;
 import dao.TrafficInfoDAO;
@@ -680,22 +680,22 @@ public class Service {
 
 	}
 
-	@GET
-	@Path("/ListFavorite")
-	@Produces("application/json")
-	public String loadFavorite(@QueryParam("creator") String creator) {
-		String result = null;
-		try {
-			ArrayList<FavoriteJSON> favorData = null;
-			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
-			favorData = favoriteDAO.listFavorite(creator);
-			Gson gson = new Gson();
-			return gson.toJson(favorData);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+//	@GET
+//	@Path("/ListFavorite")
+//	@Produces("application/json")
+//	public String loadFavorite(@QueryParam("creator") String creator) {
+//		String result = null;
+//		try {
+//			ArrayList<FavoriteJSON> favorData = null;
+//			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
+//			favorData = favoriteDAO.listFavorite(creator);
+//			Gson gson = new Gson();
+//			return gson.toJson(favorData);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
 
 	// Service Register
 	@POST
@@ -768,53 +768,53 @@ public class Service {
 		}
 		return result;
 	}
-
-	@POST
-	@Path("/SendReport")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response sendReport(@FormDataParam("content") String content,
-			@FormDataParam("type") int type,
-			@FormDataParam("creator") String creator)
-			{
-		try {
-			ReportDTO reportObj = new ReportDTO();
-			reportObj.setContent(content);
-			reportObj.setCreator("user1");
-			reportObj.setType(type);
-			reportObj.setIsActive(true);
-
-			ReportDAO reportDAO = new ReportDAOImpl();
-			Boolean result = reportDAO.add(reportObj);
-			System.out.println(result);
-			if (result.equals(true)) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(200).entity("Unsuccessfull").build();
-
-	}
-	
+//
+//	@POST
+//	@Path("/SendReport")
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	public Response sendReport(@FormDataParam("content") String content,
+//			@FormDataParam("type") int type,
+//			@FormDataParam("creator") String creator)
+//			{
+//		try {
+//			ReportDTO reportObj = new ReportDTO();
+//			reportObj.setContent(content);
+//			reportObj.setCreator("user1");
+//			reportObj.setType(type);
+//			reportObj.setIsActive(true);
+//
+//			ReportDAO reportDAO = new ReportDAOImpl();
+//			Boolean result = reportDAO.add(reportObj);
+//			System.out.println(result);
+//			if (result.equals(true)) {
+//				String msg = "Successfull";
+//				return Response.status(200).entity(msg).build();
+//			} else {
+//				return Response.status(200).entity("Unsuccessfull").build();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return Response.status(200).entity("Unsuccessfull").build();
+//
+//	}
+//	
 	//Search Report By Type
 	
-	@GET
-	@Path("/SearchReportByType")
-	@Produces("application/json")
-	public String searchReport(@QueryParam("type") int  type) {
-		String result = null;
-		try {
-			ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
-			ReportDAO reportDAO = new ReportDAOImpl();
-			reportData = reportDAO.searchReportByType(type);
-			Gson gson = new Gson();
-			result = gson.toJson(reportData);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+//	@GET
+//	@Path("/SearchReportByType")
+//	@Produces("application/json")
+//	public String searchReport(@QueryParam("type") int  type) {
+//		String result = null;
+//		try {
+//			ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
+//			ReportDAO reportDAO = new ReportDAOImpl();
+//			reportData = reportDAO.searchReportByType(type);
+//			Gson gson = new Gson();
+//			result = gson.toJson(reportData);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return result;
+//	}
 }
