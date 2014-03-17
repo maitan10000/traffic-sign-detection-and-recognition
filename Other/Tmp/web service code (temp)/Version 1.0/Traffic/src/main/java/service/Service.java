@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -85,7 +88,7 @@ public class Service {
 
 	// Load Category
 	@GET
-	@Path("/GetResult")
+	@Path("/ListCategory")
 	@Produces("application/json")
 	public String load() {
 		String result = null;
@@ -141,7 +144,7 @@ public class Service {
 	@GET
 	@Path("/ViewDetail")
 	@Produces("application/json")
-	public String viewDetal(@QueryParam("id") String trafficID) {
+	public String viewDetail(@QueryParam("id") String trafficID) {
 		String result = null;
 		try {
 			TrafficInfoDTO trafficData = null;
@@ -157,7 +160,7 @@ public class Service {
 	}
 
 	@POST
-	@Path("/upload")
+	@Path("/SearchAuto")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public Response uploadFile(
 			@FormDataParam("file") InputStream uploadedInputStream,
@@ -253,21 +256,37 @@ public class Service {
 
 	}
 
+	// List History
 	@GET
-	@Path("/GetResultByID")
+	@Path("/ListHistory")
 	@Produces("application/json")
-	public String search(@QueryParam("id") int resultID) {
+	public String viewHistory(@QueryParam("creator") String creator) {
 		String result = null;
 		try {
-			ResultDTO resultData = null;
+			ArrayList<ResultDTO> resultData = null;
 			ResultDAO resultDAO = new ResultDAOImpl();
-			resultData = resultDAO.getResultByID(resultID);
+			resultData = resultDAO.getResultByCreator(creator, true);
 			Gson gson = new Gson();
 			result = gson.toJson(resultData);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	@GET
+	@Path("/GetResultByID")
+	@Produces("application/json")
+	public String search(@QueryParam("id") int resultID) {
+		ResultDTO resultData = null;
+		try {
+			ResultDAO resultDAO = new ResultDAOImpl();
+			resultData = resultDAO.getResultByID(resultID);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Gson gson = new Gson();
+		return gson.toJson(resultData);
 	}
 
 	/**
@@ -657,30 +676,26 @@ public class Service {
 	}
 
 	// Add Favorite
+	// Chua tinh truong hop trafficID co isActive = false
 	@POST
 	@Path("/AddFavorite")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response addFavorite(@FormDataParam("creator") String creator,
-			@FormDataParam("trafficID") String trafficID) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addFavorite(@FormParam("creator") String creator,
+			@FormParam("trafficID") String trafficID) {
 		try {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
 			favoriteObj.setTrafficID(trafficID);
-			favoriteObj.setIsActive(true);
 
 			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
-			int result = favoriteDAO.add(favoriteObj);
-			System.out.println(result);
-			if (result != 0) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
+			boolean result = favoriteDAO.add(favoriteObj);
+			if (result == true) {
+				return Response.status(200).entity("Success").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
+		return Response.status(200).entity("Fail").build();
 
 	}
 
@@ -689,141 +704,147 @@ public class Service {
 	@Path("/ListFavorite")
 	@Produces("application/json")
 	public String loadFavorite(@QueryParam("creator") String creator) {
-		String result = null;
+		// get list favorite of user
+		FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
+		ArrayList<FavoriteDTO> listFavorData = favoriteDAO
+				.listFavorite(creator);
+
+		// create return Json for list favorite
+		ArrayList<FavoriteJSON> listFavoriteJSON = new ArrayList<FavoriteJSON>();
+		TrafficInfoDAO trafficInfoDAO = new TrafficInfoDAOImpl();
+		for (FavoriteDTO favoriteDTO : listFavorData) {
+			// get traffic info
+			String trafficID = favoriteDTO.getTrafficID();
+			TrafficInfoDTO trafficInfoDTO = trafficInfoDAO.getDetail(trafficID);
+
+			// create favorite JSON
+			FavoriteJSON favoriteJSON = new FavoriteJSON();
+			favoriteJSON.setTrafficID(trafficID);
+			favoriteJSON.setName(trafficInfoDTO.getName());
+			String imageLink = "rest/Image/Main/" + trafficInfoDTO.getImage();
+			favoriteJSON.setImage(imageLink);
+			listFavoriteJSON.add(favoriteJSON);
+		}// end for listFavorData
+
+		Gson gson = new Gson();
+		return gson.toJson(listFavoriteJSON);
+	}
+
+	// Delete Favorite
+	@GET
+	@Path("/DeleteFavorite")
+	public Response deleteFavorite(@QueryParam("creator") String creator,
+			@QueryParam("trafficID") String trafficID) {
 		try {
-			// get list favorite of user
-			ArrayList<FavoriteDTO> listFavorData = null;
-			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
-			listFavorData = favoriteDAO.listFavorite(creator);
+			FavoriteDTO favoriteObj = new FavoriteDTO();
+			favoriteObj.setCreator(creator);
+			favoriteObj.setTrafficID(trafficID);
 
-			// create return Json for list favorite
-			ArrayList<FavoriteJSON> listFavoriteJSON = new ArrayList<FavoriteJSON>();
-			TrafficInfoDAO trafficInfoDAO = new TrafficInfoDAOImpl();
-			for (FavoriteDTO favoriteDTO : listFavorData) {
-				// get traffic info
-				String trafficID = favoriteDTO.getTrafficID();
-				TrafficInfoDTO trafficInfoDTO = trafficInfoDAO
-						.getDetail(trafficID);
-
-				// create favorite JSON
-				FavoriteJSON favoriteJSON = new FavoriteJSON();
-				favoriteJSON.setTrafficID(trafficID);
-				favoriteJSON.setName(trafficInfoDTO.getName());
-				String imageLink = "rest/Image/Main/"
-						+ trafficInfoDTO.getImage();
-				favoriteJSON.setImage(imageLink);
-				listFavoriteJSON.add(favoriteJSON);
-			}// end for listFavorData
-
-			Gson gson = new Gson();
-			return gson.toJson(listFavoriteJSON);
+			FavoriteDAO favortiteDAO = new FavoriteDAOImpl();
+			Boolean result = favortiteDAO.delete(favoriteObj);
+			if (result.equals(true)) {
+				return Response.status(200).entity("Success").build();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return Response.status(200).entity("Fail").build();
+
 	}
+
+	// Check user ton tai hay chua
+
+	// Check email da ton tai chua
 
 	// Register
 	@POST
 	@Path("/Register")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response addAccount(@FormDataParam("userID") String userID,
-			@FormDataParam("password") String password,
-			@FormDataParam("email") String email,
-			@FormDataParam("name") String name,
-			@FormDataParam("role") String role,
-			@FormDataParam("createDate") Date createDate) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addAccount(@FormParam("userID") String userID,
+			@FormParam("password") String password,
+			@FormParam("email") String email, @FormParam("name") String name) {
 		try {
 			AccountDTO accountObj = new AccountDTO();
 			accountObj.setUserID(userID);
-			accountObj.setPassword(password);
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+			StringBuffer sb = new StringBuffer();
+			for (byte b : thedigest) {
+				sb.append(Integer.toHexString((int) (b & 0xff)));
+			}
+			String md5password = new String(sb.toString());
+			accountObj.setPassword(md5password);
 			accountObj.setEmail(email);
 			accountObj.setName(name);
-			accountObj.setCreateDate(createDate);
 			accountObj.setRole("user");
 
 			AccountDAO accountDAO = new AccountDAOImpl();
 			String result = accountDAO.addAccount(accountObj);
+			// Send mail verify
 			return Response.status(200).entity(result).build();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
+		return Response.status(200).entity("Fail").build();
 
 	}
 
 	// Login Service
 	@POST
 	@Path("/Login")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response getAccount(@FormDataParam("userID") String userID,
-			@FormDataParam("password") String password) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response getAccount(@FormParam("userID") String userID,
+			@FormParam("password") String password) {
 		try {
 			AccountDAO accountDAO = new AccountDAOImpl();
-			Boolean result = accountDAO.getAccount(userID, password);
-			if (result.equals(true)) {
-				return Response.status(200).entity("Successfull").build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+			StringBuffer sb = new StringBuffer();
+			for (byte b : thedigest) {
+				sb.append(Integer.toHexString((int) (b & 0xff)));
+			}
+			String md5password = new String(sb.toString());
+			Boolean result = accountDAO.getAccount(userID, md5password);
+			if (result == true) {
+				return Response.status(200).entity("Success").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
+		return Response.status(200).entity("Fail").build();
 
-	}
-
-	// View History
-	@GET
-	@Path("/ViewHistory")
-	@Produces("application/json")
-	public String viewHistory(@QueryParam("creator") String creator) {
-		String result = null;
-		try {
-			ArrayList<ResultDTO> resultData = null;
-			ResultDAO resultDAO = new ResultDAOImpl();
-			resultData = resultDAO.getResultByCreator(creator, true);
-			Gson gson = new Gson();
-			result = gson.toJson(resultData);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
 	}
 
 	// Send Report
 	@POST
 	@Path("/SendReport")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response sendReport(@FormDataParam("content") String content,
-			@FormDataParam("type") int type,
-			@FormDataParam("creator") String creator) {
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response sendReport(@FormParam("content") String content,
+			@FormParam("referenceID") String referenceID,
+			@FormParam("type") int type, @FormParam("creator") String creator) {
 		try {
 			ReportDTO reportObj = new ReportDTO();
 			reportObj.setContent(content);
-			reportObj.setCreator("user1");
+			reportObj.setReferenceID(referenceID);
+			reportObj.setCreator(creator);
 			reportObj.setType(type);
 			reportObj.setIsActive(true);
 
 			ReportDAO reportDAO = new ReportDAOImpl();
 			Boolean result = reportDAO.add(reportObj);
-			System.out.println(result);
-			if (result.equals(true)) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
+			if (result == true) {
+				return Response.status(200).entity("Success").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
+		return Response.status(200).entity("Fail").build();
 
 	}
 
 	// Search Report By Type
-
+	// Viet giong listFavorite
 	@GET
 	@Path("/GetReportByType")
 	@Produces("application/json")
@@ -843,9 +864,9 @@ public class Service {
 
 	// View Detail of Report
 	@GET
-	@Path("/getDetailReport")
+	@Path("/GetReportDetail")
 	@Produces("application/json")
-	public String viewDetail(@QueryParam("reportID") int reportID) {
+	public String viewReportDetail(@QueryParam("reportID") int reportID) {
 		String result = null;
 		try {
 			ReportDTO reportData = new ReportDTO();
@@ -859,55 +880,22 @@ public class Service {
 		return result;
 	}
 
-	// Delete Favorite
-	@POST
-	@Path("/DeleteFavorite")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response deleteFavorite(@FormDataParam("creator") String creator,
-			@FormDataParam("trafficID") String trafficID) {
-		try {
-			FavoriteDTO favoriteObj = new FavoriteDTO();
-			favoriteObj.setCreator(creator);
-			favoriteObj.setTrafficID(trafficID);
-
-			FavoriteDAO favortiteDAO = new FavoriteDAOImpl();
-			Boolean result = favortiteDAO.delete(favoriteObj);
-			System.out.println(result);
-			if (result.equals(true)) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(200).entity("Unsuccessfull").build();
-
-	}
-
 	// Delete Report
-	@POST
+	@GET
 	@Path("/DeleteReport")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response deleteReport(@FormDataParam("reportID") int reportID) {
+	public Response deleteReport(@QueryParam("reportID") int reportID) {
 		try {
 			ReportDTO reportObj = new ReportDTO();
 			reportObj.setReportID(reportID);
 			ReportDAO reportDAO = new ReportDAOImpl();
 			Boolean result = reportDAO.delete(reportObj);
-			System.out.println(result);
 			if (result.equals(true)) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
+				return Response.status(200).entity("Success").build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
-
+		return Response.status(200).entity("Fail").build();
 	}
 
 	// Add Traffic Sign Information

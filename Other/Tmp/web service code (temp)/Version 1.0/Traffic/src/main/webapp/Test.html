@@ -5,12 +5,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form action="rest/Service/Login" method="post"
+	<form action="rest/Service/DeleteReport" method="post"
 		enctype="multipart/form-data">
 
 		<p>
-			UserID: <input type="text" name="userID" /> Password <input
-				type="password" name="password" />
+			Content: <input type="text" name="reportID" /> 
+			ReferenceID <input
+				type="text" name="referenceID" />
+				<input
+				type="text" name="type" value = "1"/>
 		</p>
 
 		<input type="submit" value="Submit" />

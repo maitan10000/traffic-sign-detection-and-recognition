@@ -12,11 +12,9 @@ import dto.FavoriteJSON;
 
 public class FavoriteDAOImpl implements FavoriteDAO {
 
-	public int add(FavoriteDTO favorite) {
+	public boolean add(FavoriteDTO favorite) {
 		Connection connection = null;
 		PreparedStatement stm = null;
-		PreparedStatement ps = null;
-		PreparedStatement ps1 = null;
 
 		try {
 			String creator = favorite.getCreator();
@@ -30,21 +28,23 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			stm.setString(2, trafficID);
 			ResultSet result = stm.executeQuery();
 			if (!result.next()) {
-				ps = connection
+				stm.close();
+				stm = connection
 						.prepareStatement("INSERT INTO favorite(creator,trafficID,createDate,isActive) VALUE (?,?,?,?)");
-				ps.setString(1, creator);
-				ps.setString(2, trafficID);
-				ps.setDate(3, createDate);
-				ps.setBoolean(4, true);
-				return stm.executeUpdate();
+				stm.setString(1, creator);
+				stm.setString(2, trafficID);
+				stm.setDate(3, createDate);
+				stm.setBoolean(4, true);
+				return stm.executeUpdate() > 0;
 			} else {
-				ps1 = connection
-						.prepareStatement("UPDATE trafficdb.favorite SET isActive = ? WHERE creator = ? AND trafficID = ?");
-				ps1.setBoolean(1, true);
-				ps1.setString(2, creator);
-				ps1.setString(3, trafficID);
-				ps1.executeUpdate();
-				return stm.executeUpdate();
+				stm.close();
+				stm = connection
+						.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ?");
+				stm.setBoolean(1, true);
+				stm.setString(2, creator);
+				stm.setString(3, trafficID);
+				stm.executeUpdate();
+				return stm.executeUpdate() > 0;
 			}
 
 		} catch (Exception ex) {
@@ -53,22 +53,6 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			if (stm != null) {
 				try {
 					stm.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (ps1 != null) {
-				try {
-					ps1.close();
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -83,7 +67,7 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 				}
 			}
 		}
-		return -1;
+		return false;
 	}
 
 	public boolean delete(FavoriteDTO favorite) {
@@ -122,12 +106,13 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		return false;
 	}
 
-	
 	/*
 	 * List Favorite By Creator
-	 * @param: 
+	 * 
+	 * @param:
 	 * 
 	 * @return list of favorite of user
+	 * 
 	 * @see dao.FavoriteDAO#listFavorite(java.lang.String)
 	 */
 	public ArrayList<FavoriteDTO> listFavorite(String creator) {
@@ -136,20 +121,32 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 
 	/*
 	 * List Favorite By Creator
-	 * @param: 
+	 * 
+	 * @param:
 	 * 
 	 * @return list of favorite of user
+	 * 
 	 * @see dao.FavoriteDAO#listFavorite(java.lang.String)
 	 */
 	public ArrayList<FavoriteDTO> listFavorite(String creator,
 			Boolean getInActive) {
 		ArrayList<FavoriteDTO> favoriteData = new ArrayList<FavoriteDTO>();
+		Connection connection = null;
+		PreparedStatement ps = null;
 		try {
-			Connection connection = BaseDAO.getConnect();
-			PreparedStatement ps = connection
-					.prepareStatement("SELECT trafficID from favorite where creator = ? AND isActive=?");
-			ps.setString(1, creator);
-			ps.setBoolean(2, getInActive);
+			connection = BaseDAO.getConnect();
+			if (getInActive == false) {
+				// get only favorite has isActive = true
+				ps = connection
+						.prepareStatement("SELECT trafficID from favorite where creator = ? AND isActive=?");
+				ps.setString(1, creator);
+				ps.setBoolean(2, true);
+			} else {
+				// get favorite has isActive = true or false
+				ps = connection
+						.prepareStatement("SELECT trafficID from favorite where creator = ?");
+				ps.setString(1, creator);
+			}
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				FavoriteDTO favoriteDTO = new FavoriteDTO();
@@ -160,6 +157,23 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		} finally {
+			if (ps != null) {
+				try {
+					ps.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		return null;
 	}
