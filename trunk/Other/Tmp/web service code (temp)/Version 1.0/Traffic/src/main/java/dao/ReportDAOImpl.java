@@ -23,6 +23,7 @@ public class ReportDAOImpl implements ReportDAO {
 			while (rs.next()) {
 				ReportDTO reportObj = new ReportDTO();
 				reportObj.setReportID(rs.getInt("reportID"));
+				reportObj.setReferenceID(rs.getString("referenceID"));
 				reportObj.setContent(rs.getString("content"));
 				reportObj.setCreator(rs.getString("creator"));
 				reportObj.setCreateDate(rs.getDate("createDate"));
@@ -61,12 +62,13 @@ public class ReportDAOImpl implements ReportDAO {
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection.prepareStatement("INSERT INTO trafficdb.report"
-					+ " (content, creator, createDate, type," + " isActive)"
-					+ " VALUES (?, ?, DATE(NOW()),?, ?)");
+					+ " (content,referenceID, creator, createDate, type,"
+					+ " isActive)" + " VALUES (?, ?,?, DATE(NOW()),?, ?)");
 			stm.setString(1, reportDTO.getContent());
-			stm.setString(2, reportDTO.getCreator());
-			stm.setInt(3, reportDTO.getType());
-			stm.setBoolean(4, reportDTO.getIsActive());
+			stm.setString(2, reportDTO.getReferenceID());
+			stm.setString(3, reportDTO.getCreator());
+			stm.setInt(4, reportDTO.getType());
+			stm.setBoolean(5, reportDTO.getIsActive());
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -107,6 +109,7 @@ public class ReportDAOImpl implements ReportDAO {
 			while (rs.next()) {
 				ReportDTO reportObj = new ReportDTO();
 				reportObj.setReportID(rs.getInt("reportID"));
+				reportObj.setReferenceID(rs.getString("referenceID"));
 				reportObj.setContent(rs.getString("content"));
 				reportObj.setCreator(rs.getString("creator"));
 				reportObj.setCreateDate(rs.getDate("createDate"));
@@ -140,21 +143,25 @@ public class ReportDAOImpl implements ReportDAO {
 	}
 
 	public ReportDTO getDetailReport(int reportID) {
-
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT content, creator, createDate, type FROM trafficdb.report WHERE reportID = ?");
+					.prepareStatement("SELECT content,referenceID, creator, createDate, type, isActive FROM trafficdb.report WHERE reportID = ?");
 			stm.setInt(1, reportID);
 			ResultSet rs = stm.executeQuery();
-			ReportDTO reportDTO = new ReportDTO();
-			reportDTO.setContent(rs.getString("content"));
-			reportDTO.setCreator(rs.getString("creator"));
-			reportDTO.setCreateDate(rs.getDate("createDate"));
-			reportDTO.setType(rs.getInt("type"));
-			return reportDTO;
+			if (rs.next()) {
+				ReportDTO reportDTO = new ReportDTO();
+				reportDTO.setReportID(reportID);
+				reportDTO.setContent(rs.getString("content"));
+				reportDTO.setReferenceID(rs.getString("referenceID"));
+				reportDTO.setCreator(rs.getString("creator"));
+				reportDTO.setCreateDate(rs.getDate("createDate"));
+				reportDTO.setType(rs.getInt("type"));
+				reportDTO.setIsActive(rs.getBoolean("isActive"));
+				return reportDTO;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {

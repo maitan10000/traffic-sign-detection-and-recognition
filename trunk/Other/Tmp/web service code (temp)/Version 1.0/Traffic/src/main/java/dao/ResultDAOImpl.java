@@ -21,12 +21,15 @@ public class ResultDAOImpl implements ResultDAO {
 					.prepareStatement("SELECT uploadedImage,listTraffic,creator,createDate,isActive FROM trafficdb.result WHERE resultID=? ORDER BY resultID DESC");
 			stm.setInt(1, id);
 			ResultSet rs = stm.executeQuery();
-			resultData.setUploadedImage(rs.getString("uploadedImage"));
-			resultData.setListTraffic(rs.getString("listTraffic"));
-			resultData.setCreator(rs.getString("creator"));
-			resultData.setCreateDate(rs.getDate("createDate"));
-			resultData.setIsActive(rs.getBoolean("isActive"));
-			return resultData;
+			if (rs.next()) {
+				resultData.setResultID(id);
+				resultData.setUploadedImage(rs.getString("uploadedImage"));
+				resultData.setListTraffic(rs.getString("listTraffic"));
+				resultData.setCreator(rs.getString("creator"));
+				resultData.setCreateDate(rs.getDate("createDate"));
+				resultData.setIsActive(rs.getBoolean("isActive"));
+				return resultData;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -150,7 +153,8 @@ public class ResultDAOImpl implements ResultDAO {
 
 	}
 
-	public ArrayList<ResultDTO> getResultByCreator(String creator, Boolean isActive) {
+	public ArrayList<ResultDTO> getResultByCreator(String creator,
+			Boolean isActive) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		ArrayList<ResultDTO> resultData = new ArrayList<ResultDTO>();

@@ -6,7 +6,7 @@ import dto.FavoriteDTO;
 import dto.FavoriteJSON;
 
 public interface FavoriteDAO {
-	public int add(FavoriteDTO favorite);
+	public boolean add(FavoriteDTO favorite);
 
 	public boolean delete(FavoriteDTO favorite);
 

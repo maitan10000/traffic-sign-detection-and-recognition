@@ -29,14 +29,13 @@ public class AccountDAOImpl implements AccountDAO {
 			ResultSet result = ps.executeQuery();
 			if (!result.next()) {
 				stm = connection
-						.prepareStatement("INSERT INTO account(userID, password, email, name,createDate,role ,isActive) VALUES (?,?,?,?,DATE(NOW()),?,?)");
+						.prepareStatement("INSERT INTO account(userID, password, email, name, createDate, role, isActive) VALUES (?,?,?,?,DATE(NOW()),?,?)");
 				stm.setString(1, userID);
 				stm.setString(2, password);
 				stm.setString(3, email);
 				stm.setString(4, name);
-				stm.setDate(5, createDate);
-				stm.setString(6, "user");
-				stm.setBoolean(7, false);
+				stm.setString(5, "user");
+				stm.setBoolean(6, false);
 				stm.executeUpdate();
 				return userID;
 			}
@@ -66,13 +65,17 @@ public class AccountDAOImpl implements AccountDAO {
 	public Boolean getAccount(String userID, String password) {
 		Connection connection = null;
 		PreparedStatement stm = null;
+		ResultSet rs = null;
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ? AND password = ?");
+					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ? AND password = ? AND isActive = true");
 			stm.setString(1, userID);
 			stm.setString(2, password);
-			return stm.execute();
+			rs = stm.executeQuery();
+			if (rs.next()) {
+				return true;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

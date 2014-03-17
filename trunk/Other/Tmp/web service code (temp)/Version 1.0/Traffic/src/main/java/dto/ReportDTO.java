@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class ReportDTO {
 	private int reportID;
+	private String referenceID;
 	private String content;
 	private String creator;
 	private int type;
@@ -60,6 +61,14 @@ public class ReportDTO {
 
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public String getReferenceID() {
+		return referenceID;
+	}
+
+	public void setReferenceID(String referenceID) {
+		this.referenceID = referenceID;
 	}
 
 }
