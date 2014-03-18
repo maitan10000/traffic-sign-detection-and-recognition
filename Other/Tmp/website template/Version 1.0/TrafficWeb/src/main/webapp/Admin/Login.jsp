@@ -67,16 +67,18 @@
 
 		<div class="span4 box">
 			<div class="content-wrap">
-				<form action="Controller" method="post">
+				<form action="/TrafficWeb/AdminController" method="POST">
 					<h6>Log in</h6>
-					<input class="span12" type="text" placeholder="UserID" name="txtUser"/>
-					<input class="span12" type="password" placeholder="Your password" name="txtPassword"/>
-					<a href="#" class="forgot">Forgot password?</a>
+					<input class="span12" type="text" placeholder="UserID"
+						name="txtUser" /> <input class="span12" type="password"
+						placeholder="Your password" name="txtPassword" /> <a href="#"
+						class="forgot">Forgot password?</a>
 					<div class="remember">
 						<input id="remember-me" type="checkbox" /> <label
 							for="remember-me">Remember me</label>
 					</div>
-					<input class="btn-glow primary login" type="submit" name="btnAction" value="login"/>
+					<input class="btn-glow primary login" type="submit" name="action"
+						value="login" />
 				</form>
 			</div>
 		</div>
