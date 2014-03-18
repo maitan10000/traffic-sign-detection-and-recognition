@@ -1,114 +1,142 @@
 <!DOCTYPE html>
-<html class="login-bg">
+<html lang="en">
+
+<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/signin.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:15 GMT -->
 <head>
-<title>Detail Admin - Sign in</title>
+<meta charset="utf-8">
+<title>Sign In - Admin 365</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<meta name="author" content="">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="Content/css/bootstrap.min.css" rel="stylesheet">
+<link href="Content/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="Content/css/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="Content/css/jasny-bootstrap-responsive.min.css"
+	rel="stylesheet">
+<link href="Content/css/font-awesome.css" rel="stylesheet">
 
-<!-- bootstrap -->
-<link href="Content/css/bootstrap/bootstrap.css" rel="stylesheet" />
-<link href="Content/css/bootstrap/bootstrap-responsive.css"
-	rel="stylesheet" />
-<link href="Content/css/bootstrap/bootstrap-overrides.css"
-	type="text/css" rel="stylesheet" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans'
+	rel='stylesheet' type='text/css'>
+<!-- <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'> -->
+<link href="Content/css/admin.css" rel="stylesheet">
 
-<!-- global styles -->
-<link rel="stylesheet" type="text/css" href="Content/css/layout.css" />
-<link rel="stylesheet" type="text/css" href="Content/css/elements.css" />
-<link rel="stylesheet" type="text/css" href="Content/css/icons.css" />
-
-<!-- libraries -->
-<link rel="stylesheet" type="text/css"
-	href="Content/css/lib/font-awesome.css" />
-
-<!-- this page specific styles -->
-<link rel="stylesheet" href="Content/css/compiled/signin.css"
-	type="text/css" media="screen" />
-
-<!-- open sans font -->
-<link
-	href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,800italic,400,300,600,700,800'
-	rel='stylesheet' type='text/css' />
-
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- Le fav and touch icons -->
+<link rel="shortcut icon" href="Content/img/ico/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="144x144"
+	href="Content/img/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114"
+	href="Content/img/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72"
+	href="Content/img/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed"
+	href="Content/img/ico/apple-touch-icon-57-precomposed.png">
 </head>
+
 <body>
 
-
-	<!-- background switcher -->
-	<div class="bg-switch visible-desktop">
-		<div class="bgs">
-			<a href="#" data-img="landscape.jpg" class="bg active"> <img
-				src="Content/img/bgs/landscape.jpg" />
-			</a> <a href="#" data-img="blueish.jpg" class="bg"> <img
-				src="Content/img/bgs/blueish.jpg" />
-			</a> <a href="#" data-img="7.jpg" class="bg"> <img
-				src="Content/img/bgs/7.jpg" />
-			</a> <a href="#" data-img="8.jpg" class="bg"> <img
-				src="Content/img/bgs/8.jpg" />
-			</a> <a href="#" data-img="9.jpg" class="bg"> <img
-				src="Content/img/bgs/9.jpg" />
-			</a> <a href="#" data-img="10.jpg" class="bg"> <img
-				src="Content/img/bgs/10.jpg" />
-			</a> <a href="#" data-img="11.jpg" class="bg"> <img
-				src="Content/img/bgs/11.jpg" />
-			</a>
+	<div id="top-strip">
+		<div class="container">
+			<div class="row">
+				<div class="offset8 span4">
+					<div class="pull-right">
+						<a href="register.html">Register</a> | <a href="index-2.html">Home</a>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-
-	<div class="row-fluid login-wrapper">
-		<a href="index.html"> <img class="logo"
-			src="Content/img/logo-white.png" />
-		</a>
-
-		<div class="span4 box">
-			<div class="content-wrap">
-				<form action="/TrafficWeb/AdminController" method="POST">
-					<h6>Log in</h6>
-					<input class="span12" type="text" placeholder="UserID"
-						name="txtUser" /> <input class="span12" type="password"
-						placeholder="Your password" name="txtPassword" /> <a href="#"
-						class="forgot">Forgot password?</a>
-					<div class="remember">
-						<input id="remember-me" type="checkbox" /> <label
-							for="remember-me">Remember me</label>
+	<div id="logo-strip">
+		<div class="container">
+			<div class="row">
+				<div class="span12">
+					<div class="logo">
+						<img src="img/admin365_logo.png" height="40" />
 					</div>
-					<input class="btn-glow primary login" type="submit" name="action"
-						value="login" />
-				</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="nav-strip">
+
+		<div class="container">
+			<div class="row">
+				<div class="span12"></div>
 			</div>
 		</div>
 
-		<div class="span4 no-account">
-			<p>Don't have an account?</p>
-			<a href="signup.html">Sign up</a>
+	</div>
+
+	<div class="container-signin">
+		<div class="panel">
+			<div class="panel-header">
+				<i class="icon-lock icon-large"></i> Sign In
+			</div>
+			<div class="panel-content">
+				<form action="AdminController" method="post">
+					<div class="control-group">
+						<div class="controls">
+							<div class="input-prepend">
+								<span class="add-on"><i class="icon-envelope icon-large"></i></span><input
+									class="span3" placeholder="UserID" id="txtUserID" size="16"
+									type="text">
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<div class="input-prepend">
+								<span class="add-on"><i class="icon-key icon-large"></i></span><input
+									class="span3" placeholder="Password" id="txtPassword"
+									size="16" type="text">
+							</div>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<button class="btn btn-large" name="action" value="login">Sign In</button>
+							<span class="signin-remember"><input type="checkbox" />
+								Remember Me</span>
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<span class="text-small">Not registered?</span>&nbsp;&nbsp;&nbsp;<a
+								href="register.html">Register</a>
+						</div>
+					</div>
+				</form>				
+			</div>
 		</div>
 	</div>
 
-	<!-- scripts -->
-	<script src="http://code.jquery.com/jquery-latest.js"></script>
-	<script src="Content/js/bootstrap.min.js"></script>
-	<script src="Content/js/theme.js"></script>
+	<div id="footer">
+		<div class="container">
+			<div class="row">
+				<div class="span12">
+					<div class="divider"></div>
+					<div class="pull-right">
+						<p>Admin 365</p>
+					</div>
+					<div class="pull-left">
+						<p>&copy; 2012 Admin 365 RELEASE</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-	<!-- pre load bg imgs -->
-	<script type="text/javascript">
-		$(function() {
-			// bg switcher
-			var $btns = $(".bg-switch .bg");
-			$btns.click(function(e) {
-				e.preventDefault();
-				$btns.removeClass("active");
-				$(this).addClass("active");
-				var bg = $(this).data("img");
+	<script src="Content/js/jquery-1.7.2.min.js"></script>
+	<script src="Content/js/bootstrap.js"></script>
 
-				$("html").css("background-image", "url('img/bgs/" + bg + "')");
-			});
-
-		});
-	</script>
 </body>
+
+<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/signin.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:15 GMT -->
 </html>

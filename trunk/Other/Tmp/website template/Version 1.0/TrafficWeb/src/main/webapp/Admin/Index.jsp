@@ -1,291 +1,677 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  
+<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/ by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:36:28 GMT -->
 <head>
-<title>Detail Admin - Home</title>
+    <meta charset="utf-8">
+    <title>Admin 365</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="Content/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Content/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="Content/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link href="Content/css/jasny-bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="Content/css/font-awesome.css" rel="stylesheet">
 
-<!-- bootstrap -->
-<link href="Content/css/bootstrap/bootstrap.css" rel="stylesheet" />
-<link href="Content/css/bootstrap/bootstrap-responsive.css"
-	rel="stylesheet" />
-<link href="Content/css/bootstrap/bootstrap-overrides.css"
-	type="text/css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'> -->
+    <link href="css/admin.css" rel="stylesheet">
 
-<!-- libraries -->
-<link href="Content/css/lib/jquery-ui-1.10.2.custom.css"
-	rel="stylesheet" type="text/css" />
-<link href="Content/css/lib/font-awesome.css" type="text/css"
-	rel="stylesheet" />
-
-<!-- global styles -->
-<link rel="stylesheet" type="text/css" href="Content/css/layout.css" />
-<link rel="stylesheet" type="text/css" href="Content/css/elements.css" />
-<link rel="stylesheet" type="text/css" href="Content/css/icons.css" />
-
-<!-- this page specific styles -->
-<link rel="stylesheet" href="Content/css/compiled/index.css"
-	type="text/css" media="screen" />
-
-<!-- open sans font -->
-<link
-	href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
-	rel='stylesheet' type='text/css' />
-
-<!-- lato font -->
-<link
-	href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic'
-	rel='stylesheet' type='text/css' />
-
-<!--[if lt IE 9]>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="img/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="Content/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="Content/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="Content/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="Content/img/ico/apple-touch-icon-57-precomposed.png">
+  </head>
+
 <body>
 
-	<!-- navbar -->
-	<div class="navbar navbar-inverse">
-		<div class="navbar-inner">
-			<button type="button" class="btn btn-navbar visible-phone"
-				id="menu-toggler">
-				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
+<div id="top-strip">
+    <div class="container">
+        <div class="row">
+            <div class="offset8 span4">
+                <div class="pull-right">
+                    <a href="#">User</a> |
+                    <a href="#">Sign Out</a> |
+                    <a href="#">Help</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-			<a class="brand" href="index.html"><img
-				src="Content/img/logo.png" /></a>
+<div id="logo-strip">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="logo">
+                    <img src="Content/img/admin365_logo.png" height="40" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-			<ul class="nav pull-right">
-				<li class="hidden-phone"><input class="search" type="text" />
-				</li>
-				<li class="dropdown"><a href="#"
-					class="dropdown-toggle hidden-phone" data-toggle="dropdown">
-						Your account <b class="caret"></b>
-				</a>
-					<ul class="dropdown-menu">
-						<li><a href="personal-info.html">Personal info</a></li>
-						<li><a href="#">Account settings</a></li>
-						<li><a href="#">Billing</a></li>
-						<li><a href="#">Export your data</a></li>
-						<li><a href="#">Send feedback</a></li>
-					</ul></li>
-				<li class="settings hidden-phone"><a href="personal-info.html"
-					role="button"> <i class="icon-cog"></i>
-				</a></li>
-				<li class="settings hidden-phone"><a href="signin.html"
-					role="button"> <i class="icon-share-alt"></i>
-				</a></li>
-			</ul>
-		</div>
-	</div>
-	<!-- end navbar -->
+<div id="nav-strip">
 
-	<!-- sidebar -->
-	<div id="sidebar-nav">
-		<ul id="dashboard-menu">
-			<li class="active">
-				<div class="pointer">
-					<div class="arrow"></div>
-					<div class="arrow_border"></div>
-				</div> <a href="index.html"> <i class="icon-home"></i> <span>Home</span>
-			</a>
-			</li>
-			<li><a href="gallery.html"> <i class="icon-picture"></i> <span>Train
-						Image</span>
-			</a></li>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
 
-			<li><a class="dropdown-toggle" href="#"> <i
-					class="icon-group"></i> <span>Users</span> <i
-					class="icon-chevron-down"></i>
-			</a>
-				<ul class="submenu">
-					<li><a href="user-list.html">User list</a></li>
-					<li><a href="new-user.html">New user form</a></li>
-					<li><a href="user-profile.html">User profile</a></li>
-				</ul></li>
-			<li><a class="dropdown-toggle" href="#"> <i
-					class="icon-edit"></i> <span>Report</span> <i
-					class="icon-chevron-down"></i>
-			</a>
-				<ul class="submenu">
-					<li><a href="Report.jsp">Report list</a></li>
-				</ul></li>
-			<li><a href="chart-showcase.html"> <i class="icon-signal"></i>
-					<span>Charts</span>
-			</a></li>
+              <div class="navbar">
+                <div class="navbar-inner">
+                  <div class="container">
+                    <div class="nav-collapse">
+                      <ul class="nav">
+                        <li class="active"><a href="index-2.html">Dashboard</a></li>
+                        <li><a href="lists.html">Lists</a></li>
+                        <li><a href="tables.html">Tables</a></li>
+                        <li><a href="reports.html">Reports</a></li>
+                        <li><a href="forms.html">Forms</a></li>
+                        <li><a href="calendar.html">Calendar</a></li>
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="signin.html">Sign In</a></li>
+                            <li><a href="register.html">Registration</a></li>
+                            <li><a href="error.html">Error</a></li>
+                            <li class="divider"></li>
+                            <li class="nav-header">Other</li>
+                            <li><a href="grid.html">Grid</a></li>
+                            <li><a href="interface.html">Interface</a></li>
+                            <li><a href="sidebar.html">Sidebar</a></li>
+                            <li><a href="faq.html">FAQ</a></li>
+                            <li><a href="kb.html">Knowledge Base</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                      <ul class="nav pull-right">
+                        <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Settings <b class="caret"></b></a>
+                          <ul class="dropdown-menu">
+                            <li><a href="#">My Profile</a></li>
+                            <li><a href="#">Preferences</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-			<li><a href="tables.html"> <i class="icon-th-large"></i> <span>Tables</span>
-					<li><a href="personal-info.html"> <i class="icon-cog"></i>
-							<span>My Info</span>
-					</a></li>
-		</ul>
-	</div>
-	<!-- end sidebar -->
+            </div>
+        </div>
+    </div>
 
+</div>
 
-	<!-- main container -->
-	<div class="content">
+<div id="subnav-strip">
 
-		<!-- settings changer -->
-		<div class="skins-nav">
-			<a href="#" class="skin first_nav selected"> <span class="icon"></span><span
-				class="text">Default skin</span>
-			</a> <a href="#" class="skin second_nav"
-				data-file="Content/css/skins/dark.css"> <span class="icon"></span><span
-				class="text">Dark skin</span>
-			</a>
-		</div>
+    <div class="container">
+        <div class="row">
+            <div class="span12">
 
+            </div>
+        </div>
+    </div>
 
-		<!-- scripts -->
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="Content/js/bootstrap.min.js"></script>
-		<script src="Content/js/jquery-ui-1.10.2.custom.min.js"></script>
-		<!-- knob -->
-		<script src="Content/js/jquery.knob.js"></script>
-		<!-- flot charts -->
-		<script src="Content/js/jquery.flot.js"></script>
-		<script src="Content/js/jquery.flot.stack.js"></script>
-		<script src="Content/js/jquery.flot.resize.js"></script>
-		<script src="Content/js/theme.js"></script>
+</div>
 
-		<script type="text/javascript">
-			$(function() {
+<div id="content">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-bar-chart"></i> YTD Revenue 2012 <small>(1000's)</small></div>
+                    <div class="panel-content">
+                        <span class="stat-bullet"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
 
-				// jQuery Knobs
-				$(".knob").knob();
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-bar-chart"></i> Monthly Visitors</div>
+                    <div class="panel-content">
+                        <div style="text-align:center">
+                            <span class="stat-number down">928,236 <i class="icon-caret-down icon-large stat-caret-down"></i></span><br>
+                            <span class="stat-monthly-1"></span>
+                        </div>
+                    </div>
+                </div>
 
-				// jQuery UI Sliders
-				$(".slider-sample1").slider({
-					value : 100,
-					min : 1,
-					max : 500
-				});
-				$(".slider-sample2").slider({
-					range : "min",
-					value : 130,
-					min : 1,
-					max : 500
-				});
-				$(".slider-sample3").slider({
-					range : true,
-					min : 0,
-					max : 500,
-					values : [ 40, 170 ],
-				});
+            </div>
+            <div class="span4">
 
-				// jQuery Flot Chart
-				var visits = [ [ 1, 50 ], [ 2, 40 ], [ 3, 45 ], [ 4, 23 ],
-						[ 5, 55 ], [ 6, 65 ], [ 7, 61 ], [ 8, 70 ], [ 9, 65 ],
-						[ 10, 75 ], [ 11, 57 ], [ 12, 59 ] ];
-				var visitors = [ [ 1, 25 ], [ 2, 50 ], [ 3, 23 ], [ 4, 48 ],
-						[ 5, 38 ], [ 6, 40 ], [ 7, 47 ], [ 8, 55 ], [ 9, 43 ],
-						[ 10, 50 ], [ 11, 47 ], [ 12, 39 ] ];
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-bar-chart"></i> Monthly Subscriptions</div>
+                    <div class="panel-content">
+                        <div style="text-align:center">
+                            <span class="stat-number up">3,500 <i class="icon-caret-up icon-large stat-caret-up"></i></span><br>
+                            <span class="stat-monthly-2"></span>
+                        </div>
+                    </div>
+                </div>
 
-				var plot = $.plot($("#statsChart"), [ {
-					data : visits,
-					label : "Signups"
-				}, {
-					data : visitors,
-					label : "Visits"
-				} ], {
-					series : {
-						lines : {
-							show : true,
-							lineWidth : 1,
-							fill : true,
-							fillColor : {
-								colors : [ {
-									opacity : 0.1
-								}, {
-									opacity : 0.13
-								} ]
-							}
-						},
-						points : {
-							show : true,
-							lineWidth : 2,
-							radius : 3
-						},
-						shadowSize : 0,
-						stack : true
-					},
-					grid : {
-						hoverable : true,
-						clickable : true,
-						tickColor : "#f9f9f9",
-						borderWidth : 0
-					},
-					legend : {
-						// show: false
-						labelBoxBorderColor : "#fff"
-					},
-					colors : [ "#a7b5c5", "#30a0eb" ],
-					xaxis : {
-						ticks : [ [ 1, "JAN" ], [ 2, "FEB" ], [ 3, "MAR" ],
-								[ 4, "APR" ], [ 5, "MAY" ], [ 6, "JUN" ],
-								[ 7, "JUL" ], [ 8, "AUG" ], [ 9, "SEP" ],
-								[ 10, "OCT" ], [ 11, "NOV" ], [ 12, "DEC" ] ],
-						font : {
-							size : 12,
-							family : "Open Sans, Arial",
-							variant : "small-caps",
-							color : "#697695"
-						}
-					},
-					yaxis : {
-						ticks : 3,
-						tickDecimals : 0,
-						font : {
-							size : 12,
-							color : "#9da3a9"
-						}
-					}
-				});
+            </div>
+            <div class="span4">
 
-				function showTooltip(x, y, contents) {
-					$('<div id="tooltip">' + contents + '</div>').css({
-						position : 'absolute',
-						display : 'none',
-						top : y - 30,
-						left : x - 50,
-						color : "#fff",
-						padding : '2px 5px',
-						'border-radius' : '6px',
-						'background-color' : '#000',
-						opacity : 0.80
-					}).appendTo("body").fadeIn(200);
-				}
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-bar-chart"></i> Monthly Revenue</div>
+                    <div class="panel-content">
+                       <div style="text-align:center">
+                            <span class="stat-number up">$67,000 <i class="icon-caret-up icon-large stat-caret-up"></i></span><br>
+                            <span class="stat-monthly-3"></span>
+                        </div>
+                    </div>
+                </div>
 
-				var previousPoint = null;
-				$("#statsChart")
-						.bind(
-								"plothover",
-								function(event, pos, item) {
-									if (item) {
-										if (previousPoint != item.dataIndex) {
-											previousPoint = item.dataIndex;
+            </div>
+        </div>
+        <div class="row">
+            <div class="span6">
+                <div class="panel">
+                    <div class="panel-header">Recent News</div>
+                    <div class="panel-content">
+                        <p><a href="#"><strong>Title</strong></a><p>
+                        <p>An intro paragraph about the news story. <a href="#">more..</a></p>
+                        <div>
+                            <em>08 Nov</em>
+                            <div class="pull-right"><span class="label">news</span> <span class="label">story</span> <span class="label">blog</span> <span class="label">update</span></div>
+                        </div>
+                        <hr>
+                        <p><a href="#"><strong>Title</strong></a><p>
+                        <p>An intro paragraph about the news story. <a href="#">more..</a></p>
+                        <div>
+                            <em>08 Nov</em>
+                            <div class="pull-right"><span class="label">news</span> <span class="label">story</span> <span class="label">blog</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="span6">
+                <div class="panel">
+                    <div class="panel-header">Projects</div>
+                    <div class="panel-content">
+                        <h5>iPhone App <small>60%</small></h5>
+                        <div class="progress progress-striped">
+                            <div class="bar" style="width: 60%;"></div>
+                        </div>
+                        <h5>Facebook Login <small>80%</small></h5>
+                        <div class="progress progress-striped progress-success">
+                            <div class="bar" style="width: 80%;"></div>
+                        </div>
+                        <h5>Stripe Payments <small>20%</small></h5>
+                        <div class="progress progress-striped progress-warning">
+                            <div class="bar" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="span4">
 
-											$("#tooltip").remove();
-											var x = item.datapoint[0]
-													.toFixed(0), y = item.datapoint[1]
-													.toFixed(0);
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-external-link"></i> Browsers</div>
+                    <div class="panel-content panel-tables">
 
-											var month = item.series.xaxis.ticks[item.dataIndex].label;
+                            <table class="table table-bordered table-striped">     
+                            <thead>
+                            <tr>                             
+                                <th>Browser</th>
+                                <th>Visits</th>                             
+                            </tr>
+                            </thead>                       
+                            <tbody>
+                            <tr>
+                                <td class="description">Google Chrome</td>
+                                <td class="value"><span>1,714</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">Internet Explorer</td>
+                                <td class="value"><span>1,278</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">Firefox</td>
+                                <td class="value"><span>976</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">Safari</td>
+                                <td class="value"><span>589</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">Opera</td>
+                                <td class="value"><span>277</span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="description">RockMelt</td>
+                                <td class="value"><span>123</span></td>
+                            </tr>
+                            </tbody>
+                            </table>
 
-											showTooltip(item.pageX, item.pageY,
-													item.series.label + " of "
-															+ month + ": " + y);
-										}
-									} else {
-										$("#tooltip").remove();
-										previousPoint = null;
-									}
-								});
-			});
-		</script>
+                    </div>
+                </div>
+
+            </div>
+            <div class="span4">
+
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-sign-blank"></i> Pageviews</div>
+                    <div class="panel-content panel-tables">
+
+                            <table class="table table-bordered table-striped">     
+                            <thead>
+                            <tr>                             
+                                <th>Date</th>
+                                <th>Total</th>                             
+                            </tr>
+                            </thead>                       
+                            <tbody>
+                            <tr>
+                                <td class="description">August 12, 2012</td>
+                                <td class="value"><span>7,263</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">August 11, 2012</td>
+                                <td class="value"><span>7,812</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">August 10, 2012</td>
+                                <td class="value"><span>8,678</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">August 9, 2012</td>
+                                <td class="value"><span>6,567</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">August 8, 2012</td>
+                                <td class="value"><span>5,789</span></td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="description">August 7, 2012</td>
+                                <td class="value"><span>9,118</span></td>
+                            </tr>
+                            </tbody>
+                            </table>
+
+                    </div>
+                </div>
+                
+            </div>
+            <div class="span4">
+
+                <div class="panel">
+                    <div class="panel-header"><i class="icon-bar-chart"></i> Countries</div>
+                    <div class="panel-content panel-tables">
+
+                            <table class="table table-bordered table-striped">     
+                            <thead>
+                            <tr>                             
+                                <th>Country</th>
+                                <th>Members</th>                             
+                            </tr>
+                            </thead>                       
+                            <tbody>
+                            <tr>
+                                <td class="description">Australia</td>
+                                <td class="value"><span>1,458</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">United States</td>
+                                <td class="value"><span>1,236</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">New Zealand</td>
+                                <td class="value"><span>761</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">South Africa</td>
+                                <td class="value"><span>543</span></td>
+                            </tr>
+                            <tr>
+                                <td class="description">Singapore</td>
+                                <td class="value"><span>432</span></td>
+                            </tr>                           
+                            <tr>
+                                <td class="description">Canada</td>
+                                <td class="value"><span>219</span></td>
+                            </tr>
+                            </tbody>
+                            </table>
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="span12">
+
+                <div class="panel">
+                    <div class="panel-header">My Tasks</div>
+                    <div class="panel-content">
+                        
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1" data-toggle="tab">In Progress</a></li>
+                            <li><a href="#tab2" data-toggle="tab">Open <span class="badge">3</span></a></li>
+                            <li><a href="#tab3" data-toggle="tab">Closed</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab1">
+
+                                <table class="table table-striped" style="margin-bottom: 130px;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Key</th>
+                                        <th>Summary</th>
+                                        <th>Owner</th>
+                                        <th>Created</th>
+                                        <th>Due</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>AD-001</td>
+                                        <td>Create more themes for...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 1, 2012</td>
+                                        <td>Dec 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>AD-002</td>
+                                        <td>Integrate Adobe Kuler...</td>
+                                        <td>Jane Doe</td>
+                                        <td>Jul 10, 2012</td>
+                                        <td>Nov 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>AD-003</td>
+                                        <td>Integrate jQuery Mobile...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 20, 2012</td>
+                                        <td>Dec 10, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+
+                            </div>
+                            <div class="tab-pane" id="tab2">
+
+                                <table class="table table-striped" style="margin-bottom: 130px;">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Key</th>
+                                        <th>Summary</th>
+                                        <th>Owner</th>
+                                        <th>Created</th>
+                                        <th>Due</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>AD-001</td>
+                                        <td>Create more themes for...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 1, 2012</td>
+                                        <td>Dec 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>AD-002</td>
+                                        <td>Integrate Adobe Kuler...</td>
+                                        <td>Jane Doe</td>
+                                        <td>Jul 10, 2012</td>
+                                        <td>Nov 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>AD-003</td>
+                                        <td>Integrate jQuery Mobile...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 20, 2012</td>
+                                        <td>Dec 10, 2012</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">Close</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+
+                            </div>
+                            <div class="tab-pane" id="tab3">
+
+                                <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Key</th>
+                                        <th>Summary</th>
+                                        <th>Owner</th>
+                                        <th>Created</th>
+                                        <th>Due</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>AD-001</td>
+                                        <td>Create more themes for...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 1, 2012</td>
+                                        <td>Dec 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group dropup">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">ReOpen</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>AD-002</td>
+                                        <td>Integrate Adobe Kuler...</td>
+                                        <td>Jane Doe</td>
+                                        <td>Jul 10, 2012</td>
+                                        <td>Nov 1, 2012</td>
+                                        <td>
+                                            <div class="btn-group dropup">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">ReOpen</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>AD-003</td>
+                                        <td>Integrate jQuery Mobile...</td>
+                                        <td>John Doe</td>
+                                        <td>Jul 20, 2012</td>
+                                        <td>Dec 10, 2012</td>
+                                        <td>
+                                            <div class="btn-group dropup">
+                                                <button class="btn">Options</button>
+                                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a href="#">View</a></li>
+                                                    <li><a href="#">Edit</a></li>
+                                                    <li><a href="#">ReOpen</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="#">Other Action</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                </table>
+
+                            </div>
+                        </div>                        
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="span12">
+                <div class="divider"></div>
+                <div class="pull-right">
+                    <p>Admin 365</p>
+                </div>
+                <div class="pull-left">
+                    <p>&copy; 2012 Admin 365 RELEASE</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="Content/js/jquery-1.7.2.min.js"></script>
+<script src="Content/js/bootstrap.min.js"></script>
+<script src="Content/js/jquery.flot.js"></script>
+<script src="Content/js/jquery.flot.pie.js"></script>
+<script src="Content/js/jquery.flot.resize.js"></script>
+<script src="Content/js/jquery.sparkline.min.js"></script>
+
+<script src="Content/js/sparkline.admin365.js"></script>
+
 </body>
+
+<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/ by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:36:47 GMT -->
 </html>
