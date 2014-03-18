@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
-  <display-name>Archetype Created Web Application</display-name>
-  <servlet>
-    <description></description>
-    <display-name>Controller</display-name>
-    <servlet-name>Controller</servlet-name>
-    <servlet-class>servlet.Controller</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Controller</servlet-name>
-    <url-pattern>/Controller</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>UserController</display-name>
-    <servlet-name>UserController</servlet-name>
-    <servlet-class>servlet.UserController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>UserController</servlet-name>
-    <url-pattern>/UserController</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>AdminController</display-name>
-    <servlet-name>AdminController</servlet-name>
-    <servlet-class>servlet.AdminController</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>AdminController</servlet-name>
-    <url-pattern>/AdminController</url-pattern>
-  </servlet-mapping>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>Archetype Created Web Application</display-name>
+
+	<servlet>
+		<description></description>
+		<display-name>UserController</display-name>
+		<servlet-name>UserController</servlet-name>
+		<servlet-class>servlet.UserController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UserController</servlet-name>
+		<url-pattern>/UserController</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<description></description>
+		<display-name>AdminController</display-name>
+		<servlet-name>AdminController</servlet-name>
+		<servlet-class>servlet.AdminController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AdminController</servlet-name>
+		<url-pattern>/AdminController</url-pattern>
+	</servlet-mapping>
 </web-app>
