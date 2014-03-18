@@ -10,7 +10,10 @@
 <script type="text/javascript" src="User/Content/bootstrap/js/bootstrap.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
-<body>
+<
+
+<%String jsonObject = (String) request.getAttribute("category");  %>
+<body on>
 	<div class="wrapper">
 		<div class="page">
 			<div class="header-container">
@@ -71,7 +74,7 @@
 						<div class="searchName" style="margin-right: 30px;">
 							Tên biển báo: <input type="text" />
 						</div>
-						<div class="content-Selectbox font-StyleTitle needMargin">
+						<div class="content-Selectbox font-StyleTitle needMargin" onclick="loadCat()">
 							Loại Biển Báo: <select class="sortBy font-Style">
 								<option class="font-Style">Tất Cả</option>
 								<option class="font-Style">Biển báo nguy hiểm</option>
@@ -242,4 +245,11 @@
 	</div>
 	
 </body>
+<script type="text/javascript">
+function loadCat(){
+	var jsonString = '<%=jsonObject%>';
+	var jsonArray = JSON.parse(jsonString);
+	alert(jsonArray.length);
+}
+</script>
 </html>
