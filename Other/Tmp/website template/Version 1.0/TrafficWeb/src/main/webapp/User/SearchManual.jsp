@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="Content/Css/Main.css" rel="stylesheet" type="text/css" />
 <link href="Content/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" />
@@ -20,7 +20,7 @@
         <div class="card-top"> </div>
       </div>
       <div class="logo-Container">
-        <h1 class="logo"> <a href="#" > <img src="Image/logo.png" /> </a> </h1>
+        <h1 class="logo"> <a href="#" > <img src="Content/Image/logo.png" /> </a> </h1>
         <!--   _____________ -->
         <ul class="links">
           <li><a href="customer/account/login/index.html" title="Log In" >Đăng Nhập</a></li>
@@ -86,37 +86,37 @@
             </thead>
           <tbody>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/Cam di nguoc chieu.png"  alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/Cam di nguoc chieu.png"  alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td>Cấm đi ngược chiều</td>
               <td>Biển báo cấm</td>
             </tr>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/cam re.jpg" alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/cam re.jpg" alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td>Cấm Rẽ</td>
               <td>Biển báo cấm</td>
             </tr>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/bien nguy hiem tre em.jpg"  alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/bien nguy hiem tre em.jpg"  alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td>Nguy Hiểm Có người Băng Ngang</td>
               <td>Biển Nguy Hiểm</td>
             </tr>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/Cam di nguoc chieu.png" alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/Cam di nguoc chieu.png" alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td>Cấm đi ngược chiều</td>
               <td>Biển báo cấm</td>
             </tr>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/cam re.jpg"  alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/cam re.jpg"  alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td>Cấm Rẽ</td>
               <td>Biển báo cấm</td>
             </tr>
             <tr>
-              <td><img class="trafficImage" src="Image/Traffic/bien nguy hiem tre em.jpg"  alt="Responsive image"/></td>
+              <td><img class="trafficImage" src="Content/Image/Traffic/bien nguy hiem tre em.jpg"  alt="Responsive image"/></td>
               <td>ABC 123</td>
               <td><a href="#" data-toggle="modal" data-target="#myModal">Nguy Hiểm Có người Băng Ngang</a></td>
               <td>Biển Nguy Hiểm</td>
@@ -135,7 +135,7 @@
             </div>
             <div class="modal-body">
               <div class="trafficDetail">
-                <div class="contentImgDetails"><img class="imageDetails" src="Image/Traffic/bien nguy hiem tre em.jpg" alt="Responsive image"/> </div>
+                <div class="contentImgDetails"><img class="imageDetails" src="Content/Image/Traffic/bien nguy hiem tre em.jpg" alt="Responsive image"/> </div>
                 <br/>
                 <strong>Số hiệu biển báo:</strong>
                  <font> NH001</font>
@@ -164,7 +164,7 @@
     <div class="footer-container">
       <div class="footer">
         <div class="footer-brands">
-          <div class="brands"> <a href="#"><img src="Image/brands/brand1.gif" alt=""></a> <a href="#"><img src="Image/brands/brand2.gif" alt=""></a> <a href="#"><img src="Image/brands/brand3.gif" alt=""></a> <a href="#"><img src="Image/brands/brand4.gif" alt=""></a> <a href="#"><img src="Image/brands/brand5.gif" alt=""></a> <a href="#"><img src="Image/brands/brand6.gif" alt=""></a> <a href="#"><img src="Image/brands/brand7.gif" alt=""></a> <a href="#"><img src="Image/brands/brand8.gif" alt=""></a> <a href="#"><img src="Image/brands/brand9.gif" alt=""></a> </div>
+          <div class="brands"> <a href="#"><img src="Content/Image/brands/brand1.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand2.gif" alt=""></a> <a href="#"><img src="Image/brands/brand3.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand4.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand5.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand6.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand7.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand8.gif" alt=""></a> <a href="#"><img src="Content/Image/brands/brand9.gif" alt=""></a> </div>
         </div>
         <div class="footer-left">
           <p> <b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b> </p>
