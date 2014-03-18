@@ -4,15 +4,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
-<link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="User/Content/bootstrap/js/bootstrap.js"></script>
+<link href="Content/Css/Main.css" rel="stylesheet" type="text/css" />
+<link href="Content/bootstrap/css/bootstrap.css" rel="stylesheet"
+	type="text/css" />
+<script type="text/javascript" src="Content/Scripts/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="Content/bootstrap/js/bootstrap.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
 <
 
-<%String jsonObject = (String) request.getAttribute("category");  %>
+<%
+	String jsonObject = (String) request.getAttribute("category");
+%>
 <body on>
 	<div class="wrapper">
 		<div class="page">
@@ -74,7 +77,8 @@
 						<div class="searchName" style="margin-right: 30px;">
 							Tên biển báo: <input type="text" />
 						</div>
-						<div class="content-Selectbox font-StyleTitle needMargin" onclick="loadCat()">
+						<div class="content-Selectbox font-StyleTitle needMargin"
+							onclick="loadCat()">
 							Loại Biển Báo: <select class="sortBy font-Style">
 								<option class="font-Style">Tất Cả</option>
 								<option class="font-Style">Biển báo nguy hiểm</option>
@@ -203,53 +207,55 @@
 				</div>
 			</div>
 		</div>
-<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" style="display:none;"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
-					<h4 class="modal-title" id="myModalLabel">Thông Tin Biển Báo</h4>
-				</div>
-				<div class="modal-body">
-					<div class="trafficDetail">
-						<div class="contentImgDetails">
-							<img class="imageDetails"
-								src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
-								alt="Responsive image" />
-						</div>
-						<br /> <strong>Số hiệu biển báo:</strong> <font> NH001</font> <br />
-						<br /> <strong>Tên Biển Báo:</strong> <font> Biển báo nguy
-							hiểm có người băng ngang</font> <br /> <br /> <strong>Nội
-							dung:</strong> <font> Biển này được sử dụng độc lập ở những vị trí
-							sang ngang, đường không có tổ chức điều khiển giao thông hoặc có
-							thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này người lái xe
-							phải điều khiển xe chạy chậm, chú ý quan sát, ưu tiên cho người
-							đi bộ sang ngang. </font> <br /> <br /> <strong>Mức phạt:</strong> <font>
-							Biển này được sử dụng độc lập ở những vị trí sang ngang, đường
-							không có tổ chức điều khiển giao thông hoặc có thể sử dụng phối
-							hợp với vạch kẻ đường. Gặp biển này người lái xe phải điều khiển
-							xe chạy chậm, chú ý quan sát, ưu tiên cho người đi bộ sang ngang.
-						</font>
+		<!-- Modal -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			style="display: none;" aria-labelledby="myModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Thông Tin Biển Báo</h4>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Lưu biển báo</button>
+					<div class="modal-body">
+						<div class="trafficDetail">
+							<div class="contentImgDetails">
+								<img class="imageDetails"
+									src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
+									alt="Responsive image" />
+							</div>
+							<br /> <strong>Số hiệu biển báo:</strong> <font> NH001</font> <br />
+							<br /> <strong>Tên Biển Báo:</strong> <font> Biển báo
+								nguy hiểm có người băng ngang</font> <br /> <br /> <strong>Nội
+								dung:</strong> <font> Biển này được sử dụng độc lập ở những vị trí
+								sang ngang, đường không có tổ chức điều khiển giao thông hoặc có
+								thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này người lái
+								xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu tiên cho
+								người đi bộ sang ngang. </font> <br /> <br /> <strong>Mức
+								phạt:</strong> <font> Biển này được sử dụng độc lập ở những vị trí
+								sang ngang, đường không có tổ chức điều khiển giao thông hoặc có
+								thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này người lái
+								xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu tiên cho
+								người đi bộ sang ngang. </font>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Lưu biển
+							báo</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	</div>
-	
+
 </body>
 <script type="text/javascript">
 function loadCat(){
 	var jsonString = '<%=jsonObject%>';
-	var jsonArray = JSON.parse(jsonString);
-	alert(jsonArray.length);
-}
+		var jsonArray = JSON.parse(jsonString);
+		alert(jsonArray.length);
+	}
 </script>
 </html>
