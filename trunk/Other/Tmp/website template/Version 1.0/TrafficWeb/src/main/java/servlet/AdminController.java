@@ -51,14 +51,14 @@ public class AdminController extends HttpServlet {
 			if (("login").equals(action)) {
 				String userid = request.getParameter("txtUser");
 				String password = request.getParameter("txtPassword");
-				String url = "http://bienbaogiaothong.tk/rest/Service/Login";
+				String url = "http://localhost:8090/Traffic/rest/Service/Login";
 				Client client = Client.create();
 				client.setFollowRedirects(true);
 				WebResource resource = client.resource(url);
 				MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-				params.add("userid", userid);
+				params.add("userID", userid);
 				params.add("password", password);
-				String res = resource.path("Login").queryParams(params)
+				String res = resource.path("login").queryParams(params)
 						.get(String.class);
 				boolean result = Boolean.parseBoolean(res);
 				String path = "Admin/Login.jsp";
@@ -66,13 +66,14 @@ public class AdminController extends HttpServlet {
 					HttpSession session = request.getSession();
 					session.setAttribute("USER", userid);
 					path = "Admin/Index.jsp";
-					}
+				}
 				response.sendRedirect(path);
 			}
 
 		} finally {
 			out.close();
 		}
+
 	}
 
 	/**
@@ -91,6 +92,7 @@ public class AdminController extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+
 	}
 
 }
