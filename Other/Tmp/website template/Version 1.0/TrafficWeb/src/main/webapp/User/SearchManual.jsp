@@ -1,3 +1,5 @@
+<%@page import="model.TrafficSign"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -7,14 +9,17 @@
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
 <link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" />
-<script type="text/javascript" src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="User/Content/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript"
+	src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
+<script type="text/javascript"
+	src="User/Content/bootstrap/js/bootstrap.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
 
 
 <%
 	String jsonObject = (String) request.getAttribute("category");
+ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribute("listTraffic");
 %>
 <body on>
 	<div class="wrapper">
@@ -73,28 +78,33 @@
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
 					<div class="content-title">TRA CỨU BIỂN BÁO</div>
-					<div class="options">
-						<div class="searchName" style="margin-right: 30px;">
-							Tên biển báo: <input type="text" />
+					<form action="UserController">
+						<div class="options">
+							<div class="searchName" style="margin-right: 30px;">
+								Tên biển báo: <input name="searchKey" type="text" />
+							</div>
+							<div class="content-Selectbox font-StyleTitle needMargin">
+								Loại Biển Báo: <select class="sortBy font-Style" id="catID"
+									onclick="loadCat()">
+									<option class="font-Style">Tất Cả</option>
+								</select>
+							</div>
+							<div class="content-Selectbox font-StyleTitle needMargin">
+								Sắp xếp theo: <select class="sortBy font-Style">
+									<option class="font-Style">Tên biển báo</option>
+									<option class="font-Style">Số hiệu</option>
+								</select>
+							</div>
+							<div class="searchName" style="padding-bottom: 5px">
+								<button type="submit" class="btn btn-default btn-sm"
+									value="searchTraffic" name="action">Tìm kiếm</button>
+							</div>
+							<div style="clear: both"></div>
 						</div>
-						<div class="content-Selectbox font-StyleTitle needMargin"
-							>
-							Loại Biển Báo: <select class="sortBy font-Style" id="catType" onclick="loadCat()" >
-								<option class="font-Style">Tất Cả</option>
-							</select>
-						</div>
-						<div class="content-Selectbox font-StyleTitle needMargin">
-							Sắp xếp theo: <select class="sortBy font-Style">
-								<option class="font-Style">Tên biển báo</option>
-								<option class="font-Style">Số hiệu</option>
-							</select>
-						</div>
-						<div class="searchName" style="padding-bottom: 5px">
-							<button type="button" class="btn btn-default btn-sm">Tìm
-								kiếm</button>
-						</div>
-						<div style="clear: both"></div>
-					</div>
+					</form>
+					<%
+						if( listTraffic != null){
+					%>
 					<div class="contentTable " style="margin-top: 20px">
 						<table class="table table-striped .table-condensed">
 							<thead>
@@ -104,56 +114,50 @@
 								<th>Danh Mục</th>
 							</thead>
 							<tbody>
+								<%
+									if( listTraffic.size()> 0){
+															for(int i = 0; i< listTraffic.size();i++){
+								%>
+
 								<tr>
 									<td><img class="trafficImage"
-										src="Content/Image/Traffic/Cam di nguoc chieu.png"
+										src="http://bienbaogiaothong.tk/rest/Image/Main/<%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td>Cấm đi ngược chiều</td>
+									<td><%=listTraffic.get(i).getTrafficID()%></td>
+									<td><a href="#myModal" data-toggle="modal"><%=listTraffic.get(i).getName()%></a></td>
+									<%
+										if("1".equals(listTraffic.get(i).getCategoryID())) {
+									%>
+									<td>Biển báo nguy hiểm</td>
+									<%
+										}
+									%>
+									<%
+										if("2".equals(listTraffic.get(i).getCategoryID())) {
+									%>
+									<td>Biển báo hướng dẫn</td>
+									<%
+										}
+									%>
+									<%
+										if("3".equals(listTraffic.get(i).getCategoryID())) {
+									%>
 									<td>Biển báo cấm</td>
+									<%
+										}
+									%>
+
 								</tr>
-								<tr>
-									<td><img class="trafficImage"
-										src="Content/Image/Traffic/cam re.jpg" alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td>Cấm Rẽ</td>
-									<td>Biển báo cấm</td>
-								</tr>
-								<tr>
-									<td><img class="trafficImage"
-										src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
-										alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td>Nguy Hiểm Có người Băng Ngang</td>
-									<td>Biển Nguy Hiểm</td>
-								</tr>
-								<tr>
-									<td><img class="trafficImage"
-										src="Content/Image/Traffic/Cam di nguoc chieu.png"
-										alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td>Cấm đi ngược chiều</td>
-									<td>Biển báo cấm</td>
-								</tr>
-								<tr>
-									<td><img class="trafficImage"
-										src="Content/Image/Traffic/cam re.jpg" alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td>Cấm Rẽ</td>
-									<td>Biển báo cấm</td>
-								</tr>
-								<tr>
-									<td><img class="trafficImage"
-										src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
-										alt="Responsive image" /></td>
-									<td>ABC 123</td>
-									<td><a href="#" data-toggle="modal" data-target="#myModal">Nguy
-											Hiểm Có người Băng Ngang</a></td>
-									<td>Biển Nguy Hiểm</td>
-								</tr>
+								<%
+									} 
+																					}
+								%>
 							</tbody>
 						</table>
 					</div>
+					<%
+						}
+					%>
 					<div style="clear: both"></div>
 				</div>
 				<div class="footer-container">
@@ -250,19 +254,23 @@
 </body>
 <script type="text/javascript">
 function loadCat(){
-	var jsonString = '<%=jsonObject%>';
-	var jsonArray = JSON.parse(jsonString);
-	var selectBox = document.getElementById('catType');
-	if(selectBox.childNodes.length == 3){
-		for(var i= 0; i< jsonArray.length; i++ ){
-			var option = document.createElement('option');
-			option.setAttribute("class", "font-Style");
-			option.setAttribute("value", jsonArray[i].categoryID);
-			option.innerHTML  = jsonArray[i].categoryName;
-			selectBox.appendChild(option);
+	var jsonString = <%=jsonObject%>;
+		var jsonArray = JSON.parse(jsonString);
+		var selectBox = document.getElementById('catID');
+		if (selectBox.childNodes.length == 3) {
+			for (var i = 0; i < jsonArray.length; i++) {
+				var option = document.createElement('option');
+				option.setAttribute("class", "font-Style");
+				option.setAttribute("value", jsonArray[i].categoryID);
+				option.innerHTML = jsonArray[i].categoryName;
+				selectBox.appendChild(option);
+			}
 		}
+
 	}
-	
-}
+	//ajax to get traffic when click link
+	$('#myModal').on('shown', function () {
+  alert("ok men");
+});
 </script>
 </html>
