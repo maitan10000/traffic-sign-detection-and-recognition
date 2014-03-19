@@ -4,14 +4,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="Content/Css/Main.css" rel="stylesheet" type="text/css" />
-<link href="Content/bootstrap/css/bootstrap.css" rel="stylesheet"
+<link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
+<link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" />
-<script type="text/javascript" src="Content/Scripts/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="Content/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="User/Content/bootstrap/js/bootstrap.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
-<
+
 
 <%
 	String jsonObject = (String) request.getAttribute("category");
@@ -78,12 +78,9 @@
 							Tên biển báo: <input type="text" />
 						</div>
 						<div class="content-Selectbox font-StyleTitle needMargin"
-							onclick="loadCat()">
-							Loại Biển Báo: <select class="sortBy font-Style">
+							>
+							Loại Biển Báo: <select class="sortBy font-Style" id="catType" onclick="loadCat()" >
 								<option class="font-Style">Tất Cả</option>
-								<option class="font-Style">Biển báo nguy hiểm</option>
-								<option class="font-Style">Biển báo cấm</option>
-								<option class="font-Style">Biển báo hướng dẫn</option>
 							</select>
 						</div>
 						<div class="content-Selectbox font-StyleTitle needMargin">
@@ -254,8 +251,18 @@
 <script type="text/javascript">
 function loadCat(){
 	var jsonString = '<%=jsonObject%>';
-		var jsonArray = JSON.parse(jsonString);
-		alert(jsonArray.length);
+	var jsonArray = JSON.parse(jsonString);
+	var selectBox = document.getElementById('catType');
+	if(selectBox.childNodes.length == 3){
+		for(var i= 0; i< jsonArray.length; i++ ){
+			var option = document.createElement('option');
+			option.setAttribute("class", "font-Style");
+			option.setAttribute("value", jsonArray[i].categoryID);
+			option.innerHTML  = jsonArray[i].categoryName;
+			selectBox.appendChild(option);
+		}
 	}
+	
+}
 </script>
 </html>
