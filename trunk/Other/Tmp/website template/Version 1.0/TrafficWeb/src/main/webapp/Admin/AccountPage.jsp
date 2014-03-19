@@ -1,5 +1,3 @@
-<%@page import="model.Report"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -43,11 +41,8 @@
 <link rel="apple-touch-icon-precomposed"
 	href="Admin/Content/img/ico/apple-touch-icon-57-precomposed.png">
 </head>
-<%
-	String jsonObject = (String) request.getAttribute("report");
-	ArrayList<Report> listReport = (ArrayList<Report>) request.getAttribute("listReport");
-%>
-<body>
+
+<body onload="buildAccountTable()">
 
 	<div id="top-strip">
 		<div class="container">
@@ -139,52 +134,25 @@
 						<div class="panel-header">
 							<i class="icon-sign-blank"></i> Quan ly phan hoi
 						</div>
-						<form>
-							<%
-								if( listReport != null){
-							%>
-							<div class="panel-content">
-								<table cellpadding="0" cellspacing="0" border="0"
-									class="table table-bordered" id="excelDataTable">
-									<thead>
-										<tr>
-											<th>ReportID</th>
-											<th>ReferenceID</th>
-											<th>Content</th>
-											<th>Creator</th>
-											<th>Type</th>
-											<th>CreateDate</th>
-											<th>IsActive</th>
-										</tr>
-									</thead>
-									<tbody>
-										<%
-											if( listReport.size()> 0){
-																																																															for(int i = 0; i< listReport.size();i++){
-										%>
-										<tr>
-											<td><%=listReport.get(i).getReportID()%></td>
-											<td><%=listReport.get(i).getReferenceID()%></td>
-											<td><%=listReport.get(i).getContent()%></td>
-											<td><%=listReport.get(i).getCreator()%></td>
-											<td><%=listReport.get(i).getType()%></td>
-											<td><%=listReport.get(i).getCreateDate()%></td>
-											<td><a href=""/><%=listReport.get(i).getIsActive()%></td>
-											
-										</tr>
-										<%
-											} 
-																																																																					}
-										%>
-									</tbody>
-								</table>
+						<div class="panel-content">
 
-							</div>
-							<%
-								}
-							%>
-						</form>
+							<table cellpadding="0" cellspacing="0" border="0"
+								class="table table-bordered" id="excelDataTable">
+								<thead>
+									<tr>
+										<th>UserID</th>
+										<th>name</th>
+										<th>Email</th>
+										<th>Role</th>										
+										<th>CreateDate</th>
+										<th>IsActive</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
 
+						</div>
 					</div>
 
 				</div>
@@ -200,7 +168,7 @@
 					<div class="divider"></div>
 					<div class="pull-right">
 						<p>Admin 365</p>
-						<p>${report}</p>
+						<p></p>
 					</div>
 					<div class="pull-left">
 						<p>&copy; 2012 Admin 365 RELEASE</p>
@@ -215,12 +183,9 @@
 	<script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 	<script src="Admin/Content/js/dataTables.bootstrap.js"></script>
 	<script type="text/javascript">
-		var myList = $
-		{
-			report
-		};
+		var myList = ${account};
 		// Builds the HTML Table out of myList.
-		function buildHtmlTable() {
+		function buildAccountTable() {
 			var columns = addAllColumnHeaders(myList);
 
 			for (var i = 0; i < myList.length; i++) {
@@ -258,7 +223,16 @@
 			return columnSet;
 		};
 	</script>
-
+	<script type="text/javascript">
+	$("#excelDataTable tr:odd").addClass("master");
+	$("#excelDataTable tr:not(.master)").hide();
+	$("#excelDataTable tr:first-child").show();
+	$("#excelDataTable tr.master").click(function(){
+	    $(this).next("tr").toggle();
+	    $(this).find(".arrow").toggleClass("up");
+	}); 	
+	</script>
+	
 </body>
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
