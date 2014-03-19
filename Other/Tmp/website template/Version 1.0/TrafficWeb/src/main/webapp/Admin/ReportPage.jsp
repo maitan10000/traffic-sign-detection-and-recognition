@@ -160,21 +160,22 @@
 									<tbody>
 										<%
 											if( listReport.size()> 0){
-																																																															for(int i = 0; i< listReport.size();i++){
+																																																																																																															for(int i = 0; i< listReport.size();i++){
 										%>
 										<tr>
-											<td><%=listReport.get(i).getReportID()%></td>
+											<td><a href="#myModal" data-toggle="modal"
+												onclick="showDetails(<%=listReport.get(i).getReportID()%>)"><%=listReport.get(i).getReportID()%></a></td>
 											<td><%=listReport.get(i).getReferenceID()%></td>
 											<td><%=listReport.get(i).getContent()%></td>
 											<td><%=listReport.get(i).getCreator()%></td>
 											<td><%=listReport.get(i).getType()%></td>
 											<td><%=listReport.get(i).getCreateDate()%></td>
-											<td><a href=""/><%=listReport.get(i).getIsActive()%></td>
-											
+											<td><a href="" /><%=listReport.get(i).getIsActive()%></td>
+
 										</tr>
 										<%
 											} 
-																																																																					}
+																																																																																																																					}
 										%>
 									</tbody>
 								</table>
@@ -189,8 +190,14 @@
 
 				</div>
 			</div>
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+				style="display: none;" aria-labelledby="myModalLabel"
+				aria-hidden="true"></div>
 
 		</div>
+
+
 	</div>
 
 	<div id="footer">
@@ -199,8 +206,7 @@
 				<div class="span12">
 					<div class="divider"></div>
 					<div class="pull-right">
-						<p>Admin 365</p>
-						<p>${report}</p>
+						<p>Admin 365</p>						
 					</div>
 					<div class="pull-left">
 						<p>&copy; 2012 Admin 365 RELEASE</p>
@@ -215,50 +221,19 @@
 	<script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 	<script src="Admin/Content/js/dataTables.bootstrap.js"></script>
 	<script type="text/javascript">
-		var myList = $
-		{
-			report
-		};
-		// Builds the HTML Table out of myList.
-		function buildHtmlTable() {
-			var columns = addAllColumnHeaders(myList);
-
-			for (var i = 0; i < myList.length; i++) {
-				var row$ = $('<tr/>');
-				for (var colIndex = 0; colIndex < columns.length; colIndex++) {
-					var cellValue = myList[i][columns[colIndex]];
-
-					if (cellValue == null) {
-						cellValue = "";
-					}
-
-					row$.append($('<td/>').html(cellValue));
-				}
-				$("#excelDataTable").append(row$);
+	function showDetails(reportID){
+		var action = "viewDetail";
+		$.ajax({
+			url: "/TrafficWeb/AdminController",
+			type: "GET",
+			data: {action : action, reportID : reportID},
+			success: function (result) {
+				$("#myModal").html(result);
 			}
-		}
-
-		// Adds a header row to the table and returns the set of columns.
-		// Need to do union of keys from all records as some records may not contain
-		// all records
-		function addAllColumnHeaders(myList) {
-			var columnSet = [];
-			var headerTr$ = $('<tr/>');
-
-			for (var i = 0; i < myList.length; i++) {
-				var rowHash = myList[i];
-				for ( var key in rowHash) {
-					if ($.inArray(key, columnSet) == -1) {
-						columnSet.push(key);
-						headerTr$.append($('<th/>').html(key));
-					}
-				}
-			}
-
-			return columnSet;
-		};
+			
+		});
+	}
 	</script>
-
 </body>
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
