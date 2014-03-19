@@ -124,7 +124,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 										src="http://bienbaogiaothong.tk/rest/Image/Main/<%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal"><%=listTraffic.get(i).getName()%></a></td>
+									<td><a href="#myModal" data-toggle="modal" onclick="showDetails(<%=listTraffic.get(i).getTrafficID()%>)"><%=listTraffic.get(i).getName()%></a></td>
 									<%
 										if("1".equals(listTraffic.get(i).getCategoryID())) {
 									%>
@@ -269,8 +269,18 @@ function loadCat(){
 
 	}
 	//ajax to get traffic when click link
-	$('#myModal').on('shown', function () {
-  alert("ok men");
-});
+	function showDetails(trafficID){
+		var action = "viewDetail";
+		alert("vao ham roi");
+		$.ajax({
+			url: "/TrafficWeb/UserController",
+			type: "GET",
+			data: {action : action, trafficID : trafficID},
+			success: function (result) {
+				$("#myModal").html(result);
+			}
+			
+		});
+	}
 </script>
 </html>
