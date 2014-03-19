@@ -212,42 +212,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			style="display: none;" aria-labelledby="myModalLabel"
 			aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">&times;</button>
-						<h4 class="modal-title" id="myModalLabel">Thông Tin Biển Báo</h4>
-					</div>
-					<div class="modal-body">
-						<div class="trafficDetail">
-							<div class="contentImgDetails">
-								<img class="imageDetails"
-									src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
-									alt="Responsive image" />
-							</div>
-							<br /> <strong>Số hiệu biển báo:</strong> <font> NH001</font> <br />
-							<br /> <strong>Tên Biển Báo:</strong> <font> Biển báo
-								nguy hiểm có người băng ngang</font> <br /> <br /> <strong>Nội
-								dung:</strong> <font> Biển này được sử dụng độc lập ở những vị trí
-								sang ngang, đường không có tổ chức điều khiển giao thông hoặc có
-								thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này người lái
-								xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu tiên cho
-								người đi bộ sang ngang. </font> <br /> <br /> <strong>Mức
-								phạt:</strong> <font> Biển này được sử dụng độc lập ở những vị trí
-								sang ngang, đường không có tổ chức điều khiển giao thông hoặc có
-								thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này người lái
-								xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu tiên cho
-								người đi bộ sang ngang. </font>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Lưu biển
-							báo</button>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 	</div>
 
@@ -271,7 +236,6 @@ function loadCat(){
 	//ajax to get traffic when click link
 	function showDetails(trafficID){
 		var action = "viewDetail";
-		alert("vao ham roi");
 		$.ajax({
 			url: "/TrafficWeb/UserController",
 			type: "GET",
