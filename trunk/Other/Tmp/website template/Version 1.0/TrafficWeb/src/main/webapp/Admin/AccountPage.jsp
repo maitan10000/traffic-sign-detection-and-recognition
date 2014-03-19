@@ -1,3 +1,5 @@
+<%@page import="model.Account"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -41,8 +43,12 @@
 <link rel="apple-touch-icon-precomposed"
 	href="Admin/Content/img/ico/apple-touch-icon-57-precomposed.png">
 </head>
+<%
+	String jsonObject = (String) request.getAttribute("account");
+	ArrayList<Account> listAccount = (ArrayList<Account>) request.getAttribute("listAccount");
+%>
 
-<body onload="buildAccountTable()">
+<body>
 
 	<div id="top-strip">
 		<div class="container">
@@ -134,25 +140,49 @@
 						<div class="panel-header">
 							<i class="icon-sign-blank"></i> Quan ly phan hoi
 						</div>
-						<div class="panel-content">
+						<form>
+							<%
+								if( listAccount != null){
+							%>
+							<div class="panel-content">
+								<table cellpadding="0" cellspacing="0" border="0"
+									class="table table-bordered" id="excelDataTable">
+									<thead>
+										<tr>
+											<th>User Account</th>
+											<th>Email</th>
+											<th>Name</th>
+											<th>Role</th>
+											<th>CreateDate</th>
+											<th>IsActive</th>
+										</tr>
+									</thead>
+									<tbody>
+										<%
+											if( listAccount.size()> 0){for(int i = 0; i< listAccount.size();i++){
+										%>
+										<tr>
+											<td><a href="#myModal" data-toggle="modal"
+												onclick="showDetails(<%=listAccount.get(i).getUserID()%>)"><%=listAccount.get(i).getUserID()%></a></td>
+											<td><%=listAccount.get(i).getEmail()%></td>
+											<td><%=listAccount.get(i).getName()%></td>
+											<td><%=listAccount.get(i).getRole()%></td>
+											<td><%=listAccount.get(i).getCreateDate()%></td>
+											<td><%=listAccount.get(i).getIsActive()%></td>
 
-							<table cellpadding="0" cellspacing="0" border="0"
-								class="table table-bordered" id="excelDataTable">
-								<thead>
-									<tr>
-										<th>UserID</th>
-										<th>name</th>
-										<th>Email</th>
-										<th>Role</th>										
-										<th>CreateDate</th>
-										<th>IsActive</th>
-									</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
+										</tr>
+										<%
+											} 
+																																																																																																																													}
+										%>
+									</tbody>
+								</table>
 
-						</div>
+							</div>
+							<%
+								}
+							%>
+						</form>
 					</div>
 
 				</div>
@@ -232,7 +262,7 @@
 	    $(this).find(".arrow").toggleClass("up");
 	}); 	
 	</script>
-	
+
 </body>
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->

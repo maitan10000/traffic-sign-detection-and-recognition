@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MultivaluedMap;
 
+import model.Account;
 import model.Report;
 import model.TrafficSign;
 
@@ -91,11 +92,11 @@ public class AdminController extends HttpServlet {
 
 				String output = clientResponse.getEntity(String.class);
 				ArrayList<Report> listreport = new ArrayList<Report>();
-				//Parse out put to gson
+				// Parse out put to gson
 				Gson gson = new Gson();
 				Type type = new TypeToken<ArrayList<Report>>() {
 				}.getType();
-				listreport = gson.fromJson(output, type);				
+				listreport = gson.fromJson(output, type);
 				request.setAttribute("listReport", listreport);
 				// request to ReportPage.jsp
 				request.setAttribute("report", output);
@@ -115,32 +116,20 @@ public class AdminController extends HttpServlet {
 				}
 
 				String output = clientResponse.getEntity(String.class);
-				// request to searchManual.jsp
+				ArrayList<Account> listAccount = new ArrayList<Account>();
+				Gson gson = new Gson();
+				Type type = new TypeToken<ArrayList<Account>>() {
+				}.getType();
+				listAccount = gson.fromJson(output, type);
+				request.setAttribute("listAccount", listAccount);
+				// request to AccountPage.jsp
 				request.setAttribute("account", output);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AccountPage.jsp");
 				rd.forward(request, response);
-			}else if (("viewReportDetail").equals(action)) {
-				String url = "http://localhost:8090/Traffic/rest/Service/GetReportDetail";
-				Client client = Client.create();
-				WebResource webResource = client.resource(url);
-				ClientResponse clientResponse = webResource.accept(
-						"application/json").get(ClientResponse.class);
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
-				}
-
-				String output = clientResponse.getEntity(String.class);
-				// request to searchManual.jsp
-				request.setAttribute("detail", output);
-				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/DetailReport.jsp");
-				rd.forward(request, response);
-			}
-			else if (("deleteReport").equals(action)) {
-				String reportID = request.getParameter("ReportID");
-				String url = "http://localhost:8090/Traffic/rest/Service/DeleteReport?reportID=";
+			} else if (("delete").equals(action)) {
+				String reportID = request.getParameter("reportID");
+				String url = "http://localhost:8090/Traffic/rest/Service/DeleteReport?=reportID";
 				url += reportID;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
@@ -153,18 +142,47 @@ public class AdminController extends HttpServlet {
 
 				String output = clientResponse.getEntity(String.class);
 				ArrayList<Report> listreport = new ArrayList<Report>();
-				//Parse out put to gson
+				// Parse out put to gson
 				Gson gson = new Gson();
 				Type type = new TypeToken<ArrayList<Report>>() {
 				}.getType();
-				listreport = gson.fromJson(output, type);				
+				listreport = gson.fromJson(output, type);
 				request.setAttribute("listReport", listreport);
 				// request to ReportPage.jsp
 				request.setAttribute("report", output);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/ReportPage.jsp");
 				rd.forward(request, response);
-			}			
+			} else
+			// if action is show report details
+			if ("viewDetail".equals(action)) {
+				String reportID = request.getParameter("reportID");
+				// url get traffic by reportID
+				String url = "http://localhost:8090/Traffic/rest/Service/GetReportDetail?reportID=";
+				url += reportID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String output = clientResponse.getEntity(String.class);
+				Report reportDetail = new Report();
+				// parse output to list trafficSign using Gson
+				Gson gson = new Gson();
+				Type type = new TypeToken<Report>() {
+				}.getType();
+				reportDetail = gson.fromJson(output, type);
+				// request to searchManual.jsp
+				request.setAttribute("reportDetail", reportDetail);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/DetailReport.jsp");
+				rd.forward(request, response);
+			}
 		} finally {
 			out.close();
 		}
