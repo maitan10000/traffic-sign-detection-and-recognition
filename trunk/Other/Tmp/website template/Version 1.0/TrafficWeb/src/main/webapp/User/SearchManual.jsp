@@ -31,12 +31,12 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 				</div>
 				<div class="logo-Container">
 					<h1 class="logo">
-						<a href="#"> <img src="Content/Image/logo.png" />
+						<a href="#"> <img src="User/Content/Image/logo.png" />
 						</a>
 					</h1>
 					<!--   _____________ -->
 					<ul class="links">
-						<li><a href="customer/account/login/index.html"
+						<li><a href="/TrafficWeb/Admin/Login.jsp"
 							title="Log In">Đăng Nhập</a></li>
 						<li class="separator">|</li>
 						<li><a href="customer/account/create/index.html">Đăng Ký</a></li>
@@ -48,7 +48,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 				<div class="menu-container">
 					<nav class="olegnax">
 					<ul id="nav">
-						<li class="level0 nav-3 level-top"><a href="#"
+						<li class="level0 nav-3 level-top"><a href="/TrafficWeb/UserController?action=searchManual"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
 						<li class="level0 nav-4 level-top"><a href="#"
@@ -166,14 +166,14 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<div class="brands">
 								<a href="#"><img src="Content/Image/brands/brand1.gif"
 									alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand2.gif" alt=""></a> <a href="#"><img
-									src="Image/brands/brand3.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand4.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand5.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand6.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand7.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand8.gif" alt=""></a> <a href="#"><img
-									src="Content/Image/brands/brand9.gif" alt=""></a>
+									src="User/Content/Image/brands/brand2.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand3.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand4.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand5.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand6.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand7.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand8.gif" alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand9.gif" alt=""></a>
 							</div>
 						</div>
 						<div class="footer-left">
