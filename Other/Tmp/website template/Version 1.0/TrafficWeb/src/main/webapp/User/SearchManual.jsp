@@ -78,7 +78,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
 					<div class="content-title">TRA CỨU BIỂN BÁO</div>
-					<form action="UserController">
+					<form action="UserController" enctype="application/x-www-form-urlencoded">
 						<div class="options">
 							<div class="searchName" style="margin-right: 30px;">
 								Tên biển báo: <input name="searchKey" type="text" />
@@ -124,7 +124,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 										src="http://bienbaogiaothong.tk/rest/Image/Main/<%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal" onclick="showDetails(<%=listTraffic.get(i).getTrafficID()%>)"><%=listTraffic.get(i).getName()%></a></td>
+									<td><a href="#myModal" data-toggle="modal" onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
 									<%
 										if("1".equals(listTraffic.get(i).getCategoryID())) {
 									%>
