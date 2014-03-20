@@ -3,6 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MultivaluedMap;
 
+import utility.Constants;
+import utility.GlobalValue;
 import model.TrafficSign;
 
 import com.google.gson.Gson;
@@ -56,6 +60,13 @@ public class UserController extends HttpServlet {
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
+			
+			if ("login".equals(action)) {
+				String username = request.getParameter("txtUsername");
+				String password = request.getParameter("txtPassword");
+				// url login
+				String url = GlobalValue.ServiceAddress +  Constants.LIST_CATEGORY_SERVICE;
+			} else
 			// load searchmanual page with all category
 			if ("searchManual".equals(action)) {
 				// url get all category
@@ -78,16 +89,18 @@ public class UserController extends HttpServlet {
 				rd.forward(request, response);
 
 			} else
-				// search traffic by name and return to searchManual page
-				if("searchTraffic".equals(action)){
+			// search traffic by name and return to searchManual page
+			if ("searchTraffic".equals(action)) {
 				String searchKey = request.getParameter("searchKey");
+				//searchKey = searchKey.replace(" ", "%20");
 				// url get traffic by categoryID
-				String url ="http://bienbaogiaothong.tk/rest/Service/SearchByName?name=";
-				url += searchKey;
+				String url = "http://bienbaogiaothong.tk/rest/Service/SearchByName?name=";
+				url += URLEncoder.encode(searchKey, "UTF-8");
 				// connect and receive json string from web service
 				Client client = Client.create();
 				WebResource webRsource = client.resource(url);
-				ClientResponse clientResponse = webRsource.accept("application/json").get(ClientResponse.class);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
 				// handle error (not implement yet)
 				if (response.getStatus() != 200) {
 					throw new RuntimeException("Failed : HTTP error code : "
@@ -105,38 +118,42 @@ public class UserController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("User/SearchManual.jsp");
 				rd.forward(request, response);
-				
-			} else 
-				// if action is show traffic details
-				if("viewDetail".equals(action)){
-					String trafficID = request.getParameter("trafficID");
-					// url get traffic by categoryID
-					String url ="http://bienbaogiaothong.tk/rest/Service/ViewDetail?id=";
-					url += trafficID;
-					// connect and receive json string from web service
-					Client client = Client.create();
-					WebResource webRsource = client.resource(url);
-					ClientResponse clientResponse = webRsource.accept("application/json").get(ClientResponse.class);
-					// handle error (not implement yet)
-					if (response.getStatus() != 200) {
-						throw new RuntimeException("Failed : HTTP error code : "
-								+ response.getStatus());
-					}
-					String output = clientResponse.getEntity(String.class);
-					TrafficSign trafficDetail = new TrafficSign();
-					// parse output to list trafficSign using Gson
-					Gson gson = new Gson();
-					Type type = new TypeToken<TrafficSign>() {
-					}.getType();
-					trafficDetail = gson.fromJson(output, type);
-					// request to searchManual.jsp
-					request.setAttribute("trafficDetail", trafficDetail);
-					RequestDispatcher rd = request
-							.getRequestDispatcher("User/TrafficDetail.jsp");
-					rd.forward(request, response);
-				}
 
-		} finally {
+			} else
+			// if action is show traffic details
+			if ("viewDetail".equals(action)) {
+				String trafficID = request.getParameter("trafficID");
+				// url get traffic by categoryID
+				String url = "http://bienbaogiaothong.tk/rest/Service/ViewDetail?id=";
+				url += trafficID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String output = clientResponse.getEntity(String.class);
+				TrafficSign trafficDetail = new TrafficSign();
+				// parse output to list trafficSign using Gson
+				Gson gson = new Gson();
+				Type type = new TypeToken<TrafficSign>() {
+				}.getType();
+				trafficDetail = gson.fromJson(output, type);
+				// request to searchManual.jsp
+				request.setAttribute("trafficDetail", trafficDetail);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("User/TrafficDetail.jsp");
+				rd.forward(request, response);
+			}
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
 			out.close();
 		}
 	}
