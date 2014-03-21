@@ -85,7 +85,7 @@
 						<div class="controls">
 							<div class="input-prepend">
 								<span class="add-on"><i class="icon-envelope icon-large"></i></span><input
-									class="span3" placeholder="UserID" id="txtUserID" size="16"
+									class="span3" placeholder="UserID" name="txtUser" size="16"
 									type="text">
 							</div>
 						</div>
@@ -94,7 +94,7 @@
 						<div class="controls">
 							<div class="input-prepend">
 								<span class="add-on"><i class="icon-key icon-large"></i></span><input
-									class="span3" placeholder="Password" id="txtPassword"
+									class="span3" placeholder="Password" name="txtPassword"
 									size="16" type="text">
 							</div>
 						</div>
