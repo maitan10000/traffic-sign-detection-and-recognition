@@ -183,9 +183,48 @@ public class AdminController extends HttpServlet {
 						.getRequestDispatcher("Admin/DetailReport.jsp");
 				rd.forward(request, response);
 			}
+			else
+				// if action is show traffic details
+				if ("viewTrafficDetail".equals(action)) {
+					String trafficID = request.getParameter("trafficID");
+					// url get traffic by categoryID
+					String url = "http://localhost:8090/Traffic/rest/Service/ViewDetail?id=";
+					url += trafficID;
+					// connect and receive json string from web service
+					Client client = Client.create();
+					WebResource webRsource = client.resource(url);
+					ClientResponse clientResponse = webRsource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						throw new RuntimeException("Failed : HTTP error code : "
+								+ response.getStatus());
+					}
+					String output = clientResponse.getEntity(String.class);
+					TrafficSign trafficDetail = new TrafficSign();
+					// parse output to list trafficSign using Gson
+					Gson gson = new Gson();
+					Type type = new TypeToken<TrafficSign>() {
+					}.getType();
+					trafficDetail = gson.fromJson(output, type);
+					// request to searchManual.jsp
+					request.setAttribute("trafficDetail", trafficDetail);
+					RequestDispatcher rd = request
+							.getRequestDispatcher("User/TrafficDetail.jsp");
+					rd.forward(request, response);
+				}else if("register".equals(action)){
+					String userID = request.getParameter("userID");
+					String password = request.getParameter("password");
+					String email = request.getParameter("email");
+					String url = "http://localhost:8090/Traffic/rest/Service/Register";
+					Client client = Client.create();
+					client.setFollowRedirects(true);
+					WebResource resource = client.resource(url);
+				}
 		} finally {
 			out.close();
 		}
+		
 
 	}
 

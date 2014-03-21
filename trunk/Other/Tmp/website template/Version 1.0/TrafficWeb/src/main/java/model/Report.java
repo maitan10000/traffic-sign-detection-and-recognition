@@ -7,7 +7,13 @@ public class Report {
 	String referenceID;
 	String content;
 	String creator;
-	String type;
+	int type;
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
 	Date CreateDate;
 	Boolean isActive;
 	public String getReportID() {
@@ -34,12 +40,7 @@ public class Report {
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
+	
 	public Date getCreateDate() {
 		return CreateDate;
 	}
