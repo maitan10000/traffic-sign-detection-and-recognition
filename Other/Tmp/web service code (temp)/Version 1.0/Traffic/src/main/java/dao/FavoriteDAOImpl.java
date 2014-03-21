@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import json.FavoriteJSON;
 import dto.FavoriteDTO;
-import dto.FavoriteJSON;
 
 public class FavoriteDAOImpl implements FavoriteDAO {
 
@@ -106,27 +106,17 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		return false;
 	}
 
-	/*
+	/**
 	 * List Favorite By Creator
 	 * 
-	 * @param:
-	 * 
-	 * @return list of favorite of user
-	 * 
-	 * @see dao.FavoriteDAO#listFavorite(java.lang.String)
 	 */
 	public ArrayList<FavoriteDTO> listFavorite(String creator) {
 		return this.listFavorite(creator, false);
 	}
 
-	/*
+	/**
 	 * List Favorite By Creator
 	 * 
-	 * @param:
-	 * 
-	 * @return list of favorite of user
-	 * 
-	 * @see dao.FavoriteDAO#listFavorite(java.lang.String)
 	 */
 	public ArrayList<FavoriteDTO> listFavorite(String creator,
 			Boolean getInActive) {
@@ -175,6 +165,6 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 				}
 			}
 		}
-		return null;
+		return favoriteData;
 	}
 }

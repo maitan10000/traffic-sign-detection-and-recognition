@@ -68,7 +68,7 @@ public class ReportDAOImpl implements ReportDAO {
 			stm.setString(2, reportDTO.getReferenceID());
 			stm.setString(3, reportDTO.getCreator());
 			stm.setInt(4, reportDTO.getType());
-			stm.setBoolean(5, reportDTO.getIsActive());
+			stm.setBoolean(5, true);
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -95,16 +95,33 @@ public class ReportDAOImpl implements ReportDAO {
 
 	}
 
-	public ArrayList<ReportDTO> searchReportByType(int type, Boolean isActive) {
+	public ArrayList<ReportDTO> searchReportByType(int type) {		
+		return this.searchReportByType(type, false);
+	}
+	
+	public ArrayList<ReportDTO> searchReportByType(int type, Boolean getInActive) {
 		ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
-			stm = connection
-					.prepareStatement("SELECT * FROM trafficdb.report WHERE type = ? AND isActive = ?");
-			stm.setInt(1, type);
-			stm.setBoolean(2, isActive);
+			if (type == 0 && getInActive == false) {
+				stm = connection
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE isActive = ? ORDER BY createDate");
+				stm.setBoolean(1, true);
+			} else if (type == 0 && getInActive == true) {
+				stm = connection
+						.prepareStatement("SELECT * FROM trafficdb.report ORDER BY createDate");
+			} else if (getInActive == false) {
+				stm = connection
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isActive = ? ORDER BY createDate");
+				stm.setInt(1, type);
+				stm.setBoolean(2, true);
+			} else {
+				stm = connection
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? ORDER BY createDate");
+				stm.setInt(1, type);
+			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
 				ReportDTO reportObj = new ReportDTO();
@@ -138,11 +155,10 @@ public class ReportDAOImpl implements ReportDAO {
 				}
 			}
 		}
-		return null;
-
+		return reportData;
 	}
 
-	public ReportDTO getDetailReport(int reportID) {
+	public ReportDTO getReportDetail(int reportID) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
@@ -186,12 +202,10 @@ public class ReportDAOImpl implements ReportDAO {
 		return null;
 	}
 
-	public boolean delete(ReportDTO reportDTO) {
-
+	public boolean delete(int reportID) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
-			int reportID = reportDTO.getReportID();
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("UPDATE trafficdb.report SET isActive = ? WHERE reportID = ?");

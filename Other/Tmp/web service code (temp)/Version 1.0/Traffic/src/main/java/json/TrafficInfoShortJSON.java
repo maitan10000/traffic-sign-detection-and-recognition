@@ -1,20 +1,12 @@
-package dto;
+package json;
 
-public class FavoriteJSON {
-	private String creator;
+public class TrafficInfoShortJSON {
 	private String trafficID;
 	private String name;
 	private String image;
-	private Boolean isActive;
-	public FavoriteJSON() {
-		// TODO Auto-generated constructor stub
-	}
-	public String getCreator() {
-		return creator;
-	}
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
+	private int categoryID;
+	private String categoryName;
+	
 	public String getTrafficID() {
 		return trafficID;
 	}
@@ -33,13 +25,16 @@ public class FavoriteJSON {
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public Boolean getIsActive() {
-		return isActive;
+	public int getCategoryID() {
+		return categoryID;
 	}
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
+	public void setCategoryID(int categoryID) {
+		this.categoryID = categoryID;
 	}
-	
-	
-
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
 }

@@ -2,10 +2,11 @@ package dao;
 
 import java.util.ArrayList;
 
+import json.FavoriteJSON;
 import dto.FavoriteDTO;
-import dto.FavoriteJSON;
 
 public interface FavoriteDAO {
+	
 	public boolean add(FavoriteDTO favorite);
 
 	public boolean delete(FavoriteDTO favorite);

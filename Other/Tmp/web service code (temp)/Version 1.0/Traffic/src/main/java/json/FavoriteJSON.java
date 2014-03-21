@@ -1,10 +1,10 @@
-package dto;
+package json;
 
-public class ResultInput {
+public class FavoriteJSON {
 	private String trafficID;
 	private String trafficName;
 	private String trafficImage;
-	private LocateObj locate;
+	
 	public String getTrafficID() {
 		return trafficID;
 	}
@@ -23,13 +23,4 @@ public class ResultInput {
 	public void setTrafficImage(String trafficImage) {
 		this.trafficImage = trafficImage;
 	}
-	public LocateObj getLocate() {
-		return locate;
-	}
-	public void setLocate(LocateObj locate) {
-		this.locate = locate;
-	}
-	
-	
-	
 }
