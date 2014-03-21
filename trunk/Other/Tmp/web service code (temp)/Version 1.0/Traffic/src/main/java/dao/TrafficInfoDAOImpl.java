@@ -52,15 +52,23 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		return null;
 	}
 
-	public ArrayList<TrafficInfoDTO> searchByName(String name) {
-		ArrayList<TrafficInfoDTO> trafficData = new ArrayList<TrafficInfoDTO>();
+	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID) {
+		ArrayList<TrafficInfoDTO> listResult = new ArrayList<TrafficInfoDTO>();
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
-			stm = connection
-					.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ?");
-			stm.setString(1, "%" + name + "%");
+			if (cateID == 0) {
+				//search in all category
+				stm = connection
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ?");
+				stm.setString(1, "%" + name + "%");
+			} else {
+				stm = connection
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ?");
+				stm.setString(1, "%" + name + "%");
+				stm.setInt(2, cateID);
+			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
 				TrafficInfoDTO trafficObj = new TrafficInfoDTO();
@@ -70,9 +78,9 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 				trafficObj.setInformation(rs.getString("information"));
 				trafficObj.setPenaltyfee(rs.getString("penaltyfee"));
 				trafficObj.setCategoryID(rs.getInt("categoryID"));
-				trafficData.add(trafficObj);
+				listResult.add(trafficObj);
 			}
-			return trafficData;
+			return listResult;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {
@@ -93,7 +101,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 				}
 			}
 		}
-		return null;
+		return listResult;
 	}
 
 	public TrafficInfoDTO getDetail(String id) {

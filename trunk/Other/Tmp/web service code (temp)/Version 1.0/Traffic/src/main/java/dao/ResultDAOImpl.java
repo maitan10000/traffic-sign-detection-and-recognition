@@ -57,7 +57,6 @@ public class ResultDAOImpl implements ResultDAO {
 	public int add(ResultDTO result) {
 		Connection connection = null;
 		PreparedStatement stm = null;
-		PreparedStatement ps = null;
 		try {
 			String uploadedImage = result.getUploadedImage();
 			String creator = result.getCreator();
@@ -73,9 +72,10 @@ public class ResultDAOImpl implements ResultDAO {
 			stm.setBoolean(4, false);
 			stm.executeUpdate();
 
-			ps = connection
+			stm.close();
+			stm = connection
 					.prepareStatement("SELECT resultID FROM trafficdb.result WHERE creator = ? ORDER BY resultID DESC LIMIT 1");
-			ps.setString(1, creator);
+			stm.setString(1, creator);
 			ResultSet rs = stm.executeQuery();
 			if (rs.next()) {
 				return rs.getInt("resultID");
@@ -92,14 +92,7 @@ public class ResultDAOImpl implements ResultDAO {
 					e.printStackTrace();
 				}
 			}
-			if (ps != null) {
-				try {
-					ps.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			
 			if (connection != null) {
 				try {
 					connection.close();
@@ -194,6 +187,6 @@ public class ResultDAOImpl implements ResultDAO {
 				}
 			}
 		}
-		return null;
+		return resultData;
 	}
 }

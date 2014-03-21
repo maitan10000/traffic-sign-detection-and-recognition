@@ -1,6 +1,6 @@
-package dto;
+package json;
 
-public class LocateObj {
+public class LocateJSON {
 	private int height;
 	private int width;
 	private int x;
