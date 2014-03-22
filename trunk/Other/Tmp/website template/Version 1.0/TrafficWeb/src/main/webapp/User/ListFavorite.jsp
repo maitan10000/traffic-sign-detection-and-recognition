@@ -58,10 +58,10 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 						<li class="level0 nav-4 level-top"><a href="#"
 							class="level-top"> <span>Nhận Diện Tự Động</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="#"
+						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/UserController?action=viewFavorite"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
-						<li class="level0 nav-5 level-top last"><a href="#"
+						<li class="level0 nav-5 level-top last"><a href="/TrafficWeb/UserController?action=viewHistory"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -186,21 +186,104 @@ pager.showPageNav('pager', 'pageNavPosition');
 pager.showPage(1);
 </script>
 <script type="text/javascript">
-	//ajax to get traffic when click link
-	function showDetails(trafficID) {
-		var action = "viewDetail";
-		$.ajax({
-			url : "/TrafficWeb/UserController",
-			type : "GET",
-			data : {
-				action : action,
-				trafficID : trafficID
-			},
-			success : function(result) {
-				$("#myModal").html(result);
-			}
+//ajax to get traffic detail when click link
+function showDetails(trafficID) {
+	var action = "viewDetail";
+	$.ajax({
+		url : "/TrafficWeb/UserController",
+		type : "GET",
+		data : {
+			action : action,
+			trafficID : trafficID
+		},
+		success : function(result) {
+			$("#myModal").html(result);
+			checkFavorite(trafficID);
+		}
 
-		});
-	}
+	});
+}
+// ajax to add favorite when click button luu bien bao
+function addFavorite(trafficID) {
+	var action = "AddFavorite";
+	$
+			.ajax({
+				url : "/TrafficWeb/UserController",
+				type : "GET",
+				data : {
+					action : action,
+					trafficID : trafficID
+				},
+				success : function(result) {
+					// if add ok, change buuton to xoa bien bao
+					if ("Success" == result) {
+						$("#btnAddFavorite").remove();
+						$("#footerViewDetail")
+								.append(
+										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+												+ trafficID
+												+ ')\42>Xóa biển báo</button>');
+
+					}
+				}
+
+			});
+}
+// ajax to delete favorite when click button xoa bien bao
+function deleteFavorite(trafficID) {
+	var action = "DeleteFavorite";
+	$.ajax({
+		url : "/TrafficWeb/UserController",
+		type : "GET",
+		data : {
+			action : action,
+			trafficID : trafficID
+		},
+		success : function(result) {
+			alert(result);
+			// if delete ok, change buuton to luu bien bao
+			if ("Success" == result) {
+				$("#btnAddFavorite").remove();
+				$("#footerViewDetail")
+						.append(
+								'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+										+ trafficID
+										+ ')\42>Lưu biểnbáo</button>');
+			}
+		}
+
+	});
+}
+// ajax to display "luu bien bao" button if traffic is not added
+function checkFavorite(trafficID) {
+	var action = "checkFavorite";
+	$
+			.ajax({
+				url : "/TrafficWeb/UserController",
+				type : "GET",
+				data : {
+					action : action,
+					trafficID : trafficID
+				},
+				success : function(result) {
+					if ('true' == result) {
+						$("#btnAddFavorite").remove();
+						$("#footerViewDetail")
+								.append(
+										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+												+ trafficID
+												+ ')\42>Lưu biểnbáo</button>');
+					} else {
+						$("#btnAddFavorite").remove();
+						$("#footerViewDetail")
+								.append(
+										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+												+ trafficID
+												+ ')\42>Xóa biển báo</button>');
+					}
+				}
+
+			});
+}
 </script>
 </html>

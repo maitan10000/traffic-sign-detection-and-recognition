@@ -148,8 +148,7 @@ public class UserController extends HttpServlet {
 						"application/json").get(ClientResponse.class);
 				// handle error (not implement yet)
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 				String output = clientResponse.getEntity(String.class);
 				TrafficSign trafficDetail = new TrafficSign();
@@ -165,34 +164,101 @@ public class UserController extends HttpServlet {
 				rd.forward(request, response);
 			} else
 			// if action is add favorite
+			// return success if add ok, fail otherwise
 			if ("AddFavorite".equals(action)) {
 				// get trafficID and userID
-				String creator = request.getParameter("userID");
 				String trafficID = request.getParameter("trafficID");
-				// url for add favorite
-				String urlAddFavorite = GlobalValue.ServiceAddress
-						+ Constants.ADD_FAVORITE_MANAGE;
-				// String input = "{\"creator\":\"" + creator
-				// + "\",\"trafficID\":\"" + trafficID + "\"}";
-				// connect and receive json string from web service
-				Client client = Client.create();
-				WebResource webRsource = client.resource(urlAddFavorite);
-				MultivaluedMap formData = new MultivaluedMapImpl();
-				formData.add("creator", creator);
-				formData.add("trafficID", trafficID);
-				ClientResponse clientResponse = webRsource.type(
-						MediaType.APPLICATION_FORM_URLENCODED).post(
-						ClientResponse.class, formData);
-				// ClientResponse clientResponse = webRsource.type(
-				// "application/json").post(ClientResponse.class, input);
-				// handle error (not implement yet)
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				if (userID == null) {
+					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
+				} else {
+					// url for add favorite
+					String urlAddFavorite = GlobalValue.ServiceAddress
+							+ Constants.ADD_FAVORITE_MANAGE;
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlAddFavorite);
+					MultivaluedMap formData = new MultivaluedMapImpl();
+					formData.add("creator", userID);
+					formData.add("trafficID", trafficID);
+					ClientResponse clientResponse = webRsource.type(
+							MediaType.APPLICATION_FORM_URLENCODED).post(
+							ClientResponse.class, formData);
+					// ClientResponse clientResponse = webRsource.type(
+					// "application/json").post(ClientResponse.class, input);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String output = clientResponse.getEntity(String.class);
+					out.println(output);
 				}
-				String output = clientResponse.getEntity(String.class);
-				out.println(output);
 
+			} else
+			// if action is delete favorite
+			// return success if delete ok, fail otherwise
+			if ("DeleteFavorite".equals(action)) {
+				// get trafficID and userID
+				String trafficID = request.getParameter("trafficID");
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				if (userID == null) {
+					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
+				} else {
+					// url for add favorite
+					String urlDeleteFavorite = GlobalValue.ServiceAddress
+							+ Constants.DELETE_FAVORITE_MANAGE + "?creator="
+							+ userID + "&trafficID=" + trafficID;
+					// connect and receive json string from web service
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlDeleteFavorite);
+					ClientResponse clientResponse = webRsource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String output = clientResponse.getEntity(String.class);
+					out.println(output);
+				}
+
+			} else
+			/*
+			 * if action is check favorite print false if traffic is already
+			 * added or user is notlogin or session time out print true if
+			 * traffic is not added yet and user has loggin (session user has
+			 * its value)
+			 */
+			if ("checkFavorite".equals(action)) {
+				// get trafficID and userID
+				String trafficID = request.getParameter("trafficID");
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				if (userID == null) {
+					out.println("false");
+				} else {
+					// url for add favorite
+					String urlAddFavorite = GlobalValue.ServiceAddress
+							+ Constants.CHECK_FAVORITE_MANAGE;
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlAddFavorite);
+					MultivaluedMap formData = new MultivaluedMapImpl();
+					formData.add("creator", userID);
+					formData.add("trafficID", trafficID);
+					ClientResponse clientResponse = webRsource.type(
+							MediaType.APPLICATION_FORM_URLENCODED).post(
+							ClientResponse.class, formData);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String output = clientResponse.getEntity(String.class);
+					if ("False".equals(output)) {
+						out.print("true");
+					} else if ("True".equals(output)) {
+						out.print("false");
+					}
+				}
 			} else
 			// if action is view favorite
 			if ("viewFavorite".equals(action)) {
@@ -213,8 +279,7 @@ public class UserController extends HttpServlet {
 					if (response.getStatus() != 200) {
 						response.sendRedirect(Constants.ERROR_PAGE);
 					}
-					String output = clientResponse
-							.getEntity(String.class);
+					String output = clientResponse.getEntity(String.class);
 					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
 					// parse output to list trafficSign using Gson
 					Gson gson = new Gson();
@@ -247,8 +312,7 @@ public class UserController extends HttpServlet {
 					if (response.getStatus() != 200) {
 						response.sendRedirect(Constants.ERROR_PAGE);
 					}
-					String output = clientResponse
-							.getEntity(String.class);
+					String output = clientResponse.getEntity(String.class);
 					ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
 					// parse output to list trafficSign using Gson
 					Gson gson = new Gson();

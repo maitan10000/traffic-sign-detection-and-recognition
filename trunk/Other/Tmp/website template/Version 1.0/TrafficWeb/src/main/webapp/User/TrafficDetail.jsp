@@ -29,9 +29,9 @@ TrafficSign trafficDetails = (TrafficSign) request.getAttribute("trafficDetail")
 								người đi bộ sang ngang. </font>
 						</div>
 					</div>
-					<div class="modal-footer">
+					<div id="footerViewDetail" class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Lưu biển
+						<button id="btnAddFavorite" type="button" class="btn btn-primary" onclick="addFavorite(<%=trafficDetails.getTrafficID()%>)">Lưu biển
 							báo</button>
 					</div>
 				</div>

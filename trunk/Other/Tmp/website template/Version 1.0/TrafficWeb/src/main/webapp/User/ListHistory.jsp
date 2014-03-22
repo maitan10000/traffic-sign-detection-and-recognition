@@ -52,17 +52,17 @@
 				<div class="menu-container">
 					<nav class="olegnax">
 					<ul id="nav">
-						<li class="level0 nav-3 level-top"><a
+					<li class="level0 nav-3 level-top"><a
 							href="/TrafficWeb/UserController?action=searchManual"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
 						<li class="level0 nav-4 level-top"><a href="#"
 							class="level-top"> <span>Nhận Diện Tự Động</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="#"
+						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/UserController?action=viewFavorite"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
-						<li class="level0 nav-5 level-top last"><a href="#"
+						<li class="level0 nav-5 level-top last"><a href="/TrafficWeb/UserController?action=viewHistory"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>

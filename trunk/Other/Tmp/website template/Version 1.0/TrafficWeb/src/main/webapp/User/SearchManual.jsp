@@ -59,10 +59,10 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 						<li class="level0 nav-4 level-top"><a href="#"
 							class="level-top"> <span>Nhận Diện Tự Động</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="#"
+						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/UserController?action=viewFavorite"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
-						<li class="level0 nav-5 level-top last"><a href="#"
+						<li class="level0 nav-5 level-top last"><a href="/TrafficWeb/UserController?action=viewHistory"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -120,7 +120,8 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 						if( listTraffic != null){
 					%>
 					<div class="contentTable " style="margin-top: 20px">
-						<table id="resultTable" class="table table-striped .table-condensed">
+						<table id="resultTable"
+							class="table table-striped .table-condensed">
 							<thead>
 								<th>Hình Ảnh</th>
 								<th>Số Hiệu</th>
@@ -130,7 +131,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																																	for(int i = 0; i< listTraffic.size();i++){
+																																																			for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -165,7 +166,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 								</tr>
 								<%
 									} 
-																																							}
+																																																									}
 								%>
 							</tbody>
 						</table>
@@ -236,13 +237,13 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 
 </body>
 <script type="text/javascript">
-var pager = new Pager('resultTable', 5);
-pager.init();
-pager.showPageNav('pager', 'pageNavPosition');
-pager.showPage(1);
+	var pager = new Pager('resultTable', 5);
+	pager.init();
+	pager.showPageNav('pager', 'pageNavPosition');
+	pager.showPage(1);
 </script>
 <script type="text/javascript">
-	//ajax to get traffic when click link
+	//ajax to get traffic detail when click link
 	function showDetails(trafficID) {
 		var action = "viewDetail";
 		$.ajax({
@@ -254,9 +255,92 @@ pager.showPage(1);
 			},
 			success : function(result) {
 				$("#myModal").html(result);
+				checkFavorite(trafficID);
 			}
 
 		});
+	}
+	// ajax to add favorite when click button luu bien bao
+	function addFavorite(trafficID) {
+		var action = "AddFavorite";
+		$
+				.ajax({
+					url : "/TrafficWeb/UserController",
+					type : "GET",
+					data : {
+						action : action,
+						trafficID : trafficID
+					},
+					success : function(result) {
+						// if add ok, change buuton to xoa bien bao
+						if ("Success" == result) {
+							$("#btnAddFavorite").remove();
+							$("#footerViewDetail")
+									.append(
+											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+													+ trafficID
+													+ ')\42>Xóa biển báo</button>');
+
+						}
+					}
+
+				});
+	}
+	// ajax to delete favorite when click button xoa bien bao
+	function deleteFavorite(trafficID) {
+		var action = "DeleteFavorite";
+		$.ajax({
+			url : "/TrafficWeb/UserController",
+			type : "GET",
+			data : {
+				action : action,
+				trafficID : trafficID
+			},
+			success : function(result) {
+				alert(result);
+				// if delete ok, change buuton to luu bien bao
+				if ("Success" == result) {
+					$("#btnAddFavorite").remove();
+					$("#footerViewDetail")
+							.append(
+									'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+											+ trafficID
+											+ ')\42>Lưu biểnbáo</button>');
+				}
+			}
+
+		});
+	}
+	// ajax to display "luu bien bao" button if traffic is not added
+	function checkFavorite(trafficID) {
+		var action = "checkFavorite";
+		$
+				.ajax({
+					url : "/TrafficWeb/UserController",
+					type : "GET",
+					data : {
+						action : action,
+						trafficID : trafficID
+					},
+					success : function(result) {
+						if ('true' == result) {
+							$("#btnAddFavorite").remove();
+							$("#footerViewDetail")
+									.append(
+											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+													+ trafficID
+													+ ')\42>Lưu biểnbáo</button>');
+						} else {
+							$("#btnAddFavorite").remove();
+							$("#footerViewDetail")
+									.append(
+											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+													+ trafficID
+													+ ')\42>Xóa biển báo</button>');
+						}
+					}
+
+				});
 	}
 </script>
 </html>
