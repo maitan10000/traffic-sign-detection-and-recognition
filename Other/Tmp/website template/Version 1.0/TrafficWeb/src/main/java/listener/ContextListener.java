@@ -10,6 +10,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import utility.GlobalValue;
+
 @WebListener("application context listener")
 public class ContextListener implements ServletContextListener {
 
@@ -22,7 +24,8 @@ public class ContextListener implements ServletContextListener {
 					"/WEB-INF/config.properties");
 			in = new FileInputStream(realPath);
 			prop.load(in);
-			//GlobalValue.WorkPath = prop.getProperty("workPath").trim();
+			System.out.print("Realpath: "+ realPath);
+			GlobalValue.ServiceAddress = prop.getProperty("ServiceAddress").trim();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
