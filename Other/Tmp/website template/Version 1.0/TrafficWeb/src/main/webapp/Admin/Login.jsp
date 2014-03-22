@@ -79,8 +79,9 @@
 			<div class="panel-header">
 				<i class="icon-lock icon-large"></i> Sign In
 			</div>
-			<div class="panel-content">
-				<form action="/TrafficWeb/AdminController" method="post">
+			<form action="AdminController" method="post">
+				<div class="panel-content">
+
 					<div class="control-group">
 						<div class="controls">
 							<div class="input-prepend">
@@ -101,7 +102,8 @@
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<button class="btn btn-large" name="action" value="login">Sign In</button>
+							<button class="btn btn-large" name="action" value="signin" type="submit">Sign
+								In</button>
 							<span class="signin-remember"><input type="checkbox" />
 								Remember Me</span>
 						</div>
@@ -112,8 +114,8 @@
 								href="register.html">Register</a>
 						</div>
 					</div>
-				</form>				
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
 

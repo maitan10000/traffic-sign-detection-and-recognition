@@ -50,10 +50,12 @@
 							href="/TrafficWeb/UserController?action=searchManual"
 							class="level-top"> <span>Quản lí biển báo</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/AdminController?action=listAccount"
+						<li class="level0 nav-4 level-top"><a
+							href="/TrafficWeb/AdminController?action=listAccount"
 							class="level-top"> <span>Quản lí người dùng</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/AdminController?action=listReport"
+						<li class="level0 nav-4 level-top"><a
+							href="/TrafficWeb/AdminController?action=listReport"
 							class="level-top"> <span>Quản lí phản hồi</span>
 						</a></li>
 					</ul>
@@ -119,15 +121,25 @@
 								<tbody>
 									<%
 										if (listReport.size() > 0) {
-																																								for (int i = 0; i < listReport.size(); i++) {
+																																																						for (int i = 0; i < listReport.size(); i++) {
 									%>
 									<tr>
 										<td><a href="#myModal" data-toggle="modal"
 											onclick="showDetails(<%=listReport.get(i).getReportID()%>)"><%=listReport.get(i).getReportID()%></a></td>
-
+										<%
+											if(listReport.get(i).getType() == 1){
+										%>
 										<td><a href="#myModal" data-toggle="modal"
 											onclick="showTrafficDetails(<%=listReport.get(i).getReferenceID()%>)"><%=listReport.get(i).getReferenceID()%></a></td>
-
+										<%
+											}else if(listReport.get(i).getType() == 2){
+												int resultID = Integer.parseInt(listReport.get(i).getReferenceID());
+										%>
+										<td><a href="#myModal" data-toggle="modal"
+											onclick="showResultDetails(<%=resultID%>)"><%=listReport.get(i).getReferenceID()%></a></td>
+										<%
+											}
+										%>
 										<td><%=listReport.get(i).getContent()%></td>
 										<td><%=listReport.get(i).getCreator()%></td>
 										<td><%=listReport.get(i).getType()%></td>
@@ -139,7 +151,7 @@
 									</tr>
 									<%
 										}
-																																							}
+																																																					}
 									%>
 								</tbody>
 							</table>
@@ -229,6 +241,19 @@ function showTrafficDetails(trafficID){
 		url: "/TrafficWeb/AdminController",
 		type: "GET",
 		data: {action : action, trafficID : trafficID},
+		success: function (result) {
+			$("#myModal").html(result);
+		}
+		
+	});
+}
+
+function showResultDetails(resultID){
+	var action = "viewResultDetail";
+	$.ajax({
+		url: "/TrafficWeb/AdminController",
+		type: "GET",
+		data: {action : action, resultID : resultID},
 		success: function (result) {
 			$("#myModal").html(result);
 		}
