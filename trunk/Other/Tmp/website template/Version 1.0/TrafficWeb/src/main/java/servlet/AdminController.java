@@ -15,6 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import model.Account;
 import model.Report;
+import model.Result;
 import model.TrafficSign;
 
 import com.google.gson.Gson;
@@ -59,26 +60,31 @@ public class AdminController extends HttpServlet {
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
-			if (("login").equals(action)) {
-				String userid = request.getParameter("txtUser");
+			if (("signin").equals(action)) {
+				String userID = request.getParameter("txtUser");
 				String password = request.getParameter("txtPassword");
-				String url = "http://localhost:8090/Traffic/rest/Service/Login";
+				String url = "http://localhost:8090/Traffic/rest/Service";
 				Client client = Client.create();
 				client.setFollowRedirects(true);
 				WebResource resource = client.resource(url);
 				MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-				params.add("userID", userid);
+				params.add("userID", userID);
 				params.add("password", password);
-				String res = resource.path("login").queryParams(params)
+				String res = resource.path("Login").queryParams(params)
 						.get(String.class);
 				boolean result = Boolean.parseBoolean(res);
-				String path = "Admin/Login.jsp";
 				if (result) {
 					HttpSession session = request.getSession();
-					session.setAttribute("USER", userid);
-					path = "Admin/ReportPage.jsp";
+					session.setAttribute("USER", userID);
+					RequestDispatcher rd = request
+							.getRequestDispatcher("Admin/Index.jsp");
+					rd.forward(request, response);
+				} else {
+					RequestDispatcher rd = request
+							.getRequestDispatcher("Admin/Login.jsp");
+					rd.forward(request, response);
 				}
-				response.sendRedirect(path);
+
 			} else if (("listReport").equals(action)) {
 				String url = "http://localhost:8090/Traffic/rest/Service/ListReport";
 				Client client = Client.create();
@@ -128,31 +134,13 @@ public class AdminController extends HttpServlet {
 						.getRequestDispatcher("Admin/AccountPage.jsp");
 				rd.forward(request, response);
 			} else if (("delete").equals(action)) {
-				String reportID = request.getParameter("reportID");
-				String url = "http://localhost:8090/Traffic/rest/Service/DeleteReport?=reportID";
+				int reportID = Integer.parseInt(request
+						.getParameter("reportID"));
+				String url = "http://localhost:8090/Traffic/rest/Service/DeleteReport?reportID=";
 				url += reportID;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
-				ClientResponse clientResponse = webResource.accept(
-						"application/json").get(ClientResponse.class);
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
-				}
 
-				String output = clientResponse.getEntity(String.class);
-				ArrayList<Report> listreport = new ArrayList<Report>();
-				// Parse out put to gson
-				Gson gson = new Gson();
-				Type type = new TypeToken<ArrayList<Report>>() {
-				}.getType();
-				listreport = gson.fromJson(output, type);
-				request.setAttribute("listReport", listreport);
-				// request to ReportPage.jsp
-				request.setAttribute("report", output);
-				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/ReportPage.jsp");
-				rd.forward(request, response);
 			} else
 			// if action is show report details
 			if ("viewDetail".equals(action)) {
@@ -182,49 +170,76 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/DetailReport.jsp");
 				rd.forward(request, response);
-			}
-			else
-				// if action is show traffic details
-				if ("viewTrafficDetail".equals(action)) {
-					String trafficID = request.getParameter("trafficID");
-					// url get traffic by categoryID
-					String url = "http://localhost:8090/Traffic/rest/Service/ViewDetail?id=";
-					url += trafficID;
-					// connect and receive json string from web service
-					Client client = Client.create();
-					WebResource webRsource = client.resource(url);
-					ClientResponse clientResponse = webRsource.accept(
-							"application/json").get(ClientResponse.class);
-					// handle error (not implement yet)
-					if (response.getStatus() != 200) {
-						throw new RuntimeException("Failed : HTTP error code : "
-								+ response.getStatus());
-					}
-					String output = clientResponse.getEntity(String.class);
-					TrafficSign trafficDetail = new TrafficSign();
-					// parse output to list trafficSign using Gson
-					Gson gson = new Gson();
-					Type type = new TypeToken<TrafficSign>() {
-					}.getType();
-					trafficDetail = gson.fromJson(output, type);
-					// request to searchManual.jsp
-					request.setAttribute("trafficDetail", trafficDetail);
-					RequestDispatcher rd = request
-							.getRequestDispatcher("User/TrafficDetail.jsp");
-					rd.forward(request, response);
-				}else if("register".equals(action)){
-					String userID = request.getParameter("userID");
-					String password = request.getParameter("password");
-					String email = request.getParameter("email");
-					String url = "http://localhost:8090/Traffic/rest/Service/Register";
-					Client client = Client.create();
-					client.setFollowRedirects(true);
-					WebResource resource = client.resource(url);
+			} else
+			// if action is show traffic details
+			if ("viewTrafficDetail".equals(action)) {
+				String trafficID = request.getParameter("trafficID");
+				// url get traffic by categoryID
+				String url = "http://localhost:8090/Traffic/rest/Service/ViewDetail?id=";
+				url += trafficID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
 				}
+				String output = clientResponse.getEntity(String.class);
+				TrafficSign trafficDetail = new TrafficSign();
+				// parse output to list trafficSign using Gson
+				Gson gson = new Gson();
+				Type type = new TypeToken<TrafficSign>() {
+				}.getType();
+				trafficDetail = gson.fromJson(output, type);
+				// request to searchManual.jsp
+				request.setAttribute("trafficDetail", trafficDetail);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("User/TrafficDetail.jsp");
+				rd.forward(request, response);
+			} else if ("register".equals(action)) {
+				String userID = request.getParameter("userID");
+				String password = request.getParameter("password");
+				String email = request.getParameter("email");
+				String url = "http://localhost:8090/Traffic/rest/Service/Register";
+				Client client = Client.create();
+				client.setFollowRedirects(true);
+				WebResource resource = client.resource(url);
+			} else
+			// if action is show traffic details
+			if ("viewResultDetail".equals(action)) {
+				String resultID = request.getParameter("resultID");
+				// url get traffic by categoryID
+				String url = "http://localhost:8090/Traffic/rest/Service/GetResultByID?id=";
+				url += resultID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String output = clientResponse.getEntity(String.class);
+				Result resultDetail = new Result();
+				// parse output to list trafficSign using Gson
+				Gson gson = new Gson();
+				Type type = new TypeToken<Result>() {
+				}.getType();
+				resultDetail = gson.fromJson(output, type);
+				// request to searchManual.jsp
+				request.setAttribute("resultDetail", resultDetail);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/ResultDetail.jsp");
+				rd.forward(request, response);
+			}
 		} finally {
 			out.close();
 		}
-		
 
 	}
 
