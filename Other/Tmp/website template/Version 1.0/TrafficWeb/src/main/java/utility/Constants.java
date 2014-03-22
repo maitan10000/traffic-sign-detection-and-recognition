@@ -21,5 +21,8 @@ public final class Constants {
 
 	// for add favorite
 	public final static String VIEW_FAVORITE_MANAGE = "Manage/ListFavorite";
+	
+	// for  view history
+	public final static String LIST_HISTORY_TRAFFIC = "Traffic/ListHistory";
 
 }
