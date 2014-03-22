@@ -259,8 +259,8 @@ public class UserController extends HttpServlet {
 						out.print("false");
 					}
 				}
-			} else
-			// if action is view favorite
+			} else 
+			// if action is view favorite_
 			if ("viewFavorite".equals(action)) {
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
