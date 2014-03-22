@@ -95,6 +95,7 @@ public class UserController extends HttpServlet {
 				request.setAttribute("category", category);
 				// excute search manual if search key or categoryID is not null
 				if(searchKey != null && catID != null){
+					// create url searchManual
 					String urlSearchManual = GlobalValue.ServiceAddress + Constants.SEARCH_MANUAL_SERVICE + "?";
 					urlSearchManual = urlSearchManual + "name=" + URLEncoder.encode(searchKey, "UTF-8");
 					urlSearchManual = urlSearchManual + "&cateID=" + catID;
@@ -120,43 +121,12 @@ public class UserController extends HttpServlet {
 						.getRequestDispatcher("User/SearchManual.jsp");
 				rd.forward(request, response);
 
-			} else
-			// search traffic by name and return to searchManual page
-			if ("searchTraffic".equals(action)) {
-				String searchKey = request.getParameter("searchKey");
-				// searchKey = searchKey.replace(" ", "%20");
-				// url get traffic by categoryID
-				String url = "http://bienbaogiaothong.tk/rest/Service/SearchByName?name=";
-				url += URLEncoder.encode(searchKey, "UTF-8");
-				// connect and receive json string from web service
-				Client client = Client.create();
-				WebResource webRsource = client.resource(url);
-				ClientResponse clientResponse = webRsource.accept(
-						"application/json").get(ClientResponse.class);
-				// handle error (not implement yet)
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
-				}
-				String output = clientResponse.getEntity(String.class);
-				ArrayList<TrafficSign> listTraffic = new ArrayList<TrafficSign>();
-				// parse output to list trafficSign using Gson
-				Gson gson = new Gson();
-				Type type = new TypeToken<ArrayList<TrafficSign>>() {
-				}.getType();
-				listTraffic = gson.fromJson(output, type);
-				// request to searchManual.jsp
-				request.setAttribute("listTraffic", listTraffic);
-				RequestDispatcher rd = request
-						.getRequestDispatcher("User/SearchManual.jsp");
-				rd.forward(request, response);
-
-			} else
+			}  else
 			// if action is show traffic details
 			if ("viewDetail".equals(action)) {
 				String trafficID = request.getParameter("trafficID");
 				// url get traffic by categoryID
-				String url = "http://bienbaogiaothong.tk/rest/Service/ViewDetail?id=";
+				String url = GlobalValue.ServiceAddress + Constants.VIEW_TRAFFIC_DETAIL_SERVICE + "?id=";
 				url += trafficID;
 				// connect and receive json string from web service
 				Client client = Client.create();
