@@ -16,7 +16,7 @@ TrafficSign trafficDetails = (TrafficSign) request.getAttribute("trafficDetail")
 						<div class="trafficDetail">
 							<div class="contentImgDetails">
 								<img class="imageDetails"
-									src="http://bienbaogiaothong.tk/rest/Image/Main/<%=trafficDetails.getImage()%>"
+									src="http://bienbaogiaothong.tk/<%=trafficDetails.getImage()%>"
 									alt="Responsive image" />
 							</div>
 							<br /> <strong>Số hiệu biển báo:</strong> <font> <%=trafficDetails.getTrafficID() %></font> <br />
