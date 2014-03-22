@@ -18,6 +18,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
 import json.FavoriteJSON;
+import json.ResultShortJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import model.Category;
@@ -212,14 +213,14 @@ public class UserController extends HttpServlet {
 					if (response.getStatus() != 200) {
 						response.sendRedirect(Constants.ERROR_PAGE);
 					}
-					String searchString = clientResponse
+					String output = clientResponse
 							.getEntity(String.class);
 					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
 					// parse output to list trafficSign using Gson
 					Gson gson = new Gson();
-					Type typeSearch = new TypeToken<ArrayList<FavoriteJSON>>() {
+					Type type = new TypeToken<ArrayList<FavoriteJSON>>() {
 					}.getType();
-					listTraffic = gson.fromJson(searchString, typeSearch);
+					listTraffic = gson.fromJson(output, type);
 					request.setAttribute("listTraffic", listTraffic);
 					// request to ListFavorite.jsp
 					RequestDispatcher rd = request
@@ -235,29 +236,29 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
 					String urlViewFavorite = GlobalValue.ServiceAddress
-							+ Constants.VIEW_FAVORITE_MANAGE + "?creator="
+							+ Constants.LIST_HISTORY_TRAFFIC + "?creator="
 							+ userID;
 					// connect and receive json string from web service
 					Client client = Client.create();
 					WebResource webRsource = client.resource(urlViewFavorite);
 					ClientResponse clientResponse = webRsource.accept(
 							"application/json").get(ClientResponse.class);
-					// handle error (not implement yet)
+					// handle error, redirect to error page
 					if (response.getStatus() != 200) {
 						response.sendRedirect(Constants.ERROR_PAGE);
 					}
-					String searchString = clientResponse
+					String output = clientResponse
 							.getEntity(String.class);
-					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
+					ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
 					// parse output to list trafficSign using Gson
 					Gson gson = new Gson();
-					Type typeSearch = new TypeToken<ArrayList<FavoriteJSON>>() {
+					Type type = new TypeToken<ArrayList<ResultShortJSON>>() {
 					}.getType();
-					listTraffic = gson.fromJson(searchString, typeSearch);
-					request.setAttribute("listTraffic", listTraffic);
+					listHistory = gson.fromJson(output, type);
+					request.setAttribute("listHistory", listHistory);
 					// request to ListFavorite.jsp
 					RequestDispatcher rd = request
-							.getRequestDispatcher("User/ListFavorite.jsp");
+							.getRequestDispatcher("User/ListHistory.jsp");
 					rd.forward(request, response);
 				}
 			}

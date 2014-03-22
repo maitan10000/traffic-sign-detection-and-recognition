@@ -1,3 +1,4 @@
+<%@page import="json.ResultShortJSON"%>
 <%@page import="json.FavoriteJSON"%>
 <%@page import="model.Category"%>
 <%@page import="java.util.ArrayList"%>
@@ -22,7 +23,7 @@
 
 
 <%
-ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttribute("listTraffic");
+	ArrayList<ResultShortJSON> listHistory = (ArrayList<ResultShortJSON>) request.getAttribute("listHistory");
 %>
 <body on>
 	<div class="wrapper">
@@ -81,35 +82,32 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 			</div>
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
-					<div class="content-title">DANH SÁCH ĐÃ LƯU</div>
+					<div class="content-title">LỊCH SỬ TÌM KIẾM</div>
 					<%
-						if( listTraffic != null){
+						if( listHistory != null){
 					%>
 					<div class="contentTable " style="margin-top: 20px">
-						<table id="resultTable" class="table table-striped .table-condensed">
+						<table id="resultTable"
+							class="table table-striped .table-condensed">
 							<thead>
-								<th>Hình Ảnh</th>
-								<th>Số Hiệu</th>
-								<th>Tên Biển Báo</th>
+								<th>STT</th>
+								<th>Ngày tạo</th>
+								<th>Người dùng</th>
 							</thead>
 							<tbody>
 								<%
-									if( listTraffic.size()> 0){
-										for(int i = 0; i< listTraffic.size();i++){
+									if( listHistory.size()> 0){
+															for(int i = 0; i< listHistory.size();i++){
 								%>
 
 								<tr>
-									<td><img class="trafficImage"
-										src="http://bienbaogiaothong.tk/<%=listTraffic.get(i).getTrafficImage()%>"
-										alt="Responsive image" /></td>
-									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal"
-										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getTrafficName()%></a></td>
-
+									<td><%=i+1%></td>
+									<td><a href="#" data-toggle="modal"><%=listHistory.get(i).getCreateDate().toString()%></a></td>
+									<td><%=listHistory.get(i).getCreator()%></td>
 								</tr>
 								<%
 									} 
-																																							}
+																																													}
 								%>
 							</tbody>
 						</table>
@@ -180,10 +178,10 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 
 </body>
 <script type="text/javascript">
-var pager = new Pager('resultTable', 5);
-pager.init();
-pager.showPageNav('pager', 'pageNavPosition');
-pager.showPage(1);
+	var pager = new Pager('resultTable', 5);
+	pager.init();
+	pager.showPageNav('pager', 'pageNavPosition');
+	pager.showPage(1);
 </script>
 <script type="text/javascript">
 	//ajax to get traffic when click link
