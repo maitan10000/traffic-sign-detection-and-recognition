@@ -1,3 +1,4 @@
+<%@page import="model.Category"%>
 <%@page import="model.TrafficSign"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -18,7 +19,7 @@
 
 
 <%
-	String jsonObject = (String) request.getAttribute("category");
+	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
 ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribute("listTraffic");
 %>
 <body on>
@@ -36,8 +37,8 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 					</h1>
 					<!--   _____________ -->
 					<ul class="links">
-						<li><a href="/TrafficWeb/Admin/Login.jsp"
-							title="Log In">Đăng Nhập</a></li>
+						<li><a href="/TrafficWeb/Admin/Login.jsp" title="Log In">Đăng
+								Nhập</a></li>
 						<li class="separator">|</li>
 						<li><a href="customer/account/create/index.html">Đăng Ký</a></li>
 						<li class="separator">|</li>
@@ -48,7 +49,8 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 				<div class="menu-container">
 					<nav class="olegnax">
 					<ul id="nav">
-						<li class="level0 nav-3 level-top"><a href="/TrafficWeb/UserController?action=searchManual"
+						<li class="level0 nav-3 level-top"><a
+							href="/TrafficWeb/UserController?action=searchManual"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
 						<li class="level0 nav-4 level-top"><a href="#"
@@ -78,15 +80,20 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
 					<div class="content-title">TRA CỨU BIỂN BÁO</div>
-					<form action="UserController" enctype="application/x-www-form-urlencoded">
+					<form action="UserController"
+						enctype="application/x-www-form-urlencoded">
 						<div class="options">
 							<div class="searchName" style="margin-right: 30px;">
 								Tên biển báo: <input name="searchKey" type="text" />
 							</div>
 							<div class="content-Selectbox font-StyleTitle needMargin">
-								Loại Biển Báo: <select class="sortBy font-Style" id="catID"
-									onclick="loadCat()">
-									<option class="font-Style">Tất Cả</option>
+								Loại Biển Báo: <select class="sortBy font-Style" id="catID" name="catID"
+									>
+									<option class="font-Style" value="0">Tất Cả</option>
+									<%for(int i = 0; i< listCat.size();i ++) {
+									%>
+									<option class="font-Style" value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+									<%} %>
 								</select>
 							</div>
 							<div class="content-Selectbox font-StyleTitle needMargin">
@@ -97,7 +104,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							</div>
 							<div class="searchName" style="padding-bottom: 5px">
 								<button type="submit" class="btn btn-default btn-sm"
-									value="searchTraffic" name="action">Tìm kiếm</button>
+									value="searchManual" name="action">Tìm kiếm</button>
 							</div>
 							<div style="clear: both"></div>
 						</div>
@@ -116,17 +123,18 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-															for(int i = 0; i< listTraffic.size();i++){
+																					for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
 									<td><img class="trafficImage"
-										src="http://bienbaogiaothong.tk/rest/Image/Main/<%=listTraffic.get(i).getImage()%>"
+										src="http://bienbaogiaothong.tk/<%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal" onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
+									<td><a href="#myModal" data-toggle="modal"
+										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
 									<%
-										if("1".equals(listTraffic.get(i).getCategoryID())) {
+										if("3".equals(listTraffic.get(i).getCategoryID())) {
 									%>
 									<td>Biển báo nguy hiểm</td>
 									<%
@@ -140,7 +148,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 										}
 									%>
 									<%
-										if("3".equals(listTraffic.get(i).getCategoryID())) {
+										if("1".equals(listTraffic.get(i).getCategoryID())) {
 									%>
 									<td>Biển báo cấm</td>
 									<%
@@ -150,7 +158,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 								</tr>
 								<%
 									} 
-																					}
+																											}
 								%>
 							</tbody>
 						</table>
@@ -166,14 +174,18 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<div class="brands">
 								<a href="#"><img src="Content/Image/brands/brand1.gif"
 									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand2.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand3.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand4.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand5.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand6.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand7.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand8.gif" alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand9.gif" alt=""></a>
+									src="User/Content/Image/brands/brand2.gif" alt=""></a> <a
+									href="#"><img src="User/Content/Image/brands/brand3.gif"
+									alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand4.gif" alt=""></a> <a
+									href="#"><img src="User/Content/Image/brands/brand5.gif"
+									alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand6.gif" alt=""></a> <a
+									href="#"><img src="User/Content/Image/brands/brand7.gif"
+									alt=""></a> <a href="#"><img
+									src="User/Content/Image/brands/brand8.gif" alt=""></a> <a
+									href="#"><img src="User/Content/Image/brands/brand9.gif"
+									alt=""></a>
 							</div>
 						</div>
 						<div class="footer-left">
@@ -211,39 +223,26 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 		<!-- Modal -->
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			style="display: none;" aria-labelledby="myModalLabel"
-			aria-hidden="true">
-			
-		</div>
+			aria-hidden="true"></div>
 	</div>
 
 </body>
 <script type="text/javascript">
-function loadCat(){
-	var jsonString = <%=jsonObject%>;
-		var jsonArray = JSON.parse(jsonString);
-		var selectBox = document.getElementById('catID');
-		if (selectBox.childNodes.length == 3) {
-			for (var i = 0; i < jsonArray.length; i++) {
-				var option = document.createElement('option');
-				option.setAttribute("class", "font-Style");
-				option.setAttribute("value", jsonArray[i].categoryID);
-				option.innerHTML = jsonArray[i].categoryName;
-				selectBox.appendChild(option);
-			}
-		}
-
-	}
+	
 	//ajax to get traffic when click link
-	function showDetails(trafficID){
+	function showDetails(trafficID) {
 		var action = "viewDetail";
 		$.ajax({
-			url: "/TrafficWeb/UserController",
-			type: "GET",
-			data: {action : action, trafficID : trafficID},
-			success: function (result) {
+			url : "/TrafficWeb/UserController",
+			type : "GET",
+			data : {
+				action : action,
+				trafficID : trafficID
+			},
+			success : function(result) {
 				$("#myModal").html(result);
 			}
-			
+
 		});
 	}
 </script>
