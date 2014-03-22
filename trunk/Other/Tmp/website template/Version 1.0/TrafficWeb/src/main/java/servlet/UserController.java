@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.ProcessBuilder.Redirect;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import utility.Constants;
 import utility.GlobalValue;
+import model.Category;
 import model.TrafficSign;
 
 import com.google.gson.Gson;
@@ -60,30 +62,60 @@ public class UserController extends HttpServlet {
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
-			
+
 			if ("login".equals(action)) {
 				String username = request.getParameter("txtUsername");
 				String password = request.getParameter("txtPassword");
 				// url login
-				String url = GlobalValue.ServiceAddress +  Constants.LIST_CATEGORY_SERVICE;
+				String url = GlobalValue.ServiceAddress
+						+ Constants.LIST_CATEGORY_SERVICE;
 			} else
 			// load searchmanual page with all category
 			if ("searchManual".equals(action)) {
-				// url get all category
-				String url = "http://bienbaogiaothong.tk/rest/Service/ListCategory";
+				String searchKey = request.getParameter("searchKey");
+				String catID = request.getParameter("catID");
+				// get all category and set to attribute category for display in selectbox
+				String urlGetCategory = GlobalValue.ServiceAddress + Constants.LIST_CATEGORY_SERVICE ;
 				Client client = Client.create();
-				WebResource webResource = client.resource(url);
+				WebResource webResource = client.resource(urlGetCategory);
 				ClientResponse clientResponse = webResource.accept(
 						"application/json").get(ClientResponse.class);
-				// handle error (not implement yet)
+				// handle error (send redirect to error page)
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 
 				String output = clientResponse.getEntity(String.class);
+				// Arraylist Category to contain all category
+				ArrayList<Category> category = new ArrayList<Category>();
+				// parse output to List category using Gson
+				Gson gson = new Gson();
+				Type type = new TypeToken<ArrayList<Category>>(){}.getType();
+				category = gson.fromJson(output, type);
+				request.setAttribute("category", category);
+				// excute search manual if search key or categoryID is not null
+				if(searchKey != null && catID != null){
+					String urlSearchManual = GlobalValue.ServiceAddress + Constants.SEARCH_MANUAL_SERVICE + "?";
+					urlSearchManual = urlSearchManual + "name=" + URLEncoder.encode(searchKey, "UTF-8");
+					urlSearchManual = urlSearchManual + "&cateID=" + catID;
+					// connect and receive json string from web service
+					WebResource webRsource = client.resource(urlSearchManual);
+					clientResponse = webRsource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String searchString = clientResponse.getEntity(String.class);
+					ArrayList<TrafficSign> listTraffic = new ArrayList<TrafficSign>();
+					// parse output to list trafficSign using Gson
+					Type typeSearch = new TypeToken<ArrayList<TrafficSign>>() {
+					}.getType();
+					listTraffic = gson.fromJson(searchString, typeSearch);
+					request.setAttribute("listTraffic", listTraffic);
+				}
 				// request to searchManual.jsp
-				request.setAttribute("category", output);
+				
 				RequestDispatcher rd = request
 						.getRequestDispatcher("User/SearchManual.jsp");
 				rd.forward(request, response);
@@ -92,7 +124,7 @@ public class UserController extends HttpServlet {
 			// search traffic by name and return to searchManual page
 			if ("searchTraffic".equals(action)) {
 				String searchKey = request.getParameter("searchKey");
-				//searchKey = searchKey.replace(" ", "%20");
+				// searchKey = searchKey.replace(" ", "%20");
 				// url get traffic by categoryID
 				String url = "http://bienbaogiaothong.tk/rest/Service/SearchByName?name=";
 				url += URLEncoder.encode(searchKey, "UTF-8");
@@ -150,10 +182,9 @@ public class UserController extends HttpServlet {
 				rd.forward(request, response);
 			}
 
-		} catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			out.close();
 		}
 	}
