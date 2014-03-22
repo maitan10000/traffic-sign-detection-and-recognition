@@ -87,13 +87,17 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 								Tên biển báo: <input name="searchKey" type="text" />
 							</div>
 							<div class="content-Selectbox font-StyleTitle needMargin">
-								Loại Biển Báo: <select class="sortBy font-Style" id="catID" name="catID"
-									>
+								Loại Biển Báo: <select class="sortBy font-Style" id="catID"
+									name="catID">
 									<option class="font-Style" value="0">Tất Cả</option>
-									<%for(int i = 0; i< listCat.size();i ++) {
+									<%
+										for(int i = 0; i< listCat.size();i ++) {
 									%>
-									<option class="font-Style" value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
-									<%} %>
+									<option class="font-Style"
+										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+									<%
+										}
+									%>
 								</select>
 							</div>
 							<div class="content-Selectbox font-StyleTitle needMargin">
@@ -123,7 +127,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																					for(int i = 0; i< listTraffic.size();i++){
+																											for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -158,7 +162,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 								</tr>
 								<%
 									} 
-																											}
+																																	}
 								%>
 							</tbody>
 						</table>
@@ -228,7 +232,6 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 
 </body>
 <script type="text/javascript">
-	
 	//ajax to get traffic when click link
 	function showDetails(trafficID) {
 		var action = "viewDetail";
