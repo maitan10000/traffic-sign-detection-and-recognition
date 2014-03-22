@@ -26,7 +26,7 @@
 	/*border: blue thin solid;*/
 	float: right;
 	position: relative;
-	z-index: 1500;
+	/*z-index: 1500;*/
 }
 
 .list-image-result {
@@ -151,7 +151,8 @@ legend {
 											Tải hình ảnh: <input type="file" id="file" accept="image/*"
 												name="file" onchange="showThumbnails()" />
 											<button id="btn-wrong-recognize" class="btn btn-warning"
-												onclick="reportWrongRecognize(100); return false;">Sai kết quả</button>
+												onclick="reportWrongRecognize(100); return false;">Sai
+												kết quả</button>
 										</legend>
 										<div id="preview"></div>
 										<div class="image-result">
@@ -166,7 +167,7 @@ legend {
 
 						<script>
 							var server = 'http://bienbaogiaothong.tk/';
-							//var server = 'http://localhost:8080/Traffic/';
+							server = 'http://localhost:8080/Traffic/';
 							//<!-- Javascript function to add thumbnails and progress bars to the grid -->
 							function showThumbnails() {
 								$('#preview').html('');
@@ -181,7 +182,7 @@ legend {
 										img.src = e.target.result;
 									};
 								})(image);
-								fileReader.readAsDataURL(file);								
+								fileReader.readAsDataURL(file);
 								uploadFile(file);
 							}
 							//<!-- The actual upload function that updates progress bars and uploads the images to a script (in my case php) -->							 
@@ -223,7 +224,7 @@ legend {
 									var addInfo = '';
 									if (resultJSON[i].trafficID != undefined) {
 										trafficName = resultJSON[i].trafficName;
-										addInfo = 'title="Kích để xem chi tiết" onclick="viewDetail(' + resultJSON[i].trafficID + ');return false;" ';
+										addInfo = 'title="Kích để xem chi tiết" onclick="viewDetail(\'' + resultJSON[i].trafficID + '\');return false;" ';
 										imageLink = server + resultJSON[i].trafficImage;
 									}
 									var liContent = '<li><a href="#" '+ addInfo + '><img class="list-image-result list-group-item" src="'+imageLink+'"> <span >' + trafficName + '</span></a></li>';
@@ -274,12 +275,24 @@ legend {
 							}
 
 							//view detail
-							function viewDetail(id) {
-								alert('View detail :' + id);
+							function viewDetail(trafficID) {
+								//alert(trafficID);
+								var action = "viewDetail";
+								$.ajax({
+									url : "/TrafficWeb/UserController",
+									type : "GET",
+									data : {
+										action : action,
+										trafficID : trafficID
+									},
+									success : function(result) {
+										$("#myModal").html(result);
+										$("#myModal").modal('show');
+									}
+								});
 							}
-							function reportWrongRecognize(id)
-							{
-								alert('Report wrong recognize: '+id);
+							function reportWrongRecognize(id) {
+								alert('Report wrong recognize: ' + id);
 							}
 						</script>
 					</div>
@@ -287,47 +300,6 @@ legend {
 				</div>
 				<div class="contentTable "></div>
 				<div style="clear: both"></div>
-				<!-- Modal -->
-				<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-					aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal"
-									aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="myModalLabel">Thông Tin Biển
-									Báo</h4>
-							</div>
-							<div class="modal-body">
-								<div class="trafficDetail">
-									<div class="contentImgDetails">
-										<img class="imageDetails"
-											src="Content/Image/Traffic/bien nguy hiem tre em.jpg"
-											alt="Responsive image" />
-									</div>
-									<br /> <strong>Số hiệu biển báo:</strong> <font> NH001</font>
-									<br /> <br /> <strong>Tên Biển Báo:</strong> <font>
-										Biển báo nguy hiểm có người băng ngang</font> <br /> <br /> <strong>Nội
-										dung:</strong> <font> Biển này được sử dụng độc lập ở những vị
-										trí sang ngang, đường không có tổ chức điều khiển giao thông
-										hoặc có thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này
-										người lái xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu
-										tiên cho người đi bộ sang ngang. </font> <br /> <br /> <strong>Mức
-										phạt:</strong> <font> Biển này được sử dụng độc lập ở những vị
-										trí sang ngang, đường không có tổ chức điều khiển giao thông
-										hoặc có thể sử dụng phối hợp với vạch kẻ đường. Gặp biển này
-										người lái xe phải điều khiển xe chạy chậm, chú ý quan sát, ưu
-										tiên cho người đi bộ sang ngang. </font>
-								</div>
-							</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default"
-									data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Lưu biển
-									báo</button>
-							</div>
-						</div>
-					</div>
 				</div>
 			</div>
 			<div class="footer-container">
@@ -377,5 +349,9 @@ legend {
 			</div>
 		</div>
 	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+		style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
 </body>
 </html>
