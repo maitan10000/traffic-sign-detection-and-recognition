@@ -15,11 +15,17 @@ public final class Constants {
 
 	// for view traffic detail
 	public final static String VIEW_TRAFFIC_DETAIL_SERVICE = "Traffic/ViewDetail";
+	
+	// for check favorite is added or not
+	public final static String CHECK_FAVORITE_MANAGE = "Manage/CheckFavorite";
 
 	// for add favorite
 	public final static String ADD_FAVORITE_MANAGE = "Manage/AddFavorite";
+	
+	// for delete favorite
+	public final static String DELETE_FAVORITE_MANAGE = "Manage/DeleteFavorite";
 
-	// for add favorite
+	// for view list favorite
 	public final static String VIEW_FAVORITE_MANAGE = "Manage/ListFavorite";
 	
 	// for  view history
