@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import json.FavoriteJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import model.Category;
@@ -59,6 +61,9 @@ public class UserController extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
+		// create sample session for testing
+		HttpSession sessionTest = request.getSession(true);
+		sessionTest.setAttribute("user", "user1");
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
@@ -74,8 +79,10 @@ public class UserController extends HttpServlet {
 			if ("searchManual".equals(action)) {
 				String searchKey = request.getParameter("searchKey");
 				String catID = request.getParameter("catID");
-				// get all category and set to attribute category for display in selectbox
-				String urlGetCategory = GlobalValue.ServiceAddress + Constants.LIST_CATEGORY_SERVICE ;
+				// get all category and set to attribute category for display in
+				// selectbox
+				String urlGetCategory = GlobalValue.ServiceAddress
+						+ Constants.LIST_CATEGORY_SERVICE;
 				Client client = Client.create();
 				WebResource webResource = client.resource(urlGetCategory);
 				ClientResponse clientResponse = webResource.accept(
@@ -90,24 +97,28 @@ public class UserController extends HttpServlet {
 				ArrayList<Category> category = new ArrayList<Category>();
 				// parse output to List category using Gson
 				Gson gson = new Gson();
-				Type type = new TypeToken<ArrayList<Category>>(){}.getType();
+				Type type = new TypeToken<ArrayList<Category>>() {
+				}.getType();
 				category = gson.fromJson(output, type);
 				request.setAttribute("category", category);
 				// excute search manual if search key or categoryID is not null
-				if(searchKey != null && catID != null){
+				if (searchKey != null && catID != null) {
 					// create url searchManual
-					String urlSearchManual = GlobalValue.ServiceAddress + Constants.SEARCH_MANUAL_SERVICE + "?";
-					urlSearchManual = urlSearchManual + "name=" + URLEncoder.encode(searchKey, "UTF-8");
+					String urlSearchManual = GlobalValue.ServiceAddress
+							+ Constants.SEARCH_MANUAL_SERVICE + "?";
+					urlSearchManual = urlSearchManual + "name="
+							+ URLEncoder.encode(searchKey, "UTF-8");
 					urlSearchManual = urlSearchManual + "&cateID=" + catID;
 					// connect and receive json string from web service
 					WebResource webRsource = client.resource(urlSearchManual);
-					clientResponse = webRsource.accept(
-							"application/json").get(ClientResponse.class);
+					clientResponse = webRsource.accept("application/json").get(
+							ClientResponse.class);
 					// handle error (not implement yet)
 					if (response.getStatus() != 200) {
 						response.sendRedirect(Constants.ERROR_PAGE);
 					}
-					String searchString = clientResponse.getEntity(String.class);
+					String searchString = clientResponse
+							.getEntity(String.class);
 					ArrayList<TrafficSign> listTraffic = new ArrayList<TrafficSign>();
 					// parse output to list trafficSign using Gson
 					Type typeSearch = new TypeToken<ArrayList<TrafficSign>>() {
@@ -116,17 +127,18 @@ public class UserController extends HttpServlet {
 					request.setAttribute("listTraffic", listTraffic);
 				}
 				// request to searchManual.jsp
-				
+
 				RequestDispatcher rd = request
 						.getRequestDispatcher("User/SearchManual.jsp");
 				rd.forward(request, response);
 
-			}  else
+			} else
 			// if action is show traffic details
 			if ("viewDetail".equals(action)) {
 				String trafficID = request.getParameter("trafficID");
 				// url get traffic by categoryID
-				String url = GlobalValue.ServiceAddress + Constants.VIEW_TRAFFIC_DETAIL_SERVICE + "?id=";
+				String url = GlobalValue.ServiceAddress
+						+ Constants.VIEW_TRAFFIC_DETAIL_SERVICE + "?id=";
 				url += trafficID;
 				// connect and receive json string from web service
 				Client client = Client.create();
@@ -150,6 +162,104 @@ public class UserController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("User/TrafficDetail.jsp");
 				rd.forward(request, response);
+			} else
+			// if action is add favorite
+			if ("AddFavorite".equals(action)) {
+				// get trafficID and userID
+				String creator = request.getParameter("userID");
+				String trafficID = request.getParameter("trafficID");
+				// url for add favorite
+				String urlAddFavorite = GlobalValue.ServiceAddress
+						+ Constants.ADD_FAVORITE_MANAGE;
+				// String input = "{\"creator\":\"" + creator
+				// + "\",\"trafficID\":\"" + trafficID + "\"}";
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(urlAddFavorite);
+				MultivaluedMap formData = new MultivaluedMapImpl();
+				formData.add("creator", creator);
+				formData.add("trafficID", trafficID);
+				ClientResponse clientResponse = webRsource.type(
+						MediaType.APPLICATION_FORM_URLENCODED).post(
+						ClientResponse.class, formData);
+				// ClientResponse clientResponse = webRsource.type(
+				// "application/json").post(ClientResponse.class, input);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.println(output);
+
+			} else
+			// if action is view favorite
+			if ("viewFavorite".equals(action)) {
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				if (userID == null) {
+					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
+				} else {
+					String urlViewFavorite = GlobalValue.ServiceAddress
+							+ Constants.VIEW_FAVORITE_MANAGE + "?creator="
+							+ userID;
+					// connect and receive json string from web service
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlViewFavorite);
+					ClientResponse clientResponse = webRsource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String searchString = clientResponse
+							.getEntity(String.class);
+					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
+					// parse output to list trafficSign using Gson
+					Gson gson = new Gson();
+					Type typeSearch = new TypeToken<ArrayList<FavoriteJSON>>() {
+					}.getType();
+					listTraffic = gson.fromJson(searchString, typeSearch);
+					request.setAttribute("listTraffic", listTraffic);
+					// request to ListFavorite.jsp
+					RequestDispatcher rd = request
+							.getRequestDispatcher("User/ListFavorite.jsp");
+					rd.forward(request, response);
+				}
+			} else
+			// if action is view history
+			if ("viewHistory".equals(action)) {
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				if (userID == null) {
+					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
+				} else {
+					String urlViewFavorite = GlobalValue.ServiceAddress
+							+ Constants.VIEW_FAVORITE_MANAGE + "?creator="
+							+ userID;
+					// connect and receive json string from web service
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlViewFavorite);
+					ClientResponse clientResponse = webRsource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String searchString = clientResponse
+							.getEntity(String.class);
+					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
+					// parse output to list trafficSign using Gson
+					Gson gson = new Gson();
+					Type typeSearch = new TypeToken<ArrayList<FavoriteJSON>>() {
+					}.getType();
+					listTraffic = gson.fromJson(searchString, typeSearch);
+					request.setAttribute("listTraffic", listTraffic);
+					// request to ListFavorite.jsp
+					RequestDispatcher rd = request
+							.getRequestDispatcher("User/ListFavorite.jsp");
+					rd.forward(request, response);
+				}
 			}
 
 		} catch (Exception e) {
