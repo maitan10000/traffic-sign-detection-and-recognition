@@ -10,10 +10,13 @@
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
 <link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
 	type="text/css" />
+<link href="User/Content/Css/paging.css" rel="stylesheet"
+	type="text/css" />
 <script type="text/javascript"
 	src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
 <script type="text/javascript"
 	src="User/Content/bootstrap/js/bootstrap.js"></script>
+<script type="text/javascript" src="User/Content/Scripts/paging.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
 
@@ -117,7 +120,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 						if( listTraffic != null){
 					%>
 					<div class="contentTable " style="margin-top: 20px">
-						<table class="table table-striped .table-condensed">
+						<table id="resultTable" class="table table-striped .table-condensed">
 							<thead>
 								<th>Hình Ảnh</th>
 								<th>Số Hiệu</th>
@@ -127,7 +130,7 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																											for(int i = 0; i< listTraffic.size();i++){
+																																	for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -162,11 +165,12 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 								</tr>
 								<%
 									} 
-																																	}
+																																							}
 								%>
 							</tbody>
 						</table>
 					</div>
+					<div id="pageNavPosition" style="padding-top: 20px" align="center"></div>
 					<%
 						}
 					%>
@@ -231,6 +235,12 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 	</div>
 
 </body>
+<script type="text/javascript">
+var pager = new Pager('resultTable', 5);
+pager.init();
+pager.showPageNav('pager', 'pageNavPosition');
+pager.showPage(1);
+</script>
 <script type="text/javascript">
 	//ajax to get traffic when click link
 	function showDetails(trafficID) {
