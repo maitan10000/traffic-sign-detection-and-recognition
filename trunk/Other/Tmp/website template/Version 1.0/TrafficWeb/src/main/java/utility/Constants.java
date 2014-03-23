@@ -43,6 +43,7 @@ public final class Constants {
 	public final static String MANAGE_REPORT_LIST = "rest/Manage/ListReportByType";
 	public final static String MANAGE_REPORT_VIEW = "rest/Manage/GetReportDetail";
 	public final static String MANAGE_REPORT_DELETE = "rest/Manage/DeleteReport";
+	public final static String MANAGE_REPORT_SEND = "rest/Manage/SendReport";
 	
 	//for get detail of result
 	
