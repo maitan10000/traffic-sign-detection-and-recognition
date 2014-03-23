@@ -79,7 +79,7 @@
 			<div class="panel-header">
 				<i class="icon-lock icon-large"></i> Sign In
 			</div>
-			<form action="AdminController" method="post">
+			<form action="/TrafficWeb/AdminController" method="post">
 				<div class="panel-content">
 
 					<div class="control-group">
@@ -96,7 +96,7 @@
 							<div class="input-prepend">
 								<span class="add-on"><i class="icon-key icon-large"></i></span><input
 									class="span3" placeholder="Password" name="txtPassword"
-									size="16" type="text">
+									size="16" type="password">
 							</div>
 						</div>
 					</div>

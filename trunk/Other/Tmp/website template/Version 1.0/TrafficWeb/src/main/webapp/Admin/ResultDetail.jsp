@@ -17,7 +17,7 @@
 		<div class="modal-body">
 			<div class="resultDetail">
 				<br /> <strong>Hình ảnh:</strong> <font><%=resultDetails.getUploadedImage()%></font>
-				<br /> <br /> <strong>Danh sách biển báo:</strong> <font> <%=resultDetails.getListTraffic()%></font>
+				<br /> <br /> <strong>Danh sách biển báo:</strong> <font> <%= resultDetails.getListTraffic()%></font>
 				<br /> <br /> <strong>Người tạo:</strong> <font><%=resultDetails.getCreator()%>
 				</font> <br /> <br /> <strong>Ngày tạo:</strong> <font><%=resultDetails.getCreateDate()%></font><br />
 				<br /> <strong>Trạng thái: </strong> <font><%=resultDetails.getIsActive()%>
