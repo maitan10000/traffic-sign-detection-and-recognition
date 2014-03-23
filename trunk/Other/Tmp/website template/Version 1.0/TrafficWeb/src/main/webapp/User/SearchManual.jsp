@@ -1,3 +1,4 @@
+<%@page import="utility.GlobalValue"%>
 <%@page import="json.TrafficInfoShortJSON"%>
 <%@page import="json.TrafficInfoJSON"%>
 <%@page import="model.Category"%>
@@ -138,32 +139,12 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 
 								<tr>
 									<td><img class="trafficImage"
-										src="http://bienbaogiaothong.tk/<%=listTraffic.get(i).getImage()%>"
+										src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
-									<%
-										if("3".equals(listTraffic.get(i).getCategoryID())) {
-									%>
-									<td>Biển báo nguy hiểm</td>
-									<%
-										}
-									%>
-									<%
-										if("2".equals(listTraffic.get(i).getCategoryID())) {
-									%>
-									<td>Biển báo hướng dẫn</td>
-									<%
-										}
-									%>
-									<%
-										if("1".equals(listTraffic.get(i).getCategoryID())) {
-									%>
-									<td>Biển báo cấm</td>
-									<%
-										}
-									%>
+									<td><%=listTraffic.get(i).getCategoryName() %></td>									
 
 								</tr>
 								<%

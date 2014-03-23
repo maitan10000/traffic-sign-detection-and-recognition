@@ -1,3 +1,4 @@
+<%@page import="utility.GlobalValue"%>
 <%@page import="json.FavoriteJSON"%>
 <%@page import="model.Category"%>
 <%@page import="java.util.ArrayList"%>
@@ -24,11 +25,11 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 
 								<tr>
 									<td><img class="trafficImage"
-										src="http://bienbaogiaothong.tk/<%=listTraffic.get(i).getTrafficImage()%>"
+										src="<%=GlobalValue.getServiceAddress() %><%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
-										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getTrafficName()%></a></td>
+										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
 									<td><button class="btn btn-inverse" onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
 								</tr>
 								<%
