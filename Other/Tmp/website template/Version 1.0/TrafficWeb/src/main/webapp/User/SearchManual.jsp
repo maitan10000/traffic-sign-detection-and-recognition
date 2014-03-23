@@ -1,3 +1,5 @@
+<%@page import="json.TrafficInfoShortJSON"%>
+<%@page import="json.TrafficInfoJSON"%>
 <%@page import="model.Category"%>
 <%@page import="model.TrafficSign"%>
 <%@page import="java.util.ArrayList"%>
@@ -23,7 +25,7 @@
 
 <%
 	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
-ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribute("listTraffic");
+ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
 %>
 <body on>
 	<div class="wrapper">
