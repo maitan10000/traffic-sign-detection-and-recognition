@@ -19,6 +19,8 @@ import json.ReportShortJSON;
 
 import com.google.gson.Gson;
 
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
 import dao.FavoriteDAO;
 import dao.FavoriteDAOImpl;
 import dao.ReportDAO;
@@ -108,6 +110,7 @@ public class Manage {
 
 			// create return Json for list favorite
 			TrafficInfoDAO trafficInfoDAO = new TrafficInfoDAOImpl();
+			CategoryDAO categoryDAO = new CategoryDAOImpl();
 			for (FavoriteDTO favoriteDTO : listFavorData) {
 				// get traffic info
 				String trafficID = favoriteDTO.getTrafficID();
@@ -117,10 +120,14 @@ public class Manage {
 				// create favorite JSON
 				FavoriteJSON favoriteJSON = new FavoriteJSON();
 				favoriteJSON.setTrafficID(trafficID);
-				favoriteJSON.setTrafficName(trafficInfoDTO.getName());
+				favoriteJSON.setName(trafficInfoDTO.getName());
 				String imageLink = Constants.MAIN_IMAGE_SUB_LINK
 						+ trafficInfoDTO.getImage();
-				favoriteJSON.setTrafficImage(imageLink);
+				favoriteJSON.setImage(imageLink);
+				favoriteJSON.setCategoryID(trafficInfoDTO.getCategoryID());
+				favoriteJSON.setCategoryName(categoryDAO
+						.getCategoryName(trafficInfoDTO.getCategoryID()));
+
 				listFavoriteJSON.add(favoriteJSON);
 			}// end for listFavorData
 		}
