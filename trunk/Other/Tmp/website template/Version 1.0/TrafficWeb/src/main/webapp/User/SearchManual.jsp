@@ -136,7 +136,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																																																									for(int i = 0; i< listTraffic.size();i++){
+																																																															for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -151,7 +151,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 								</tr>
 								<%
 									} 
-																																																															}
+																																																																					}
 								%>
 							</tbody>
 						</table>
@@ -218,22 +218,24 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			style="display: none;" aria-labelledby="myModalLabel"
 			aria-hidden="true"></div>
-			
-			
+
+
 		<!-- Modal for report-->
-		<div id="reportModal" class="modal hide fade" tabindex="-1" role="dialog"
-			aria-labelledby="myModalLabel" aria-hidden="true">
+		<div id="reportModal" class="modal hide fade" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">×</button>
-				<h3 id="myModalLabel">Modal header</h3>
+				<h3 id="myModalLabel">Gửi Ý Kiến</h3>
 			</div>
 			<div class="modal-body">
-				<p>One fine body…</p>
+				<strong>Nội dung ý kiến :</strong><br>
+				<textarea rows="3" cols="12" id="txtContent" style="width: 515px; resize:none;"></textarea>
+				<input type="hidden" id="reference_id" />
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button class="btn btn-primary">Gửi Ý Kiến</button>
+				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi Ý Kiến</button>
 			</div>
 		</div>
 	</div>
@@ -347,11 +349,41 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 
 				});
 	}
-	// function show popup for send report
-	function showFromReport(){
-		$('#myModal').modal('hide');
-		$('#reportModal').modal('show')
+	// ajax send report
+	function sendReport(trafficID){
+		var type = '2';
+		var content = document.getElementById("txtContent").value;
+		var action = "reportTraffic";
+		$.ajax({
+			url : "/TrafficWeb/UserController",
+			type : "GET",
+			data : {
+				action : action,
+				trafficID : trafficID,
+				type : type,
+				content : content
+			},
+			success : function(result) {
+				$('#reportModal').modal('hide');
+			}
+
+		});
 		
 	}
+	// function show popup for send report
+	function showFromReport(trafficID) {
+		$('#reference_id').val(trafficID);
+		$('#myModal').modal('hide');
+		$('#reportModal').modal('show');
+
+	}
+	// event on shown to set onclick
+	$('#reportModal').on('show', function() {
+		document.getElementById("txtContent").value = '';
+		var trafficID = document.getElementById("reference_id").value;
+		var functionName = 'sendReport(' + trafficID +')';
+		var button = document.getElementById("btnSubmitReport");
+		button.getAttributeNode("onclick").value = functionName;
+	});
 </script>
 </html>
