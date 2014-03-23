@@ -1,8 +1,10 @@
 package model;
+import java.util.ArrayList;
+import json.ResultInput;
 
 public class Result {
-	String uploadedImage;
-	String listTraffic;
+	private String uploadedImage;
+	private ArrayList<ResultInput> listTraffic;
 	String creator;
 	String createDate;
 	Boolean isActive;
@@ -12,10 +14,11 @@ public class Result {
 	public void setUploadedImage(String uploadedImage) {
 		this.uploadedImage = uploadedImage;
 	}
-	public String getListTraffic() {
+	
+	public ArrayList<ResultInput> getListTraffic() {
 		return listTraffic;
 	}
-	public void setListTraffic(String listTraffic) {
+	public void setListTraffic(ArrayList<ResultInput> listTraffic) {
 		this.listTraffic = listTraffic;
 	}
 	public String getCreator() {

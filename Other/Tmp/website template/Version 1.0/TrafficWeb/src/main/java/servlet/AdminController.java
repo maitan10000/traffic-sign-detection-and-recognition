@@ -11,8 +11,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import utility.Constants;
+import utility.GlobalValue;
 import model.Account;
 import model.Report;
 import model.Result;
@@ -63,19 +66,24 @@ public class AdminController extends HttpServlet {
 			if (("signin").equals(action)) {
 				String userID = request.getParameter("txtUser");
 				String password = request.getParameter("txtPassword");
-				String url = "http://localhost:8090/Traffic/rest/Service";
+				String url = GlobalValue.getServiceAddress() + Constants.MANAGE_LOGIN;
 				Client client = Client.create();
 				client.setFollowRedirects(true);
 				WebResource resource = client.resource(url);
 				MultivaluedMap<String, String> params = new MultivaluedMapImpl();
 				params.add("userID", userID);
 				params.add("password", password);
-				String res = resource.path("Login").queryParams(params)
-						.get(String.class);
-				boolean result = Boolean.parseBoolean(res);
-				if (result) {
+				ClientResponse clientResponse = resource.type(
+						MediaType.APPLICATION_FORM_URLENCODED).post(
+						ClientResponse.class, params);				
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String result = clientResponse.getEntity(String.class);				
+				if ("Success".equals(result)) {
 					HttpSession session = request.getSession();
-					session.setAttribute("USER", userID);
+					session.setAttribute("user", userID);
 					RequestDispatcher rd = request
 							.getRequestDispatcher("Admin/Index.jsp");
 					rd.forward(request, response);
@@ -86,7 +94,7 @@ public class AdminController extends HttpServlet {
 				}
 
 			} else if (("listReport").equals(action)) {
-				String url = "http://localhost:8090/Traffic/rest/Service/ListReport";
+				String url = GlobalValue.getServiceAddress() + Constants.MANAGE_REPORT_LIST;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
 				ClientResponse clientResponse = webResource.accept(
@@ -136,17 +144,24 @@ public class AdminController extends HttpServlet {
 			} else if (("delete").equals(action)) {
 				int reportID = Integer.parseInt(request
 						.getParameter("reportID"));
-				String url = "http://localhost:8090/Traffic/rest/Service/DeleteReport?reportID=";
+				String url = GlobalValue.getServiceAddress() + Constants.MANAGE_REPORT_DELETE + "?reportID=";
 				url += reportID;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
+				ClientResponse clientRespone = webResource.accept("String").get(ClientResponse.class);
+				String output = clientRespone.getEntity(String.class);
+				if(output == "Success"){
+					RequestDispatcher rd = request
+							.getRequestDispatcher("Admin/ReportPage.jsp");
+					rd.forward(request, response);					
+				}	
 
 			} else
 			// if action is show report details
 			if ("viewDetail".equals(action)) {
 				String reportID = request.getParameter("reportID");
 				// url get traffic by reportID
-				String url = "http://localhost:8090/Traffic/rest/Service/GetReportDetail?reportID=";
+				String url = GlobalValue.getServiceAddress() + Constants.MANAGE_REPORT_VIEW + "?reportID=";
 				url += reportID;
 				// connect and receive json string from web service
 				Client client = Client.create();
@@ -175,7 +190,8 @@ public class AdminController extends HttpServlet {
 			if ("viewTrafficDetail".equals(action)) {
 				String trafficID = request.getParameter("trafficID");
 				// url get traffic by categoryID
-				String url = "http://localhost:8090/Traffic/rest/Service/ViewDetail?id=";
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.TRAFFIC_TRAFFIC_VIEW + "?id=";
 				url += trafficID;
 				// connect and receive json string from web service
 				Client client = Client.create();
@@ -203,16 +219,38 @@ public class AdminController extends HttpServlet {
 				String userID = request.getParameter("userID");
 				String password = request.getParameter("password");
 				String email = request.getParameter("email");
-				String url = "http://localhost:8090/Traffic/rest/Service/Register";
+				String name = request.getParameter("name");
+				String urlCreator = GlobalValue.getServiceAddress() + Constants.MANAGE_REGISTER;
 				Client client = Client.create();
 				client.setFollowRedirects(true);
-				WebResource resource = client.resource(url);
+				WebResource resource = client.resource(urlCreator);
+				MultivaluedMap formData = new MultivaluedMapImpl();
+				formData.add("userID", userID);
+				formData.add("password", password);
+				formData.add("email", email);
+				formData.add("name", name);
+				ClientResponse clientResponse = resource.type(
+						MediaType.APPLICATION_FORM_URLENCODED).post(
+						ClientResponse.class, formData);				
+				if (response.getStatus() != 200) {
+					throw new RuntimeException("Failed : HTTP error code : "
+							+ response.getStatus());
+				}
+				String output = clientResponse.getEntity(String.class);
+				if(output != null){
+				request.setAttribute("userID", output);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Login.jsp");
+				rd.forward(request, response);
+				}
+				
+				
 			} else
 			// if action is show traffic details
 			if ("viewResultDetail".equals(action)) {
 				String resultID = request.getParameter("resultID");
 				// url get traffic by categoryID
-				String url = "http://localhost:8090/Traffic/rest/Service/GetResultByID?id=";
+				String url = GlobalValue.getServiceAddress() + Constants.TRAFFIC_HISTORY_VIEW + "?id=";
 				url += resultID;
 				// connect and receive json string from web service
 				Client client = Client.create();
@@ -235,6 +273,10 @@ public class AdminController extends HttpServlet {
 				request.setAttribute("resultDetail", resultDetail);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/ResultDetail.jsp");
+				rd.forward(request, response);
+			}else if(Constants.ACTION_TRAFFICINFO_ADD.equals(action)){
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
 				rd.forward(request, response);
 			}
 		} finally {
