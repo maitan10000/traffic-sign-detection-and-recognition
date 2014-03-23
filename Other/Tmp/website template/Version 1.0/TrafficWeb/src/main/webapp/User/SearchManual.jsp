@@ -329,13 +329,15 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 													+ trafficID
 													+ '\')\42>Lưu biểnbáo</button>');
-						} else {
+						} else if('false' == result) {
 							$("#btnAddFavorite").remove();
 							$("#footerViewDetail")
 									.append(
 											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 													+ trafficID
 													+ '\')\42>Xóa biển báo</button>');
+						} else {
+							$("#btnAddFavorite").remove();
 						}
 					}
 

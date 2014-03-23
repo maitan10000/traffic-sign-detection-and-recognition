@@ -228,6 +228,7 @@ public class UserController extends HttpServlet {
 			 * added or user is notlogin or session time out print true if
 			 * traffic is not added yet and user has loggin (session user has
 			 * its value)
+			 * print notlogin if user is not login
 			 */
 			if ("checkFavorite".equals(action)) {
 				// get trafficID and userID
@@ -235,7 +236,7 @@ public class UserController extends HttpServlet {
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
 				if (userID == null) {
-					out.println("false");
+					out.println("notlogin");
 				} else {
 					// url for add favorite
 					String urlAddFavorite = GlobalValue.getServiceAddress()
@@ -261,7 +262,7 @@ public class UserController extends HttpServlet {
 				}
 			} else 
 			// if action is view favorite_
-			if ("viewFavorite".equals(action)) {
+			if ("viewFavorite".equals(action) || "viewFavoriteShort".equals(action)) {
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
 				if (userID == null) {
@@ -287,9 +288,13 @@ public class UserController extends HttpServlet {
 					}.getType();
 					listTraffic = gson.fromJson(output, type);
 					request.setAttribute("listTraffic", listTraffic);
+					String address = "User/ListFavorite.jsp";
+					if("viewFavoriteShort".equals(action)){
+						address = "User/ListFavoriteShort.jsp";
+					}
 					// request to ListFavorite.jsp
 					RequestDispatcher rd = request
-							.getRequestDispatcher("User/ListFavorite.jsp");
+							.getRequestDispatcher(address);
 					rd.forward(request, response);
 				}
 			} else

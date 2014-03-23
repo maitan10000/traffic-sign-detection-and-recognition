@@ -86,12 +86,13 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 					<%
 						if( listTraffic != null){
 					%>
-					<div class="contentTable " style="margin-top: 20px">
+					<div id="contentTable" class="contentTable " style="margin-top: 20px">
 						<table id="resultTable" class="table table-striped .table-condensed">
 							<thead>
 								<th>Hình Ảnh</th>
 								<th>Số Hiệu</th>
 								<th>Tên Biển Báo</th>
+								<th></th>
 							</thead>
 							<tbody>
 								<%
@@ -106,6 +107,7 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getTrafficName()%></a></td>
+									<td><button class="btn btn-inverse" onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
 
 								</tr>
 								<%
@@ -217,14 +219,14 @@ function addFavorite(trafficID) {
 				},
 				success : function(result) {
 					// if add ok, change buuton to xoa bien bao
-					if ("Success" == result) {
+					if ("Success" == result.trim()) {
 						$("#btnAddFavorite").remove();
 						$("#footerViewDetail")
 								.append(
-										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+										'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 												+ trafficID
-												+ ')\42>Xóa biển báo</button>');
-
+												+ '\')\42>Xóa biển báo</button>');
+						reloadTable();
 					}
 				}
 
@@ -241,15 +243,15 @@ function deleteFavorite(trafficID) {
 			trafficID : trafficID
 		},
 		success : function(result) {
-			alert(result);
 			// if delete ok, change buuton to luu bien bao
-			if ("Success" == result) {
+			if ("Success" == result.trim()) {
 				$("#btnAddFavorite").remove();
 				$("#footerViewDetail")
 						.append(
-								'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+								'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 										+ trafficID
-										+ ')\42>Lưu biểnbáo</button>');
+										+ '\')\42>Lưu biểnbáo</button>');
+				reloadTable();
 			}
 		}
 
@@ -271,20 +273,38 @@ function checkFavorite(trafficID) {
 						$("#btnAddFavorite").remove();
 						$("#footerViewDetail")
 								.append(
-										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 												+ trafficID
-												+ ')\42>Lưu biểnbáo</button>');
-					} else {
+												+ '\')\42>Lưu biểnbáo</button>');
+					} else if('false' == result) {
 						$("#btnAddFavorite").remove();
 						$("#footerViewDetail")
 								.append(
-										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+										'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 												+ trafficID
-												+ ')\42>Xóa biển báo</button>');
+												+ '\')\42>Xóa biển báo</button>');
+					} else {
+						$("#btnAddFavorite").remove();
 					}
 				}
 
 			});
+}
+// ajax to refresh table
+function reloadTable(){
+	var action = "viewFavoriteShort";
+	$.ajax({
+		url : "/TrafficWeb/UserController",
+		type : "GET",
+		data : {
+			action : action
+		},
+		success : function(result) {
+			$("#contentTable").html(result);
+			
+		}
+
+	});
 }
 </script>
 </html>
