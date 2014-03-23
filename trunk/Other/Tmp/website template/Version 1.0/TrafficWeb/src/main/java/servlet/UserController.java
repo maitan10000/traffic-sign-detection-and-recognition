@@ -153,10 +153,10 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 				String output = clientResponse.getEntity(String.class);
-				TrafficSign trafficDetail = new TrafficSign();
+				TrafficInfoJSON trafficDetail = new TrafficInfoJSON();
 				// parse output to list trafficSign using Gson
 				Gson gson = new Gson();
-				Type type = new TypeToken<TrafficSign>() {
+				Type type = new TypeToken<TrafficInfoJSON>() {
 				}.getType();
 				trafficDetail = gson.fromJson(output, type);
 				// request to searchManual.jsp

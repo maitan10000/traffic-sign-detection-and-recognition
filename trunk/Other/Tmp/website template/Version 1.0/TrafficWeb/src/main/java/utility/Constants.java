@@ -8,22 +8,22 @@ public final class Constants {
 	public final static String SESSION_ERROR_PAGE = "";
 
 	// for list all category
-	public final static String TRAFFIC_LIST_CATEGORY = "Traffic/ListAllCategory";
+	public final static String TRAFFIC_LIST_CATEGORY = "rest/Traffic/ListAllCategory";
 
 	// for search manual
-	public final static String TRAFFIC_SEARCH_MANUAL = "Traffic/SearchManual";
+	public final static String TRAFFIC_SEARCH_MANUAL = "rest/Traffic/SearchManual";
 
 	// for view traffic detail
-	public final static String TRAFFIC_TRAFFIC_VIEW = "Traffic/ViewDetail";
+	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	
 	// Favorite
-	public final static String MANAGE_FAVORITE_CHECK = "Manage/CheckFavorite";
-	public final static String MANAGE_FAVORITE_ADD = "Manage/AddFavorite";
-	public final static String MANAGE_FAVORITE_DELETE = "Manage/DeleteFavorite";
-	public final static String MANAGE_FAVORITE_LIST = "Manage/ListFavorite";
+	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
+	public final static String MANAGE_FAVORITE_ADD = "rest/Manage/AddFavorite";
+	public final static String MANAGE_FAVORITE_DELETE = "rest/Manage/DeleteFavorite";
+	public final static String MANAGE_FAVORITE_LIST = "rest/Manage/ListFavorite";
 	
 	// for  view history
-	public final static String TRAFFIC_LIST_HISTORY = "Traffic/ListHistory";
+	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
 	
 	//action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
