@@ -1,6 +1,7 @@
 <%@page import="json.FavoriteJSON"%>
 <%@page import="model.Category"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="utility.Constants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -52,7 +53,7 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 					<nav class="olegnax">
 					<ul id="nav">
 						<li class="level0 nav-3 level-top"><a
-							href="/TrafficWeb/UserController?action=searchManual"
+							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_SEARCH_MANUAL %>"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
 						<li class="level0 nav-4 level-top"><a href="#"
