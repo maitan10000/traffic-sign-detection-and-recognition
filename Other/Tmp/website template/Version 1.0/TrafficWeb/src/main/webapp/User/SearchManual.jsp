@@ -381,7 +381,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 	$('#reportModal').on('show', function() {
 		document.getElementById("txtContent").value = '';
 		var trafficID = document.getElementById("reference_id").value;
-		var functionName = 'sendReport(' + trafficID +')';
+		var functionName = 'sendReport("' + trafficID +'")';
 		var button = document.getElementById("btnSubmitReport");
 		button.getAttributeNode("onclick").value = functionName;
 	});
