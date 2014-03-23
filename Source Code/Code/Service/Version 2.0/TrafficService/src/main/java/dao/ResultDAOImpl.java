@@ -64,12 +64,11 @@ public class ResultDAOImpl implements ResultDAO {
 			Date createDate = new Date(utilDate.getTime());
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("INSERT INTO result(uploadedImage, creator, createDate,isActive) VALUES(?,?,?,?)");
+					.prepareStatement("INSERT INTO result(uploadedImage, creator, createDate,isActive) VALUES(?,?,NOW(),?)");
 			;
 			stm.setString(1, uploadedImage);
 			stm.setString(2, creator);
-			stm.setDate(3, createDate);
-			stm.setBoolean(4, false);
+			stm.setBoolean(3, false);
 			stm.executeUpdate();
 
 			stm.close();
@@ -116,7 +115,6 @@ public class ResultDAOImpl implements ResultDAO {
 			stm = connection
 					.prepareStatement("UPDATE trafficdb.result SET listTraffic = ?,isActive = ? WHERE resultID=?");
 			;
-
 			stm.setString(1, listTraffic);
 			stm.setBoolean(2, isActive);
 			stm.setInt(3, resultID);

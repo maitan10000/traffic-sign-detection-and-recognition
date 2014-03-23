@@ -1,5 +1,6 @@
 package service;
 
+import java.security.MessageDigest;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -11,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import utility.Constants;
 import json.FavoriteJSON;
@@ -19,6 +21,10 @@ import json.ReportShortJSON;
 
 import com.google.gson.Gson;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
 import dao.FavoriteDAO;
 import dao.FavoriteDAOImpl;
 import dao.ReportDAO;
@@ -27,6 +33,7 @@ import dao.ResultDAO;
 import dao.ResultDAOImpl;
 import dao.TrafficInfoDAO;
 import dao.TrafficInfoDAOImpl;
+import dto.AccountDTO;
 import dto.FavoriteDTO;
 import dto.ReportDTO;
 import dto.ResultDTO;
@@ -108,6 +115,7 @@ public class Manage {
 
 			// create return Json for list favorite
 			TrafficInfoDAO trafficInfoDAO = new TrafficInfoDAOImpl();
+			CategoryDAO categoryDAO = new CategoryDAOImpl();
 			for (FavoriteDTO favoriteDTO : listFavorData) {
 				// get traffic info
 				String trafficID = favoriteDTO.getTrafficID();
@@ -117,10 +125,14 @@ public class Manage {
 				// create favorite JSON
 				FavoriteJSON favoriteJSON = new FavoriteJSON();
 				favoriteJSON.setTrafficID(trafficID);
-				favoriteJSON.setTrafficName(trafficInfoDTO.getName());
+				favoriteJSON.setName(trafficInfoDTO.getName());
 				String imageLink = Constants.MAIN_IMAGE_SUB_LINK
 						+ trafficInfoDTO.getImage();
-				favoriteJSON.setTrafficImage(imageLink);
+				favoriteJSON.setImage(imageLink);
+				favoriteJSON.setCategoryID(trafficInfoDTO.getCategoryID());
+				favoriteJSON.setCategoryName(categoryDAO
+						.getCategoryName(trafficInfoDTO.getCategoryID()));
+
 				listFavoriteJSON.add(favoriteJSON);
 			}// end for listFavorData
 		}
@@ -297,4 +309,68 @@ public class Manage {
 		}
 		return "Fail";
 	}
+	
+	// Check user ton tai hay chua
+
+		// Check email da ton tai chua
+
+		// Register
+		@POST
+		@Path("/Register")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		public Response addAccount(@FormParam("userID") String userID,
+				@FormParam("password") String password,
+				@FormParam("email") String email, @FormParam("name") String name) {
+			try {
+				AccountDTO accountObj = new AccountDTO();
+				accountObj.setUserID(userID);
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+				StringBuffer sb = new StringBuffer();
+				for (byte b : thedigest) {
+					sb.append(Integer.toHexString((int) (b & 0xff)));
+				}
+				String md5password = new String(sb.toString());
+				accountObj.setPassword(md5password);
+				accountObj.setEmail(email);
+				accountObj.setName(name);
+				accountObj.setRole("user");
+
+				AccountDAO accountDAO = new AccountDAOImpl();
+				String result = accountDAO.addAccount(accountObj);
+				// Send mail verify
+				return Response.status(200).entity(result).build();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return Response.status(200).entity("Fail").build();
+
+		}
+
+		// Login Service
+		@POST
+		@Path("/Login")
+		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+		public Response getAccount(@FormParam("userID") String userID,
+				@FormParam("password") String password) {
+			try {
+				AccountDAO accountDAO = new AccountDAOImpl();
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+				StringBuffer sb = new StringBuffer();
+				for (byte b : thedigest) {
+					sb.append(Integer.toHexString((int) (b & 0xff)));
+				}
+				String md5password = new String(sb.toString());
+				Boolean result = accountDAO.getAccount(userID, md5password);
+				if (result == true) {
+					return Response.status(200).entity("Success").build();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return Response.status(200).entity("Fail").build();
+
+		}
 }

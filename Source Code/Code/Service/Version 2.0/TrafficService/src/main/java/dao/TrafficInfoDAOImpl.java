@@ -156,7 +156,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 					.prepareStatement("INSERT INTO trafficdb.trafficinformation"
 							+ " (trafficID, name, image, categoryID, information,"
 							+ " penaltyfee, creator, createDate, modifyDate, isActive)"
-							+ " VALUES (?, ?, ?, ?, ?, ?, ?, DATE(NOW()), NULL, ?)");
+							+ " VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NULL, ?)");
 			stm.setString(1, trafficDTO.getTrafficID());
 			stm.setString(2, trafficDTO.getName());
 			stm.setString(3, trafficDTO.getImage());
@@ -164,7 +164,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			stm.setString(5, trafficDTO.getInformation());
 			stm.setString(6, trafficDTO.getPenaltyfee());
 			stm.setString(7, trafficDTO.getCreator());
-			stm.setBoolean(8, trafficDTO.getIsActive());
+			stm.setBoolean(8, true);
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -198,7 +198,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			stm = connection
 					.prepareStatement("UPDATE trafficdb.trafficinformation SET name= ?,"
 							+ " image=?, categoryID=?, information=?, penaltyfee=?, creator=?, "
-							+ "modifyDate= DATE(NOW()), isActive=? WHERE trafficID = ?");
+							+ "modifyDate= NOW(), isActive=? WHERE trafficID = ?");
 			stm.setString(1, trafficDTO.getName());
 			stm.setString(2, trafficDTO.getImage());
 			stm.setInt(3, trafficDTO.getCategoryID());

@@ -2,25 +2,38 @@ package json;
 
 public class FavoriteJSON {
 	private String trafficID;
-	private String trafficName;
-	private String trafficImage;
-	
+	private String name;
+	private String image;
+	private int categoryID;
+	private String categoryName;
 	public String getTrafficID() {
 		return trafficID;
 	}
 	public void setTrafficID(String trafficID) {
 		this.trafficID = trafficID;
 	}
-	public String getTrafficName() {
-		return trafficName;
+	public String getName() {
+		return name;
 	}
-	public void setTrafficName(String trafficName) {
-		this.trafficName = trafficName;
+	public void setName(String name) {
+		this.name = name;
 	}
-	public String getTrafficImage() {
-		return trafficImage;
+	public String getImage() {
+		return image;
 	}
-	public void setTrafficImage(String trafficImage) {
-		this.trafficImage = trafficImage;
+	public void setImage(String image) {
+		this.image = image;
+	}
+	public int getCategoryID() {
+		return categoryID;
+	}
+	public void setCategoryID(int categoryID) {
+		this.categoryID = categoryID;
+	}
+	public String getCategoryName() {
+		return categoryName;
+	}
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 }
