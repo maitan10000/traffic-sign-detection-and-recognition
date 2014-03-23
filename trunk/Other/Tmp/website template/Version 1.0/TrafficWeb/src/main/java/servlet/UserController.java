@@ -19,6 +19,8 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import json.FavoriteJSON;
 import json.ResultShortJSON;
+import json.TrafficInfoJSON;
+import json.TrafficInfoShortJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import model.Category;
@@ -74,7 +76,7 @@ public class UserController extends HttpServlet {
 				String password = request.getParameter("txtPassword");
 				// url login
 				String url = GlobalValue.getServiceAddress()
-						+ Constants.LIST_CATEGORY_SERVICE;
+						+ Constants.TRAFFIC_LIST_CATEGORY;
 			} else
 			// load searchmanual page with all category
 			if ("searchManual".equals(action)) {
@@ -83,7 +85,7 @@ public class UserController extends HttpServlet {
 				// get all category and set to attribute category for display in
 				// selectbox
 				String urlGetCategory = GlobalValue.getServiceAddress()
-						+ Constants.LIST_CATEGORY_SERVICE;
+						+ Constants.TRAFFIC_LIST_CATEGORY;
 				Client client = Client.create();
 				WebResource webResource = client.resource(urlGetCategory);
 				ClientResponse clientResponse = webResource.accept(
@@ -106,7 +108,7 @@ public class UserController extends HttpServlet {
 				if (searchKey != null && catID != null) {
 					// create url searchManual
 					String urlSearchManual = GlobalValue.getServiceAddress()
-							+ Constants.SEARCH_MANUAL_SERVICE + "?";
+							+ Constants.TRAFFIC_SEARCH_MANUAL + "?";
 					urlSearchManual = urlSearchManual + "name="
 							+ URLEncoder.encode(searchKey, "UTF-8");
 					urlSearchManual = urlSearchManual + "&cateID=" + catID;
@@ -120,9 +122,9 @@ public class UserController extends HttpServlet {
 					}
 					String searchString = clientResponse
 							.getEntity(String.class);
-					ArrayList<TrafficSign> listTraffic = new ArrayList<TrafficSign>();
+					ArrayList<TrafficInfoShortJSON> listTraffic = new ArrayList<TrafficInfoShortJSON>();
 					// parse output to list trafficSign using Gson
-					Type typeSearch = new TypeToken<ArrayList<TrafficSign>>() {
+					Type typeSearch = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 					}.getType();
 					listTraffic = gson.fromJson(searchString, typeSearch);
 					request.setAttribute("listTraffic", listTraffic);
@@ -139,7 +141,7 @@ public class UserController extends HttpServlet {
 				String trafficID = request.getParameter("trafficID");
 				// url get traffic by categoryID
 				String url = GlobalValue.getServiceAddress()
-						+ Constants.VIEW_TRAFFIC_DETAIL_SERVICE + "?id=";
+						+ Constants.TRAFFIC_TRAFFIC_VIEW + "?id=";
 				url += trafficID;
 				// connect and receive json string from web service
 				Client client = Client.create();
@@ -175,7 +177,7 @@ public class UserController extends HttpServlet {
 				} else {
 					// url for add favorite
 					String urlAddFavorite = GlobalValue.getServiceAddress()
-							+ Constants.ADD_FAVORITE_MANAGE;
+							+ Constants.MANAGE_FAVORITE_ADD;
 					Client client = Client.create();
 					WebResource webRsource = client.resource(urlAddFavorite);
 					MultivaluedMap formData = new MultivaluedMapImpl();
@@ -207,7 +209,7 @@ public class UserController extends HttpServlet {
 				} else {
 					// url for add favorite
 					String urlDeleteFavorite = GlobalValue.getServiceAddress()
-							+ Constants.DELETE_FAVORITE_MANAGE + "?creator="
+							+ Constants.MANAGE_FAVORITE_DELETE + "?creator="
 							+ userID + "&trafficID=" + trafficID;
 					// connect and receive json string from web service
 					Client client = Client.create();
@@ -240,7 +242,7 @@ public class UserController extends HttpServlet {
 				} else {
 					// url for add favorite
 					String urlAddFavorite = GlobalValue.getServiceAddress()
-							+ Constants.CHECK_FAVORITE_MANAGE;
+							+ Constants.MANAGE_FAVORITE_CHECK;
 					Client client = Client.create();
 					WebResource webRsource = client.resource(urlAddFavorite);
 					MultivaluedMap formData = new MultivaluedMapImpl();
@@ -269,7 +271,7 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
 					String urlViewFavorite = GlobalValue.getServiceAddress()
-							+ Constants.VIEW_FAVORITE_MANAGE + "?creator="
+							+ Constants.MANAGE_FAVORITE_LIST + "?creator="
 							+ userID;
 					// connect and receive json string from web service
 					Client client = Client.create();
@@ -306,7 +308,7 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
 					String urlViewFavorite = GlobalValue.getServiceAddress()
-							+ Constants.LIST_HISTORY_TRAFFIC + "?creator="
+							+ Constants.TRAFFIC_LIST_HISTORY + "?creator="
 							+ userID;
 					// connect and receive json string from web service
 					Client client = Client.create();
