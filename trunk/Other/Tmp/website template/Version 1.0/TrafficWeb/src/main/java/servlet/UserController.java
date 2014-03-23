@@ -73,7 +73,7 @@ public class UserController extends HttpServlet {
 				String username = request.getParameter("txtUsername");
 				String password = request.getParameter("txtPassword");
 				// url login
-				String url = GlobalValue.ServiceAddress
+				String url = GlobalValue.getServiceAddress()
 						+ Constants.LIST_CATEGORY_SERVICE;
 			} else
 			// load searchmanual page with all category
@@ -82,7 +82,7 @@ public class UserController extends HttpServlet {
 				String catID = request.getParameter("catID");
 				// get all category and set to attribute category for display in
 				// selectbox
-				String urlGetCategory = GlobalValue.ServiceAddress
+				String urlGetCategory = GlobalValue.getServiceAddress()
 						+ Constants.LIST_CATEGORY_SERVICE;
 				Client client = Client.create();
 				WebResource webResource = client.resource(urlGetCategory);
@@ -105,7 +105,7 @@ public class UserController extends HttpServlet {
 				// excute search manual if search key or categoryID is not null
 				if (searchKey != null && catID != null) {
 					// create url searchManual
-					String urlSearchManual = GlobalValue.ServiceAddress
+					String urlSearchManual = GlobalValue.getServiceAddress()
 							+ Constants.SEARCH_MANUAL_SERVICE + "?";
 					urlSearchManual = urlSearchManual + "name="
 							+ URLEncoder.encode(searchKey, "UTF-8");
@@ -138,7 +138,7 @@ public class UserController extends HttpServlet {
 			if ("viewDetail".equals(action)) {
 				String trafficID = request.getParameter("trafficID");
 				// url get traffic by categoryID
-				String url = GlobalValue.ServiceAddress
+				String url = GlobalValue.getServiceAddress()
 						+ Constants.VIEW_TRAFFIC_DETAIL_SERVICE + "?id=";
 				url += trafficID;
 				// connect and receive json string from web service
@@ -174,7 +174,7 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
 					// url for add favorite
-					String urlAddFavorite = GlobalValue.ServiceAddress
+					String urlAddFavorite = GlobalValue.getServiceAddress()
 							+ Constants.ADD_FAVORITE_MANAGE;
 					Client client = Client.create();
 					WebResource webRsource = client.resource(urlAddFavorite);
@@ -206,7 +206,7 @@ public class UserController extends HttpServlet {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
 					// url for add favorite
-					String urlDeleteFavorite = GlobalValue.ServiceAddress
+					String urlDeleteFavorite = GlobalValue.getServiceAddress()
 							+ Constants.DELETE_FAVORITE_MANAGE + "?creator="
 							+ userID + "&trafficID=" + trafficID;
 					// connect and receive json string from web service
@@ -238,7 +238,7 @@ public class UserController extends HttpServlet {
 					out.println("false");
 				} else {
 					// url for add favorite
-					String urlAddFavorite = GlobalValue.ServiceAddress
+					String urlAddFavorite = GlobalValue.getServiceAddress()
 							+ Constants.CHECK_FAVORITE_MANAGE;
 					Client client = Client.create();
 					WebResource webRsource = client.resource(urlAddFavorite);
@@ -267,7 +267,7 @@ public class UserController extends HttpServlet {
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
-					String urlViewFavorite = GlobalValue.ServiceAddress
+					String urlViewFavorite = GlobalValue.getServiceAddress()
 							+ Constants.VIEW_FAVORITE_MANAGE + "?creator="
 							+ userID;
 					// connect and receive json string from web service
@@ -300,7 +300,7 @@ public class UserController extends HttpServlet {
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
-					String urlViewFavorite = GlobalValue.ServiceAddress
+					String urlViewFavorite = GlobalValue.getServiceAddress()
 							+ Constants.LIST_HISTORY_TRAFFIC + "?creator="
 							+ userID;
 					// connect and receive json string from web service

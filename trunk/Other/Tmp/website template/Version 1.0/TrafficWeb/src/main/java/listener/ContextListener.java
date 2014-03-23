@@ -18,18 +18,12 @@ public class ContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent event) {
 		// Init global values
 		Properties prop = new Properties();
-		FileInputStream in;
+		String realPath = event.getServletContext().getRealPath(
+				"/WEB-INF/config.properties");		
+		System.out.print("Realpath: "+ realPath);
 		try {
-			String realPath = event.getServletContext().getRealPath(
-					"/WEB-INF/config.properties");
-			in = new FileInputStream(realPath);
-			prop.load(in);
-			System.out.print("Realpath: "+ realPath);
-			GlobalValue.ServiceAddress = prop.getProperty("ServiceAddress").trim();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+			GlobalValue.createInstance(realPath);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
