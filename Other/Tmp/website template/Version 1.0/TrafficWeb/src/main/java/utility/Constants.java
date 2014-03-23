@@ -16,19 +16,22 @@ public final class Constants {
 	// for view traffic detail
 	public final static String VIEW_TRAFFIC_DETAIL_SERVICE = "Traffic/ViewDetail";
 	
-	// for check favorite is added or not
+	// Favorite
 	public final static String CHECK_FAVORITE_MANAGE = "Manage/CheckFavorite";
-
-	// for add favorite
 	public final static String ADD_FAVORITE_MANAGE = "Manage/AddFavorite";
-	
-	// for delete favorite
 	public final static String DELETE_FAVORITE_MANAGE = "Manage/DeleteFavorite";
-
-	// for view list favorite
 	public final static String VIEW_FAVORITE_MANAGE = "Manage/ListFavorite";
 	
 	// for  view history
 	public final static String LIST_HISTORY_TRAFFIC = "Traffic/ListHistory";
+	
+	//action constant
+	public final static String ACTION_SEARCH_MANUAL = "searchManual";
+	public final static String ACTION_SEARCH_MANUAL1 = "searchManual";
+	public final static String ACTION_SEARCH_MANUAL2 = "searchManual";
+	
+	//controller
+	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
+	
 
 }
