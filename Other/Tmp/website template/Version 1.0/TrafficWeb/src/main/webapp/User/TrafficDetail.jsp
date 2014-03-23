@@ -1,3 +1,4 @@
+<%@page import="utility.GlobalValue"%>
 <%@page import="json.TrafficInfoJSON"%>
 <%@page import="model.TrafficSign"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -18,12 +19,12 @@
 			<div class="trafficDetail">
 				<div class="contentImgDetails">
 					<img class="imageDetails"
-						src="http://bienbaogiaothong.tk/<%=trafficDetails.getImage()%>"
+						src="<%=GlobalValue.getServiceAddress() %><%=trafficDetails.getImage()%>"
 						alt="Responsive image" />
 				</div>
 				<br /> <strong>Số hiệu biển báo:</strong> <font> <%=trafficDetails.getTrafficID()%></font>
 				<br /> <br /> <strong>Tên Biển Báo:</strong> <font> <%=trafficDetails.getName()%></font>
-				<%if(trafficDetails.getPenaltyfee().length() > 1){ %>
+				<%if(trafficDetails.getPenaltyfee() != null && trafficDetails.getPenaltyfee().length() > 1){ %>
 				- Khi vi phạm phạt : <%=trafficDetails.getPenaltyfee() %>
 				<%} %>
 				<br /> <br /> <strong>Nội dung:</strong> <font><%=trafficDetails.getInformation()%>
