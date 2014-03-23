@@ -62,10 +62,12 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 						<li class="level0 nav-4 level-top"><a href="#"
 							class="level-top"> <span>Nhận Diện Tự Động</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/UserController?action=viewFavorite"
+						<li class="level0 nav-4 level-top"><a
+							href="/TrafficWeb/UserController?action=viewFavorite"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
-						<li class="level0 nav-5 level-top last"><a href="/TrafficWeb/UserController?action=viewHistory"
+						<li class="level0 nav-5 level-top last"><a
+							href="/TrafficWeb/UserController?action=viewHistory"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -134,7 +136,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																																																			for(int i = 0; i< listTraffic.size();i++){
+																																																									for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -144,12 +146,12 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
-									<td><%=listTraffic.get(i).getCategoryName() %></td>									
+									<td><%=listTraffic.get(i).getCategoryName()%></td>
 
 								</tr>
 								<%
 									} 
-																																																									}
+																																																															}
 								%>
 							</tbody>
 						</table>
@@ -216,6 +218,24 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			style="display: none;" aria-labelledby="myModalLabel"
 			aria-hidden="true"></div>
+			
+			
+		<!-- Modal for report-->
+		<div id="reportModal" class="modal hide fade" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Modal header</h3>
+			</div>
+			<div class="modal-body">
+				<p>One fine body…</p>
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn btn-primary">Gửi Ý Kiến</button>
+			</div>
+		</div>
 	</div>
 
 </body>
@@ -272,26 +292,27 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 	// ajax to delete favorite when click button xoa bien bao
 	function deleteFavorite(trafficID) {
 		var action = "DeleteFavorite";
-		$.ajax({
-			url : "/TrafficWeb/UserController",
-			type : "GET",
-			data : {
-				action : action,
-				trafficID : trafficID
-			},
-			success : function(result) {
-				// if delete ok, change buuton to luu bien bao
-				if ("Success" == result.trim()) {
-					$("#btnAddFavorite").remove();
-					$("#footerViewDetail")
-							.append(
-									'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
-											+ trafficID
-											+ '\')\42>Lưu biểnbáo</button>');
-				}
-			}
+		$
+				.ajax({
+					url : "/TrafficWeb/UserController",
+					type : "GET",
+					data : {
+						action : action,
+						trafficID : trafficID
+					},
+					success : function(result) {
+						// if delete ok, change buuton to luu bien bao
+						if ("Success" == result.trim()) {
+							$("#btnAddFavorite").remove();
+							$("#footerViewDetail")
+									.append(
+											'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
+													+ trafficID
+													+ '\')\42>Lưu biểnbáo</button>');
+						}
+					}
 
-		});
+				});
 	}
 	// ajax to display "luu bien bao" button if traffic is not added
 	function checkFavorite(trafficID) {
@@ -312,7 +333,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 													+ trafficID
 													+ '\')\42>Lưu biểnbáo</button>');
-						} else if('false' == result) {
+						} else if ('false' == result) {
 							$("#btnAddFavorite").remove();
 							$("#footerViewDetail")
 									.append(
@@ -325,6 +346,12 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					}
 
 				});
+	}
+	// function show popup for send report
+	function showFromReport(){
+		$('#myModal').modal('hide');
+		$('#reportModal').modal('show')
+		
 	}
 </script>
 </html>
