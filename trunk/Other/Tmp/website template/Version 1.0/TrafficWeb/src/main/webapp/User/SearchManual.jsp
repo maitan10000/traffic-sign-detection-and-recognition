@@ -273,13 +273,13 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 					},
 					success : function(result) {
 						// if add ok, change buuton to xoa bien bao
-						if ("Success" == result) {
+						if ("Success" == result.trim()) {
 							$("#btnAddFavorite").remove();
 							$("#footerViewDetail")
 									.append(
-											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+											'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 													+ trafficID
-													+ ')\42>Xóa biển báo</button>');
+													+ '\')\42>Xóa biển báo</button>');
 
 						}
 					}
@@ -297,15 +297,14 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 				trafficID : trafficID
 			},
 			success : function(result) {
-				alert(result);
 				// if delete ok, change buuton to luu bien bao
-				if ("Success" == result) {
+				if ("Success" == result.trim()) {
 					$("#btnAddFavorite").remove();
 					$("#footerViewDetail")
 							.append(
-									'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+									'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 											+ trafficID
-											+ ')\42>Lưu biểnbáo</button>');
+											+ '\')\42>Lưu biểnbáo</button>');
 				}
 			}
 
@@ -327,16 +326,16 @@ ArrayList<TrafficSign> listTraffic = (ArrayList<TrafficSign>) request.getAttribu
 							$("#btnAddFavorite").remove();
 							$("#footerViewDetail")
 									.append(
-											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite('
+											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 													+ trafficID
-													+ ')\42>Lưu biểnbáo</button>');
+													+ '\')\42>Lưu biểnbáo</button>');
 						} else {
 							$("#btnAddFavorite").remove();
 							$("#footerViewDetail")
 									.append(
-											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite('
+											'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 													+ trafficID
-													+ ')\42>Xóa biển báo</button>');
+													+ '\')\42>Xóa biển báo</button>');
 						}
 					}
 
