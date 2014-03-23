@@ -86,7 +86,7 @@
 				<i class="icon-user icon-large"></i> Registration
 			</div>
 			<div class="panel-content">
-				<form action="AdminController" method="post">
+				<form action="/TrafficWeb/AdminController" method="post">
 					<div class="control-group">
 						<div class="controls">
 							<div class="input-prepend">

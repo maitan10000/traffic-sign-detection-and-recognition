@@ -1,5 +1,6 @@
-<%@page import="model.Report"%>
-<%@page import="java.util.ArrayList"%>
+
+<%@page import="utility.GlobalValue"%>
+<%@page import="utility.Constants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -15,10 +16,6 @@
 	src="User/Content/bootstrap/js/bootstrap.js"></script>
 <title>Traffic Sign Recognition</title>
 </head>
-<%
-	String jsonObject = (String) request.getAttribute("report");
-	ArrayList<Report> listReport = (ArrayList<Report>) request.getAttribute("listReport");
-%>
 <body on>
 	<div class="wrapper">
 		<div class="page">
@@ -75,7 +72,7 @@
 			</div>
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
-					<div class="content-title">QUẢN LÍ PHẢN HỒI NGƯỜI DÙNG</div>
+					<div class="content-title">THÊM MỚI BIỂN BÁO</div>
 					<!-- <form action="UserController" enctype="application/x-www-form-urlencoded">
 						<div class="options">
 							<div class="searchName" style="margin-right: 30px;">
@@ -100,59 +97,21 @@
 							<div style="clear: both"></div>
 						</div>
 					</form> -->
-					<form action="/TrafficWeb/AdminController">
-						<%
-							if (listReport != null) {
-						%>
-						<div class="panel-content">
-							<table cellpadding="0" cellspacing="0" border="0"
-								class="table table-bordered" id="excelDataTable">
-								<thead>
-									<tr>
-										<th>Mã số phản hồi</th>
-										<th>Nội Dung</th>
-										<th>Người gửi</th>
-										<th>Ngày gửi</th>
-									</tr>
-								</thead>
-								<tbody>
-									<%
-										if (listReport.size() > 0) {
-																																																													for (int i = 0; i < listReport.size(); i++) {
-									%>
-									<tr>
-										<td><a href="#myModal" data-toggle="modal"
-											onclick="showDetails(<%=listReport.get(i).getReportID()%>)"><%=listReport.get(i).getReportID()%></a></td>
-										<%-- 	<%
-											if(listReport.get(i).getType() == 1){
-										%>
-										<td><a href="#myModal" data-toggle="modal"
-											onclick="showTrafficDetails(<%=listReport.get(i).getReferenceID()%>)"><%=listReport.get(i).getReferenceID()%></a></td>
-										<%
-											}else if(listReport.get(i).getType() == 2){
-												int resultID = Integer.parseInt(listReport.get(i).getReferenceID());
-										%>
-										<td><a href="#myModal" data-toggle="modal"
-											onclick="showResultDetails(<%=resultID%>)"><%=listReport.get(i).getReferenceID()%></a></td>
-										<%
-											}
-										%> --%>
-										<td><%=listReport.get(i).getContent()%></td>
-										<td><%=listReport.get(i).getCreator()%></td>
-										<td><%=listReport.get(i).getCreateDate()%></td>																			
-									</tr>
-									<%
-										}
-																																																												}
-									%>
-								</tbody>
-							</table>
+					<form id ="add_traffic_form"  method="post"
+						enctype="multipart/form-data">
+						<p>
+							TrafficID : <input type="text" name="trafficID" /><br>
+							Name: <input type="text" name="name" /><br> Image : <input
+								type="file" name="mainImage" size="45" /><br> CategoryID:<input
+								type="text" name="categoryID" /><br> Information:<input
+								type="text" name="information" /><br> PenaltyFee: <input
+								type="text" name="penaltyfee" /><br> Creator: <input
+								type="text" name="creator" value="user1" /><br>
+						</p>
 
-						</div>
-						<%
-							}
-						%>
+						<button type="button" onclick="uploadFile(); return false;">Add</button>
 					</form>
+
 					<div style="clear: both"></div>
 				</div>
 				<div class="footer-container">
@@ -212,47 +171,55 @@
 			style="display: none;" aria-labelledby="myModalLabel"
 			aria-hidden="true"></div>
 	</div>
+	<script type="text/javascript">
+	function uploadFile() {
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4) {
+				showResult(xhr.responseText);
+			}
+		}
+		var tmpForm = document.getElementById("add_traffic_form");
+		/* TrafficID : <input type="text" name="trafficID" /><br> Name: <input
+		type="text" name="name" /><br> Image : <input type="file"
+		name="mainImage" size="45" /><br> CategoryID:<input type="text"
+		name="categoryID" /><br> Information:<input type="text"
+		name="information" /><br> PenaltyFee: <input type="text"
+		name="penaltyfee" /><br> Creator: <input type="text" name="creator"
+		value="user1" /><br> */
+		
+		var formData = new FormData();
+		formData.append("trafficID", tmpForm.trafficID.value);
+		formData.append("name", tmpForm.name.value);
+		console.log(tmpForm.mainImage);
+		formData.append('mainImage', tmpForm.mainImage.files[0]);
+		formData.append("categoryID", tmpForm.categoryID.value);
+		formData.append("information", tmpForm.information.value);
+		formData.append("penaltyfee", tmpForm.penaltyfee.value);
+		formData.append('creator', tmpForm.creator.value);
+		console.log(formData);
+		
+		xhr.upload.addEventListener("progress", function(e) {
+			if (e.lengthComputable) {
+				//var percentage = Math.round((e.loaded * 100) / e.total);
+				//$("#progress").html('<span class="bar" style="width: ' + percentage + '%"></span>');
+				//console.log("%: "+ percentage);
+			}
+		}, false);
+		xhr.upload.addEventListener("load", function(e) {
+			//$("#progress").html('<span class="bar" style="width: 100%"></span>');
+			//console.log("%: 100");
+		}, false);
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress() %><%=Constants.TRAFFIC_TRAFFIC_ADD%>');
+		//xhr.overrideMimeType('text/plain; charset=utf-8');
+		xhr.send(formData);
+	}
+	
+	function showResult(result){
+		alert(result);
+	}
+	</script>
 
 </body>
-<script type="text/javascript">
-function showDetails(reportID){
-	var action = "viewDetail";
-	$.ajax({
-		url: "/TrafficWeb/AdminController",
-		type: "GET",
-		data: {action : action, reportID : reportID},
-		success: function (result) {
-			$("#myModal").html(result);
-		}
-		
-	});
-}
-function showTrafficDetails(trafficID){
-	var action = "viewTrafficDetail";
-	$.ajax({
-		url: "/TrafficWeb/AdminController",
-		type: "GET",
-		data: {action : action, trafficID : trafficID},
-		success: function (result) {
-			$("#myModal").html(result);
-		}
-		
-	});
-}
-
-function showResultDetails(resultID){
-	var action = "viewResultDetail";
-	$.ajax({
-		url: "/TrafficWeb/AdminController",
-		type: "GET",
-		data: {action : action, resultID : resultID},
-		success: function (result) {
-			$("#myModal").html(result);
-		}
-		
-	});
-}
-</script>
-
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
 </html>
