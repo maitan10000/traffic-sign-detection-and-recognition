@@ -19,7 +19,7 @@
 			<div class="trafficDetail">
 				<div class="contentImgDetails">
 					<img class="imageDetails"
-						src="<%=GlobalValue.getServiceAddress() %><%=trafficDetails.getImage()%>"
+						src="<%=GlobalValue.getServiceAddress() %><%=trafficDetails.getImage()%>?size=big"
 						alt="Responsive image" />
 				</div>
 				<br /> <strong>Số hiệu biển báo:</strong> <font> <%=trafficDetails.getTrafficID()%></font>
