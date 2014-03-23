@@ -191,7 +191,7 @@ public class Traffic {
 		if (userID != null) {
 			fileSaveName += "-" + userID;
 		}
-		fileSaveName += "-"+fileDetail.getFileName();
+		fileSaveName += "-" + fileDetail.getFileName();
 
 		String uploadedFileLocation = GlobalValue.getWorkPath()
 				+ Constants.UPLOAD_FOLDER + fileSaveName;
@@ -294,7 +294,8 @@ public class Traffic {
 		}
 
 		resultJSON.setListTraffic(listResult);
-		resultJSON.setUploadedImage( Constants.UPLOAD_IMAGE_SUB_LINK +result.getUploadedImage());
+		resultJSON.setUploadedImage(Constants.UPLOAD_IMAGE_SUB_LINK
+				+ result.getUploadedImage());
 
 		return gson.toJson(resultJSON);
 	}
@@ -385,36 +386,38 @@ public class Traffic {
 	@POST
 	@Path("/AddTrafficInfo")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public Response addTrafficInfo(
+	public String addTrafficInfo(
 			@FormDataParam("trafficID") String trafficID,
 			@FormDataParam("name") String name,
-			@FormDataParam("image") String image,
+			@FormDataParam("mainImage") InputStream mainImageStream,
+			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail,
 			@FormDataParam("categoryID") int categoryID,
 			@FormDataParam("information") String information,
 			@FormDataParam("penaltyfee") String penaltyfee,
 			@FormDataParam("creator") String creator) {
-		try {
+		if (trafficID != null && name != null && information != null
+				&& creator != null && !trafficID.isEmpty() && !name.isEmpty()
+				&& !information.isEmpty() && !creator.isEmpty()) {
 			TrafficInfoDTO trafficObj = new TrafficInfoDTO();
 			trafficObj.setTrafficID(trafficID);
 			trafficObj.setName(name);
-			trafficObj.setImage(image);
+			trafficObj.setImage(trafficID + ".jpg");
 			trafficObj.setCategoryID(categoryID);
 			trafficObj.setInformation(information);
 			trafficObj.setPenaltyfee(penaltyfee);
 			trafficObj.setCreator(creator);
-
 			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
 			Boolean result = trafficDAO.add(trafficObj);
-			System.out.println(result);
-			if (result.equals(true)) {
-				String msg = "Successfull";
-				return Response.status(200).entity(msg).build();
-			} else {
-				return Response.status(200).entity("Unsuccessfull").build();
+
+			if (result == true) {
+				// save to main Image folder
+				String newImagePath = GlobalValue.getWorkPath()
+						+ Constants.MAIN_IMAGE_FOLDER + trafficObj.getImage();
+				Helper.writeToFile(mainImageStream, newImagePath);
+				return "Success";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return Response.status(200).entity("Unsuccessfull").build();
+		return "Fail";
+
 	}
 }

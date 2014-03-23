@@ -19,8 +19,6 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		try {
 			String creator = favorite.getCreator();
 			String trafficID = favorite.getTrafficID();
-			java.util.Date utilDate = new java.util.Date();
-			Date createDate = new Date(utilDate.getTime());
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("SELECT * FROM trafficdb.favorite WHERE creator = ? AND trafficID = ?");
@@ -30,11 +28,10 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			if (!result.next()) {
 				stm.close();
 				stm = connection
-						.prepareStatement("INSERT INTO favorite(creator,trafficID,createDate,isActive) VALUE (?,?,?,?)");
+						.prepareStatement("INSERT INTO favorite(creator,trafficID,createDate,isActive) VALUE (?,?,NOW(),?)");
 				stm.setString(1, creator);
 				stm.setString(2, trafficID);
-				stm.setDate(3, createDate);
-				stm.setBoolean(4, true);
+				stm.setBoolean(3, true);
 				return stm.executeUpdate() > 0;
 			} else {
 				stm.close();

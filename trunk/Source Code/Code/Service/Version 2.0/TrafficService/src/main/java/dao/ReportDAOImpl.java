@@ -63,7 +63,7 @@ public class ReportDAOImpl implements ReportDAO {
 			connection = BaseDAO.getConnect();
 			stm = connection.prepareStatement("INSERT INTO trafficdb.report"
 					+ " (content,referenceID, creator, createDate, type,"
-					+ " isActive)" + " VALUES (?, ?,?, DATE(NOW()),?, ?)");
+					+ " isActive)" + " VALUES (?, ?,?, NOW(),?, ?)");
 			stm.setString(1, reportDTO.getContent());
 			stm.setString(2, reportDTO.getReferenceID());
 			stm.setString(3, reportDTO.getCreator());
