@@ -25,6 +25,9 @@ public final class Constants {
 	// for  view history
 	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
 	
+	//for report
+	public final static String MANAGE_REPORT_SEND = "rest/Manage/SendReport";
+	
 	//action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
 	public final static String ACTION_SEARCH_MANUAL1 = "searchManual";

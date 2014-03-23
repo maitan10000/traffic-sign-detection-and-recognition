@@ -332,7 +332,35 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher("User/ListHistory.jsp");
 					rd.forward(request, response);
 				}
-			}
+			} else 
+			// if action is sendreport for traffic
+				if("reportTraffic".equals(action)){
+					HttpSession session = request.getSession();
+					String userID = (String) session.getAttribute("user");
+					String trafficID = request.getParameter("trafficID");
+					String content = request.getParameter("content");
+					String type = request.getParameter("type");
+					// url for send report
+					String urlSendReport = GlobalValue.getServiceAddress()
+							+ Constants.MANAGE_REPORT_SEND;
+					Client client = Client.create();
+					WebResource webRsource = client.resource(urlSendReport);
+					MultivaluedMap formData = new MultivaluedMapImpl();
+					formData.add("type", type);
+					formData.add("creator", userID);
+					formData.add("referenceID", trafficID);
+					formData.add("content", content);
+					ClientResponse clientResponse = webRsource.type(
+							MediaType.APPLICATION_FORM_URLENCODED).post(
+							ClientResponse.class, formData);
+					// handle error (not implement yet)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
+					String output = clientResponse.getEntity(String.class);
+					out.print(output);
+					
+				}
 
 		} catch (Exception e) {
 			e.printStackTrace();
