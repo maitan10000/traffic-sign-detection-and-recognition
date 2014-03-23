@@ -4,10 +4,11 @@ import java.sql.Date;
 
 public class Report {
 	int reportID;
-
 	String referenceID;
 	String content;
 	String creator;
+	Date createDate;
+	Boolean isActive;
 	int type;
 
 	public int getType() {
@@ -17,9 +18,6 @@ public class Report {
 	public void setType(int type) {
 		this.type = type;
 	}
-
-	Date CreateDate;
-	Boolean isActive;
 
 	public String getReferenceID() {
 		return referenceID;
@@ -46,11 +44,11 @@ public class Report {
 	}
 
 	public Date getCreateDate() {
-		return CreateDate;
+		return createDate;
 	}
 
 	public void setCreateDate(Date createDate) {
-		CreateDate = createDate;
+		this.createDate = createDate;
 	}
 
 	public Boolean getIsActive() {
