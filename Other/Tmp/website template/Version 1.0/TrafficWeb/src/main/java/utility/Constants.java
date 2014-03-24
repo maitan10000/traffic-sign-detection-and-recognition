@@ -12,7 +12,8 @@ public final class Constants {
 
 	// for search manual
 	public final static String TRAFFIC_SEARCH_MANUAL = "rest/Traffic/SearchManual";
-
+	public final static String TRAFFIC_SEARCH_AUTO = "rest/Traffic/SearchAuto";
+	
 	// for view traffic detail
 	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
@@ -29,9 +30,9 @@ public final class Constants {
 	
 	//action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
-	public final static String ACTION_SEARCH_MANUAL1 = "searchManual";
-	public final static String ACTION_SEARCH_MANUAL2 = "searchManual";
 	public final static String ACTION_TRAFFICINFO_ADD = "addTrafficInfo";
+	public final static String ACTION_SEARCH_AUTO = "searchAuto";
+	public final static String ACTION_TRAIN_IMAGE_ADD = "addTrainImage";
 	
 	
 	//controller

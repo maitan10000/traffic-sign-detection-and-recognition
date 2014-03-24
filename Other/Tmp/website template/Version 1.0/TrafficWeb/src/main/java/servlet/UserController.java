@@ -229,8 +229,7 @@ public class UserController extends HttpServlet {
 			 * if action is check favorite print false if traffic is already
 			 * added or user is notlogin or session time out print true if
 			 * traffic is not added yet and user has loggin (session user has
-			 * its value)
-			 * print notlogin if user is not login
+			 * its value) print notlogin if user is not login
 			 */
 			if ("checkFavorite".equals(action)) {
 				// get trafficID and userID
@@ -262,9 +261,10 @@ public class UserController extends HttpServlet {
 						out.print("false");
 					}
 				}
-			} else 
+			} else
 			// if action is view favorite_
-			if ("viewFavorite".equals(action) || "viewFavoriteShort".equals(action)) {
+			if ("viewFavorite".equals(action)
+					|| "viewFavoriteShort".equals(action)) {
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
 				if (userID == null) {
@@ -291,7 +291,7 @@ public class UserController extends HttpServlet {
 					listTraffic = gson.fromJson(output, type);
 					request.setAttribute("listTraffic", listTraffic);
 					String address = "User/ListFavorite.jsp";
-					if("viewFavoriteShort".equals(action)){
+					if ("viewFavoriteShort".equals(action)) {
 						address = "User/ListFavoriteShort.jsp";
 					}
 					// request to ListFavorite.jsp
@@ -299,9 +299,8 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher(address);
 					rd.forward(request, response);
 				}
-			} else
-			// if action is view history
-			if ("viewHistory".equals(action)) {
+			} else if ("viewHistory".equals(action)) {
+				// if action is view history
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
 				if (userID == null) {
@@ -332,35 +331,37 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher("User/ListHistory.jsp");
 					rd.forward(request, response);
 				}
-			} else 
-			// if action is sendreport for traffic
-				if("reportTraffic".equals(action)){
-					HttpSession session = request.getSession();
-					String userID = (String) session.getAttribute("user");
-					String trafficID = request.getParameter("trafficID");
-					String content = request.getParameter("content");
-					String type = request.getParameter("type");
-					// url for send report
-					String urlSendReport = GlobalValue.getServiceAddress()
-							+ Constants.MANAGE_REPORT_SEND;
-					Client client = Client.create();
-					WebResource webRsource = client.resource(urlSendReport);
-					MultivaluedMap formData = new MultivaluedMapImpl();
-					formData.add("type", type);
-					formData.add("creator", userID);
-					formData.add("referenceID", trafficID);
-					formData.add("content", content);
-					ClientResponse clientResponse = webRsource.type(
-							MediaType.APPLICATION_FORM_URLENCODED).post(
-							ClientResponse.class, formData);
-					// handle error (not implement yet)
-					if (response.getStatus() != 200) {
-						response.sendRedirect(Constants.ERROR_PAGE);
-					}
-					String output = clientResponse.getEntity(String.class);
-					out.print(output);
-					
+			} else if (action.equals(Constants.ACTION_SEARCH_AUTO)) {
+				// Search auto
+				// response.sendRedirect("User/SearchAuto.jsp");
+				RequestDispatcher rd = request
+						.getRequestDispatcher("User/SearchAuto.jsp");
+				rd.forward(request, response);
+			} else if ("reportTraffic".equals(action)) {
+				// if action is sendreport for traffic
+				HttpSession session = request.getSession();
+				String userID = (String) session.getAttribute("user");
+				String trafficID = request.getParameter("trafficID");
+				String content = request.getParameter("content");
+				String type = request.getParameter("type");
+				// url for send report
+				String urlSendReport = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_REPORT_SEND;
+				Client client = Client.create();
+				WebResource webRsource = client.resource(urlSendReport);
+				MultivaluedMap formData = new MultivaluedMapImpl();
+				formData.add("type", type);
+				formData.add("creator", userID);
+				formData.add("referenceID", trafficID);
+				formData.add("content", content);
+				ClientResponse clientResponse = webRsource.type(
+						MediaType.APPLICATION_FORM_URLENCODED).post(
+						ClientResponse.class, formData);
+				// handle error (not implement yet)
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

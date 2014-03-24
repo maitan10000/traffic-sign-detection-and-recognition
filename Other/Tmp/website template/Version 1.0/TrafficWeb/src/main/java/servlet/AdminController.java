@@ -278,6 +278,12 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
 				rd.forward(request, response);
+			}else if(action.equals(Constants.ACTION_TRAIN_IMAGE_ADD))
+			{
+				//Add train image
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/AddTrainImage.jsp");
+				rd.forward(request, response);
 			}
 		} finally {
 			out.close();
