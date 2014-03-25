@@ -104,7 +104,7 @@
 						<%
 							if (listReport != null) {
 						%>
-						<div class="panel-content">
+						<div id="contentTable" class="panel-content">
 							<table cellpadding="0" cellspacing="0" border="0"
 								class="table table-bordered" id="excelDataTable">
 								<thead>
@@ -113,6 +113,8 @@
 										<th>Nội Dung</th>
 										<th>Người gửi</th>
 										<th>Ngày gửi</th>
+										<th></th>
+										<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -121,8 +123,7 @@
 																																																													for (int i = 0; i < listReport.size(); i++) {
 									%>
 									<tr>
-										<td><a href="#myModal" data-toggle="modal"
-											onclick="showDetails(<%=listReport.get(i).getReportID()%>)"><%=listReport.get(i).getReportID()%></a></td>
+										<td><%=listReport.get(i).getReportID()%></td>
 										<%-- 	<%
 											if(listReport.get(i).getType() == 1){
 										%>
@@ -139,7 +140,9 @@
 										%> --%>
 										<td><%=listReport.get(i).getContent()%></td>
 										<td><%=listReport.get(i).getCreator()%></td>
-										<td><%=listReport.get(i).getCreateDate()%></td>																			
+										<td><%=listReport.get(i).getCreateDate()%></td>
+										<td><a href="#myModal" data-toggle="modal" onclick = "showDetails(<%=listReport.get(i).getReportID() %>)">Chi tiết</a></td>
+										<td><a href="#" onclick="deleteReport(<%=listReport.get(i).getReportID()%>)">Xóa</a></td>																			
 									</tr>
 									<%
 										}
@@ -252,6 +255,51 @@ function showResultDetails(resultID){
 		
 	});
 }
+
+function deleteReport(reportID) {
+	var action = "delete";
+	$
+			.ajax({
+				url : "/TrafficWeb/AdminController",
+				type : "GET",
+				data : {
+					action : action,
+					reportID : reportID
+				},
+				success : function(result) {
+					// if delete ok, change buuton to luu bien bao
+					if ("Success" == result.trim()) {
+						$("#myModal").modal("hide");
+						/* $("#btnAddFavorite").remove();
+						$("#footerViewDetail")
+								.append(
+										'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
+												+ trafficID
+												+ '\')\42>Lưu biểnbáo</button>'); */
+						reloadTable();
+					}
+				}
+
+			});
+}
+
+function reloadTable() {
+	var action = "listReport";
+	$.ajax({
+		url : "/TrafficWeb/AdminController",
+		type : "GET",
+		data : {
+			action : action
+		},
+		success : function(result) {
+			$("#contentTable").html(result);
+
+		}
+
+	});
+}
+
+
 </script>
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->

@@ -51,11 +51,12 @@
 							href="/TrafficWeb/UserController?action=searchManual"
 							class="level-top"> <span>Quản lí biển báo</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a 
-						href="/TrafficWeb/AdminController?action=listAccount"
+						<li class="level0 nav-4 level-top"><a
+							href="/TrafficWeb/AdminController?action=listAccount"
 							class="level-top"> <span>Quản lí người dùng</span>
 						</a></li>
-						<li class="level0 nav-4 level-top"><a href="/TrafficWeb/AdminController?action=listReport"
+						<li class="level0 nav-4 level-top"><a
+							href="/TrafficWeb/AdminController?action=listReport"
 							class="level-top"> <span>Quản lì phản hồi</span>
 						</a></li>
 					</ul>
@@ -74,7 +75,7 @@
 				</div>
 			</div>
 			<div class="main-container">
-				<div class="main-content content-cat notHomepage">
+				<div id="contentTable" class="main-content content-cat notHomepage">
 					<div class="content-title">QUẢN LÍ NGƯỜI DÙNG</div>
 					<!-- <form action="UserController" enctype="application/x-www-form-urlencoded">
 						<div class="options">
@@ -100,51 +101,64 @@
 							<div style="clear: both"></div>
 						</div>
 					</form> -->
-					<form action="AdminController">
-						
-							<%
-								if( listAccount != null){
-							%>
-							<div class="panel-content">
-								<table cellpadding="0" cellspacing="0" border="0"
-									class="table table-bordered" id="excelDataTable">
-									<thead>
-										<tr>
-											<th>User Account</th>
-											<th>Email</th>
-											<th>Name</th>
-											<th>Role</th>
-											<th>CreateDate</th>
-											<th>IsActive</th>
-										</tr>
-									</thead>
-									<tbody>
-										<%
-											if( listAccount.size()> 0){for(int i = 0; i< listAccount.size();i++){
-										%>
-										<tr>
-											<td><a href="#myModal" data-toggle="modal"
-												onclick="showDetails(<%=listAccount.get(i).getUserID()%>)"><%=listAccount.get(i).getUserID()%></a></td>
-											<td><%=listAccount.get(i).getEmail()%></td>
-											<td><%=listAccount.get(i).getName()%></td>
-											<td><%=listAccount.get(i).getRole()%></td>
-											<td><%=listAccount.get(i).getCreateDate()%></td>
-											<td><%=listAccount.get(i).getIsActive()%></td>
+					<form action="/TrafficWeb/AdminController">
 
-										</tr>
+						<%
+							if( listAccount != null){
+						%>
+						<div class="panel-content">
+							<table cellpadding="0" cellspacing="0" border="0"
+								class="table table-bordered" id="excelDataTable">
+								<thead>
+									<tr>
+										<th>User Account</th>
+										<th>Email</th>
+										<th>Name</th>
+										<th>Role</th>
+										<th>CreateDate</th>
+										<th>IsActive</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<%
+										if( listAccount.size()> 0){for(int i = 0; i< listAccount.size();i++){
+									%>
+									<tr>
+										<td><a href="#myModal" data-toggle="modal"
+											onclick="showDetails(<%=listAccount.get(i).getUserID()%>)"><%=listAccount.get(i).getUserID()%></a></td>
+										<td><%=listAccount.get(i).getEmail()%></td>
+										<td><%=listAccount.get(i).getName()%></td>
+										<td><%=listAccount.get(i).getRole()%></td>
+										<td><%=listAccount.get(i).getCreateDate()%></td>
+										<td><%=listAccount.get(i).getIsActive()%></td>
 										<%
-											} 
-																																																																																																																																																					}
+											if(listAccount.get(i).getIsActive() == true){
 										%>
-									</tbody>
-								</table>
+										<td><a href="#"
+											onclick="deactiveAccount('<%=listAccount.get(i).getUserID()%>')">Deactive</a></td>
+										<%
+											}else if(listAccount.get(i).getIsActive() == false){
+										%>
+										<td><a href="#"
+											onclick="activeAccount('<%=listAccount.get(i).getUserID()%>')">Active</a></td>
+										<%
+											}
+										%>
+									</tr>
+									<%
+										} 
+																																																																									}
+									%>
+								</tbody>
+							</table>
 
-							</div>
-							<%
-								}
-							%>
-						</form>
-					
+						</div>
+						<%
+							}
+						%>
+					</form>
+
 					<div style="clear: both"></div>
 				</div>
 				<div class="footer-container">
@@ -206,6 +220,57 @@
 	</div>
 
 </body>
+<script type="text/javascript">
+function deactiveAccount(userID) {
+	var action = "deactive";	
+	$.ajax({	url : "/TrafficWeb/AdminController",
+				type : "GET",
+				data : {action : action,userID : userID},
+				success : function(result) {
+					// if delete ok, change buuton to luu bien bao
+					if ("Success" == result.trim()) {					
+						reloadTable();
+					}
+				}
+
+			});
+}
+
+function activeAccount(userID) {
+	var action = "active";
+	$.ajax({
+				url : "/TrafficWeb/AdminController",
+				type : "GET",
+				data : {
+					action : action,
+					userID : userID
+				},
+				success : function(result) {
+					// if delete ok, change buuton to luu bien bao
+					if ("Success" == result.trim()) {
+						reloadTable();
+					}
+				}
+
+			});
+}
+
+function reloadTable() {
+	var action = "listAccount";
+	$.ajax({
+		url : "/TrafficWeb/AdminController",
+		type : "GET",
+		data : {
+			action : action
+		},
+		success : function(result) {
+			$("#contentTable").html(result);
+
+		}
+
+	});
+}
+</script>
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
 </html>
