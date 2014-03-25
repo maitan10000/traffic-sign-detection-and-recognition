@@ -1,5 +1,8 @@
 package service;
 
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +28,7 @@ import json.TrafficInfoShortJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import utility.Helper;
+import utility.ImageUtil;
 import utility.ResultInputCompare;
 
 import com.google.gson.Gson;
@@ -33,7 +37,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
+
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.multipart.FormDataParam;
@@ -52,6 +58,7 @@ import dto.CategoryDTO;
 import dto.FavoriteDTO;
 import dto.ResultDTO;
 import dto.TrafficInfoDTO;
+import dto.TrainImageDTO;
 
 @Path("/Traffic")
 public class Traffic {
@@ -101,16 +108,21 @@ public class Traffic {
 	@Path("/SearchManual")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String searchManual(@QueryParam("name") String name,
-			@QueryParam("cateID") Integer cateID) {
+			@QueryParam("cateID") Integer cateID,
+			@QueryParam("limit") Integer limit) {
 		if (cateID == null) {
 			// search in all category
 			cateID = 0;
+		}
+		if (limit == null) {
+			// no limit
+			limit = 0;
 		}
 
 		// search
 		ArrayList<TrafficInfoDTO> listTrafficInfoDTO = new ArrayList<TrafficInfoDTO>();
 		TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
-		listTrafficInfoDTO = trafficDAO.searchTraffic(name, cateID);
+		listTrafficInfoDTO = trafficDAO.searchTraffic(name, cateID, limit);
 
 		// get return info
 		CategoryDAO cateDao = new CategoryDAOImpl();
@@ -418,6 +430,100 @@ public class Traffic {
 			}
 		}
 		return "Fail";
+	}
 
+	/**
+	 * Add Train Image From Report
+	 * @param resultID
+	 * @param trafficID
+	 * @param order
+	 * @return
+	 */
+	@GET
+	@Path("/AddTrainImageFromReport")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String addTrainImageFromReport(@QueryParam("resultID") int resultID,
+			@QueryParam("trafficID") String trafficID,
+			@QueryParam("order") int order) {
+		// check exist trafficID
+		TrafficInfoDAO trafficInfoDAO = new TrafficInfoDAOImpl();
+		TrafficInfoDTO trafficInfoDTO = trafficInfoDAO.getDetail(trafficID);
+		if (trafficInfoDTO == null) {
+			return "TrafficID not exist";
+		}
+
+		ResultDAO resultDAO = new ResultDAOImpl();
+		ResultDTO resultDTO = resultDAO.getResultByID(resultID);
+		if (resultDTO != null) {
+			Gson gson = new Gson();
+			Type t = new TypeToken<ArrayList<ResultInput>>() {
+			}.getType();
+			ArrayList<ResultInput> listTraffic = new ArrayList<ResultInput>();
+			listTraffic = gson.fromJson(resultDTO.getListTraffic(), t);
+			if (order < listTraffic.size()) {
+				//save back result to db
+				ResultInput tempResultInput = listTraffic.get(order);				
+				tempResultInput.setTrafficID(trafficID);
+				listTraffic.set(order, tempResultInput);
+				resultDTO.setListTraffic(gson.toJson(listTraffic));
+				resultDAO.edit(resultDTO);
+				
+				//crop image and save to train folder
+				LocateJSON locateJSON = tempResultInput.getLocate();				
+				Rectangle rect = new Rectangle();
+				rect.x = locateJSON.getX();
+				rect.y = locateJSON.getY();
+				rect.width = locateJSON.getWidth();
+				rect.height = locateJSON.getHeight();
+
+				String uploadedImageServerPath = GlobalValue.getWorkPath()
+						+ Constants.UPLOAD_FOLDER
+						+ resultDTO.getUploadedImage();
+				String trainChildFolderPath = GlobalValue.getWorkPath()
+						+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
+				File trainChildFolder = new File(trainChildFolderPath);
+				// create if not exist
+				if (!trainChildFolder.exists()) {
+					trainChildFolder.mkdir();
+				}
+				String newTrainImageID = trafficID + "-"
+						+ UUID.randomUUID().toString();
+				String newTrainImagePath = trainChildFolderPath
+						+ newTrainImageID + ".jpg";
+				boolean result = ImageUtil.cropImageAndSave(
+						uploadedImageServerPath, newTrainImagePath, rect);
+				if (result == true) {
+					// save to train image to db
+					TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+					TrainImageDTO trainImageDTO = new TrainImageDTO();
+					trainImageDTO.setTrafficID(trafficID);
+					trainImageDTO.setImageID(newTrainImageID);
+					trainImageDTO.setImageName(newTrainImageID + ".jpg");
+					if (trainImageDAO.add(trainImageDTO)) {
+						return "Success";
+					}
+				}
+			} else {
+				return "Order out of Range";
+			}
+
+		} else {
+			return "ResultID not exist";
+		}
+
+		return "Fail";
+	}
+
+	/**
+	 * Retrain All Data
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/ReTrainAll")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String reTrainAll()
+	{
+		return Helper.trainSVM(GlobalValue.getWorkPath());		
 	}
 }

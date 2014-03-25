@@ -52,22 +52,41 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		return null;
 	}
 
-	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID) {
+	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID)
+	{
+		return searchTraffic(name, cateID, 0);
+	}
+	
+	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID, int limit) {
 		ArrayList<TrafficInfoDTO> listResult = new ArrayList<TrafficInfoDTO>();
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
-			if (cateID == 0) {
-				//search in all category
+			if (cateID == 0 && limit == 0) {
+				//search in all category and no limit
 				stm = connection
 						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ?");
 				stm.setString(1, "%" + name + "%");
-			} else {
+			} else if (cateID == 0 && limit != 0) {
+				//search in all category with limit
+				stm = connection
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? LIMIT ?");
+				stm.setString(1, "%" + name + "%");
+				stm.setInt(2, limit);
+			} else if (cateID != 0 && limit == 0) {
+				//search in one cate and not limit
 				stm = connection
 						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ?");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, cateID);
+			} else {
+				//search in one cate with limit
+				stm = connection
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? LIMIT ?");
+				stm.setString(1, "%" + name + "%");
+				stm.setInt(2, cateID);
+				stm.setInt(3, limit);
 			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
