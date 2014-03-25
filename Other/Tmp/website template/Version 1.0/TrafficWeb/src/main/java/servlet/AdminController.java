@@ -287,6 +287,40 @@ public class AdminController extends HttpServlet {
 						.getRequestDispatcher("Admin/AddTrainImage.jsp");
 				rd.forward(request, response);
 			}
+			else if (("deactive").equals(action)) {
+				String userID = request.getParameter("userID");
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_DEACTIVE_ACCOUNT + "?userID=";
+				url += userID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.println(output);
+			}
+			else if (("active").equals(action)) {
+				String userID = request.getParameter("userID");
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_ACTIVE_ACCOUNT + "?userID=";
+				url += userID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.println(output);
+			}
 		} finally {
 			out.close();
 		}
