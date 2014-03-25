@@ -36,7 +36,11 @@ public final class Constants {
 	public final static String ACTION_TRAFFICINFO_ADD = "addTrafficInfo";
 	public final static String ACTION_SEARCH_AUTO = "searchAuto";
 	public final static String ACTION_TRAIN_IMAGE_ADD_FROM_REPORT = "addTrainImageFromReport";
-
+	public final static String ACTION_FAVORITE_VIEW = "viewFavorite";
+	public final static String ACTION_FARVORITE_VIEW_SHORT = "viewFavoriteShort";
+	public final static String ACTION_HISTORY_VIEW = "viewHistory";
+	public final static String ACTION_HISTORY_LIST = "listHistory";
+	
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
 	public final static String CONTROLLER_ADMIN = "/TrafficWeb/AdminController";

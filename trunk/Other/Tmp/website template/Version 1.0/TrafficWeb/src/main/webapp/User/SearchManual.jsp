@@ -1,3 +1,4 @@
+<%@page import="utility.Constants"%>
 <%@page import="utility.GlobalValue"%>
 <%@page import="json.TrafficInfoShortJSON"%>
 <%@page import="json.TrafficInfoJSON"%>
@@ -37,10 +38,8 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h1 class="logo">
-						<a href="#"> <img src="User/Content/Image/logo.png" />
-						</a>
-					</h1>
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN BIỂN
+						BÁO</h2>
 					<!--   _____________ -->
 					<ul class="links">
 						<li><a href="/TrafficWeb/Admin/Login.jsp" title="Log In">Đăng
@@ -55,34 +54,27 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				<div class="menu-container">
 					<nav class="olegnax">
 					<ul id="nav">
-						<li class="level0 nav-3 level-top"><a
-							href="/TrafficWeb/UserController?action=searchManual"
-							class="level-top"> <span>Tra Cứu Biển Báo</span>
-						</a></li>
-						<li class="level0 nav-4 level-top"><a href="#"
+						<li class="level0 nav-4 level-top"><a
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
+								"
 							class="level-top"> <span>Nhận Diện Tự Động</span>
 						</a></li>
+						<li class="level0 nav-3 level-top"><a
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
+							class="level-top"> <span>Tra Cứu Biển Báo</span>
+						</a></li>
 						<li class="level0 nav-4 level-top"><a
-							href="/TrafficWeb/UserController?action=viewFavorite"
+							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
 						<li class="level0 nav-5 level-top last"><a
-							href="/TrafficWeb/UserController?action=viewHistory"
+							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
 					</nav>
 					<div style="clear: both"></div>
-					<form id="search_mini_form"
-						action="http://celebrity.olegnax.com/catalogsearch/result/"
-						method="get">
-						<div class="form-search">
-							<input id="search" type="text" name="q" value=""
-								class="input-text" />
-							<button type="submit" title="Search"></button>
-						</div>
-						<div id="search_autocomplete" class="search-autocomplete"></div>
-					</form>
+
 				</div>
 			</div>
 			<div class="main-container">
@@ -108,12 +100,6 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 									%>
 								</select>
 							</div>
-							<div class="content-Selectbox font-StyleTitle needMargin">
-								Sắp xếp theo: <select class="sortBy font-Style">
-									<option class="font-Style">Tên biển báo</option>
-									<option class="font-Style">Số hiệu</option>
-								</select>
-							</div>
 							<div class="searchName" style="padding-bottom: 5px">
 								<button type="submit" class="btn btn-default btn-sm"
 									value="searchManual" name="action">Tìm kiếm</button>
@@ -136,7 +122,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																																																															for(int i = 0; i< listTraffic.size();i++){
+																																																																											for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
@@ -151,7 +137,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 								</tr>
 								<%
 									} 
-																																																																					}
+																																																																																	}
 								%>
 							</tbody>
 						</table>
@@ -165,39 +151,23 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				<div class="footer-container">
 					<div class="footer">
 						<div class="footer-brands">
-							<div class="brands">
-								<a href="#"><img src="Content/Image/brands/brand1.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand2.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand3.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand4.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand5.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand6.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand7.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand8.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand9.gif"
-									alt=""></a>
-							</div>
+							<div class="brands"></div>
 						</div>
 						<div class="footer-left">
 							<p>
 								<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
 							</p>
-							<p>"Chúng tôi khác biệt...!" - Sau 3 năm thành lập đến nay hệ
-								thống cửa hàng Celebrity đã ngày càng phát triển và hoàn thiện
-								hơn so với những năm về trước</p>
+							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
+								giao thông."</p>
 						</div>
 						<div class="footer-left">
 							<p>
-								<span style="border-bottom: dotted 1px #fafafa;">TRUNG
-									TÂM CELEBRITY</span>
+								<span style="border-bottom: dotted 1px #fafafa;">TRƯỜNG
+									ĐẠI HOC FPT</span>
 							</p>
 							<p style="padding-bottom: 7px;">
-								770F, Sư Vạn Hạnh (ND), P.12, Q.10, Tp. HCM <a class="location"
-									href="#">&nbsp;</a>
+								Công viên phần mềm Quang Trung - Quận 12 - TP Hồ Chí Minh <a
+									class="location" href="#">&nbsp;</a>
 							</p>
 						</div>
 						<div class="footer-left">
@@ -230,12 +200,14 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			</div>
 			<div class="modal-body">
 				<strong>Nội dung ý kiến :</strong><br>
-				<textarea rows="3" cols="12" id="txtContent" style="width: 515px; resize:none;"></textarea>
+				<textarea rows="3" cols="12" id="txtContent"
+					style="width: 515px; resize: none;"></textarea>
 				<input type="hidden" id="reference_id" />
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi Ý Kiến</button>
+				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
+					Ý Kiến</button>
 			</div>
 		</div>
 	</div>
@@ -350,7 +322,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				});
 	}
 	// ajax send report
-	function sendReport(trafficID){
+	function sendReport(trafficID) {
 		var type = '2';
 		var content = document.getElementById("txtContent").value;
 		var action = "reportTraffic";
@@ -368,7 +340,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			}
 
 		});
-		
+
 	}
 	// function show popup for send report
 	function showFromReport(trafficID) {
@@ -381,7 +353,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 	$('#reportModal').on('show', function() {
 		document.getElementById("txtContent").value = '';
 		var trafficID = document.getElementById("reference_id").value;
-		var functionName = 'sendReport("' + trafficID +'")';
+		var functionName = 'sendReport("' + trafficID + '")';
 		var button = document.getElementById("btnSubmitReport");
 		button.getAttributeNode("onclick").value = functionName;
 	});
