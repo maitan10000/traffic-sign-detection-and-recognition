@@ -299,7 +299,7 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher(address);
 					rd.forward(request, response);
 				}
-			} else if ("viewHistory".equals(action)) {
+			} else if (Constants.ACTION_HISTORY_LIST.equals(action)) {
 				// if action is view history
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute("user");
@@ -331,7 +331,14 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher("User/ListHistory.jsp");
 					rd.forward(request, response);
 				}
-			} else if (action.equals(Constants.ACTION_SEARCH_AUTO)) {
+			} else if (Constants.ACTION_HISTORY_VIEW.equals(action)) {
+				String resultID = request.getParameter("resultID");
+				request.setAttribute("resultID", resultID);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("User/ViewHistory.jsp");
+				rd.forward(request, response);
+
+			} else if (Constants.ACTION_SEARCH_AUTO.equals(action)) {
 				// Search auto
 				// response.sendRedirect("User/SearchAuto.jsp");
 				RequestDispatcher rd = request

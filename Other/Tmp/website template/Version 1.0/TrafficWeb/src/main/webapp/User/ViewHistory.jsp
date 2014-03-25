@@ -121,7 +121,7 @@ legend {
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
 						<li class="level0 nav-5 level-top last"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
+							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_VIEW%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -147,9 +147,7 @@ legend {
 							<div class="form-upload">
 								<form>
 									<fieldset>
-										<legend>
-											Tải hình ảnh: <input type="file" id="file" accept="image/*"
-												name="file" onchange="showThumbnails()" />
+										<legend>										
 											<button id="btn-wrong-recognize" class="btn btn-warning"
 												onclick="reportWrongRecognize(this.value); return false;" disabled="disabled">Sai
 												kết quả</button>
@@ -167,102 +165,23 @@ legend {
 
 						<script>
 						var server = '<%=GlobalValue.getServiceAddress()%>';
-							//var server = 'http://bienbaogiaothong.tk/';
-							//server = 'http://localhost:8080/Traffic/';
-							
-							//<!-- Resie image -->
-							function dataURItoBlob(dataURI) {
-							    var binary = atob(dataURI.split(',')[1]);
-							    var array = [];
-							    for(var i = 0; i < binary.length; i++) {
-							        array.push(binary.charCodeAt(i));
-							    }
-							    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+						var resultID = '<%=request.getAttribute("resultID")%>';							
+							function getResult(resultID)
+							{
+								$.ajax({
+									url : server + "<%=Constants.TRAFFIC_HISTORY_VIEW%>",
+									type : "GET",
+									data : {
+										id : resultID
+									},
+									success : function(resultJSON) {
+										showResult(resultJSON);
+									}
+								});
 							}
-							
-							//<!-- Javascript function to add thumbnails and progress bars to the grid -->
-							function showThumbnails() {
-								$('#preview').html('');
-								$('.draw-div').html('');
-								$('#preview').show();
-								$('#preview').append('<div id="progress" class="progress progress-striped active"><span class="bar" style="width: 0%"></span></div>');
-								
-								var file = document.getElementById('file').files[0];
-								var image = document.getElementById("image-result");
 
-								var tempImage = new Image();
-								tempImage.onload = function() {						             
-							         var MAX_WIDTH = 1000;
-							         var MAX_HEIGHT = 1000;
-							         var tempW = tempImage.width;
-							         var tempH = tempImage.height;
-							         if (tempW > tempH) {
-							            if (tempW > MAX_WIDTH) {
-							               tempH *= MAX_WIDTH / tempW;
-							               tempW = MAX_WIDTH;
-							            }
-							         } 
-							         else {
-							            if (tempH > MAX_HEIGHT) {
-							               tempW *= MAX_HEIGHT / tempH;
-							               tempH = MAX_HEIGHT;
-							            }
-							         }
-							         
-							         var canvas = document.createElement('canvas');
-							         canvas.width = tempW;
-							         canvas.height = tempH;
-							         var ctx = canvas.getContext("2d");
-							         ctx.drawImage(this, 0, 0, tempW, tempH);
-							         var data = canvas.toDataURL("image/jpeg");
-							         image.src = data;
-							         var blodFile = dataURItoBlob(data);							
-									uploadFile(blodFile);
-								};
-							         
-								var fileReader = new FileReader();
-								fileReader.onload = (function(img) {
-									return function(e) {
-										img.src = e.target.result;										
-									};
-								})(tempImage);
-								fileReader.readAsDataURL(file);	
-								//uploadFile(file);							
-							};
-							
-							//<!-- The actual upload function that updates progress bars and uploads the images to a script (in my case php) -->							 
-							function uploadFile(file) {
-								var xhr = new XMLHttpRequest();
-								xhr.onreadystatechange = function() {
-									if (xhr.readyState == 4) {
-										showResult(xhr.responseText, file.name);
-									}
-								}
-								var formData = new FormData();
-								var fileName = document.getElementById('file').files[0].name;
-								formData.append('file', file, fileName);
-								formData.append('userID', 'user1');
-								xhr.upload.addEventListener("progress", function(e) {
-									if (e.lengthComputable) {
-										var percentage = Math.round((e.loaded * 100) / e.total);
-										$("#progress").html('<span class="bar" style="width: ' + percentage + '%"></span>');
-										//console.log("%: "+ percentage);
-									}
-								}, false);
-								xhr.upload.addEventListener("load", function(e) {
-									$("#progress").html('<span class="bar" style="width: 100%"></span>');
-									//console.log("%: 100");
-									$('#preview').hide();
-								}, false);
-								xhr.open("POST", server + '<%=Constants.TRAFFIC_SEARCH_AUTO%>');
-								xhr.overrideMimeType('text/plain; charset=utf-8');
-								xhr.send(formData);
-							};
-
-							function showResult(resultData, fileName) {
-								//add list result
-								//console.log(resultData);
-								var resultJSON = JSON.parse(resultData);
+							function showResult(resultJSON) {
+								console.log(resultJSON);
 								if(resultJSON.resultID != -1)
 								{
 									$('#btn-wrong-recognize').val(resultJSON.resultID);
@@ -288,10 +207,10 @@ legend {
 								}
 
 								//show image result
-								//var iamgeLink = server + 'rest/Image/Upload/'
-								//		+ fileName;
-								//$('#image-result').attr('src', iamgeLink);
-								//$('.image-result').show();
+								var iamgeLink = server + 'rest/Image/Upload/'
+										+ fileName;
+								$('#image-result').attr('src', iamgeLink);
+								$('.image-result').show();
 
 								var orgImage = new Image();
 								orgImage.onload = function() {
@@ -499,6 +418,7 @@ legend {
 								$('#reportModal').modal('show');
 
 							}
+							getResult(resultID);
 						</script>
 					</div>
 					<div style="clear: both"></div>

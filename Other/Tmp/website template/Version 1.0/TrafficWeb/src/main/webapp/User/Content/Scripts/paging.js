@@ -104,7 +104,7 @@ function Pager(tableName, itemsPerPage) {
 		var element = document.getElementById(positionId);
 
 		var pagerHtml = '<span onclick="' + pagerName
-				+ '.prev();" class="pg-normal"> << Prev </span> ';
+				+ '.prev();" class="pg-normal"> << Trước </span> ';
 
 		for (var page = 1; page <= this.pages; page++)
 
@@ -113,7 +113,7 @@ function Pager(tableName, itemsPerPage) {
 					+ '.showPage(' + page + ');">' + page + '</span> ';
 
 		pagerHtml += '<span onclick="' + pagerName
-				+ '.next();" class="pg-normal"> Next >></span>';
+				+ '.next();" class="pg-normal"> Sau >></span>';
 
 		element.innerHTML = pagerHtml;
 
