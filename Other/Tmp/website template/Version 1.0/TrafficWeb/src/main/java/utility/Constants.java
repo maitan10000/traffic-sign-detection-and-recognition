@@ -59,4 +59,9 @@ public final class Constants {
 
 	// for inActive Report
 
+	// Account Service
+	public final static String MANAGE_LIST_ACCOUNT = "rest/Manage/ListAllAccount";
+	public final static String MANAGE_DEACTIVE_ACCOUNT = "rest/Manage/Deactive";
+	public final static String MANAGE_ACTIVE_ACCOUNT = "rest/Manage/Active";
+	
 }

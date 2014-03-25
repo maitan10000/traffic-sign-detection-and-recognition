@@ -8,8 +8,7 @@
 			.getAttribute("reportDetail");
 %>
 
-<div class="modal-dialog">
-<form action="/TrafficWeb/AdminController">
+<div class="modal-dialog">\
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
@@ -19,18 +18,17 @@
 		<div class="modal-body">
 			<div class="reportDetail">
 				<br /> <strong>Mã số phản hồi:</strong> <font><%=reportDetails.getReportID()%></font>
-				<br /> <br /> <strong>Mã số liên hệ:</strong> <font> <%=reportDetails.getReferenceID()%></font>
+				<br /> <br /> <strong>Mã số liên hệ:<a href="#">  <%=reportDetails.getReferenceID()%></a>
 				<br /> <br /> <strong>Nội dung:</strong> <font><%=reportDetails.getContent()%>
 				</font> <br /> <br /> <strong>Người gửi:</strong> <font><%=reportDetails.getCreator()%></font><br />
 				<br /> <strong>Ngày gửi: </strong> <font><%=reportDetails.getCreateDate()%>
-				</font> <br /> <br /><strong>Trạng thái:</strong> <font><%=reportDetails.getIsActive()%></font></br></br>
+				</font>
 			</div>
 		</div>
 		
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary" name="action"
-					value="delete">Xoa phan hoi</button>
+				<button type="button" class="btn btn-primary" onclick="deleteReport(<%=reportDetails.getReportID()%>)">Xoa phan hoi</button>
 			</div>
 	</div>
 
