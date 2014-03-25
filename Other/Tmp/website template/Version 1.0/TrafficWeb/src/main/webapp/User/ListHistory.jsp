@@ -90,11 +90,11 @@
 							<tbody>
 								<%
 									if( listHistory.size()> 0){
-															for(int i = 0; i< listHistory.size();i++){
+															for(int i = listHistory.size() -1; i >= 0 ;i--){
 								%>
 
 								<tr>
-									<td><%=i+1%></td>
+									<td><%=listHistory.size() - i%></td>
 									<td><a href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>" data-toggle="modal"><%=listHistory.get(i).getCreateDate().toString()%></a></td>
 								</tr>
 								<%
@@ -154,7 +154,7 @@
 
 </body>
 <script type="text/javascript">
-	var pager = new Pager('resultTable', 5);
+	var pager = new Pager('resultTable', 10);
 	pager.init();
 	pager.showPageNav('pager', 'pageNavPosition');
 	pager.showPage(1);

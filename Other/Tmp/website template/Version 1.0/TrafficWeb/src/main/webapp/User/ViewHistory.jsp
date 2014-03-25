@@ -121,7 +121,7 @@ legend {
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
 						<li class="level0 nav-5 level-top last"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_VIEW%>"
+							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -181,7 +181,7 @@ legend {
 							}
 
 							function showResult(resultJSON) {
-								console.log(resultJSON);
+								//console.log(resultJSON);
 								if(resultJSON.resultID != -1)
 								{
 									$('#btn-wrong-recognize').val(resultJSON.resultID);
@@ -207,9 +207,9 @@ legend {
 								}
 
 								//show image result
-								var iamgeLink = server + 'rest/Image/Upload/'
-										+ fileName;
-								$('#image-result').attr('src', iamgeLink);
+								var imageLink = server + resultJSON.uploadedImage;
+								//console.log(imageLink);
+								$('#image-result').attr('src', imageLink);
 								$('.image-result').show();
 
 								var orgImage = new Image();
