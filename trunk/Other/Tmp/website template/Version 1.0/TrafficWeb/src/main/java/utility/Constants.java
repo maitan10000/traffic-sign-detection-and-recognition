@@ -13,48 +13,46 @@ public final class Constants {
 	// for search manual
 	public final static String TRAFFIC_SEARCH_MANUAL = "rest/Traffic/SearchManual";
 	public final static String TRAFFIC_SEARCH_AUTO = "rest/Traffic/SearchAuto";
-	
+
 	// for view traffic detail
 	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
-	
+
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
 	public final static String MANAGE_FAVORITE_ADD = "rest/Manage/AddFavorite";
 	public final static String MANAGE_FAVORITE_DELETE = "rest/Manage/DeleteFavorite";
 	public final static String MANAGE_FAVORITE_LIST = "rest/Manage/ListFavorite";
-	
-	// for  view history
+
+	// for view history
 	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
 	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
-	
-	//action constant
+
+	// Train Image
+	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
+
+	// action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
 	public final static String ACTION_TRAFFICINFO_ADD = "addTrafficInfo";
 	public final static String ACTION_SEARCH_AUTO = "searchAuto";
-	public final static String ACTION_TRAIN_IMAGE_ADD = "addTrainImage";
-	
-	
-	//controller
+	public final static String ACTION_TRAIN_IMAGE_ADD_FROM_REPORT = "addTrainImageFromReport";
+
+	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
 	public final static String CONTROLLER_ADMIN = "/TrafficWeb/AdminController";
-	
-	
+
 	// Report Service
 	public final static String MANAGE_REPORT_LIST = "rest/Manage/ListReportByType";
 	public final static String MANAGE_REPORT_VIEW = "rest/Manage/GetReportDetail";
 	public final static String MANAGE_REPORT_DELETE = "rest/Manage/DeleteReport";
 	public final static String MANAGE_REPORT_SEND = "rest/Manage/SendReport";
-	
-	//for get detail of result
-	
-	
-	//for register
+
+	// for register
 	public final static String MANAGE_REGISTER = "rest/Manage/Register";
-	
-	//for login
+
+	// for login
 	public final static String MANAGE_LOGIN = "rest/Manage/Login";
-	
-	//for inActive Report
-	
+
+	// for inActive Report
+
 }

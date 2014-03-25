@@ -54,12 +54,20 @@
 {
  display: none;
  position: absolute;
- margin-left: -60px;
+ margin-left: -20px;
 }
+
 .tag-inner
 {
+height: 25px !important;
 
-
+}
+.auto-complete
+{
+display: block;
+position: absolute;
+margin-top: -1px;
+margin-left: -5px;
 }
 </style>
 </head>
@@ -190,7 +198,8 @@
 <script type="text/javascript">
 
 var server = '<%=GlobalValue.getServiceAddress()%>';
-var resultID = '241';
+var resultID = '<%= request.getAttribute("reportID")%>';// '360';//'241';
+var dataJSON;
 
 function showResult(resultID)
 {
@@ -203,6 +212,7 @@ function showResult(resultID)
 			success : function(resultJSON) {
 				//console.log(resultJSON);
 				showImage(resultJSON);
+				dataJSON = resultJSON;
 			}
 		});
 	}
@@ -233,7 +243,7 @@ function showResult(resultID)
 	function drawImage(listTraffic, widthScale, heightScale) {
 		$('.draw-div').html('');
 		//console.log(resultJSON.length);
-		console.log(listTraffic);
+		//console.log(listTraffic);
 		for (var i = 0; i < listTraffic.length; i++) {
 			var style = 'width: ' + listTraffic[i].locate.width * widthScale
 					+ 'px;';
@@ -244,13 +254,22 @@ function showResult(resultID)
 			style += 'margin-top: ' + listTraffic[i].locate.y * heightScale
 					+ 'px;';
 			var style2 = 'padding-top: '+(listTraffic[i].locate.height * heightScale -15) + 'px;';
-			var imageLink = server + listTraffic[i].trafficImage+'?size=small';
+			var trafficID = listTraffic[i].trafficID;
+			var imageLink = 'User/Content/Image/Traffic/no-image.png';			
+			var trafficName = '';
+			if(trafficID !== undefined)
+			{
+				imageLink = server + listTraffic[i].trafficImage+'?size=small';			
+				trafficName = listTraffic[i].trafficName;
+			}
 			var content = '<div class="tag-image" order="'+(i+1)+'" id="tag-' + (i + 1)+ '" style="' + style
 					+ '"><span class="image-result-number badge badge-info">'+ (i + 1) + '</span>'
-					+'<div class="tag-text-out"><div id= "tag-text'+(i+1)+'" class="tag-text input-prepend input-append" '
-					+ 'style="' + style2+'"><img class="add-on tag-inner" src='+imageLink+' />'
-					+'<input class="span2 tag-inner" id="prependedInput" type="text" placeholder="Biển báo mới">'
-					+'<button class="btn tag-inner" type="button">Lưu</button></div></div></div>';
+					+ '<div class="tag-text-out"><div id= "tag-text'+(i+1)+'" class="tag-text input-prepend" '
+					+ 'style="' + style2+'"><img id="tag-img-'+(i+1)+'" class="add-on tag-inner" src='+imageLink+' />'
+					+ '<input type="hidden" name="tag-trafficID-'+(i+1)+'" value="'+trafficID+'" />'
+					+ '<input class="span2 tag-inner" id="prependedInput-'+(i+1)+'" order="'+(i+1)+'" type="text" placeholder="Nhập tên biển báo" value="'+trafficName+'"/>'
+					+ '<div class="auto-complete" id="auto-complete-'+(i+1)+'"></div></div></div></div>';
+					//+'<button class="btn tag-inner" type="button">Lưu</button></div></div></div>';
 					
 			//console.log(content);										
 			$('.draw-div').append(content);
@@ -264,15 +283,85 @@ function showResult(resultID)
 		 if(e.type == "mouseover") {
 			   // console.log("over");
 			    $('#tag-text'+id).show();
-			    $('#tag-text'+id + ' #prependedInput').focus();
-			    
+			    $('#auto-complete-'+id).show();
+			    $('#tag-text'+id + ' #prependedInput').focus();			    
 		  }
 		  else if (e.type == "mouseout") {
 		    	//console.log("out");
 		    	$('#tag-text'+id).hide();
+		    	$('#auto-complete-'+id).hide();
+		    	//$('#auto-complete-'+id).html('');
 		  }
 		});	
-
+	
+	$('.draw-div').on('input', ".tag-image",function(e){
+	     var id = $(this).attr('order');
+	     var keyword = $('#prependedInput-'+id).val();
+	     autoComplete(keyword, id);
+	 });
+	
+	function autoComplete(keyword, id)
+	{		
+		$.ajax({
+			url : server + '<%=Constants.TRAFFIC_SEARCH_MANUAL%>',
+			type : "GET",
+			data : {
+				name : keyword,
+				limit : 5
+			},
+			success : function(resultJSON) {
+				//console.log(resultJSON.length);
+				appendListResult(resultJSON, id);
+			}
+		});
+	}
+	
+	function appendListResult(resultJSON, id)
+	{		
+		var content = '<ul class="dropdown-menu auto-complete" role="menu" aria-labelledby="dropdownMenu">';
+		for(var i = 0; i < resultJSON.length; i++)
+		{
+			var trafficName = resultJSON[i].name;
+			var trafficID = resultJSON[i].trafficID;
+			var imageLink = server + resultJSON[i].image;
+			content += '<li><a tabindex="-1" href="#" onclick="selectTS('+id+',\''+trafficID+'\',\''+trafficName+'\',\''+imageLink +'\'); return false;"><img src="'+imageLink+'" style="width:30px; height:30px;"/>     '+trafficName+'</a></li>';
+		}
+	    content += '</ul>';	    
+	    //console.log(content);
+	    $('#auto-complete-'+id).html(content);
+	}
+	
+	function selectTS(id,trafficID, name, imageLink)
+	{
+		$('#prependedInput-'+id).val(name);
+		$('#tag-img-'+id).attr('src', imageLink);
+		addTrainImage(id, trafficID);
+	}
+	
+	function addTrainImage(id, trafficID)
+	{
+		//console.log(dataJSON);
+		var assginTrafficID = trafficID;
+		var resultID = dataJSON.resultID;
+		var order = id -1;		
+		console.log(assginTrafficID);
+		console.log(resultID);
+		console.log(order);
+		$('#auto-complete-'+id).html('');
+		
+		$.ajax({
+			url : server + '<%=Constants.TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT%>',
+			type : "GET",
+			data : {
+				trafficID : assginTrafficID,
+				resultID : resultID,
+				order : order
+			},
+			success : function(resultJSON) {
+				console.log(resultJSON);
+			}
+		});
+	};
 	showResult(resultID);
 </script>
 
