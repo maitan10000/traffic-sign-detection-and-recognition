@@ -1,8 +1,10 @@
 package utility;
 
 import java.awt.AlphaComposite;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -44,6 +46,36 @@ public class ImageUtil {
 		graphics2D.drawImage(image, 0, 0, width, height, null);
 		graphics2D.dispose();
 		return bufferedImage;
+	}
+
+	public static BufferedImage cropImage(final BufferedImage src, Rectangle rect) {
+		BufferedImage dest = new BufferedImage((int) rect.getWidth(),
+				(int) rect.getHeight(), BufferedImage.TYPE_INT_RGB);
+		final Graphics2D graphics2D = dest.createGraphics();
+		graphics2D
+				.drawImage(src, 0, 0, dest.getWidth(), dest.getHeight(),
+						rect.x, rect.y, rect.x + rect.width, rect.y
+								+ rect.height, null);
+		graphics2D.dispose();
+		return dest;
+	}
+	
+	public static boolean cropImageAndSave(String sourcePath, String destPath, Rectangle cropArea)
+	{
+		BufferedImage srcImage = getImageFromPath(sourcePath);
+		if(srcImage != null)
+		{
+			BufferedImage destImage = cropImage(srcImage, cropArea);
+			File destFile = new File(destPath);
+			try {
+				ImageIO.write(destImage, "jpg", destFile);
+				return true;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return false;
 	}
 
 	public static InputStream getInpuStreamFromImage(final BufferedImage image) {
