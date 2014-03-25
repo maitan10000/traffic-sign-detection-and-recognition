@@ -15,11 +15,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import utility.Constants;
+import json.AccountJSON;
 import json.FavoriteJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
 
 import com.google.gson.Gson;
+import com.sun.jersey.multipart.FormDataParam;
 
 import dao.AccountDAO;
 import dao.AccountDAOImpl;
@@ -34,6 +36,7 @@ import dao.ResultDAOImpl;
 import dao.TrafficInfoDAO;
 import dao.TrafficInfoDAOImpl;
 import dto.AccountDTO;
+import dto.CategoryDTO;
 import dto.FavoriteDTO;
 import dto.ReportDTO;
 import dto.ResultDTO;
@@ -309,68 +312,129 @@ public class Manage {
 		}
 		return "Fail";
 	}
-	
+
 	// Check user ton tai hay chua
 
-		// Check email da ton tai chua
+	// Check email da ton tai chua
 
-		// Register
-		@POST
-		@Path("/Register")
-		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-		public Response addAccount(@FormParam("userID") String userID,
-				@FormParam("password") String password,
-				@FormParam("email") String email, @FormParam("name") String name) {
-			try {
-				AccountDTO accountObj = new AccountDTO();
-				accountObj.setUserID(userID);
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
-				StringBuffer sb = new StringBuffer();
-				for (byte b : thedigest) {
-					sb.append(Integer.toHexString((int) (b & 0xff)));
-				}
-				String md5password = new String(sb.toString());
-				accountObj.setPassword(md5password);
-				accountObj.setEmail(email);
-				accountObj.setName(name);
-				accountObj.setRole("user");
-
-				AccountDAO accountDAO = new AccountDAOImpl();
-				String result = accountDAO.addAccount(accountObj);
-				// Send mail verify
-				return Response.status(200).entity(result).build();
-
-			} catch (Exception e) {
-				e.printStackTrace();
+	// Register
+	@POST
+	@Path("/Register")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response addAccount(@FormParam("userID") String userID,
+			@FormParam("password") String password,
+			@FormParam("email") String email, @FormParam("name") String name) {
+		try {
+			AccountDTO accountObj = new AccountDTO();
+			accountObj.setUserID(userID);
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+			StringBuffer sb = new StringBuffer();
+			for (byte b : thedigest) {
+				sb.append(Integer.toHexString((int) (b & 0xff)));
 			}
-			return Response.status(200).entity("Fail").build();
+			String md5password = new String(sb.toString());
+			accountObj.setPassword(md5password);
+			accountObj.setEmail(email);
+			accountObj.setName(name);
+			accountObj.setRole("user");
 
+			AccountDAO accountDAO = new AccountDAOImpl();
+			String result = accountDAO.addAccount(accountObj);
+			// Send mail verify
+			return Response.status(200).entity(result).build();
+
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return Response.status(200).entity("Fail").build();
 
-		// Login Service
-		@POST
-		@Path("/Login")
-		@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-		public Response getAccount(@FormParam("userID") String userID,
-				@FormParam("password") String password) {
-			try {
-				AccountDAO accountDAO = new AccountDAOImpl();
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
-				StringBuffer sb = new StringBuffer();
-				for (byte b : thedigest) {
-					sb.append(Integer.toHexString((int) (b & 0xff)));
-				}
-				String md5password = new String(sb.toString());
-				Boolean result = accountDAO.getAccount(userID, md5password);
-				if (result == true) {
-					return Response.status(200).entity("Success").build();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+	}
+
+	// Login Service
+	@POST
+	@Path("/Login")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response getAccount(@FormParam("userID") String userID,
+			@FormParam("password") String password) {
+		try {
+			AccountDAO accountDAO = new AccountDAOImpl();
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+			StringBuffer sb = new StringBuffer();
+			for (byte b : thedigest) {
+				sb.append(Integer.toHexString((int) (b & 0xff)));
 			}
-			return Response.status(200).entity("Fail").build();
-
+			String md5password = new String(sb.toString());
+			Boolean result = accountDAO.getAccount(userID, md5password);
+			if (result == true) {
+				return Response.status(200).entity("Success").build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		return Response.status(200).entity("Fail").build();
+
+	}
+
+	/**
+	 * List all account in db
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/ListAllAccount")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listAllAccount() {
+		ArrayList<AccountDTO> accountData = new ArrayList<AccountDTO>();
+		AccountDAO accountDAO = new AccountDAOImpl();
+		accountData = accountDAO.getAllAccount();
+		ArrayList<AccountJSON> listAccountJSON = new ArrayList<AccountJSON>();
+		for (AccountDTO accountDTO : accountData) {
+			AccountJSON accountJSON = new AccountJSON();
+			accountJSON.setUserID(accountDTO.getUserID());
+			accountJSON.setEmail(accountDTO.getEmail());
+			accountJSON.setName(accountDTO.getName());
+			accountJSON.setRole(accountDTO.getRole());
+			accountJSON.setCreateDate(accountDTO.getCreateDate());
+			accountJSON.setIsActive(accountDTO.getIsActive());
+			listAccountJSON.add(accountJSON);
+		}
+		Gson gson = new Gson();
+		return gson.toJson(listAccountJSON);
+	}
+
+	/**
+	 * Deactive Accont
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/Deactive")
+	public String deactiveAccount(@QueryParam("userID") String userID) {
+		AccountDAO accountDAO = new AccountDAOImpl();
+		boolean result = accountDAO.deactiveAccount(userID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
+
+	/**
+	 * inActive Accont
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/Active")
+	public String activeAccount(@QueryParam("userID") String userID) {
+		AccountDAO accountDAO = new AccountDAOImpl();
+		boolean result = accountDAO.activeAccount(userID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
+
+	
 }
