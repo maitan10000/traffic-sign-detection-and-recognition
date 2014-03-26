@@ -287,7 +287,7 @@ function showResult(resultID)
 				trafficName = listTraffic[i].trafficName;
 			}
 			var content = '<div class="tag-image" order="'+(i+1)+'" id="tag-' + (i + 1)+ '" style="' + style
-					+ '"><span class="image-result-number badge badge-info">'+ (i + 1) + '</span>'
+					+ '"><span id="tag-num-'+(i+1)+'" class="image-result-number badge badge-info">'+ (i + 1) + '</span>'
 					+ '<div class="tag-text-out"><div id= "tag-text'+(i+1)+'" class="tag-text input-prepend" '
 					+ 'style="' + style2+'"><div><img id="tag-img-'+(i+1)+'" class="add-on tag-inner" src='+imageLink+' />'
 					+ '<input type="hidden" name="tag-trafficID-'+(i+1)+'" value="'+trafficID+'" />'
@@ -306,15 +306,15 @@ function showResult(resultID)
 		var id = $(this).attr('order');
 		//console.log(id);	
 		 if(e.type == "mouseover") {
-			   // console.log("over");
 			    $('#tag-text'+id).show();
 			    $('#auto-complete-'+id).show();
-			    $('#tag-text'+id + ' #prependedInput').focus();			    
+			    $('#tag-text'+id + ' #prependedInput').focus();
+			    $('#tag-num-'+id).hide();
 		  }
 		  else if (e.type == "mouseout") {
-		    	//console.log("out");
 		    	$('#tag-text'+id).hide();
 		    	$('#auto-complete-'+id).hide();
+		    	$('#tag-num-'+id).show();
 		    	//$('#auto-complete-'+id).html('');
 		  }
 		});	
