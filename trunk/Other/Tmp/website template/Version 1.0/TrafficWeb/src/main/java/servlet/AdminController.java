@@ -302,7 +302,7 @@ public class AdminController extends HttpServlet {
 				
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
-				rd.forward(request, response);
+				rd.forward(request, response);			
 			} else if (Constants.ACTION_TRAFFIC_VIEW.equals(action)) {
 				// View Traffic
 

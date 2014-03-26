@@ -1,32 +1,38 @@
 <%@page import="utility.GlobalValue"%>
 <%@page import="utility.Constants"%>
-<%@page import="model.Account"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+<title>HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN LÝ</title>
+<meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
-<link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
-	type="text/css" />
-<script type="text/javascript"
-	src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
-<script type="text/javascript"
-	src="User/Content/bootstrap/js/bootstrap.js"></script>
-<title>Traffic Sign Recognition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="Admin/Content/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="Admin/Content/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="Admin/Content/css/fullcalendar.css" />
+<link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
+<link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
+	class="skin-color" />
 
 <style type="text/css">
+#train-new-area
+{
+	margin: 0 auto;
+	margin-top:10px;
+	width: 700px;
+}
 .image-result-resize {
 	min-height: 350px;
-	width: 900px;
+	width: 700px;
 	position: absolute;
 }
 
 .tag-image {
 	position: absolute;
-	border: 2px solid rgba(255, 255, 255, .5);
+	border: 3px solid rgba(255, 255, 255, .5);
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -34,7 +40,7 @@
 }
 
 .tag-image:HOVER {
-	border: 2px solid rgba(0, 255, 255, .5);
+	border: 3px solid rgba(0, 255, 255, .5);
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -46,159 +52,178 @@
 	font-weight: bold;
 	font-size: 15px;
 }
-.tag-text-out
-{
 
-}
-.tag-text
-{
- display: none;
- position: absolute;
- margin-left: -20px;
+.tag-text-out {
+	left: 50%;
+	position: absolute;
+	/*border: red thin solid;*/
+	text-align: center;
 }
 
-.tag-inner
-{
-height: 25px !important;
-
+.tag-text {
+	left: -50%;
+	display: none;
+	position: relative;
+	text-align: center;
+	z-index: 1500;
+	/*border: blue thin solid;*/
 }
-.auto-complete
-{
-display: block;
-position: absolute;
-margin-top: -1px;
-margin-left: -5px;
+
+.tag-inner {
+	height: 25px !important;
+	/*border: green thin solid;*/
+}
+
+.auto-complete {
+	display: block;
+	position: absolute;
+	margin-top: -1px;
+	/*margin-left: -5px;*/
+	/*border: yellow thin solid;*/
+	text-align: left;
+}
+
+.auto-complete ul {
+	float: none;
 }
 </style>
+
 </head>
+<body>
 
+	<!--Header-part-->
+	<div id="header">
+		<h4>
+			<a href="dashboard.html">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
+				LÝ</a>
+		</h4>
+	</div>
+	<!--close-Header-part-->
 
-<body on>
-	<div class="wrapper">
-		<div class="page">
-			<div class="header-container">
-				<header>
-				<div class="clearfix">
-					<div class="card-top"></div>
-				</div>
-				<div class="logo-Container">
-					<h1 class="logo">
-						<a href="#"> <img src="User/Content/Image/logo.png" />
-						</a>
-					</h1>
-					<!--   _____________ -->
-					<ul class="links">
-						<li><a href="/TrafficWeb/Admin/Login.jsp" title="Log In">Đăng
-								Nhập</a></li>
-						<li class="separator">|</li>
-						<li><a href="/TrafficWeb/Admin/Register.jsp">Đăng Ký</a></li>
-						<li class="separator">|</li>
-						<li><a href="customer/account/create/index.html">Liên Hệ</a></li>
-					</ul>
-				</div>
-				</header>
-				<div class="menu-container">
-					<nav class="olegnax">
-					<ul id="nav">
-						<li class="level0 nav-3 level-top"><a
-							href="/TrafficWeb/UserController?action=searchManual"
-							class="level-top"> <span>Quản lí biển báo</span>
-						</a></li>
-						<li class="level0 nav-4 level-top"><a
-							href="/TrafficWeb/AdminController?action=listAccount"
-							class="level-top"> <span>Quản lí người dùng</span>
-						</a></li>
-						<li class="level0 nav-4 level-top"><a
-							href="/TrafficWeb/AdminController?action=listReport"
-							class="level-top"> <span>Quản lì phản hồi</span>
-						</a></li>
-					</ul>
-					</nav>
-					<div style="clear: both"></div>
-					<form id="search_mini_form"
-						action="http://celebrity.olegnax.com/catalogsearch/result/"
-						method="get">
-						<div class="form-search">
-							<input id="search" type="text" name="q" value=""
-								class="input-text" />
-							<button type="submit" title="Search"></button>
-						</div>
-						<div id="search_autocomplete" class="search-autocomplete"></div>
-					</form>
-				</div>
-			</div>
-			<div class="main-container">
-				<div class="main-content content-cat notHomepage">
-					<div class="image-result">
-						<img id="image-result" class="image-result-resize" />
-						<div class="draw-div"></div>
-					</div>
+	<!--top-Header-messaages-->
+	<div class="btn-group rightzero">
+		<a class="top_message tip-left" title="Manage Files"><i
+			class="icon-file"></i></a> <a class="top_message tip-bottom"
+			title="Manage Users"><i class="icon-user"></i></a> <a
+			class="top_message tip-bottom" title="Manage Comments"><i
+			class="icon-comment"></i><span class="label label-important">5</span></a>
+		<a class="top_message tip-bottom" title="Manage Orders"><i
+			class="icon-shopping-cart"></i></a>
+	</div>
+	<!--close-top-Header-messaages-->
 
-					<div style="clear: both"></div>
-				</div>
-				<div class="footer-container">
-					<div class="footer">
-						<div class="footer-brands">
-							<div class="brands">
-								<a href="#"><img src="Content/Image/brands/brand1.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand2.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand3.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand4.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand5.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand6.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand7.gif"
-									alt=""></a> <a href="#"><img
-									src="User/Content/Image/brands/brand8.gif" alt=""></a> <a
-									href="#"><img src="User/Content/Image/brands/brand9.gif"
-									alt=""></a>
-							</div>
-						</div>
-						<div class="footer-left">
-							<p>
-								<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
-							</p>
-							<p>"Chúng tôi khác biệt...!" - Sau 3 năm thành lập đến nay hệ
-								thống cửa hàng Celebrity đã ngày càng phát triển và hoàn thiện
-								hơn so với những năm về trước</p>
-						</div>
-						<div class="footer-left">
-							<p>
-								<span style="border-bottom: dotted 1px #fafafa;">TRUNG
-									TÂM CELEBRITY</span>
-							</p>
-							<p style="padding-bottom: 7px;">
-								770F, Sư Vạn Hạnh (ND), P.12, Q.10, Tp. HCM <a class="location"
-									href="#">&nbsp;</a>
-							</p>
-						</div>
-						<div class="footer-left">
-							<ul class="social">
-								<li><a href="#"><span class="facebook icon"></span>Join
-										us on Facebook</a></li>
-								<li><a href="#"><span class="email icon"></span>Send an
-										Email</a></li>
-								<li><a href="#"><span class="rss icon"></span>Subscrible
-										RSS Feed</a></li>
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Modal -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-			style="display: none;" aria-labelledby="myModalLabel"
-			aria-hidden="true"></div>
+	<!--top-Header-menu-->
+	<div id="user-nav" class="navbar navbar-inverse">
+		<ul class="nav">
+			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
+					<span class="text">Profile</span></a></li>
+			<li class=" dropdown" id="menu-messages"><a href="#"
+				data-toggle="dropdown" data-target="#menu-messages"
+				class="dropdown-toggle"><i class="icon icon-envelope"></i> <span
+					class="text">Messages</span> <span class="label label-important">5</span>
+					<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a class="sAdd" title="" href="#">new message</a></li>
+					<li><a class="sInbox" title="" href="#">inbox</a></li>
+					<li><a class="sOutbox" title="" href="#">outbox</a></li>
+					<li><a class="sTrash" title="" href="#">trash</a></li>
+				</ul></li>
+			<li class=""><a title="" href="#"><i class="icon icon-cog"></i>
+					<span class="text">Settings</span></a></li>
+			<li class=""><a title="" href="login.html"><i
+					class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+		</ul>
 	</div>
 
-</body>
-<script type="text/javascript">
+	<!--close-top-Header-menu-->
 
+	<div id="sidebar">
+		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
+			Dashboard2</a>
+		<ul>
+			<li class="active"><a href="index-2.html"><i
+					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
+			<li><a href="tables.html"><i class="icon icon-th"></i> <span>Quản
+						lý biển báo</span></a></li>
+			<li><a href="charts.html"><i class="icon icon-user"></i> <span>Quản
+						lý người dùng</span></a></li>
+			<li><a href="widgets.html"><i
+					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
+						hồi</span></a></li>
+			<li><a href="grid.html"><i class="icon icon-signal"></i> <span>Thống
+						kê</span></a></li>
+			<li><a href="grid.html"><i class="icon icon-cog"></i> <span>Thiếp
+						lập hệ thống</span></a></li>
+
+		</ul>
+	</div>
+
+	<div id="content">
+		<div id="content-header">
+			<div id="breadcrumb">
+				<a href="#" title="Thêm ảnh nhận diện" class="tip-bottom"></i> Thêm ảnh nhận diện</a>
+			</div>
+		</div>
+		<div class="container-fluid">
+		<div id="train-new-area">
+			<div class="image-result">
+				<img id="image-result" class="image-result-resize" />
+				<div class="draw-div"></div>
+			</div>
+
+			<div style="clear: both"></div>
+		</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div id="footer" class="span12">			
+			<p>
+				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
+			</p>
+			<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
+				giao thông."</p>
+		</div>
+	</div>
+	<script src="Admin/Content/js/excanvas.min.js"></script>
+	<script src="Admin/Content/js/jquery.min.js"></script>
+	<script src="Admin/Content/js/jquery.ui.custom.js"></script>
+	<script src="Admin/Content/js/bootstrap.min.js"></script>
+	<script src="Admin/Content/js/jquery.flot.min.js"></script>
+	<script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
+	<script src="Admin/Content/js/jquery.peity.min.js"></script>
+	<script src="Admin/Content/js/fullcalendar.min.js"></script>
+	<script src="Admin/Content/js/maruti.js"></script>
+	<script src="Admin/Content/js/maruti.dashboard.js"></script>
+	<script src="Admin/Content/js/maruti.calendar.js"></script>
+	<script type="text/javascript">
+		// This function is called from the pop-up menus to transfer to
+		// a different page. Ignore if the value returned is a null string:
+		function goPage(newURL) {
+
+			// if url is empty, skip the menu dividers and reset the menu selection to default
+			if (newURL != "") {
+
+				// if url is "-", it is this page -- reset the menu:
+				if (newURL == "-") {
+					resetMenu();
+				}
+				// else, send page to designated URL            
+				else {
+					document.location.href = newURL;
+				}
+			}
+		}
+
+		// resets the menu selection upon entry to this page:
+		function resetMenu() {
+			document.gomenu.selector.selectedIndex = 2;
+		}
+	</script>
+</body>
+
+<script type="text/javascript">
 var server = '<%=GlobalValue.getServiceAddress()%>';
-var resultID = '<%= request.getAttribute("resultID")%>';// '360';//'241';
+var resultID = '<%=request.getAttribute("resultID")%>';
 var dataJSON;
 
 function showResult(resultID)
@@ -218,8 +243,7 @@ function showResult(resultID)
 	}
 
 	function showImage(resultJSON) {
-		var imageLink = server + resultJSON.uploadedImage;
-		//console.log(imageLink);
+		var imageLink = server + resultJSON.uploadedImage;		
 		$('#image-result').attr('src', imageLink);
 		var orgImage = new Image();
 		orgImage.onload = function() {
@@ -230,7 +254,7 @@ function showResult(resultID)
 			//console.log(orgWidth + '---' + showWidth);
 			//console.log(orgHeight + '---' + showHeight);
 
-			$('.main-content').height(showHeight + 20);
+			$('#train-new-area').height(showHeight);
 			var widthScale = showWidth / orgWidth;
 			var heightScale = showHeight / orgHeight;
 			drawImage(resultJSON.listTraffic, widthScale, heightScale);
@@ -265,9 +289,10 @@ function showResult(resultID)
 			var content = '<div class="tag-image" order="'+(i+1)+'" id="tag-' + (i + 1)+ '" style="' + style
 					+ '"><span class="image-result-number badge badge-info">'+ (i + 1) + '</span>'
 					+ '<div class="tag-text-out"><div id= "tag-text'+(i+1)+'" class="tag-text input-prepend" '
-					+ 'style="' + style2+'"><img id="tag-img-'+(i+1)+'" class="add-on tag-inner" src='+imageLink+' />'
+					+ 'style="' + style2+'"><div><img id="tag-img-'+(i+1)+'" class="add-on tag-inner" src='+imageLink+' />'
 					+ '<input type="hidden" name="tag-trafficID-'+(i+1)+'" value="'+trafficID+'" />'
-					+ '<input class="span2 tag-inner" id="prependedInput-'+(i+1)+'" order="'+(i+1)+'" type="text" placeholder="Nhập tên biển báo" value="'+trafficName+'"/>'
+					+ '<input class="span2 tag-inner" id="prependedInput-'
+					+ (i+1)+'" order="'+(i+1)+'" type="text" placeholder="Nhập tên biển báo" value="'+trafficName+'"/></div>'
 					+ '<div class="auto-complete" id="auto-complete-'+(i+1)+'"></div></div></div></div>';
 					//+'<button class="btn tag-inner" type="button">Lưu</button></div></div></div>';
 					
@@ -326,6 +351,10 @@ function showResult(resultID)
 			var imageLink = server + resultJSON[i].image;
 			content += '<li><a tabindex="-1" href="#" onclick="selectTS('+id+',\''+trafficID+'\',\''+trafficName+'\',\''+imageLink +'\'); return false;"><img src="'+imageLink+'" style="width:30px; height:30px;"/>     '+trafficName+'</a></li>';
 		}
+		if(resultJSON.length == 0)
+		{
+			content += '<li style="text-align: center;" >Không tìm thấy</li>';
+		}
 	    content += '</ul>';	    
 	    //console.log(content);
 	    $('#auto-complete-'+id).html(content);
@@ -364,5 +393,4 @@ function showResult(resultID)
 	};
 	showResult(resultID);
 </script>
-
 </html>

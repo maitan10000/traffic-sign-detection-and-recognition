@@ -20,7 +20,7 @@ public class ContextListener implements ServletContextListener {
 		Properties prop = new Properties();
 		String realPath = event.getServletContext().getRealPath(
 				"/WEB-INF/config.properties");		
-		System.out.print("Realpath: "+ realPath);
+		System.out.println("Realpath: "+ realPath);
 		try {
 			GlobalValue.createInstance(realPath);
 		} catch (Exception e) {
