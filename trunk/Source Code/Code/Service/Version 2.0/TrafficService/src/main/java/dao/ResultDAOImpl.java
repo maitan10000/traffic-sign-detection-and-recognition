@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import dto.ResultDTO;
@@ -159,9 +161,10 @@ public class ResultDAOImpl implements ResultDAO {
 			while (rs.next()) {
 				ResultDTO resultObject = new ResultDTO();
 				resultObject.setResultID(rs.getInt("resultID"));
-				resultObject.setUploadedImage(rs.getString("uploadedImage"));
-				resultObject.setCreateDate(rs.getDate("createDate"));
-
+				resultObject.setUploadedImage(rs.getString("uploadedImage"));				
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				resultObject.setCreateDate(tempDate);
 				resultData.add(resultObject);
 			}
 			return resultData;
