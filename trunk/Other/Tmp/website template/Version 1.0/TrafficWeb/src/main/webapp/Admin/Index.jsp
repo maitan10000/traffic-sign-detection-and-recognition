@@ -1,3 +1,4 @@
+<%@page import="utility.Constants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,17 +13,17 @@
 <meta name="description" content="">
 <meta name="author" content="">
 
-<link href="Content/css/bootstrap.min.css" rel="stylesheet">
-<link href="Content/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="Content/css/jasny-bootstrap.min.css" rel="stylesheet">
-<link href="Content/css/jasny-bootstrap-responsive.min.css"
+<link href="Admin/Content/css/bootstrap.min.css" rel="stylesheet">
+<link href="Admin/Content/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="Admin/Content/css/jasny-bootstrap.min.css" rel="stylesheet">
+<link href="Admin/Content/css/jasny-bootstrap-responsive.min.css"
 	rel="stylesheet">
-<link href="Content/css/font-awesome.css" rel="stylesheet">
+<link href="Admin/Content/css/font-awesome.css" rel="stylesheet">
 
 <link href='http://fonts.googleapis.com/css?family=Open+Sans'
 	rel='stylesheet' type='text/css'>
 <!-- <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'> -->
-<link href="Content/css/admin.css" rel="stylesheet">
+<link href="Admin/Content/css/admin.css" rel="stylesheet">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 <!--[if lt IE 9]>
@@ -32,13 +33,13 @@
 <!-- Le fav and touch icons -->
 <link rel="shortcut icon" href="Content/img/ico/favicon.ico">
 <link rel="apple-touch-icon-precomposed" sizes="144x144"
-	href="Content/img/ico/apple-touch-icon-144-precomposed.png">
+	href="Admin/Content/img/ico/apple-touch-icon-144-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="114x114"
-	href="Content/img/ico/apple-touch-icon-114-precomposed.png">
+	href="Admin/Content/img/ico/apple-touch-icon-114-precomposed.png">
 <link rel="apple-touch-icon-precomposed" sizes="72x72"
-	href="Content/img/ico/apple-touch-icon-72-precomposed.png">
+	href="Admin/Content/img/ico/apple-touch-icon-72-precomposed.png">
 <link rel="apple-touch-icon-precomposed"
-	href="Content/img/ico/apple-touch-icon-57-precomposed.png">
+	href="Admin/Content/img/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
 <body>
@@ -80,10 +81,10 @@
 									<ul class="nav">
 										<li><a href="Index.html">Dashboard</a></li>
 										<li><a
-											href="/TrafficWeb/AdminController?action=listAccount">Nguoi
+											href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>">Nguoi
 												Dung</a></li>
 										<li><a
-											href="/TrafficWeb/AdminController?action=listReport">Phan
+											href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>">Phan
 												hoi</a></li>
 										<li><a href="reports.html">Reports</a></li>
 										<li><a href="forms.html">Forms</a></li>
@@ -710,12 +711,12 @@
 		</div>
 	</div>
 
-	<script src="Content/js/jquery-1.7.2.min.js"></script>
-	<script src="Content/js/bootstrap.min.js"></script>
-	<script src="Content/js/jquery.flot.js"></script>
-	<script src="Content/js/jquery.flot.pie.js"></script>
-	<script src="Content/js/jquery.flot.resize.js"></script>
-	<script src="Content/js/jquery.sparkline.min.js"></script>
+	<script src="Admin/Content/js/jquery-1.7.2.min.js"></script>
+	<script src="Admin/Content/js/bootstrap.min.js"></script>
+	<script src="Admin/Content/js/jquery.flot.js"></script>
+	<script src="Admin/Content/js/jquery.flot.pie.js"></script>
+	<script src="Admin/Content/js/jquery.flot.resize.js"></script>
+	<script src="Admin/Content/js/jquery.sparkline.min.js"></script>
 
 	<script src="Content/js/sparkline.admin365.js"></script>
 

@@ -1,3 +1,4 @@
+<%@page import="utility.Constants"%>
 <%@page import="model.Account"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -75,7 +76,7 @@
 				</div>
 			</div>
 			<div class="main-container">
-				<div id="contentTable" class="main-content content-cat notHomepage">
+				<div class="main-content content-cat notHomepage">
 					<div class="content-title">QUẢN LÍ NGƯỜI DÙNG</div>
 					<!-- <form action="UserController" enctype="application/x-www-form-urlencoded">
 						<div class="options">
@@ -108,7 +109,7 @@
 						%>
 						<div class="panel-content">
 							<table cellpadding="0" cellspacing="0" border="0"
-								class="table table-bordered" id="excelDataTable">
+								class="table table-bordered" id="contentTable">
 								<thead>
 									<tr>
 										<th>User Account</th>
@@ -222,8 +223,8 @@
 </body>
 <script type="text/javascript">
 function deactiveAccount(userID) {
-	var action = "deactive";	
-	$.ajax({	url : "/TrafficWeb/AdminController",
+	var action = '<%=Constants.ACTION_ACCOUNT_DEACTIVE%>';
+	$.ajax({	url : '<%=Constants.CONTROLLER_ADMIN%>',
 				type : "GET",
 				data : {action : action,userID : userID},
 				success : function(result) {
@@ -237,9 +238,9 @@ function deactiveAccount(userID) {
 }
 
 function activeAccount(userID) {
-	var action = "active";
+	var action = '<%=Constants.ACTION_ACCOUNT_ACTIVE%>';
 	$.ajax({
-				url : "/TrafficWeb/AdminController",
+				url : '<%=Constants.CONTROLLER_ADMIN%>',
 				type : "GET",
 				data : {
 					action : action,
@@ -256,16 +257,15 @@ function activeAccount(userID) {
 }
 
 function reloadTable() {
-	var action = "listAccount";
+	var action = '<%=Constants.ACTION_ACCOUNT_LIST%>';
 	$.ajax({
-		url : "/TrafficWeb/AdminController",
+		url : '<%=Constants.CONTROLLER_ADMIN%>',
 		type : "GET",
 		data : {
 			action : action
 		},
 		success : function(result) {
 			$("#contentTable").html(result);
-
 		}
 
 	});
