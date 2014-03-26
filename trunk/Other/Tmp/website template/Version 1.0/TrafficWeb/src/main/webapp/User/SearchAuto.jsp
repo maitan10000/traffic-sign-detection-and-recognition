@@ -432,7 +432,7 @@ legend {
 															.append(
 																	'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 																			+ trafficID
-																			+ '\')\42>Lưu biểnbáo</button>');
+																			+ '\')\42>Lưu biển báo</button>');
 												}
 											}
 
@@ -456,7 +456,7 @@ legend {
 															.append(
 																	'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 																			+ trafficID
-																			+ '\')\42>Lưu biểnbáo</button>');
+																			+ '\')\42>Lưu biển báo</button>');
 												} else if ('false' == result) {
 													$("#btnAddFavorite").remove();
 													$("#footerViewDetail")
