@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import utility.ImageUtil;
 import utility.ResultInputCompare;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -334,7 +336,9 @@ public class Traffic {
 			resultShortJSON.setCreateDate(resultDTO.getCreateDate());
 			listResultShortJSON.add(resultShortJSON);
 		}
-		Gson gson = new Gson();
+		//Gson gson = new Gson();
+		Gson gson = new GsonBuilder()
+		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
 		return gson.toJson(listResultShortJSON);
 	}
 
