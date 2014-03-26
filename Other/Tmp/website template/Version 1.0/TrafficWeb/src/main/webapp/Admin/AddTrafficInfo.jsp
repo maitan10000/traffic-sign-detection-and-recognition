@@ -97,19 +97,22 @@
 							<div style="clear: both"></div>
 						</div>
 					</form> -->
-					<form id ="add_traffic_form"  method="post"
+					<form id="add_traffic_form" method="post"
 						enctype="multipart/form-data">
-						<p>
-							TrafficID : <input type="text" name="trafficID" /><br>
-							Name: <input type="text" name="name" /><br> Image : <input
-								type="file" name="mainImage" size="45" /><br> CategoryID:<input
-								type="text" name="categoryID" /><br> Information:<input
-								type="text" name="information" /><br> PenaltyFee: <input
-								type="text" name="penaltyfee" /><br> Creator: <input
-								type="text" name="creator" value="user1" /><br>
-						</p>
+						<fieldset>
+							<legend>Thêm mới thông tin biển báo</legend>
+							<label>Số hiệu biển báo</label> <input type="text"
+								name="trafficID" /> <label>Tên biển báo</label><input
+								type="text" name="name" /> <label>Hình ảnh</label> <input
+								type="file" name="mainImage" size="45" /> <label>Loại
+								biển báo</label> <input type="text" name="categoryID" /> <label>Thông
+								tin biển báo</label><input type="text" name="information" /> <label>Mức
+								phạt</label><input type="text" name="penaltyfee" /> <label>Người
+								tạo</label><input type="text" name="creator" value="user1" /><br>
+							<button type="button" onclick="uploadFile(); return false;">Add</button>
+						</fieldset>
 
-						<button type="button" onclick="uploadFile(); return false;">Add</button>
+
 					</form>
 
 					<div style="clear: both"></div>
@@ -210,14 +213,14 @@
 			//$("#progress").html('<span class="bar" style="width: 100%"></span>');
 			//console.log("%: 100");
 		}, false);
-		xhr.open("POST",'<%=GlobalValue.getServiceAddress() %><%=Constants.TRAFFIC_TRAFFIC_ADD%>');
-		//xhr.overrideMimeType('text/plain; charset=utf-8');
-		xhr.send(formData);
-	}
-	
-	function showResult(result){
-		alert(result);
-	}
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_ADD%>');
+			//xhr.overrideMimeType('text/plain; charset=utf-8');
+			xhr.send(formData);
+		}
+
+		function showResult(result) {
+			alert(result);
+		}
 	</script>
 
 </body>

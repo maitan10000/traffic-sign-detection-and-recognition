@@ -41,6 +41,22 @@ public final class Constants {
 	public final static String ACTION_HISTORY_VIEW = "viewHistory";
 	public final static String ACTION_HISTORY_LIST = "listHistory";
 	
+	//Admin controler action
+	public final static String ACTION_LOGIN = "login";
+	public final static String ACTION_REGISTER = "register";
+	
+	public final static String ACTION_REPORT_LIST = "listReport";	
+	public final static String ACTION_REPORT_VIEW = "viewReport";
+	public final static String ACTION_REPORT_DELETE = "deleteReport";
+	
+	public final static String ACTION_ACCOUNT_LIST = "listAccount";
+	public final static String ACTION_ACCOUNT_DEACTIVE = "deactiveAcccount";
+	public final static String ACTION_ACCOUNT_ACTIVE = "activeAccount";	
+	
+	public final static String ACTION_TRAFFIC_VIEW = "viewTraffic";
+	
+	
+	
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
 	public final static String CONTROLLER_ADMIN = "/TrafficWeb/AdminController";
@@ -60,8 +76,8 @@ public final class Constants {
 	// for inActive Report
 
 	// Account Service
-	public final static String MANAGE_LIST_ACCOUNT = "rest/Manage/ListAllAccount";
-	public final static String MANAGE_DEACTIVE_ACCOUNT = "rest/Manage/Deactive";
-	public final static String MANAGE_ACTIVE_ACCOUNT = "rest/Manage/Active";
+	public final static String MANAGE_ACCOUNT_LIST = "rest/Manage/ListAllAccount";
+	public final static String MANAGE_ACCOUNT_DEACTIVE = "rest/Manage/Deactive";
+	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
 	
 }

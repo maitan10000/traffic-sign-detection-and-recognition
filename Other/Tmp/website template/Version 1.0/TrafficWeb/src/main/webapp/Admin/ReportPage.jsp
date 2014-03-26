@@ -1,3 +1,5 @@
+<%@page import="json.ReportShortJSON"%>
+<%@page import="utility.Constants"%>
 <%@page import="model.Report"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -16,8 +18,7 @@
 <title>Traffic Sign Recognition</title>
 </head>
 <%
-	String jsonObject = (String) request.getAttribute("report");
-	ArrayList<Report> listReport = (ArrayList<Report>) request.getAttribute("listReport");
+	ArrayList<ReportShortJSON> listReport = (ArrayList<ReportShortJSON>) request.getAttribute("listReport");
 %>
 <body on>
 	<div class="wrapper">
@@ -100,7 +101,7 @@
 							<div style="clear: both"></div>
 						</div>
 					</form> -->
-					<form action="/TrafficWeb/AdminController">
+					<form>
 						<%
 							if (listReport != null) {
 						%>
@@ -140,9 +141,9 @@
 										%> --%>
 										<td><%=listReport.get(i).getContent()%></td>
 										<td><%=listReport.get(i).getCreator()%></td>
-										<td><%=listReport.get(i).getCreateDate()%></td>
+										<td><%=listReport.get(i).getCreateDate().toString()%></td>
 										<td><a href="#myModal" data-toggle="modal" onclick = "showDetails(<%=listReport.get(i).getReportID() %>)">Chi tiết</a></td>
-										<td><a href="#" onclick="deleteReport(<%=listReport.get(i).getReportID()%>)">Xóa</a></td>																			
+										<td><a href="#" onclick="deleteReport(<%=listReport.get(i).getReportID()%>); return false;">Xóa</a></td>																			
 									</tr>
 									<%
 										}
@@ -219,9 +220,9 @@
 </body>
 <script type="text/javascript">
 function showDetails(reportID){
-	var action = "viewDetail";
+	var action = '<%=Constants.ACTION_REPORT_VIEW%>';
 	$.ajax({
-		url: "/TrafficWeb/AdminController",
+		url: '<%=Constants.CONTROLLER_ADMIN%>',
 		type: "GET",
 		data: {action : action, reportID : reportID},
 		success: function (result) {
@@ -231,9 +232,9 @@ function showDetails(reportID){
 	});
 }
 function showTrafficDetails(trafficID){
-	var action = "viewTrafficDetail";
+	var action = '<%=Constants.ACTION_TRAFFIC_VIEW%>';
 	$.ajax({
-		url: "/TrafficWeb/AdminController",
+		url: '<%=Constants.CONTROLLER_ADMIN%>',
 		type: "GET",
 		data: {action : action, trafficID : trafficID},
 		success: function (result) {
@@ -244,9 +245,9 @@ function showTrafficDetails(trafficID){
 }
 
 function showResultDetails(resultID){
-	var action = "viewResultDetail";
+	var action = '<%=Constants.ACTION_HISTORY_VIEW%>';
 	$.ajax({
-		url: "/TrafficWeb/AdminController",
+		url: '<%=Constants.CONTROLLER_ADMIN%>',
 		type: "GET",
 		data: {action : action, resultID : resultID},
 		success: function (result) {
@@ -256,11 +257,12 @@ function showResultDetails(resultID){
 	});
 }
 
+//ajax to delete report
 function deleteReport(reportID) {
-	var action = "delete";
+	var action = '<%=Constants.ACTION_REPORT_DELETE%>';
 	$
 			.ajax({
-				url : "/TrafficWeb/AdminController",
+				url : '<%=Constants.CONTROLLER_ADMIN%>',
 				type : "GET",
 				data : {
 					action : action,
@@ -268,37 +270,14 @@ function deleteReport(reportID) {
 				},
 				success : function(result) {
 					// if delete ok, change buuton to luu bien bao
-					if ("Success" == result.trim()) {
-						$("#myModal").modal("hide");
-						/* $("#btnAddFavorite").remove();
-						$("#footerViewDetail")
-								.append(
-										'<button id="btnAddFavorite" type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
-												+ trafficID
-												+ '\')\42>Lưu biểnbáo</button>'); */
-						reloadTable();
+					if ("Success" == result.trim()) {									
+						 location.reload(); 
+												
 					}
 				}
 
 			});
 }
-
-function reloadTable() {
-	var action = "listReport";
-	$.ajax({
-		url : "/TrafficWeb/AdminController",
-		type : "GET",
-		data : {
-			action : action
-		},
-		success : function(result) {
-			$("#contentTable").html(result);
-
-		}
-
-	});
-}
-
 
 </script>
 

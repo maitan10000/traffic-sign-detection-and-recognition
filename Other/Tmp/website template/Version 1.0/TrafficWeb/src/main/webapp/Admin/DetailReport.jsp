@@ -1,11 +1,10 @@
-<%@page import="model.Report"%>
+<%@page import="json.ReportJSON"%>
 <%@page import="model.TrafficSign"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
-	Report reportDetails = (Report) request
-			.getAttribute("reportDetail");
+ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 %>
 
 <div class="modal-dialog">\

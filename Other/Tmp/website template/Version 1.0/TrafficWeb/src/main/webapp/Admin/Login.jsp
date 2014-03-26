@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<%@page import="utility.Constants"%>
 <html lang="en">
 
 <!-- Mirrored from wbpreview.com/previews/WB0CTJ195/signin.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:15 GMT -->
@@ -79,7 +80,7 @@
 			<div class="panel-header">
 				<i class="icon-lock icon-large"></i> Sign In
 			</div>
-			<form action="/TrafficWeb/AdminController" method="post">
+			<form action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
 				<div class="panel-content">
 
 					<div class="control-group">
@@ -102,7 +103,7 @@
 					</div>
 					<div class="control-group">
 						<div class="controls">
-							<button class="btn btn-large" name="action" value="signin" type="submit">Sign
+							<button class="btn btn-large" name="action" value="<%=Constants.ACTION_LOGIN%>" type="submit">Sign
 								In</button>
 							<span class="signin-remember"><input type="checkbox" />
 								Remember Me</span>
