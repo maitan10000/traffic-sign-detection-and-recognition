@@ -18,6 +18,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import json.CategoryJSON;
 import json.FavoriteJSON;
 import json.LocateJSON;
 import json.ResultInput;
@@ -72,29 +73,23 @@ public class Traffic {
 	@Path("/ListAllCategory")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String listAllCategory() {
-		ArrayList<CategoryDTO> cateData = new ArrayList<CategoryDTO>();
+		ArrayList<CategoryDTO> listCate = new ArrayList<CategoryDTO>();
 		CategoryDAO categoryDAO = new CategoryDAOImpl();
-		cateData = categoryDAO.listAllCategory();
+		listCate = categoryDAO.listAllCategory();
+		
+		//get return info
+		ArrayList<CategoryJSON> listCateJSON = new ArrayList<CategoryJSON>();
+		for (CategoryDTO categoryDTO : listCate) {
+			CategoryJSON categoryJSON = new CategoryJSON();
+			categoryJSON.setCategoryID(categoryDTO.getCategoryID());
+			categoryJSON.setCategoryName(categoryDTO.getCategoryName());
+			listCateJSON.add(categoryJSON);
+		}		
 		Gson gson = new Gson();
-		return gson.toJson(cateData);
+		return gson.toJson(listCateJSON);
 	}
 
-	/**
-	 * List traffic sign by categoryID
-	 * 
-	 * @param categoryID
-	 * @return
-	 */
-	@GET
-	@Path("/ListByCateID")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String listByCateID(@QueryParam("id") int categoryID) {
-		ArrayList<TrafficInfoDTO> trafficData = new ArrayList<TrafficInfoDTO>();
-		TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
-		trafficData = trafficDAO.searchByCateID(categoryID);
-		Gson gson = new Gson();
-		return gson.toJson(trafficData);
-	}
+	
 
 	/**
 	 * Search traffic sign by name and cateID (cateID = null to search in all
@@ -117,6 +112,10 @@ public class Traffic {
 		if (limit == null) {
 			// no limit
 			limit = 0;
+		}
+		if(name == null)
+		{
+			name = "";
 		}
 
 		// search
@@ -382,9 +381,9 @@ public class Traffic {
 		return "";
 	}
 
-	// CHUA IMPLEMENT
+
 	/**
-	 * Add traffic sign inforamtion
+	 * Add traffic sign information
 	 * 
 	 * @param trafficID
 	 * @param name

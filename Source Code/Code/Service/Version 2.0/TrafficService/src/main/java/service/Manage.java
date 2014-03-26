@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import utility.Constants;
+import utility.MailUtil;
 import json.AccountJSON;
 import json.FavoriteJSON;
 import json.ReportJSON;
@@ -368,7 +369,8 @@ public class Manage {
 			String md5password = new String(sb.toString());
 			AccountDTO accountDTO = accountDAO.getAccount(userID);
 			if (accountDTO != null) {
-				if(accountDTO.getIsActive() == true && accountDTO.getPassword().equals(md5password)){
+				if (accountDTO.getIsActive() == true
+						&& accountDTO.getPassword().equals(md5password)) {
 					return accountDTO.getRole();
 				}
 			}
@@ -437,4 +439,17 @@ public class Manage {
 		return "Fail";
 	}
 
+	// For test send mail function not real service
+	@GET
+	@Path("/SendMail")
+	public String sendEmail() {
+		String email = "maitan_10000@yahoo.com.vn";
+		String subject = "Thử gửi mail";
+		String message = "<p><span style=\"font-size: medium;\">Thử chức năng</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\">HTML Conent</span>.</p>";
+		boolean result = MailUtil.sendEmail(email, subject, message);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
 }
