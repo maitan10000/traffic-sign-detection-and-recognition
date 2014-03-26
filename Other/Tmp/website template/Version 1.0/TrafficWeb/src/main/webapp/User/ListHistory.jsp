@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="json.ResultShortJSON"%>
 <%@page import="json.FavoriteJSON"%>
 <%@page import="model.Category"%>
@@ -88,14 +89,15 @@
 								<th>Ngày tạo</th>
 							</thead>
 							<tbody>
-								<%
+								<%								
+									SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 									if( listHistory.size()> 0){
 															for(int i = listHistory.size() -1; i >= 0 ;i--){
 								%>
 
 								<tr>
 									<td><%=listHistory.size() - i%></td>
-									<td><a href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>" data-toggle="modal"><%=listHistory.get(i).getCreateDate().toString()%></a></td>
+									<td><a href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>" data-toggle="modal"><%=dateFormat.format(listHistory.get(i).getCreateDate()) %></a></td>
 								</tr>
 								<%
 									} 

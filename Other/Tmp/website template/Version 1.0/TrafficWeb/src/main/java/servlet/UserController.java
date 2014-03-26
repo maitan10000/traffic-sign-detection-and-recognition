@@ -6,6 +6,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -27,6 +28,7 @@ import model.Category;
 import model.TrafficSign;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -321,7 +323,8 @@ public class UserController extends HttpServlet {
 					String output = clientResponse.getEntity(String.class);
 					ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
 					// parse output to list trafficSign using Gson
-					Gson gson = new Gson();
+					Gson gson = new GsonBuilder()
+					   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
 					Type type = new TypeToken<ArrayList<ResultShortJSON>>() {
 					}.getType();
 					listHistory = gson.fromJson(output, type);
