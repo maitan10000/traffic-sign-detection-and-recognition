@@ -32,7 +32,7 @@
 			</div>
 		</div>
 		<div id="footerViewDetail" class="modal-footer">
-			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 				<button id="btnSend" type="button" class="btn btn-primary"
 				onclick="showFromReport('<%=trafficDetails.getTrafficID()%>')">Gửi ý kiến</button>
 				<button id="btnAddFavorite" type="button" class="btn btn-primary"
