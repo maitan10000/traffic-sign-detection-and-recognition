@@ -48,7 +48,7 @@ public class CategoryDAOImpl implements CategoryDAO {
 				}
 			}
 		}
-		return null;
+		return cateData;
 	}
 
 	public String getCategoryName(int CateID) {
