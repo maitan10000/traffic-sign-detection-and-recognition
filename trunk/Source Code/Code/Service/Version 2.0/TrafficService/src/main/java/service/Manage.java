@@ -355,7 +355,7 @@ public class Manage {
 	@POST
 	@Path("/Login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response getAccount(@FormParam("userID") String userID,
+	public String getAccount(@FormParam("userID") String userID,
 			@FormParam("password") String password) {
 		try {
 			AccountDAO accountDAO = new AccountDAOImpl();
@@ -366,15 +366,16 @@ public class Manage {
 				sb.append(Integer.toHexString((int) (b & 0xff)));
 			}
 			String md5password = new String(sb.toString());
-			Boolean result = accountDAO.getAccount(userID, md5password);
-			if (result == true) {
-				return Response.status(200).entity("Success").build();
+			AccountDTO accountDTO = accountDAO.getAccount(userID);
+			if (accountDTO != null) {
+				if(accountDTO.getIsActive() == true && accountDTO.getPassword().equals(md5password)){
+					return accountDTO.getRole();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Fail").build();
-
+		return "";
 	}
 
 	/**
@@ -436,5 +437,4 @@ public class Manage {
 		return "Fail";
 	}
 
-	
 }

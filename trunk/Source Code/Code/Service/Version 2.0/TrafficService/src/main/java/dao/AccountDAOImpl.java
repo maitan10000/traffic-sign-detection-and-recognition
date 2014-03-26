@@ -60,19 +60,26 @@ public class AccountDAOImpl implements AccountDAO {
 		return null;
 	}
 
-	public Boolean getAccount(String userID, String password) {
+	public AccountDTO getAccount(String userID) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		ResultSet rs = null;
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ? AND password = ? AND isActive = true");
-			stm.setString(1, userID);
-			stm.setString(2, password);
+					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ? AND isActive = true");
+			stm.setString(1, userID);			
 			rs = stm.executeQuery();
 			if (rs.next()) {
-				return true;
+				AccountDTO accountData = new AccountDTO();
+				accountData.setUserID(rs.getString("userID"));
+				accountData.setPassword(rs.getString("password"));
+				accountData.setEmail(rs.getString("email"));
+				accountData.setName(rs.getString("name"));
+				accountData.setRole(rs.getString("role"));
+				accountData.setCreateDate(rs.getDate("createDate"));
+				accountData.setIsActive(rs.getBoolean("isActive"));
+				return accountData;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,7 +101,7 @@ public class AccountDAOImpl implements AccountDAO {
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public ArrayList<AccountDTO> getAllAccount() {
