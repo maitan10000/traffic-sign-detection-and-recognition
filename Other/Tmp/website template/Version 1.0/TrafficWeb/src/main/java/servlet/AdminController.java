@@ -117,14 +117,20 @@ public class AdminController extends HttpServlet {
 					throw new RuntimeException("Failed : HTTP error code : "
 							+ response.getStatus());
 				}
-				String result = clientResponse.getEntity(String.class);
-				if ("Success".equals(result)) {
-					HttpSession session = request.getSession();
-					session.setAttribute("user", userID);
+				String result = clientResponse.getEntity(String.class).trim().toLowerCase();
+				HttpSession session = request.getSession();				
+				session.setAttribute(Constants.SESSION_USERID, userID);
+				session.setAttribute(Constants.SESSION_ROLE, result);
+				if ("user".equals(result)) {					
+					RequestDispatcher rd = request
+							.getRequestDispatcher("/");
+					rd.forward(request, response);
+				} else if("staff".equals(result) || "admin".equals(result)){
 					RequestDispatcher rd = request
 							.getRequestDispatcher("Admin/Index.jsp");
 					rd.forward(request, response);
-				} else {
+				}else{
+					session.invalidate();
 					RequestDispatcher rd = request
 							.getRequestDispatcher("Admin/Login.jsp");
 					rd.forward(request, response);

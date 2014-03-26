@@ -80,4 +80,8 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_DEACTIVE = "rest/Manage/Deactive";
 	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
 	
+	//Session Constant
+	public final static String SESSION_USERID = "userid";
+	public final static String SESSION_ROLE = "role";
+	
 }
