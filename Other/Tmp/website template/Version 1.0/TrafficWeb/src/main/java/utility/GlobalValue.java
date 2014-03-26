@@ -22,6 +22,7 @@ public class GlobalValue {
 				//map value
 				serviceAddress = prop.getProperty("ServiceAddress").trim();
 				
+				System.out.println("Service address: "+ serviceAddress);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

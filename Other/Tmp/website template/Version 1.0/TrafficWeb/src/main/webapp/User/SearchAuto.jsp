@@ -132,7 +132,7 @@ legend {
 			</div>
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
-					<div class="content-title">TRA CỨU BIỂN BÁO</div>
+					<div class="content-title">NHẬN DIỆN TỰ ĐỘNG</div>
 					<div class="list-result">
 						<fieldset>
 							<legend>Kết quả:</legend>
