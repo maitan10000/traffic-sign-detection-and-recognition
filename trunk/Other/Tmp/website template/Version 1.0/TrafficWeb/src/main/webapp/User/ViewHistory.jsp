@@ -54,11 +54,18 @@
 
 .tag-image {
 	position: absolute;
-	border: 2px solid rgba(255, 255, 255, .5);
+	border: 3px solid rgba(255, 255, 255, .5);
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 	/*margin-top: 100px;*/
+}
+
+.tag-image:HOVER {
+	border: 3px solid rgba(0, 255, 255, .5);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
 }
 
 .image-result-number {
@@ -243,11 +250,24 @@ legend {
 									style += 'height: ' + listTraffic[i].locate.height * heightScale + 'px;';
 									style += 'margin-left: ' + listTraffic[i].locate.x * widthScale + 'px;';
 									style += 'margin-top: ' + listTraffic[i].locate.y * heightScale + 'px;';
-									var content = '<div class="tag-image" id="tag-' + (i + 1) + '" style="' + style + '"><span class="image-result-number badge badge-info">' + (i + 1) + '</span></div>';
+									var content = '<div class="tag-image" order="'+(i+1)+'" id="tag-' + (i + 1) + '" style="' + style 
+									+ '"><span id="tag-num-'+(i+1)+'" class="image-result-number badge badge-info">' 
+									+ (i + 1) + '</span></div>';
 									//console.log(content);										
 									$('.draw-div').append(content);
 								}//end for							
 							};
+							
+							//handle mouseover and mouseout
+							$(".draw-div").on("mouseover mouseout", ".tag-image", function(e){
+								var id = $(this).attr('order');	
+								 if(e.type == "mouseover") {
+									    $('#tag-num-'+id).hide();
+								  }
+								  else if (e.type == "mouseout") {
+									  	$('#tag-num-'+id).show();
+								  }
+							});	
 
 							//view detail
 							function viewDetail(trafficID) {
