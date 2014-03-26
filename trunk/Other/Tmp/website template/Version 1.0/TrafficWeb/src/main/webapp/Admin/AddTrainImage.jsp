@@ -198,7 +198,7 @@ margin-left: -5px;
 <script type="text/javascript">
 
 var server = '<%=GlobalValue.getServiceAddress()%>';
-var resultID = '<%= request.getAttribute("reportID")%>';// '360';//'241';
+var resultID = '<%= request.getAttribute("resultID")%>';// '360';//'241';
 var dataJSON;
 
 function showResult(resultID)
