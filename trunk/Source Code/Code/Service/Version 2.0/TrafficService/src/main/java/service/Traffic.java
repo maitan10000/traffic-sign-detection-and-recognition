@@ -503,10 +503,13 @@ public class Traffic {
 					trainImageDTO.setImageName(newTrainImageID + ".jpg");
 
 					if (trainImageDAO.add(trainImageDTO)) {
-						//Auto retrain
+						// Auto retrain
 						if (++GlobalValue.ReTrainCount >= GlobalValue
-								.getReTrainNum()) {
+								.getReTrainNum()
+								&& GlobalValue.isReTraining == false) {
+							GlobalValue.isReTraining = true;
 							Helper.trainSVM(GlobalValue.getWorkPath());
+							GlobalValue.isReTraining = false;
 							GlobalValue.ReTrainCount = 0;
 						}
 						return "Success";
@@ -532,6 +535,13 @@ public class Traffic {
 	@Path("/ReTrainAll")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String reTrainAll() {
-		return Helper.trainSVM(GlobalValue.getWorkPath());
+		String result = "Server is training new DB";
+		if (GlobalValue.isReTraining == false) {
+			GlobalValue.isReTraining = true;
+			result = Helper.trainSVM(GlobalValue.getWorkPath());
+			GlobalValue.isReTraining = false;
+
+		}
+		return result;
 	}
 }

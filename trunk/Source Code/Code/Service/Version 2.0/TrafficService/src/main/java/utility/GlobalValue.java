@@ -14,13 +14,14 @@ public class GlobalValue {
 
 	private static String connectionURL = "";
 	private static String dbUser = "";
-	private static String dbPasswork = "";
+	private static String dbPassword = "";
 	private static String workPath = "";
 	private static String gmailUsername = "";
 	private static String gmailPassword = "";
 	private static int reTrainNum = 0;
 
 	public static int ReTrainCount = 0;
+	public static boolean isReTraining = false;
 
 	/**
 	 * Load setting information to globalValue Only can create instance one time
@@ -39,7 +40,7 @@ public class GlobalValue {
 				// map value
 				connectionURL = prop.getProperty("connectionURL").trim();
 				dbUser = prop.getProperty("dbUser").trim();
-				dbPasswork = prop.getProperty("dbPasswork").trim();
+				dbPassword = prop.getProperty("dbPasswork").trim();
 				workPath = prop.getProperty("workPath").trim();
 				gmailUsername = prop.getProperty("gmailUsername").trim();
 				gmailPassword = prop.getProperty("gmailPassword").trim();
@@ -107,7 +108,7 @@ public class GlobalValue {
 	}
 
 	public static String getDbPasswork() {
-		return dbPasswork;
+		return dbPassword;
 	}
 
 	public static String getWorkPath() {
