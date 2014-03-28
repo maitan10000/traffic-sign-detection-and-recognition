@@ -89,8 +89,5 @@ import static utility.GlobalValue.*;
 @Path("/Service")
 public class Service {
 
-	
-
-	
 
 }

@@ -67,7 +67,7 @@ public class Image {
 				}
 				imageBuffer = ImageUtil.resizeImage(imageBuffer, width, height);
 			}
-			InputStream is = ImageUtil.getInpuStreamFromImage(imageBuffer);
+			InputStream is = ImageUtil.getInputStreamFromImage(imageBuffer);
 			if (is != null) {
 				return Response.ok(is).build();
 			}
