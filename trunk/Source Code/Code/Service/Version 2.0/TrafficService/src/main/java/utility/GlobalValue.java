@@ -40,7 +40,8 @@ public class GlobalValue {
 				// map value
 				connectionURL = prop.getProperty("connectionURL").trim();
 				dbUser = prop.getProperty("dbUser").trim();
-				dbPassword = prop.getProperty("dbPasswork").trim();
+				dbPassword = prop.getProperty("dbPassword").trim();
+
 				workPath = prop.getProperty("workPath").trim();
 				gmailUsername = prop.getProperty("gmailUsername").trim();
 				gmailPassword = prop.getProperty("gmailPassword").trim();

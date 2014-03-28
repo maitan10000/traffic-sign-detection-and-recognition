@@ -1,6 +1,7 @@
 package service;
 
 import java.security.MessageDigest;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import json.ReportJSON;
 import json.ReportShortJSON;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.jersey.multipart.FormDataParam;
 
 import dao.AccountDAO;
@@ -264,7 +266,8 @@ public class Manage {
 			reportShortJSON.setCreateDate(reportDTO.getCreateDate());
 			listReportShortJSON.add(reportShortJSON);
 		}
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder()
+		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
 		return gson.toJson(listReportShortJSON);
 	}
 
@@ -291,7 +294,8 @@ public class Manage {
 			reportJSON.setType(reportData.getType());
 			reportJSON.setContent(reportData.getContent());
 			reportJSON.setCreateDate(reportData.getCreateDate());
-			Gson gson = new Gson();
+			Gson gson = new GsonBuilder()
+			   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
 			return gson.toJson(reportJSON);
 		}
 		return null;
@@ -433,6 +437,38 @@ public class Manage {
 	public String activeAccount(@QueryParam("userID") String userID) {
 		AccountDAO accountDAO = new AccountDAOImpl();
 		boolean result = accountDAO.activeAccount(userID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
+	
+	/**
+	 * Set Staff Account
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/SetStaff")
+	public String setStaffAccount(@QueryParam("userID") String userID) {
+		AccountDAO accountDAO = new AccountDAOImpl();
+		boolean result = accountDAO.setStaffAccount(userID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
+	
+	/**
+	 * Unset Staff Account
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/UnsetStaff")
+	public String unsetStaffAccount(@QueryParam("userID") String userID) {
+		AccountDAO accountDAO = new AccountDAOImpl();
+		boolean result = accountDAO.unsetStaffAccount(userID);
 		if (result == true) {
 			return "Success";
 		}

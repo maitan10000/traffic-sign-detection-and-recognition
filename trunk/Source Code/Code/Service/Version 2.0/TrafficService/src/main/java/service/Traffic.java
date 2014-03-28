@@ -544,4 +544,56 @@ public class Traffic {
 		}
 		return result;
 	}
+
+	/**
+	 * Update traffic sign information
+	 * 
+	 * @param trafficID
+	 * @param name
+	 * @param image
+	 * @param categoryID
+	 * @param information
+	 * @param penaltyfee
+	 * @param creator
+	 * @return
+	 */
+	@POST
+	@Path("/UpdateTrafficInfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String updateTrafficInfo(
+			@FormDataParam("trafficID") String trafficID,
+			@FormDataParam("name") String name,
+			@FormDataParam("mainImage") InputStream mainImageStream,
+			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail,
+			@FormDataParam("categoryID") int categoryID,
+			@FormDataParam("information") String information,
+			@FormDataParam("penaltyfee") String penaltyfee,
+			@FormDataParam("creator") String creator) {
+		if (trafficID != null && name != null && information != null
+				&& creator != null && !trafficID.isEmpty() && !name.isEmpty()
+				&& !information.isEmpty() && !creator.isEmpty()) {
+			TrafficInfoDTO trafficObj = new TrafficInfoDTO();
+			trafficObj.setTrafficID(trafficID);
+			trafficObj.setName(name);
+			trafficObj.setImage(trafficID + ".jpg");
+			trafficObj.setCategoryID(categoryID);
+			trafficObj.setInformation(information);
+			trafficObj.setPenaltyfee(penaltyfee);
+			trafficObj.setCreator(creator);
+			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
+			Boolean result = trafficDAO.edit(trafficObj);
+
+			if (mainImageDetail.getFileName() != null && !mainImageDetail.getFileName().isEmpty()) {
+				// save to main Image folder
+				String newImagePath = GlobalValue.getWorkPath()
+						+ Constants.MAIN_IMAGE_FOLDER + trafficObj.getImage();
+				Helper.writeToFile(mainImageStream, newImagePath);
+			}
+
+			if (result == true) {
+				return "Success";
+			}
+		}		
+		return "Fail";
+	}
 }
