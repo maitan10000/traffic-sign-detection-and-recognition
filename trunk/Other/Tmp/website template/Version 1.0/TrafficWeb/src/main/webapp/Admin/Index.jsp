@@ -59,7 +59,7 @@
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="#"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
 						lý người dùng</span></a></li>
