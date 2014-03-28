@@ -21,6 +21,7 @@ import json.AccountJSON;
 import json.FavoriteJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
+import json.TrafficInfoShortJSON;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -476,10 +477,10 @@ public class Manage {
 	}
 
 	// For test send mail function not real service
-	@GET
+	@POST
 	@Path("/SendMail")
-	public String sendEmail() {
-		String email = "maitan_10000@yahoo.com.vn";
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String sendEmail(@FormParam("email") String email) {		
 		String subject = "Thử gửi mail";
 		String message = "<p><span style=\"font-size: medium;\">Thử chức năng</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\">HTML Conent</span>.</p>";
 		boolean result = MailUtil.sendEmail(email, subject, message);
@@ -487,5 +488,6 @@ public class Manage {
 			return "Success";
 		}
 		return "Fail";
-	}
+	}	
+	
 }

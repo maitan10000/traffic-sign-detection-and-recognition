@@ -15,16 +15,23 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
+			if(cateID == 0){
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("SELECT * FROM trafficdb.trafficinformation");
+			}else{
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT trafficID,name,image FROM trafficdb.trafficinformation WHERE categoryID = ?");
+					.prepareStatement("SELECT trafficID,name,image,categoryID FROM trafficdb.trafficinformation WHERE categoryID = ?");
 			stm.setInt(1, cateID);
+			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
 				TrafficInfoDTO trafficObj = new TrafficInfoDTO();
 				trafficObj.setTrafficID(rs.getString("trafficID"));
 				trafficObj.setName(rs.getString("name"));
 				trafficObj.setImage(rs.getString("image"));
+				trafficObj.setCategoryID(rs.getInt("categoryID"));
 				cateData.add(trafficObj);
 			}
 			return cateData;
