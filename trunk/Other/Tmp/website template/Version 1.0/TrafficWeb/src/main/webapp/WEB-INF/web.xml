@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" version="2.5">
-	<display-name>Archetype Created Web Application</display-name>	
+	<display-name>Archetype Created Web Application</display-name>
 	<!-- Listener -->
 	<listener>
 		<listener-class>listener.ContextListener</listener-class>
@@ -34,4 +34,8 @@
 		<servlet-name>AdminController</servlet-name>
 		<url-pattern>/AdminController</url-pattern>
 	</servlet-mapping>
+
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
 </web-app>
