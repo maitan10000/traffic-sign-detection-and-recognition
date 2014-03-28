@@ -116,22 +116,9 @@
 	<div id="user-nav" class="navbar navbar-inverse">
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
-					<span class="text">Profile</span></a></li>
-			<li class=" dropdown" id="menu-messages"><a href="#"
-				data-toggle="dropdown" data-target="#menu-messages"
-				class="dropdown-toggle"><i class="icon icon-envelope"></i> <span
-					class="text">Messages</span> <span class="label label-important">5</span>
-					<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a class="sAdd" title="" href="#">new message</a></li>
-					<li><a class="sInbox" title="" href="#">inbox</a></li>
-					<li><a class="sOutbox" title="" href="#">outbox</a></li>
-					<li><a class="sTrash" title="" href="#">trash</a></li>
-				</ul></li>
-			<li class=""><a title="" href="#"><i class="icon icon-cog"></i>
-					<span class="text">Settings</span></a></li>
-			<li class=""><a title="" href="login.html"><i
-					class="icon icon-share-alt"></i> <span class="text">Logout</span></a></li>
+					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
+			<li class=""><a title="" href="#"><i
+					class="icon icon-share-alt"></i> <span class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
 
@@ -141,18 +128,19 @@
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
 			Dashboard2</a>
 		<ul>
-			<li class="active"><a href="index-2.html"><i
+			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="tables.html"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="#"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
-			<li><a href="charts.html"><i class="icon icon-user"></i> <span>Quản
+			<li><a href="#"><i class="icon icon-user"></i> <span>Quản
 						lý người dùng</span></a></li>
-			<li><a href="widgets.html"><i
+			<li><a
+				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
 					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
 						hồi</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-signal"></i> <span>Thống
+			<li><a href="#"><i class="icon icon-signal"></i> <span>Thống
 						kê</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-cog"></i> <span>Thiếp
+			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
 
 		</ul>
@@ -178,10 +166,11 @@
 	<div class="row-fluid">
 		<div id="footer" class="span12">			
 			<p>
-				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
-			</p>
-			<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
-				giao thông."</p>
+				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b><br>
+			
+			<span style="font-size:11px;">"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
+				giao thông"</span>
+				</p>
 		</div>
 	</div>
 	<script src="Admin/Content/js/excanvas.min.js"></script>

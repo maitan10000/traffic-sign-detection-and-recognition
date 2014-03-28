@@ -65,9 +65,23 @@ public class AdminController extends HttpServlet {
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
-			if (Constants.ACTION_REGISTER.equals(action)) {
-				// Register
+			HttpSession session = request.getSession(true);
 
+			// check if session null or not login, register action, redirect to
+			// login page
+			String role = (String)session.getAttribute(Constants.SESSION_ROLE);
+			boolean validRole = false;
+			if ("admin".equals(role) || "staff".equals(role)) {
+				validRole = true;
+			}
+
+			if (validRole == false && !Constants.ACTION_REGISTER.equals(action)
+					&& !Constants.ACTION_LOGIN.equals(action)) {
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Login.jsp");
+				rd.forward(request, response);
+			} else if (Constants.ACTION_REGISTER.equals(action)) {
+				// Register
 				String userID = request.getParameter("userID");
 				String password = request.getParameter("password");
 				String email = request.getParameter("email");
@@ -99,7 +113,6 @@ public class AdminController extends HttpServlet {
 
 			} else if (Constants.ACTION_LOGIN.equals(action)) {
 				// login
-
 				String userID = request.getParameter("txtUser");
 				String password = request.getParameter("txtPassword");
 				String url = GlobalValue.getServiceAddress()
@@ -117,24 +130,20 @@ public class AdminController extends HttpServlet {
 					throw new RuntimeException("Failed : HTTP error code : "
 							+ response.getStatus());
 				}
-				String result = clientResponse.getEntity(String.class).trim().toLowerCase();
-				HttpSession session = request.getSession();				
+				String result = clientResponse.getEntity(String.class).trim()
+						.toLowerCase();
 				session.setAttribute(Constants.SESSION_USERID, userID);
 				session.setAttribute(Constants.SESSION_ROLE, result);
-				if ("user".equals(result)) {					
-					RequestDispatcher rd = request
-							.getRequestDispatcher("/");
-					rd.forward(request, response);
-				} else if("staff".equals(result) || "admin".equals(result)){
-					RequestDispatcher rd = request
-							.getRequestDispatcher("Admin/Index.jsp");
-					rd.forward(request, response);
-				}else{
+				String urlRewrite = "Admin/Login.jsp";
+				if ("user".equals(result)) {
+					urlRewrite = "/";
+				} else if ("staff".equals(result) || "admin".equals(result)) {
+					urlRewrite = "Admin/Index.jsp";
+				} else {
 					session.invalidate();
-					RequestDispatcher rd = request
-							.getRequestDispatcher("Admin/Login.jsp");
-					rd.forward(request, response);
 				}
+				RequestDispatcher rd = request.getRequestDispatcher(urlRewrite);
+				rd.forward(request, response);
 
 			} else if (Constants.ACTION_REPORT_LIST.equals(action)) {
 				// List Report
@@ -298,11 +307,11 @@ public class AdminController extends HttpServlet {
 						.getRequestDispatcher("Admin/ResultDetail.jsp");
 				rd.forward(request, response);
 			} else if (Constants.ACTION_TRAFFICINFO_ADD.equals(action)) {
-				//Add Traffic
-				
+				// Add Traffic
+
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
-				rd.forward(request, response);			
+				rd.forward(request, response);
 			} else if (Constants.ACTION_TRAFFIC_VIEW.equals(action)) {
 				// View Traffic
 
@@ -336,13 +345,19 @@ public class AdminController extends HttpServlet {
 			} else if (Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT
 					.equals(action)) {
 				// Add train image
-				
+
 				String reportID = request.getParameter("resultID");
 				request.setAttribute("resultID", reportID);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrainImage.jsp");
 				rd.forward(request, response);
+			} else {
+				// redirect to home
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Index.jsp");
+				rd.forward(request, response);
 			}
+
 		} finally {
 			out.close();
 		}

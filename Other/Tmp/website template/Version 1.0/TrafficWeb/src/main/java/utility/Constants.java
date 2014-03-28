@@ -44,6 +44,7 @@ public final class Constants {
 	//Admin controler action
 	public final static String ACTION_LOGIN = "login";
 	public final static String ACTION_REGISTER = "register";
+	public final static String ACTION_LOGOUT = "logout";
 	
 	public final static String ACTION_REPORT_LIST = "listReport";	
 	public final static String ACTION_REPORT_VIEW = "viewReport";
