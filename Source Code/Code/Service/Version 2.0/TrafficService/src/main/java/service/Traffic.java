@@ -596,4 +596,40 @@ public class Traffic {
 		}		
 		return "Fail";
 	}
+	
+	/**
+	 * List traffic by cateID
+	 * 
+	 * @param type
+	 *            (0 or null for all type, 1: for type 1, 2 for type2)
+	 * @return
+	 */
+	@GET
+	@Path("/ListTrafficByCateID")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listTrafficByCateID(@QueryParam("cateID") Integer cateID) {
+		ArrayList<TrafficInfoDTO> trafficData = new ArrayList<TrafficInfoDTO>();
+		TrafficInfoDAO trafficinfoDAO = new TrafficInfoDAOImpl();
+		if (cateID == null) {
+			cateID = 0;
+		}
+		trafficData = trafficinfoDAO.searchByCateID(cateID);
+		// get return info
+		CategoryDAO cateDao = new CategoryDAOImpl();
+		ArrayList<TrafficInfoShortJSON> listTrafficShortJSON = new ArrayList<TrafficInfoShortJSON>();
+		for (TrafficInfoDTO trafficInfoDTO : trafficData) {
+			TrafficInfoShortJSON trafficInfoShortJSON = new TrafficInfoShortJSON();
+			trafficInfoShortJSON.setTrafficID(trafficInfoDTO.getTrafficID());
+			trafficInfoShortJSON.setName(trafficInfoDTO.getName());
+			String imageLink = Constants.MAIN_IMAGE_SUB_LINK
+					+ trafficInfoDTO.getImage();
+			trafficInfoShortJSON.setImage(imageLink);			
+			trafficInfoShortJSON.setCategoryID(trafficInfoDTO.getCategoryID());
+			trafficInfoShortJSON.setCategoryName(cateDao.getCategoryName(trafficInfoDTO.getCategoryID()));			
+			listTrafficShortJSON.add(trafficInfoShortJSON);
+		}
+		Gson gson = new GsonBuilder()
+		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+		return gson.toJson(listTrafficShortJSON);
+	}
 }
