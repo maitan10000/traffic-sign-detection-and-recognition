@@ -224,7 +224,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			stm.setString(4, trafficDTO.getInformation());
 			stm.setString(5, trafficDTO.getPenaltyfee());
 			stm.setString(6, trafficDTO.getCreator());
-			stm.setBoolean(7, trafficDTO.getIsActive());
+			stm.setBoolean(7, true);
 			stm.setString(8, trafficDTO.getTrafficID());
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {

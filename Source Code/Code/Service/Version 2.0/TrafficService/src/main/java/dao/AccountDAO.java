@@ -15,8 +15,8 @@ public interface AccountDAO {
 
 	public boolean activeAccount(String userID);
 
-	public boolean setStaffAccount(String user, String role);
+	public boolean setStaffAccount(String userID);
 
-	public boolean setStaffAccount(String user);
+	public boolean unsetStaffAccount(String userID);
 
 }

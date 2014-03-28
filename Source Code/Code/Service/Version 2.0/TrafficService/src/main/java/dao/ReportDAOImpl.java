@@ -1,9 +1,11 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import dao.BaseDAO;
@@ -11,51 +13,6 @@ import dao.ReportDAO;
 import dto.ReportDTO;
 
 public class ReportDAOImpl implements ReportDAO {
-
-	public ArrayList<ReportDTO> listReport() {
-		ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
-		Connection connection = null;
-		PreparedStatement stm = null;
-		try {
-			connection = BaseDAO.getConnect();
-			stm = connection.prepareStatement("SELECT * FROM trafficdb.report");
-			ResultSet rs = stm.executeQuery();
-			while (rs.next()) {
-				ReportDTO reportObj = new ReportDTO();
-				reportObj.setReportID(rs.getInt("reportID"));
-				reportObj.setReferenceID(rs.getString("referenceID"));
-				reportObj.setContent(rs.getString("content"));
-				reportObj.setCreator(rs.getString("creator"));
-				reportObj.setCreateDate(rs.getDate("createDate"));
-				reportObj.setType(rs.getInt("type"));
-				reportObj.setIsActive(rs.getBoolean("isActive"));
-				reportData.add(reportObj);
-			}
-			return reportData;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (stm != null) {
-				try {
-					stm.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		return null;
-
-	}
-
 	public boolean add(ReportDTO reportDTO) {
 		Connection connection = null;
 		PreparedStatement stm = null;
@@ -107,19 +64,19 @@ public class ReportDAOImpl implements ReportDAO {
 			connection = BaseDAO.getConnect();
 			if (type == 0 && getInActive == false) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE isActive = ? ORDER BY createDate");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE isActive = ? ORDER BY reportID DESC");
 				stm.setBoolean(1, true);
 			} else if (type == 0 && getInActive == true) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report ORDER BY createDate");
+						.prepareStatement("SELECT * FROM trafficdb.report ORDER BY reportID DESC");
 			} else if (getInActive == false) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isActive = ? ORDER BY createDate");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isActive = ? ORDER BY reportID DESC");
 				stm.setInt(1, type);
 				stm.setBoolean(2, true);
 			} else {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? ORDER BY createDate");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? ORDER BY reportID DESC");
 				stm.setInt(1, type);
 			}
 			ResultSet rs = stm.executeQuery();
@@ -129,7 +86,9 @@ public class ReportDAOImpl implements ReportDAO {
 				reportObj.setReferenceID(rs.getString("referenceID"));
 				reportObj.setContent(rs.getString("content"));
 				reportObj.setCreator(rs.getString("creator"));
-				reportObj.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				reportObj.setCreateDate(tempDate);
 				reportObj.setType(rs.getInt("type"));
 				reportObj.setIsActive(rs.getBoolean("isActive"));
 				reportData.add(reportObj);
@@ -173,7 +132,9 @@ public class ReportDAOImpl implements ReportDAO {
 				reportDTO.setContent(rs.getString("content"));
 				reportDTO.setReferenceID(rs.getString("referenceID"));
 				reportDTO.setCreator(rs.getString("creator"));
-				reportDTO.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				reportDTO.setCreateDate(tempDate);				
 				reportDTO.setType(rs.getInt("type"));
 				reportDTO.setIsActive(rs.getBoolean("isActive"));
 				return reportDTO;

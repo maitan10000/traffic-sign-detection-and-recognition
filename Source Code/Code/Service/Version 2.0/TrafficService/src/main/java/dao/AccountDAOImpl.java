@@ -218,22 +218,18 @@ public class AccountDAOImpl implements AccountDAO {
 		return false;
 	}
 
-	//
-	public boolean setStaffAccount(String user) {
-		return this.setStaffAccount(user, "User");
-	}
 	
 	
 	// Set Account with role Staff
-	public boolean setStaffAccount(String user, String role) {
+	public boolean setStaffAccount(String userID) {
 		Connection connection = null;
 		PreparedStatement stm = null;				
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("UPDATE trafficdb.account SET role = ? WHERE userID = ?");
-			stm.setString(1, role);
-			stm.setString(2, user);
+			stm.setString(1, "staff");
+			stm.setString(2, userID);
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -257,4 +253,38 @@ public class AccountDAOImpl implements AccountDAO {
 		}
 		return false;
 	}
+	
+	//Unset Staff Account	
+		public boolean unsetStaffAccount(String userID){
+			Connection connection = null;
+			PreparedStatement stm = null;				
+			try {
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("UPDATE trafficdb.account SET role = ? WHERE userID = ?");
+				stm.setString(1, "user");
+				stm.setString(2, userID);
+				return stm.executeUpdate() > 0;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				if (stm != null) {
+					try {
+						stm.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return false;
+		}
 }
