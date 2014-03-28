@@ -4,7 +4,12 @@ import java.util.Comparator;
 
 import json.ResultInput;
 
-//compare ResultInput
+/**
+ * ResultInputCompare
+ * 
+ * @author everything
+ * 
+ */
 public class ResultInputCompare implements Comparator<ResultInput> {
 	public int compare(ResultInput arg0, ResultInput arg1) {
 		if (arg0.getLocate().getY() > arg1.getLocate().getY()) {

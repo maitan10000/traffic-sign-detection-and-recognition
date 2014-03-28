@@ -13,6 +13,14 @@ import java.util.Comparator;
 import json.ResultInput;
 
 public class Helper {
+
+	/**
+	 * Run TSRT with list command
+	 * 
+	 * @param appDic
+	 * @param listCommand
+	 * @return
+	 */
 	public static String runTSRT(String appDic, ArrayList<String> listCommand) {
 		String commands = "./TSRT";
 		listCommand.add(0, commands);
@@ -34,19 +42,10 @@ public class Helper {
 				if (!line.equals(previous)) {
 					previous = line;
 					out.append(line).append('\n');
-					// System.out.println(line);
 				}
 
 			// Check result
 			if (process.waitFor() == 0)
-				// System.out.println("Success!");
-				// System.exit(0);
-
-				// Abnormal termination: Log command parameters and output and
-				// throw ExecutionException
-				// System.err.println(commands);
-				// System.out.println(out.toString());
-				// System.exit(1);
 				return out.toString();
 
 		} catch (IOException e) {
@@ -59,55 +58,34 @@ public class Helper {
 		return "";
 	}
 
+	/**
+	 * Train DB using SVM
+	 * 
+	 * @param appDic
+	 * @return
+	 */
 	public static String trainSVM(String appDic) {
-		String commands = "./TSRT";
-
-		// Run macro on target
-		ProcessBuilder pb = new ProcessBuilder(commands, "-l");
-		pb.directory(new File(appDic));
-		pb.redirectErrorStream(true);
-		Process process;
-		try {
-			process = pb.start();
-			// Read output
-			StringBuilder out = new StringBuilder();
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
-			String line = null, previous = null;
-			while ((line = br.readLine()) != null)
-				if (!line.equals(previous)) {
-					previous = line;
-					out.append(line).append('\n');
-					// System.out.println(line);
-				}
-
-			// Check result
-			if (process.waitFor() == 0)
-				// System.out.println("Success!");
-				// System.exit(0);
-				return out.toString();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "";
+		ArrayList<String> listCommand = new ArrayList<String>();
+		listCommand.add("-l");
+		return runTSRT(appDic, listCommand);
 	}
 
-	// save uploaded file to new location
-	public static void writeToFile(InputStream uploadedInputStream,
-			String uploadedFileLocation) {
+	/**
+	 * Write InputStream to File
+	 * 
+	 * @param inputStream
+	 * @param fileLocation
+	 */
+	public static void writeToFile(InputStream inputStream,
+			String fileLocation) {
 		try {
 			OutputStream out = new FileOutputStream(new File(
-					uploadedFileLocation));
+					fileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
 
-			out = new FileOutputStream(new File(uploadedFileLocation));
-			while ((read = uploadedInputStream.read(bytes)) != -1) {
+			out = new FileOutputStream(new File(fileLocation));
+			while ((read = inputStream.read(bytes)) != -1) {
 				out.write(bytes, 0, read);
 			}
 			out.flush();

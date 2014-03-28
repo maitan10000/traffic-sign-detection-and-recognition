@@ -1,17 +1,35 @@
 package utility;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
 
 public class GlobalValue {
+	private static String configPath = "";
 	private static boolean isCreated = false;
-	private static String workPath = "";
-	private static String gmailUsername="";
-	private static String gmailPassword ="";
 
+	private static String connectionURL = "";
+	private static String dbUser = "";
+	private static String dbPasswork = "";
+	private static String workPath = "";
+	private static String gmailUsername = "";
+	private static String gmailPassword = "";
+	private static int reTrainNum = 0;
+
+	public static int ReTrainCount = 0;
+
+	/**
+	 * Load setting information to globalValue Only can create instance one time
+	 * 
+	 * @param configPath
+	 * @throws Exception
+	 */
 	public static void createInstance(String configPath) throws Exception {
+		GlobalValue.configPath = configPath;
 		if (isCreated == false) {
 			Properties prop = new Properties();
 			FileInputStream in;
@@ -19,9 +37,18 @@ public class GlobalValue {
 				in = new FileInputStream(configPath);
 				prop.load(in);
 				// map value
+				connectionURL = prop.getProperty("connectionURL").trim();
+				dbUser = prop.getProperty("dbUser").trim();
+				dbPasswork = prop.getProperty("dbPasswork").trim();
 				workPath = prop.getProperty("workPath").trim();
 				gmailUsername = prop.getProperty("gmailUsername").trim();
 				gmailPassword = prop.getProperty("gmailPassword").trim();
+				try {
+					reTrainNum = Integer.parseInt(prop
+							.getProperty("reTrainNum").trim());
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
 
 				java.net.InetAddress localMachine = java.net.InetAddress
 						.getLocalHost();
@@ -43,6 +70,46 @@ public class GlobalValue {
 		}
 	}
 
+	/**
+	 * Save setting to file
+	 * 
+	 * @return
+	 */
+	public static boolean saveSetting() {
+		Properties prop = new Properties();
+		prop.setProperty("workPath", workPath);
+		prop.setProperty("gmailUsername", gmailUsername);
+		prop.setProperty("gmailPassword", gmailPassword);
+		prop.setProperty("reTrainNum", reTrainNum + "");
+
+		File f = new File(configPath);
+		OutputStream out;
+		try {
+			out = new FileOutputStream(f);
+			prop.store(out, "Config for Traffic Service");
+			return true;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public static String getConnectionURL() {
+		return connectionURL;
+	}
+
+	public static String getDbUser() {
+		return dbUser;
+	}
+
+	public static String getDbPasswork() {
+		return dbPasswork;
+	}
+
 	public static String getWorkPath() {
 		return workPath;
 	}
@@ -54,5 +121,8 @@ public class GlobalValue {
 	public static String getGmailPassword() {
 		return gmailPassword;
 	}
-	
+
+	public static int getReTrainNum() {
+		return reTrainNum;
+	}
 }

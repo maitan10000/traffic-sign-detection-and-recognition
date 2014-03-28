@@ -19,6 +19,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.xmlbeans.impl.common.GlobalLock;
+
 import json.CategoryJSON;
 import json.FavoriteJSON;
 import json.LocateJSON;
@@ -78,20 +80,18 @@ public class Traffic {
 		ArrayList<CategoryDTO> listCate = new ArrayList<CategoryDTO>();
 		CategoryDAO categoryDAO = new CategoryDAOImpl();
 		listCate = categoryDAO.listAllCategory();
-		
-		//get return info
+
+		// get return info
 		ArrayList<CategoryJSON> listCateJSON = new ArrayList<CategoryJSON>();
 		for (CategoryDTO categoryDTO : listCate) {
 			CategoryJSON categoryJSON = new CategoryJSON();
 			categoryJSON.setCategoryID(categoryDTO.getCategoryID());
 			categoryJSON.setCategoryName(categoryDTO.getCategoryName());
 			listCateJSON.add(categoryJSON);
-		}		
+		}
 		Gson gson = new Gson();
 		return gson.toJson(listCateJSON);
 	}
-
-	
 
 	/**
 	 * Search traffic sign by name and cateID (cateID = null to search in all
@@ -115,8 +115,7 @@ public class Traffic {
 			// no limit
 			limit = 0;
 		}
-		if(name == null)
-		{
+		if (name == null) {
 			name = "";
 		}
 
@@ -336,9 +335,9 @@ public class Traffic {
 			resultShortJSON.setCreateDate(resultDTO.getCreateDate());
 			listResultShortJSON.add(resultShortJSON);
 		}
-		//Gson gson = new Gson();
-		Gson gson = new GsonBuilder()
-		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+		// Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
 		return gson.toJson(listResultShortJSON);
 	}
 
@@ -384,7 +383,6 @@ public class Traffic {
 		}
 		return "";
 	}
-
 
 	/**
 	 * Add traffic sign information
@@ -437,6 +435,7 @@ public class Traffic {
 
 	/**
 	 * Add Train Image From Report
+	 * 
 	 * @param resultID
 	 * @param trafficID
 	 * @param order
@@ -464,15 +463,15 @@ public class Traffic {
 			ArrayList<ResultInput> listTraffic = new ArrayList<ResultInput>();
 			listTraffic = gson.fromJson(resultDTO.getListTraffic(), t);
 			if (order < listTraffic.size()) {
-				//save back result to db
-				ResultInput tempResultInput = listTraffic.get(order);				
+				// save back result to db
+				ResultInput tempResultInput = listTraffic.get(order);
 				tempResultInput.setTrafficID(trafficID);
 				listTraffic.set(order, tempResultInput);
 				resultDTO.setListTraffic(gson.toJson(listTraffic));
 				resultDAO.edit(resultDTO);
-				
-				//crop image and save to train folder
-				LocateJSON locateJSON = tempResultInput.getLocate();				
+
+				// crop image and save to train folder
+				LocateJSON locateJSON = tempResultInput.getLocate();
 				Rectangle rect = new Rectangle();
 				rect.x = locateJSON.getX();
 				rect.y = locateJSON.getY();
@@ -502,7 +501,14 @@ public class Traffic {
 					trainImageDTO.setTrafficID(trafficID);
 					trainImageDTO.setImageID(newTrainImageID);
 					trainImageDTO.setImageName(newTrainImageID + ".jpg");
+
 					if (trainImageDAO.add(trainImageDTO)) {
+						//Auto retrain
+						if (++GlobalValue.ReTrainCount >= GlobalValue
+								.getReTrainNum()) {
+							Helper.trainSVM(GlobalValue.getWorkPath());
+							GlobalValue.ReTrainCount = 0;
+						}
 						return "Success";
 					}
 				}
@@ -525,8 +531,7 @@ public class Traffic {
 	@GET
 	@Path("/ReTrainAll")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String reTrainAll()
-	{
-		return Helper.trainSVM(GlobalValue.getWorkPath());		
+	public String reTrainAll() {
+		return Helper.trainSVM(GlobalValue.getWorkPath());
 	}
 }

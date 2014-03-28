@@ -17,6 +17,12 @@ import javax.imageio.ImageIO;
 
 public class ImageUtil {
 
+	/**
+	 * Get Image From Path
+	 * 
+	 * @param imagePath
+	 * @return
+	 */
 	public static BufferedImage getImageFromPath(String imagePath) {
 		try {
 			return ImageIO.read(new File(imagePath));
@@ -31,6 +37,14 @@ public class ImageUtil {
 		return null;
 	}
 
+	/**
+	 * Resize Image
+	 * 
+	 * @param image
+	 * @param width
+	 * @param height
+	 * @return
+	 */
 	public static BufferedImage resizeImage(final BufferedImage image,
 			int width, int height) {
 		final BufferedImage bufferedImage = new BufferedImage(width, height,
@@ -48,7 +62,15 @@ public class ImageUtil {
 		return bufferedImage;
 	}
 
-	public static BufferedImage cropImage(final BufferedImage src, Rectangle rect) {
+	/**
+	 * Crop Image
+	 * 
+	 * @param src
+	 * @param rect
+	 * @return
+	 */
+	public static BufferedImage cropImage(final BufferedImage src,
+			Rectangle rect) {
 		BufferedImage dest = new BufferedImage((int) rect.getWidth(),
 				(int) rect.getHeight(), BufferedImage.TYPE_INT_RGB);
 		final Graphics2D graphics2D = dest.createGraphics();
@@ -59,12 +81,19 @@ public class ImageUtil {
 		graphics2D.dispose();
 		return dest;
 	}
-	
-	public static boolean cropImageAndSave(String sourcePath, String destPath, Rectangle cropArea)
-	{
+
+	/**
+	 * Crop and Save Image
+	 * 
+	 * @param sourcePath
+	 * @param destPath
+	 * @param cropArea
+	 * @return
+	 */
+	public static boolean cropImageAndSave(String sourcePath, String destPath,
+			Rectangle cropArea) {
 		BufferedImage srcImage = getImageFromPath(sourcePath);
-		if(srcImage != null)
-		{
+		if (srcImage != null) {
 			BufferedImage destImage = cropImage(srcImage, cropArea);
 			File destFile = new File(destPath);
 			try {
@@ -78,7 +107,13 @@ public class ImageUtil {
 		return false;
 	}
 
-	public static InputStream getInpuStreamFromImage(final BufferedImage image) {
+	/**
+	 * Get InputStream From Image
+	 * 
+	 * @param image
+	 * @return
+	 */
+	public static InputStream getInputStreamFromImage(final BufferedImage image) {
 		try {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			ImageIO.write(image, "jpg", os);
