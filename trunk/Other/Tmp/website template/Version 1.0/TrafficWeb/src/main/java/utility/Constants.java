@@ -17,6 +17,7 @@ public final class Constants {
 	// for view traffic detail
 	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
+	public final static String TRAFFIC_TRAFFIC_UPDATE = "rest/Traffic/UpdateTrafficInfo";
 
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
@@ -46,13 +47,15 @@ public final class Constants {
 	public final static String ACTION_REGISTER = "register";
 	public final static String ACTION_LOGOUT = "logout";
 	
-	public final static String ACTION_REPORT_LIST = "listReport";	
+	public final static String ACTION_REPORT_LIST = "listReport";
 	public final static String ACTION_REPORT_VIEW = "viewReport";
 	public final static String ACTION_REPORT_DELETE = "deleteReport";
 	
 	public final static String ACTION_ACCOUNT_LIST = "listAccount";
 	public final static String ACTION_ACCOUNT_DEACTIVE = "deactiveAcccount";
-	public final static String ACTION_ACCOUNT_ACTIVE = "activeAccount";	
+	public final static String ACTION_ACCOUNT_ACTIVE = "activeAccount";
+	public final static String ACTION_ACCOUNT_SETSTAFF = "setStaff";
+	public final static String ACTION_ACCOUNT_UNSETSTAFF = "unsetStaff";
 	
 	public final static String ACTION_TRAFFIC_VIEW = "viewTraffic";
 	
@@ -80,6 +83,8 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_LIST = "rest/Manage/ListAllAccount";
 	public final static String MANAGE_ACCOUNT_DEACTIVE = "rest/Manage/Deactive";
 	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
+	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
+	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
 	
 	//Session Constant
 	public final static String SESSION_USERID = "userid";

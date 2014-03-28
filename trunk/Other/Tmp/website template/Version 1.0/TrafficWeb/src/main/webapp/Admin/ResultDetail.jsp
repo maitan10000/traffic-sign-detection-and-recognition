@@ -1,13 +1,12 @@
+<%@page import="utility.Constants"%>
+<%@page import="json.ResultJSON"%>
 <%@page import="model.Result"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%
-	Result resultDetails = (Result) request
-			.getAttribute("resultDetail");
+	ResultJSON resultDetails = (ResultJSON) request.getAttribute("resultDetail");
 %>
 <div class="modal-dialog">
-
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
@@ -20,8 +19,8 @@
 				<br /> <br /> <strong>Danh sách biển báo:</strong> <font> <%= resultDetails.getListTraffic()%></font>
 				<br /> <br /> <strong>Người tạo:</strong> <font><%=resultDetails.getCreator()%>
 				</font> <br /> <br /> <strong>Ngày tạo:</strong> <font><%=resultDetails.getCreateDate()%></font><br />
-				<br /> <strong>Trạng thái: </strong> <font><%=resultDetails.getIsActive()%>
-				</font> <br /> <br />
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT%>&resultID=<%=resultDetails.getResultID()%> ">Sửa chữa nhận diện</a>
+				
 			</div>
 		</div>
 		
