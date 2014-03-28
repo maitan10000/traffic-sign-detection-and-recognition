@@ -135,12 +135,12 @@
 								if(listAccount.get(i).getIsActive() == true){
 							%>
 							<td><a href="#"
-								onclick="deactiveAccount('<%=listAccount.get(i).getUserID()%>')">Deactive</a></td>
+								onclick="deactiveAccount('<%=listAccount.get(i).getUserID()%>')">Khóa</a></td>
 							<%
 								}else if(listAccount.get(i).getIsActive() == false){
 							%>
 							<td><a href="#"
-								onclick="activeAccount('<%=listAccount.get(i).getUserID()%>')">Active</a></td>
+								onclick="activeAccount('<%=listAccount.get(i).getUserID()%>')">Kích hoạt</a></td>
 							<%
 								}
 							%>

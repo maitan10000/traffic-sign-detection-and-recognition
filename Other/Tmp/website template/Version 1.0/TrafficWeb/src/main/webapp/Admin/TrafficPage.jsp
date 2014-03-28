@@ -2,7 +2,6 @@
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="utility.Constants"%>
 <%@page import="utility.GlobalValue"%>
-<%@page import="model.Report"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="model.Category"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -21,10 +20,21 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
+<style type="text/css">
+#paging-table_filter {
+	margin-left: 20px;
+}
+#trafficDetailModal{
+width: 800px;
+    margin-left: -400px;
+}
+	
+	</style>
+	
 </head>
 <%
 	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
-ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
+	ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
 %>
 
 <body>
@@ -95,34 +105,24 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			<div class="widget-title">
 				<span class="icon"><i class="icon-th"></i></span>
 				<h5>Quản lý biển báo</h5>
-			</div>
-			<form action="/TrafficWeb/AdminController"
-				enctype="application/x-www-form-urlencoded">
-				<div class="options">
-					<div class="searchName" style="margin-right: 30px;">
-						Tên biển báo: <input name="searchKey" type="text" />
-					</div>
-					<div class="content-Selectbox font-StyleTitle needMargin">
-						Loại Biển Báo: <select class="sortBy font-Style" id="catID"
-							name="catID">
-							<option class="font-Style" value="0">Tất Cả</option>
-							<%
-								for(int i = 0; i< listCat.size();i ++) {
-							%>
-							<option class="font-Style"
-								value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
-							<%
-								}
-							%>
+				<div id="show-type" align="right" class="control-group">
+					<div class="controls">
+						<span>Loại biển báo:</span> <select id="select-type" name="cateID"
+							onchange="listTraffic(this.value); return false;">							
+									<option class="font-Style" value="0">Tất Cả</option>
+									<%
+										for(int i = 0; i< listCat.size();i ++) {
+									%>
+									<option class="font-Style"
+										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+									<%
+										}
+									%>
+								</select>
 						</select>
 					</div>
-					<div class="searchName" style="padding-bottom: 5px">
-						<button type="submit" class="btn btn-default btn-sm"
-							value="searchManual" name="action">Tìm kiếm</button>
-					</div>
-					<div style="clear: both"></div>
 				</div>
-			</form>
+			</div>			
 			<%
 				if( listTraffic != null){
 			%>
@@ -154,13 +154,12 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							</tr>
 							<%
 								} 
-																																																																																						}
+									}
 							%>
 						</tbody>
 					</table>
 				</div>
-			</div>
-			<!-- <div id="pageNavPosition" style="padding-top: 20px" align="right"></div> -->
+			</div>			
 			<%
 				}
 			%>
@@ -189,7 +188,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 	<!-- Traffic Detail modal -->
 	<div class="modal fade" id="trafficDetailModal" tabindex="-1"
 		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
+		aria-hidden="true" ></div>
 	<!-- End detail modal-->
 </body>
 <script src="Admin/Content/js/excanvas.min.js"></script>
@@ -201,22 +200,32 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
 <script src="Admin/Content/js/fullcalendar.min.js"></script>
 <script src="Admin/Content/js/maruti.js"></script>
-<script src="Admin/Content/js/maruti.dashboard.js"></script>
+<script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
 <script src="Admin/Content/js/maruti.calendar.js"></script>
 <script src="Admin/Content/js/jquery.uniform.js"></script>
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 <script src="Admin/Content/js/maruti.tables.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		oTable = $('#traffic-table').dataTable({
-			"bJQueryUI" : true,
-			"sPaginationType" : "full_numbers",
-			"sDom" : '<"">t<"F"fp>'
-		});
-		$("#select-type").select2('destroy');
-	});
-	
+$(document).ready(function() {
+    oTable = $('#traffic-table').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "sDom": '<"">t<"F"fp>',
+        "oLanguage": { 
+        	"oPaginate": {
+        		"sFirst":    "Đầu",
+        		"sPrevious": "Trước",
+        		"sNext":     "Sau",
+        		"sLast":     "Cuối"
+        	},
+        "sSearch":"Tìm kiếm"
+        }
+    });
+    $("#select-type").select2('destroy'); 
+} );
+</script>
+<script type="text/javascript">	
 	function showTrafficDetails(trafficID){
 		var action = '<%=Constants.ACTION_TRAFFIC_VIEW%>';
 		$.ajax({
@@ -231,7 +240,11 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			
 		});
 	}
+	function listTraffic(cateID){
+		window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>&cateID="+cateID;	
+	}
 </script>
+
 
 
 

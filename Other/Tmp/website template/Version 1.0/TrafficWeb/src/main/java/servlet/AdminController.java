@@ -167,8 +167,7 @@ public class AdminController extends HttpServlet {
 				ClientResponse clientResponse = webResource.accept(
 						"application/json").get(ClientResponse.class);
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 
 				String output = clientResponse.getEntity(String.class);
@@ -202,8 +201,7 @@ public class AdminController extends HttpServlet {
 						"application/json").get(ClientResponse.class);
 				// handle error (not implement yet)
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 				String output = clientResponse.getEntity(String.class);
 				ReportJSON reportDetail = new ReportJSON();
@@ -373,15 +371,14 @@ public class AdminController extends HttpServlet {
 			}
 			else
 				// load searchmanual page with all category
-				if (Constants.ACTION_SEARCH_MANUAL.equals(action)) {
-					String searchKey = request.getParameter("searchKey");
-					String catID = request.getParameter("catID");
+				if (Constants.ACTION_TRAFFIC_LIST.equals(action)) {					
+					String cateID = request.getParameter("cateID");
 					// get all category and set to attribute category for display in
 					// selectbox
-					String urlGetCategory = GlobalValue.getServiceAddress()
+					String url = GlobalValue.getServiceAddress()
 							+ Constants.TRAFFIC_LIST_CATEGORY;
 					Client client = Client.create();
-					WebResource webResource = client.resource(urlGetCategory);
+					WebResource webResource = client.resource(url);
 					ClientResponse clientResponse = webResource.accept(
 							"application/json").get(ClientResponse.class);
 					// handle error (send redirect to error page)
@@ -399,15 +396,15 @@ public class AdminController extends HttpServlet {
 					category = gson.fromJson(output, type);
 					request.setAttribute("category", category);
 					// excute search manual if search key or categoryID is not null
-					if (searchKey != null && catID != null) {
+					if (cateID == null) {
+						cateID = "0";
+					}
 						// create url searchManual
-						String urlSearchManual = GlobalValue.getServiceAddress()
-								+ Constants.TRAFFIC_SEARCH_MANUAL + "?";
-						urlSearchManual = urlSearchManual + "name="
-								+ URLEncoder.encode(searchKey, "UTF-8");
-						urlSearchManual = urlSearchManual + "&cateID=" + catID;
+					 	url = GlobalValue.getServiceAddress()
+								+ Constants.TRAFFIC_TRAFFIC_LIST + "?";						
+						url = url + "&cateID=" + cateID;
 						// connect and receive json string from web service
-						WebResource webRsource = client.resource(urlSearchManual);
+						WebResource webRsource = client.resource(url);
 						clientResponse = webRsource.accept("application/json").get(
 								ClientResponse.class);
 						// handle error (not implement yet)
@@ -420,9 +417,9 @@ public class AdminController extends HttpServlet {
 						// parse output to list trafficSign using Gson
 						Type typeSearch = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 						}.getType();
-						listTraffic = gson.fromJson(searchString, typeSearch);
+						listTraffic = gson.fromJson(searchString, typeSearch);						
 						request.setAttribute("listTraffic", listTraffic);
-					}
+					
 					// request to searchManual.jsp
 
 					RequestDispatcher rd = request

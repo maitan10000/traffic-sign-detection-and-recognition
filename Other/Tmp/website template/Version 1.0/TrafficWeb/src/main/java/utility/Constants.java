@@ -18,6 +18,8 @@ public final class Constants {
 	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
 	public final static String TRAFFIC_TRAFFIC_UPDATE = "rest/Traffic/UpdateTrafficInfo";
+	public final static String TRAFFIC_TRAFFIC_LIST = "rest/Traffic/ListTrafficByCateID";
+	
 
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
@@ -58,6 +60,8 @@ public final class Constants {
 	public final static String ACTION_ACCOUNT_UNSETSTAFF = "unsetStaff";
 	
 	public final static String ACTION_TRAFFIC_VIEW = "viewTraffic";
+	public final static String ACTION_TRAFFIC_LIST = "listTraffic";
+	
 	
 	
 	
