@@ -1,5 +1,5 @@
 <%@page import="java.util.ArrayList"%>
-<%@page import="json.TrafficInfoShortJSON"%>
+<%@page import="json.TrafficInfoJSON"%>
 <%@page import="utility.GlobalValue"%>
 <%@page import="utility.Constants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -23,8 +23,8 @@
 	class="skin-color" />
 </head>
 <%
-	ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
-%>
+TrafficInfoJSON trafficDetails = (TrafficInfoJSON) request.getAttribute("trafficDetail");%>
+
 <body>
 <!--Header-part-->
 	<div id="header">
@@ -109,20 +109,20 @@
 						<div class="widget-title">
 							<span class="icon"> <i class="icon-align-justify"></i>
 							</span>
-							<h5>Personal-info</h5>
+							<h5></h5>
 						</div>
 						<div class="widget-content nopadding">
-							<form id="add_traffic_form" method="post" class="form-horizontal">
+							<form id="update_traffic_form" method="post" class="form-horizontal">
 							<div class="control-group">
 									<label class="control-label">Số hiệu Biển Báo :</label>
 									<div class="controls">
-										<input name="trafficID" "text" class="span6" />
+										<input name="trafficID" type="text" class="span6" value="<%=trafficDetails.getTrafficID()%>" />
 									</div>
 								</div>
 								<div class="control-group">
 									<label class="control-label">Tên Biển Báo :</label>
 									<div class="controls">
-										<input name="name" "text" class="span6" />
+										<input name="name" type="text" class="span6" value=""/>
 									</div>
 								</div>
 								<div class="control-group">
@@ -168,22 +168,20 @@
 			</div>
 		</div>
 	</div>
-
-
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
 
 	<script type="text/javascript">
-	function uploadFile() {
+	function updateTrafficInfo() {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
 				showResult(xhr.responseText);
 			}
 		}
-		var tmpForm = document.getElementById("add_traffic_form");
+		var tmpForm = document.getElementById("update_traffic_form");
 		/* TrafficID : <input type="text" name="trafficID" /><br> Name: <input
 		type="text" name="name" /><br> Image : <input type="file"
 		name="mainImage" size="45" /><br> CategoryID:<input type="text"

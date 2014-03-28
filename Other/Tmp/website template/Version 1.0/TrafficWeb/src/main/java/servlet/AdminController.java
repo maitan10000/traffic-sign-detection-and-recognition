@@ -3,6 +3,8 @@ package servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -14,16 +16,22 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import json.CategoryJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
+import json.ResultJSON;
+import json.TrafficInfoJSON;
+import json.TrafficInfoShortJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import model.Account;
+import model.Category;
 import model.Report;
 import model.Result;
 import model.TrafficSign;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -147,9 +155,13 @@ public class AdminController extends HttpServlet {
 
 			} else if (Constants.ACTION_REPORT_LIST.equals(action)) {
 				// List Report
-
+				String type = request.getParameter("type");
+				if(type == null){
+					type = "0";
+				}
 				String url = GlobalValue.getServiceAddress()
-						+ Constants.MANAGE_REPORT_LIST;
+						+ Constants.MANAGE_REPORT_LIST + "?type=";
+				url += type;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
 				ClientResponse clientResponse = webResource.accept(
@@ -162,17 +174,20 @@ public class AdminController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				ArrayList<ReportShortJSON> listreport = new ArrayList<ReportShortJSON>();
 				// Parse out put to gson
-				Gson gson = new Gson();
-				Type type = new TypeToken<ArrayList<ReportShortJSON>>() {
+				Gson gson = new GsonBuilder()
+				   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+				Type type1 = new TypeToken<ArrayList<ReportShortJSON>>() {
 				}.getType();
-				listreport = gson.fromJson(output, type);
+				listreport = gson.fromJson(output, type1);
 				request.setAttribute("listReport", listreport);
+				request.setAttribute("type", type);
 				// request to ReportPage.jsp
 				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/ReportPage.jsp");
+						.getRequestDispatcher("Admin/ListReport.jsp");
 				rd.forward(request, response);
 
-			} else if (Constants.ACTION_REPORT_VIEW.equals(action)) {
+			}
+			else if (Constants.ACTION_REPORT_VIEW.equals(action)) {
 				// show report
 
 				String reportID = request.getParameter("reportID");
@@ -193,7 +208,8 @@ public class AdminController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				ReportJSON reportDetail = new ReportJSON();
 				// parse output to list trafficSign using Gson
-				Gson gson = new Gson();
+				Gson gson = new GsonBuilder()
+				   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
 				reportDetail = gson.fromJson(output, ReportJSON.class);
 				// request to searchManual.jsp
 				request.setAttribute("reportDetail", reportDetail);
@@ -276,7 +292,45 @@ public class AdminController extends HttpServlet {
 				}
 				String output = clientResponse.getEntity(String.class);
 				out.println(output);
-			} else if (Constants.ACTION_HISTORY_VIEW.equals(action)) {
+			}else if (Constants.ACTION_ACCOUNT_SETSTAFF.equals(action)) {
+				// Deactive Account
+
+				String userID = request.getParameter("userID");
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_ACCOUNT_SETSTAFF + "?userID=";
+				url += userID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.println(output);
+			}
+			else if (Constants.ACTION_ACCOUNT_UNSETSTAFF.equals(action)) {
+				// Deactive Account
+
+				String userID = request.getParameter("userID");
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_ACCOUNT_UNSETSTAFF + "?userID=";
+				url += userID;
+				// connect and receive json string from web service
+				Client client = Client.create();
+				WebResource webRsource = client.resource(url);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				// handle error
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.println(output);
+			}
+			else if (Constants.ACTION_HISTORY_VIEW.equals(action)) {
 				// View History
 
 				String resultID = request.getParameter("resultID");
@@ -295,12 +349,10 @@ public class AdminController extends HttpServlet {
 							+ response.getStatus());
 				}
 				String output = clientResponse.getEntity(String.class);
-				Result resultDetail = new Result();
+				ResultJSON resultDetail = new ResultJSON();
 				// parse output to list trafficSign using Gson
-				Gson gson = new Gson();
-				Type type = new TypeToken<Result>() {
-				}.getType();
-				resultDetail = gson.fromJson(output, type);
+				Gson gson = new Gson();				
+				resultDetail = gson.fromJson(output, ResultJSON.class);
 				// request to searchManual.jsp
 				request.setAttribute("resultDetail", resultDetail);
 				RequestDispatcher rd = request
@@ -310,37 +362,105 @@ public class AdminController extends HttpServlet {
 				// Add Traffic
 
 				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
+						.getRequestDispatcher("Admin/TrafficPage.jsp");
+				rd.forward(request, response);			
+			}else if (Constants.TRAFFIC_TRAFFIC_UPDATE.equals(action)) {
+				//Add Traffic
+				
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/UpdateTrafficInfo.jsp");
 				rd.forward(request, response);
-			} else if (Constants.ACTION_TRAFFIC_VIEW.equals(action)) {
-				// View Traffic
+			}
+			else
+				// load searchmanual page with all category
+				if (Constants.ACTION_SEARCH_MANUAL.equals(action)) {
+					String searchKey = request.getParameter("searchKey");
+					String catID = request.getParameter("catID");
+					// get all category and set to attribute category for display in
+					// selectbox
+					String urlGetCategory = GlobalValue.getServiceAddress()
+							+ Constants.TRAFFIC_LIST_CATEGORY;
+					Client client = Client.create();
+					WebResource webResource = client.resource(urlGetCategory);
+					ClientResponse clientResponse = webResource.accept(
+							"application/json").get(ClientResponse.class);
+					// handle error (send redirect to error page)
+					if (response.getStatus() != 200) {
+						response.sendRedirect(Constants.ERROR_PAGE);
+					}
 
-				String trafficID = request.getParameter("trafficID");
-				// url get traffic by categoryID
-				String url = GlobalValue.getServiceAddress()
-						+ Constants.TRAFFIC_TRAFFIC_VIEW + "?id=";
-				url += trafficID;
-				// connect and receive json string from web service
-				Client client = Client.create();
-				WebResource webRsource = client.resource(url);
+					String output = clientResponse.getEntity(String.class);
+					// Arraylist Category to contain all category
+					ArrayList<Category> category = new ArrayList<Category>();
+					// parse output to List category using Gson
+					Gson gson = new Gson();
+					Type type = new TypeToken<ArrayList<Category>>() {
+					}.getType();
+					category = gson.fromJson(output, type);
+					request.setAttribute("category", category);
+					// excute search manual if search key or categoryID is not null
+					if (searchKey != null && catID != null) {
+						// create url searchManual
+						String urlSearchManual = GlobalValue.getServiceAddress()
+								+ Constants.TRAFFIC_SEARCH_MANUAL + "?";
+						urlSearchManual = urlSearchManual + "name="
+								+ URLEncoder.encode(searchKey, "UTF-8");
+						urlSearchManual = urlSearchManual + "&cateID=" + catID;
+						// connect and receive json string from web service
+						WebResource webRsource = client.resource(urlSearchManual);
+						clientResponse = webRsource.accept("application/json").get(
+								ClientResponse.class);
+						// handle error (not implement yet)
+						if (response.getStatus() != 200) {
+							response.sendRedirect(Constants.ERROR_PAGE);
+						}
+						String searchString = clientResponse
+								.getEntity(String.class);
+						ArrayList<TrafficInfoShortJSON> listTraffic = new ArrayList<TrafficInfoShortJSON>();
+						// parse output to list trafficSign using Gson
+						Type typeSearch = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
+						}.getType();
+						listTraffic = gson.fromJson(searchString, typeSearch);
+						request.setAttribute("listTraffic", listTraffic);
+					}
+					// request to searchManual.jsp
+
+					RequestDispatcher rd = request
+							.getRequestDispatcher("Admin/TrafficPage.jsp");
+					rd.forward(request, response);
+
+			}
+			else if (Constants.ACTION_TRAFFIC_VIEW.equals(action)) {				
+				// View Traffic
+				//Get listCategory
+				String url = GlobalValue.getServiceAddress() + Constants.TRAFFIC_LIST_CATEGORY;
+				Client client =  Client.create();
+				WebResource webRsource= client.resource(url);
 				ClientResponse clientResponse = webRsource.accept(
 						"application/json").get(ClientResponse.class);
-				// handle error (not implement yet)
-				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
-				}
+				// handle error (not implement yet)				
 				String output = clientResponse.getEntity(String.class);
-				TrafficSign trafficDetail = new TrafficSign();
-				// parse output to list trafficSign using Gson
+				ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
+				// parse output to list Category using Gson
 				Gson gson = new Gson();
-				Type type = new TypeToken<TrafficSign>() {
-				}.getType();
-				trafficDetail = gson.fromJson(output, type);
-				// request to searchManual.jsp
+				Type type = new TypeToken<ArrayList<CategoryJSON>>() {}.getType();
+				listCategory = gson.fromJson(output, type);				
+				request.setAttribute("cateList", listCategory);
+				
+				//Get traffic info detail
+				String trafficID = request.getParameter("trafficID");
+				url = GlobalValue.getServiceAddress()
+						+ Constants.TRAFFIC_TRAFFIC_VIEW + "?id=";
+				url += trafficID;						
+				webRsource = client.resource(url);	
+				clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				output = clientResponse.getEntity(String.class);
+				TrafficInfoJSON trafficDetail = new TrafficInfoJSON();			
+				trafficDetail = gson.fromJson(output, TrafficInfoJSON.class);			
 				request.setAttribute("trafficDetail", trafficDetail);
 				RequestDispatcher rd = request
-						.getRequestDispatcher("User/TrafficDetail.jsp");
+						.getRequestDispatcher("Admin/TrafficEdit.jsp");
 				rd.forward(request, response);
 			} else if (Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT
 					.equals(action)) {
