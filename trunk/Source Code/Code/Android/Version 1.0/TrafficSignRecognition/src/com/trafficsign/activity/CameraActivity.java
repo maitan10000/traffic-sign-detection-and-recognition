@@ -86,12 +86,19 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private int blinkCount = 0;
 	private ImageButton btnTakeImage;
 
+	static {
+	   if (!OpenCVLoader.initDebug())
+            Log.d("debug", "Unable to load OpenCV");
+        else
+            Log.d("debug", "OpenCV loaded");
+	}
+	
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
 		public void onManagerConnected(int status) {
 			switch (status) {
 			case LoaderCallbackInterface.SUCCESS: {
-				Log.i(TAG, "OpenCV loaded successfully");
+				//Log.i(TAG, "OpenCV loaded successfully");
 				mOpenCvCameraView.enableView();
 				mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
 			}
@@ -102,7 +109,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				break;
 			}
 		}
-
 	};
 
 	String fileName = "";
@@ -168,8 +174,9 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	@Override
 	public void onResume() {
 		super.onResume();
-		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
-				mLoaderCallback);
+		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+//		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
+//				mLoaderCallback);
 	}
 
 	public void onDestroy() {
