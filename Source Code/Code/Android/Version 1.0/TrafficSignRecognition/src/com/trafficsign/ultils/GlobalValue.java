@@ -10,6 +10,8 @@ public class GlobalValue {
 	private static String appFolder = "";
 	private static String serviceAddress = "";
 	private static boolean isCreated = false;
+	
+	public static boolean isUploading = false;
 
 	public static void createInstance(String externalPath) throws Exception {
 		if (isCreated == false) {

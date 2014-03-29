@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.core.Mat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,8 +34,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,6 +53,31 @@ public class ListResultActivity extends Activity {
 	static ResultJSON resultJson;
 	static ArrayList<ResultInput> listResult;
 	static ListView lv;
+
+	static {
+		if (!OpenCVLoader.initDebug())
+			Log.d("debug", "Unable to load OpenCV List result");
+		else
+			Log.d("debug", "OpenCV loaded List result");
+	}
+
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+		@Override
+		public void onManagerConnected(int status) {
+			switch (status) {
+			case LoaderCallbackInterface.SUCCESS: {
+				// Log.i(TAG, "OpenCV loaded successfully");
+				// mOpenCvCameraView.enableView();
+				// mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
+			}
+				break;
+			default: {
+				super.onManagerConnected(status);
+			}
+				break;
+			}
+		}
+	};
 
 	/** Called when the activity is first created. */
 	@Override
@@ -106,7 +139,7 @@ public class ListResultActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 		ImageView resultImage = (ImageView) findViewById(R.id.imageResult);
@@ -114,48 +147,56 @@ public class ListResultActivity extends Activity {
 		resultImage.setImageBitmap(image);
 	}
 
-//	@Override
-//	protected void onStart() {
-//		// TODO Auto-generated method stub
-//		super.onStart();
-//		// display image
-//		for (int i = 0; i < listResult.size(); i++) {
-//			try {
-//				int wantedPosition = i;
-//				if (listResult.get(wantedPosition).getTrafficID() != null
-//						&& listResult.get(wantedPosition).getTrafficID()
-//								.length() > 0) {
-//					HttpImageUtils httpImgUtil = new HttpImageUtils();
-//					httpImgUtil.setUrl(serviceIp
-//							+ listResult.get(wantedPosition).getTrafficImage()
-//							+ "?size=small");
-//					httpImgUtil.setExtra(wantedPosition);
-//					httpImgUtil
-//							.setHttpImageListener(new IAsyncHttpImageListener() {
-//
-//								@Override
-//								public void onComplete(Bitmap bitmap, int extra) {
-//									try {
-//										// View tmpView =
-//										// listResultAdapter.getView(
-//										// extra, null, lv);
-//										View tmpView = lv.getChildAt(extra);
-//										ImageView icon = (ImageView) tmpView
-//												.findViewById(R.id.trafficImage);
-//										icon.setImageBitmap(bitmap);
-//									} catch (Exception e) {
-//										e.printStackTrace();
-//									}
-//								}
-//							});
-//					httpImgUtil.execute();
-//				}// end if length > 0
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}// end for
+	@Override
+	public void onResume() {
+		super.onResume();
+		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
+		// mLoaderCallback);
+	}
 
-	//}
+	// @Override
+	// protected void onStart() {
+	// // TODO Auto-generated method stub
+	// super.onStart();
+	// // display image
+	// for (int i = 0; i < listResult.size(); i++) {
+	// try {
+	// int wantedPosition = i;
+	// if (listResult.get(wantedPosition).getTrafficID() != null
+	// && listResult.get(wantedPosition).getTrafficID()
+	// .length() > 0) {
+	// HttpImageUtils httpImgUtil = new HttpImageUtils();
+	// httpImgUtil.setUrl(serviceIp
+	// + listResult.get(wantedPosition).getTrafficImage()
+	// + "?size=small");
+	// httpImgUtil.setExtra(wantedPosition);
+	// httpImgUtil
+	// .setHttpImageListener(new IAsyncHttpImageListener() {
+	//
+	// @Override
+	// public void onComplete(Bitmap bitmap, int extra) {
+	// try {
+	// // View tmpView =
+	// // listResultAdapter.getView(
+	// // extra, null, lv);
+	// View tmpView = lv.getChildAt(extra);
+	// ImageView icon = (ImageView) tmpView
+	// .findViewById(R.id.trafficImage);
+	// icon.setImageBitmap(bitmap);
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// });
+	// httpImgUtil.execute();
+	// }// end if length > 0
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }// end for
+
+	// }
 	// @Override
 	// protected void onResume() {
 	// //Toast.makeText(getApplicationContext(), "OnResume",
@@ -184,5 +225,5 @@ public class ListResultActivity extends Activity {
 	// // httpImgUtil.execute();
 	// // }// end if length > 0
 	// // }// end for
-	//}
+	// }
 }
