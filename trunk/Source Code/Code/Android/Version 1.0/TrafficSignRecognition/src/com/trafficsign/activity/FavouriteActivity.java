@@ -9,7 +9,7 @@ import com.google.gson.Gson;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.Properties;
@@ -42,7 +42,7 @@ public class FavouriteActivity extends Activity {
 
 
 		try {
-			listFavorite = (ArrayList<TrafficInfoShortJSON>) CommonUtil
+			listFavorite = (ArrayList<TrafficInfoShortJSON>) ConvertUtil
 					.bytes2Object(intent.getByteArrayExtra("listFavorite"));
 			if (listFavorite == null) {
 				listFavorite = new ArrayList<TrafficInfoShortJSON>();
@@ -88,7 +88,7 @@ public class FavouriteActivity extends Activity {
 									getApplicationContext(),
 									TracfficSignDetailActivity.class);
 							try {
-								byte[] dataBytes = CommonUtil
+								byte[] dataBytes = ConvertUtil
 										.object2Bytes(trafficInfoJSON);
 								nextScreen
 										.putExtra("trafficDetails", dataBytes);

@@ -270,7 +270,7 @@ public class DBUtil {
 					+ trafficInfoJSON.getTrafficID() + ".jpg";
 			trafficInfoJSON.setImage(imagePath);
 		}
-
+		db.close();
 		return trafficInfoJSON;
 	}
 
@@ -292,8 +292,10 @@ public class DBUtil {
 		values.put("createDate", dateFormat.format(cal.getTime()));
 		values.put("isActive", true);
 		if (db.insert("result", null, values) != -1) {
+			db.close();
 			return true;
 		}
+		db.close();
 		return false;
 	}
 
@@ -317,11 +319,22 @@ public class DBUtil {
 						.getColumnIndexOrThrow("listTraffic")));
 				temp.setCreator(cursor.getString(cursor
 						.getColumnIndexOrThrow("creator")));
+				temp.setCreateDate(cursor.getString(cursor.getColumnIndexOrThrow("createDate")));
 				listResult.add(temp);
 			} while (cursor.moveToNext());
-
+			
 		}
+		db.close();
 		return listResult;
 	}
+	// delete a row in result table
+		public static int deleteSavedResult(String imagePath) {
+			SQLiteDatabase db = SQLiteDatabase.openDatabase(
+					GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+					SQLiteDatabase.OPEN_READWRITE);
+			int output = db.delete("result", "uploadedImage = ?" , new String[]{imagePath});
+			db.close();
+			return output;
+		}
 
 }

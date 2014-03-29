@@ -10,7 +10,7 @@ import com.google.gson.Gson;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.HttpAsyncUtil;
@@ -48,7 +48,7 @@ public class ListTrafficSignActivity extends Activity {
 		setContentView(R.layout.activity_listtraffic);
 
 		try {
-			listTrafficInfo = (ArrayList<TrafficInfoShortJSON>) CommonUtil
+			listTrafficInfo = (ArrayList<TrafficInfoShortJSON>) ConvertUtil
 					.bytes2Object(intent.getByteArrayExtra("trafficList"));
 			if (listTrafficInfo == null) {
 				listTrafficInfo = new ArrayList<TrafficInfoShortJSON>();
@@ -79,7 +79,7 @@ public class ListTrafficSignActivity extends Activity {
 					// move next screen
 					Intent nextScreen = new Intent(getApplicationContext(),
 							TracfficSignDetailActivity.class);
-					dataBytes = CommonUtil.object2Bytes(trafficInfoJSON);
+					dataBytes = ConvertUtil.object2Bytes(trafficInfoJSON);
 					nextScreen.putExtra("trafficDetails", dataBytes);
 					startActivity(nextScreen);
 				} catch (IOException e) {

@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.ImageUtils;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpImageListener;
@@ -32,7 +32,7 @@ public class TracfficSignDetailActivity extends Activity {
 		
 		// lay du lieu		
 		try {
-			trafficInfo = (TrafficInfoJSON) CommonUtil.bytes2Object(intent
+			trafficInfo = (TrafficInfoJSON) ConvertUtil.bytes2Object(intent
 					.getByteArrayExtra("trafficDetails"));
 			this.setTitle(trafficInfo.getName());
 		} catch (IOException e) {

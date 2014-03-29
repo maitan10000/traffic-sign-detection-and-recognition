@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
@@ -43,7 +43,7 @@ public class CategoryActivity extends Activity {
 		setContentView(R.layout.activity_category);
 		Intent intent = getIntent();
 		try {
-			listCategory = (ArrayList<CategoryJSON>) CommonUtil
+			listCategory = (ArrayList<CategoryJSON>) ConvertUtil
 					.bytes2Object(intent.getByteArrayExtra("catList"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -69,7 +69,7 @@ public class CategoryActivity extends Activity {
 					Intent nextScreen = new Intent(
 							getApplicationContext(),
 							ListTrafficSignActivity.class);
-					dataBytes = CommonUtil
+					dataBytes = ConvertUtil
 							.object2Bytes(listTrafficInfo);
 					nextScreen.putExtra("trafficList", dataBytes);
 					nextScreen
@@ -101,7 +101,7 @@ public class CategoryActivity extends Activity {
 					Intent nextScreen = new Intent(
 							getApplicationContext(),
 							ListTrafficSignActivity.class);
-					dataBytes = CommonUtil
+					dataBytes = ConvertUtil
 							.object2Bytes(listTrafficInfo);
 					nextScreen.putExtra("trafficList", dataBytes);
 					nextScreen
