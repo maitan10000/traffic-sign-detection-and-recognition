@@ -18,7 +18,7 @@ import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
 import com.trafficsign.json.FavoriteJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.HttpDatabaseUtil;
@@ -69,7 +69,7 @@ public class MainActivity extends Activity {
 					listCategory = DBUtil.getAllCategory();
 					Intent nextScreen = new Intent(getApplicationContext(),
 							CategoryActivity.class);
-					dataBytes = CommonUtil.object2Bytes(listCategory);
+					dataBytes = ConvertUtil.object2Bytes(listCategory);
 					nextScreen.putExtra("catList", dataBytes);
 					startActivity(nextScreen);
 				} catch (IOException e) {
@@ -124,7 +124,7 @@ public class MainActivity extends Activity {
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
 									FavouriteActivity.class);
-							byte[] datBytes = CommonUtil
+							byte[] datBytes = ConvertUtil
 									.object2Bytes(listFavoriteJSON);
 							nextScreen.putExtra("listFavorite", datBytes);
 							startActivity(nextScreen);

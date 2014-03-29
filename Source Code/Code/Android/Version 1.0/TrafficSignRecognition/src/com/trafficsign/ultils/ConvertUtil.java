@@ -18,7 +18,7 @@ import android.net.NetworkInfo;
 
 
 
-public class CommonUtil {
+public class ConvertUtil {
 
 	/**
 	 * Converting objects to byte arrays

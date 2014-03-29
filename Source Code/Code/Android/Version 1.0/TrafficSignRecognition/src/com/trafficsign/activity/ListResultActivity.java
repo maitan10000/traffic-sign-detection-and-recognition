@@ -14,7 +14,7 @@ import com.trafficsign.activity.R;
 import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
 import com.trafficsign.json.TrafficInfoJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.HttpAsyncUtil;
@@ -57,7 +57,7 @@ public class ListResultActivity extends Activity {
 
 		// Get list from extra
 		try {
-			resultJson = (ResultJSON) CommonUtil.bytes2Object(intent
+			resultJson = (ResultJSON) ConvertUtil.bytes2Object(intent
 					.getByteArrayExtra("resultJson"));
 			listResult = resultJson.getListTraffic();
 			if (listResult == null) {
@@ -99,7 +99,7 @@ public class ListResultActivity extends Activity {
 					// move next screen
 					Intent nextScreen = new Intent(getApplicationContext(),
 							TracfficSignDetailActivity.class);
-					dataBytes = CommonUtil.object2Bytes(trafficInfoJSON);
+					dataBytes = ConvertUtil.object2Bytes(trafficInfoJSON);
 					nextScreen.putExtra("trafficDetails", dataBytes);
 					startActivity(nextScreen);
 				} catch (IOException e) {

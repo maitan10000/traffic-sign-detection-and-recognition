@@ -38,7 +38,7 @@ import com.trafficsign.activity.R;
 import com.trafficsign.json.LocateJSON;
 import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
-import com.trafficsign.ultils.CommonUtil;
+import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.NetUtil;
@@ -432,7 +432,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							/* put resultInput to the next screen */
 							byte[] dataBytes;
 							try {
-								dataBytes = CommonUtil.object2Bytes(resultJson);
+								dataBytes = ConvertUtil.object2Bytes(resultJson);
 								nextScreen.putExtra("resultJson", dataBytes);
 								startActivity(nextScreen);
 							} catch (IOException e) {
