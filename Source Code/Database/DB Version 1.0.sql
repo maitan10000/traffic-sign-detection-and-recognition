@@ -96,6 +96,10 @@ CREATE TABLE `result` (
         ON DELETE NO ACTION ON UPDATE NO ACTION
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `account` VALUES ('user1','12345','nghiahd92@gmail.com','NghiaHD','Staff','2014-01-01 00:00:00',1);
-INSERT INTO `category` VALUES (1,'Biển Cấm'),(2,'Biển Hướng Dẫn'),(3,'Báo Nguy Hiểm');
+
+INSERT INTO `account` VALUES ('user1','827ccb0eea8a706c4c34a16891f84e7b','user1@gmail.com','User1','user','2014-01-01 00:00:00',1);
+('staff1','827ccb0eea8a706c4c34a16891f84e7b','staff1@gmail.com','Staff1','staff','2014-01-01 00:00:00',1);
+('admin1','827ccb0eea8a706c4c34a16891f84e7b','admin1@gmail.com','Admin1','admin','2014-01-01 00:00:00',1);
+
+INSERT INTO `category` VALUES (1,'Biển báo cấm'),(2,'Biển báo nguy hiểm'),(3,'Biển hiệu lệnh'),(4,'Biển chỉ dẫn'),(5,'Biển phụ');
 
