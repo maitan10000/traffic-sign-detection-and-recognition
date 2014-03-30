@@ -38,17 +38,30 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN BIỂN
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
 						BÁO</h2>
 					<!--   _____________ -->
+					<%
+						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
+					if(userID != null && !userID.isEmpty())
+					{
+					%>
 					<ul class="links">
-						<li><a href="/TrafficWeb/Admin/Login.jsp" title="Log In">Đăng
-								Nhập</a></li>
+						<li><a href="#"
+							title=""><%=userID %></a></li>
 						<li class="separator">|</li>
-						<li><a href="customer/account/create/index.html">Đăng Ký</a></li>
-						<li class="separator">|</li>
-						<li><a href="customer/account/create/index.html">Liên Hệ</a></li>
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng xuất</a></li>
+						<li class="separator">
 					</ul>
+					<%}else{ %>
+					<ul class="links">
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
+							title="Đăng nhập">Đăng Nhập</a></li>
+						<li class="separator">|</li>
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>" title="Đăng ký">Đăng Ký</a></li>
+						<li class="separator">
+					</ul>
+					<%}//end if session useID %>
 				</div>
 				</header>
 				<div class="menu-container">
@@ -155,7 +168,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 						</div>
 						<div class="footer-left">
 							<p>
-								<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
+								<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
 							</p>
 							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
 								giao thông."</p>
