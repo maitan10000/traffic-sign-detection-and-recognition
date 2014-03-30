@@ -25,6 +25,7 @@ header {
 	margin:auto;
 	width: 1010px;
 }
+
 .clearfix {
 	height: 26px;
 }
@@ -70,7 +71,7 @@ header h1.logo {
 }
 header .links {
 	float: right;
-	margin: 0;
+	margin-top: -80px;
 	padding: 0;
 }
 header .links li {
@@ -90,6 +91,7 @@ header .links li.separator {
 	background: #1d1c1b;
 	border: 1px solid #242424;
 	border-bottom: none;
+	border-radius: 10px 10px 0px 0px;
 	background: #666;
 	color: #fff;
 	text-shadow: none;
@@ -125,6 +127,10 @@ nav {
 #nav li a {
 	display:block;
 	text-decoration:none;
+}
+#nav li:first-child a
+{
+	border-radius: 10px 0 0;
 }
 #nav li a:hover {
 	text-decoration:none;

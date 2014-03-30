@@ -2,8 +2,8 @@
 <%@page import="utility.Constants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
@@ -86,6 +86,12 @@ legend {
 #previewPane {
 	margin-left: 0px;
 }
+
+#canvasDraw
+{
+border: red thin solid;
+}
+
 </style>
 <title>Traffic Sign Recognition</title>
 </head>
@@ -98,17 +104,30 @@ legend {
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN BIỂN
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
 						BÁO</h2>
 					<!--   _____________ -->
+					<%
+						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
+					if(userID != null && !userID.isEmpty())
+					{
+					%>
 					<ul class="links">
-						<li><a href="customer/account/login/index.html"
-							title="Log In">Đăng Nhập</a></li>
+						<li><a href="#"
+							title=""><%=userID %></a></li>
 						<li class="separator">|</li>
-						<li><a href="customer/account/create/index.html">Đăng Ký</a></li>
-						<li class="separator">|</li>
-						<li><a href="customer/account/create/index.html">Liên Hệ</a></li>
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng xuất</a></li>
+						<li class="separator">
 					</ul>
+					<%}else{ %>
+					<ul class="links">
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
+							title="Đăng nhập">Đăng Nhập</a></li>
+						<li class="separator">|</li>
+						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>" title="Đăng ký">Đăng Ký</a></li>
+						<li class="separator">
+					</ul>
+					<%}//end if session useID %>
 				</div>
 				</header>
 				<div class="menu-container">
@@ -142,7 +161,9 @@ legend {
 					<div class="content-title">NHẬN DIỆN TỰ ĐỘNG</div>
 					<div class="list-result">
 						<fieldset>
-							<legend>Kết quả:</legend>
+							<legend>Kết quả: <button id="btn-wrong-recognize" class="btn btn-warning"
+												onclick="reportWrongRecognize(this.value); return false;" disabled="disabled">Sai
+												kết quả</button></legend>
 							<ol>
 							</ol>
 						</fieldset>
@@ -157,27 +178,71 @@ legend {
 										<legend>
 											Tải hình ảnh: <input type="file" id="file" accept="image/*"
 												name="file" onchange="showThumbnails()" />
-											<button id="btn-wrong-recognize" class="btn btn-warning"
-												onclick="reportWrongRecognize(this.value); return false;" disabled="disabled">Sai
-												kết quả</button>
+											<!-- <input type="checkbox" id="detect-Manual"><span style="font-size: 12px;"> Khoanh vùng biển báo bằng tay</span>  --> 
 										</legend>
 										<div id="preview"></div>
 										<div class="image-result">
-											<img id="image-result" class="image-result-resize" />
+											<img id="image-result" class="image-result-resize" />											
 											<div class="draw-div"></div>
 										</div>
+										<!-- <canvas id="canvasDraw" width="500" height="500"></canvas>-->
 									</fieldset>
 								</form>
+								
 							</div>
-
+			
 						</div>
 
 						<script>
 						var server = '<%=GlobalValue.getServiceAddress()%>';
-							//var server = 'http://bienbaogiaothong.tk/';
-							//server = 'http://localhost:8080/Traffic/';
+						var userID = 'user1';
+
+							//<!--  Detect Manual -->	
+							/*						
+							var canvasDraw = document.getElementById('canvasDraw'),
+							    ctxDraw = canvasDraw.getContext('2d'),
+							    rect = {},
+							    drag = false;
+
 							
-							//<!-- Resie image -->
+							function draw() {
+								console.log(rect);		
+								ctxDraw.rect(rect.startX, rect.startY, rect.w, rect.h);								
+							    ctxDraw.lineWidth = 2;
+							    ctxDraw.strokeStyle = 'black';
+							    ctxDraw.stroke();													
+							}
+							
+							function mouseDown(e) {
+								//console.log(this.offsetTop);
+								console.log(e.pageY);
+							  rect.startX = e.pageX;
+							  rect.startY = e.pageY;
+							  drag = true;
+							}
+							
+							function mouseUp() {
+							  drag = false;
+							}
+							
+							function mouseMove(e) {
+							  if (drag) {								  
+							    rect.w = (e.pageX - this.offsetLeft) - rect.startX;
+							    rect.h = (e.pageY - this.offsetTop) - rect.startY ;
+							    ctxDraw.clearRect(0, 0, canvasDraw.width, canvasDraw.height);						   
+							    draw();
+							  }
+							}
+							
+							function init() {
+								canvasDraw.addEventListener('mousedown', mouseDown, false);
+								canvasDraw.addEventListener('mouseup', mouseUp, false);
+								canvasDraw.addEventListener('mousemove', mouseMove, false);
+							}
+							
+							init();
+						    
+							//<!-- Resize image -->
 							function dataURItoBlob(dataURI) {
 							    var binary = atob(dataURI.split(',')[1]);
 							    var array = [];
@@ -185,14 +250,12 @@ legend {
 							        array.push(binary.charCodeAt(i));
 							    }
 							    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-							}
+							}*/
 							
 							//<!-- Javascript function to add thumbnails and progress bars to the grid -->
 							function showThumbnails() {
 								$('#preview').html('');
-								$('.draw-div').html('');
-								$('#preview').show();
-								$('#preview').append('<div id="progress" class="progress progress-striped active"><span class="bar" style="width: 0%"></span></div>');
+								$('.draw-div').html('');							
 								
 								var file = document.getElementById('file').files[0];
 								var image = document.getElementById("image-result");
@@ -223,8 +286,14 @@ legend {
 							         ctx.drawImage(this, 0, 0, tempW, tempH);
 							         var data = canvas.toDataURL("image/jpeg");
 							         image.src = data;
-							         var blodFile = dataURItoBlob(data);							
-									uploadFile(blodFile);
+							         if($('#detect-Manual').checked)
+							         {
+						         		var blodFile = dataURItoBlob(data);							
+								 		uploadFile(blodFile);
+							         }else
+							         {
+								         console.log('Khoanh bang tay');
+							         }
 								};
 							         
 								var fileReader = new FileReader();
@@ -233,12 +302,13 @@ legend {
 										img.src = e.target.result;										
 									};
 								})(tempImage);
-								fileReader.readAsDataURL(file);	
-								//uploadFile(file);							
+								fileReader.readAsDataURL(file);							
 							};
 							
-							//<!-- The actual upload function that updates progress bars and uploads the images to a script (in my case php) -->							 
+							//<!-- The actual upload function that updates progress bars -->							 
 							function uploadFile(file) {
+								$('#preview').show();
+								$('#preview').append('<div id="progress" class="progress progress-striped active"><span class="bar" style="width: 0%"></span></div>');
 								var xhr = new XMLHttpRequest();
 								xhr.onreadystatechange = function() {
 									if (xhr.readyState == 4) {
@@ -248,7 +318,7 @@ legend {
 								var formData = new FormData();
 								var fileName = document.getElementById('file').files[0].name;
 								formData.append('file', file, fileName);
-								formData.append('userID', 'user1');
+								formData.append('userID', userID);
 								xhr.upload.addEventListener("progress", function(e) {
 									if (e.lengthComputable) {
 										var percentage = Math.round((e.loaded * 100) / e.total);
@@ -258,7 +328,6 @@ legend {
 								}, false);
 								xhr.upload.addEventListener("load", function(e) {
 									$("#progress").html('<span class="bar" style="width: 100%"></span>');
-									//console.log("%: 100");
 									$('#preview').hide();
 								}, false);
 								xhr.open("POST", server + '<%=Constants.TRAFFIC_SEARCH_AUTO%>');
@@ -268,7 +337,6 @@ legend {
 
 							function showResult(resultData, fileName) {
 								//add list result
-								//console.log(resultData);
 								var resultJSON = JSON.parse(resultData);
 								if(resultJSON.resultID != -1)
 								{
@@ -326,7 +394,6 @@ legend {
 							//draw rectangle in image result
 							function drawImage(listTraffic, widthScale, heightScale) {
 								$('.draw-div').html('');
-								//console.log(resultJSON.length);
 								for (var i = 0; i < listTraffic.length; i++) {
 									var style = 'width: ' + listTraffic[i].locate.width * widthScale + 'px;';
 									style += 'height: ' + listTraffic[i].locate.height * heightScale + 'px;';
@@ -334,8 +401,7 @@ legend {
 									style += 'margin-top: ' + listTraffic[i].locate.y * heightScale + 'px;';
 									var content = '<div class="tag-image" order="'+(i+1)+'" id="tag-' + (i + 1) + '" style="' + style 
 									+ '"><span id="tag-num-'+(i+1)+'" class="image-result-number badge badge-info">' 
-									+ (i + 1) + '</span></div>';
-									//console.log(content);										
+									+ (i + 1) + '</span></div>';							
 									$('.draw-div').append(content);
 								}//end for							
 							};
@@ -370,7 +436,6 @@ legend {
 							};
 							
 							function reportWrongRecognize(id) {
-								//alert('Report wrong recognize: ' + id);
 								$('#reference_id').val(id);
 								$('#myModal').modal('hide');
 								$('#reportModal').modal('show');
@@ -413,7 +478,7 @@ legend {
 								var action = "AddFavorite";
 								$
 										.ajax({
-											url : "/TrafficWeb/UserController",
+											url : '<%=Constants.CONTROLLER_USER%>',
 											type : "GET",
 											data : {
 												action : action,
@@ -439,7 +504,7 @@ legend {
 								var action = "DeleteFavorite";
 								$
 										.ajax({
-											url : "/TrafficWeb/UserController",
+											url : '<%=Constants.CONTROLLER_USER%>',
 											type : "GET",
 											data : {
 												action : action,
@@ -464,7 +529,7 @@ legend {
 								var action = "checkFavorite";
 								$
 										.ajax({
-											url : "/TrafficWeb/UserController",
+											url : '<%=Constants.CONTROLLER_USER%>',
 											type : "GET",
 											data : {
 												action : action,
@@ -498,7 +563,7 @@ legend {
 								var content = document.getElementById("txtContent").value;
 								var action = "reportTraffic";
 								$.ajax({
-									url : "/TrafficWeb/UserController",
+									url : '<%=Constants.CONTROLLER_USER%>',
 									type : "GET",
 									data : {
 										action : action,
@@ -535,7 +600,7 @@ legend {
 						</div>
 						<div class="footer-left">
 							<p>
-								<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
+								<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
 							</p>
 							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
 								giao thông."</p>
@@ -583,7 +648,7 @@ legend {
 			<input type="hidden" id="reference_id" />
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
 			<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
 				Ý Kiến</button>
 		</div>
