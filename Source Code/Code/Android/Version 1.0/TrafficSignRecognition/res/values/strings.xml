@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="category">Danh mục biển báo</string>
     <string name="listtraffic">Danh sách biển báo</string>
-
+	<string name="login">Đăng nhập</string>
+	<string name="logout">Đăng xuất</string>
 </resources>

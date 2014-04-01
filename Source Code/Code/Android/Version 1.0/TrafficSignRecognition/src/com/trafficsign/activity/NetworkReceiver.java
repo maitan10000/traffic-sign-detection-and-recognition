@@ -106,16 +106,15 @@ public class NetworkReceiver extends BroadcastReceiver {
 								// Adds the Intent that starts the Activity to
 								// the top of the stack
 								stackBuilder.addNextIntent(resultIntent);
-								PendingIntent resultPendingIntent = stackBuilder
-										.getPendingIntent(
-												0,
-												PendingIntent.FLAG_UPDATE_CURRENT);
+								PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(i,PendingIntent.FLAG_UPDATE_CURRENT);
 								mBuilder.setContentIntent(resultPendingIntent);
+								mBuilder.setAutoCancel(true);
 								NotificationManager mNotificationManager = (NotificationManager) context
 										.getSystemService(context.NOTIFICATION_SERVICE);
 								// mId allows you to update the notification
 								// later on.
-								mNotificationManager.notify(1, mBuilder.build());
+								mNotificationManager.notify(i, mBuilder.build());
+								
 							}// end for
 						}
 						GlobalValue.isUploading = false;
