@@ -139,11 +139,13 @@ public class Manage {
 				favoriteJSON.setCategoryID(trafficInfoDTO.getCategoryID());
 				favoriteJSON.setCategoryName(categoryDAO
 						.getCategoryName(trafficInfoDTO.getCategoryID()));
-
+				favoriteJSON.setModifyDate(favoriteDTO.getModifyDate());
+				
 				listFavoriteJSON.add(favoriteJSON);
 			}// end for listFavorData
 		}
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
 		return gson.toJson(listFavoriteJSON);
 	}
 

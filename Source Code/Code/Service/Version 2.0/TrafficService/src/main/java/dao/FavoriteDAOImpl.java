@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import json.FavoriteJSON;
@@ -125,19 +126,22 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			if (getInActive == false) {
 				// get only favorite has isActive = true
 				ps = connection
-						.prepareStatement("SELECT trafficID from favorite where creator = ? AND isActive=?");
+						.prepareStatement("SELECT trafficID, modifyDate from favorite where creator = ? AND isActive=?");
 				ps.setString(1, creator);
 				ps.setBoolean(2, true);
 			} else {
 				// get favorite has isActive = true or false
 				ps = connection
-						.prepareStatement("SELECT trafficID from favorite where creator = ?");
+						.prepareStatement("SELECT trafficID, modifyDate from favorite where creator = ?");
 				ps.setString(1, creator);
 			}
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				FavoriteDTO favoriteDTO = new FavoriteDTO();
 				favoriteDTO.setTrafficID(rs.getString("trafficID"));
+				Timestamp tempTimeStamp = rs.getTimestamp("modifyDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				favoriteDTO.setModifyDate(tempDate);
 				favoriteData.add(favoriteDTO);
 			}
 			return favoriteData;

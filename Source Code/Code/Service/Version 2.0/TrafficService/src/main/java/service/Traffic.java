@@ -199,7 +199,14 @@ public class Traffic {
 			@FormDataParam("userID") String userID,
 			@FormDataParam("listLocate") String listLocate) {
 
-		String fileSaveName = UUID.randomUUID().toString();
+		
+		ResultDTO result = new ResultDTO();
+		result.setCreator(userID);
+		result.setUploadedImage("");
+		ResultDAO resultDAO = new ResultDAOImpl();
+		int resultID = resultDAO.add(result);
+		
+		String fileSaveName = resultID+"";
 		if (userID != null) {
 			fileSaveName += "-" + userID;
 		}
@@ -211,11 +218,8 @@ public class Traffic {
 		// save file
 		Helper.writeToFile(uploadedInputStream, uploadedFileLocation);
 
-		ResultDTO result = new ResultDTO();
-		result.setCreator(userID);
-		result.setUploadedImage(fileSaveName);
-		ResultDAO resultDAO = new ResultDAOImpl();
-		int resultID = resultDAO.add(result);
+		
+		//recognize
 		String imagePath = uploadedFileLocation;
 		String appDic = GlobalValue.getWorkPath();
 		String tmpresult = "";
@@ -285,6 +289,7 @@ public class Traffic {
 		String output = gson.toJson(listResult);
 
 		result.setResultID(resultID);
+		result.setUploadedImage(fileSaveName);
 		result.setListTraffic(output);
 		result.setIsActive(true);
 		resultDAO.edit(result);
