@@ -36,6 +36,8 @@ import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -54,12 +56,9 @@ public class MainActivity extends Activity {
 		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
 		InputStream settingIS = getResources().openRawResource(R.raw.setting);
 		DBUtil.initResource(dbIS, settingIS, MainActivity.this);
-		//
-//		Toast.makeText(getApplicationContext(),
-//				"Trang thai"+ NetUtil.networkState(this), Toast.LENGTH_SHORT).show();
-		/* Set event for manual search button */
-		ImageButton imgBtnManualSearch = (ImageButton) findViewById(R.id.imageButtonManualSearch);
 
+		// Get and set event onclick for manual search button
+		ImageButton imgBtnManualSearch = (ImageButton) findViewById(R.id.imageButtonManualSearch);
 		imgBtnManualSearch.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -145,7 +144,44 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		// if user has been logged in
+		SharedPreferences pref = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+		String user = pref.getString("user", "notLogin");
+		if ("notLogin".equals(user) == false) {
+			MenuItem item = menu.getItem(0);
+			item.setTitle("Đăng xuất");
+		}
+		
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		switch (item.getItemId()) {
+		case R.id.action_checklogin:
+			// user has been logged in
+			SharedPreferences pref = getSharedPreferences(
+					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+			String user = pref.getString("user", "notLogin");
+			if ("notLogin".equals(user) == false) {
+				Editor editor = pref.edit();
+				editor.remove("user");
+				editor.commit();
+				item.setTitle(R.string.login);
+				
+			} else {
+				Intent nextScreen = new Intent(getApplicationContext(),
+						LoginActivity.class);
+				startActivity(nextScreen);
+			}
+			
+			
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+
 	}
 
 }

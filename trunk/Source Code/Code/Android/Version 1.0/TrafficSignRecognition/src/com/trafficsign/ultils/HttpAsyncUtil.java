@@ -30,7 +30,6 @@ public class HttpAsyncUtil extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private ProgressDialog dialog;
 	private String respond = "";
-
 	private String method = "GET";
 	private List<NameValuePair> parameters;
 	private String url = "";
@@ -80,18 +79,24 @@ public class HttpAsyncUtil extends AsyncTask<Void, Void, Void> {
 	protected Void doInBackground(Void... params) {
 		// TODO Auto-generated method stub
 		respond = "";
-		if (this.method.toUpperCase().equals("GET")) {
-			respond = HttpUtil.get(url);
-		} else {
-			respond = HttpUtil.post(url, parameters);
+		// if accessed to server
+		if(NetUtil.isAccessService() == true){
+			if (this.method.toUpperCase().equals("GET")) {
+				respond = HttpUtil.get(url);
+			} else {
+				respond = HttpUtil.post(url, parameters);
+			}
+		} else{ // if can not access to server
+			respond = "serverFail";
 		}
+	
 		return null;
 	}
 
 	@Override
 	protected void onPreExecute() {
 		if (dialog != null) {
-			dialog.setMessage("Loading");
+			dialog.setMessage("Vui lòng đợi trong giây lát");
 			dialog.setCancelable(false);
 			dialog.show();
 		}

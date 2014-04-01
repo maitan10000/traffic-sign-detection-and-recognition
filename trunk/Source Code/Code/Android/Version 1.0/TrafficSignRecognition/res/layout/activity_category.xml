@@ -4,26 +4,32 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/searchTraffic"
-            android:layout_width="290dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/searchButton"
             android:layout_weight="1"
-            android:ems="10"
+            android:ems="10"            
+            android:layout_margin="10dp"
             android:hint="Tìm kiếm biển báo" />
 
         <ImageButton
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            
             android:layout_weight="1"
+            
             android:src="@android:drawable/ic_menu_search" />
-    </LinearLayout>
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/listFavorite"
