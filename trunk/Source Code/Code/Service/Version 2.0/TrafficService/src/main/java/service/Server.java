@@ -46,10 +46,13 @@ import utility.Helper;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
+import dao.CategoryDAO;
+import dao.CategoryDAOImpl;
 import dao.TrafficInfoDAO;
 import dao.TrafficInfoDAOImpl;
 import dao.TrainImageDAO;
 import dao.TrainImageDAOImpl;
+import dto.CategoryDTO;
 import dto.TrafficInfoDTO;
 import dto.TrainImageDTO;
 
@@ -123,8 +126,8 @@ public class Server {
 		try {
 			file = new FileInputStream(new File(tempExcelFilePath));
 			// Get the workbook instance for XLS file
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-
+			XSSFWorkbook workbook = new XSSFWorkbook(file);					
+			
 			// Get first sheet from the workbook
 			XSSFSheet sheet = workbook.getSheetAt(0);
 
@@ -363,10 +366,31 @@ public class Server {
 			    anchor.setRow2(row.getRowNum()+3);
 			    Drawing drawing = sheet.createDrawingPatriarch();
 				Comment comment = drawing.createCellComment(anchor);
-			    RichTextString str = factory.createRichTextString("Đối chiếu loại biển báo với bảng bên!");
+			    RichTextString str = factory.createRichTextString("Đối chiếu loại biển báo với sheet bên!");
 			    comment.setString(str);
 			    comment.setAuthor("Service");
 			    cellCateID.setCellComment(comment);
+			    
+			    //create category table in excel file
+			    XSSFSheet cateSheet = workbook.createSheet("Loại biển báo");
+			    CategoryDAO categoryDAO = new CategoryDAOImpl();
+			    ArrayList<CategoryDTO> listCategoryDTO = categoryDAO.listAllCategory();
+			    int cateRow = 0;
+			    Row rowCate = null;
+			    //header
+			    rowCate = cateSheet.createRow(cateRow++);
+				Cell cellCateName = rowCate.createCell(0);
+				cellCateName.setCellValue("Tên biển báo");
+				Cell cellCateID1 = rowCate.createCell(1);			   
+				cellCateID1.setCellValue("ID");
+				
+			    for (CategoryDTO categoryDTO : listCategoryDTO) {
+			    	rowCate = cateSheet.createRow(cateRow++);
+					cellCateName = rowCate.createCell(0);
+					cellCateName.setCellValue(categoryDTO.getCategoryName());
+					cellCateID1 = rowCate.createCell(1);			   
+					cellCateID1.setCellValue(categoryDTO.getCategoryID());			    	
+				}
 
 				// create temp folder
 				File tempMainFolder = new File(tempMainFolderPath);

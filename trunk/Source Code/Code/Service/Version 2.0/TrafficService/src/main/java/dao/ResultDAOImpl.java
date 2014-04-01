@@ -113,13 +113,15 @@ public class ResultDAOImpl implements ResultDAO {
 			String listTraffic = result.getListTraffic();
 			Boolean isActive = result.getIsActive();
 			int resultID = result.getResultID();
+			String imagePath = result.getUploadedImage();
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("UPDATE trafficdb.result SET listTraffic = ?,isActive = ? WHERE resultID=?");
+					.prepareStatement("UPDATE trafficdb.result SET listTraffic = ?,uploadedImage = ?, isActive = ? WHERE resultID=?");
 			;
 			stm.setString(1, listTraffic);
-			stm.setBoolean(2, isActive);
-			stm.setInt(3, resultID);
+			stm.setString(2, imagePath);
+			stm.setBoolean(3, isActive);
+			stm.setInt(4, resultID);
 			stm.executeUpdate();
 			return true;
 		} catch (Exception e) {

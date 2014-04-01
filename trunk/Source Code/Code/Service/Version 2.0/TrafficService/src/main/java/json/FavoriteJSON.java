@@ -1,11 +1,15 @@
 package json;
 
+import java.sql.Date;
+
 public class FavoriteJSON {
 	private String trafficID;
 	private String name;
 	private String image;
 	private int categoryID;
 	private String categoryName;
+	private Date modifyDate;
+	
 	public String getTrafficID() {
 		return trafficID;
 	}
@@ -36,4 +40,11 @@ public class FavoriteJSON {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
+	
 }
