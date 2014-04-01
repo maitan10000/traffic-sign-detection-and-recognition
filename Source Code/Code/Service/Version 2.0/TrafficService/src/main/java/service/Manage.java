@@ -1,6 +1,7 @@
 package service;
 
 import java.security.MessageDigest;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ import dto.TrafficInfoDTO;
 @Path("/Manage")
 public class Manage {
 
+
 	/**
 	 * Add Favorite
 	 * 
@@ -56,17 +58,20 @@ public class Manage {
 	 * 
 	 * @param creator
 	 * @param trafficID
+	 * @param modifyDate
 	 * @return
 	 */
 	@POST
 	@Path("/AddFavorite")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public String addFavorite(@FormParam("creator") String creator,
-			@FormParam("trafficID") String trafficID) {
+			@FormParam("trafficID") String trafficID,
+			@FormParam("modifyDate") Date modifyDate) {
 		if (creator != null && trafficID != null) {
 			FavoriteDTO favoriteDTO = new FavoriteDTO();
 			favoriteDTO.setCreator(creator);
 			favoriteDTO.setTrafficID(trafficID);
+			favoriteDTO.setModifyDate(modifyDate);
 
 			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
 			boolean result = favoriteDAO.add(favoriteDTO);
@@ -140,7 +145,7 @@ public class Manage {
 				favoriteJSON.setCategoryName(categoryDAO
 						.getCategoryName(trafficInfoDTO.getCategoryID()));
 				favoriteJSON.setModifyDate(favoriteDTO.getModifyDate());
-				
+
 				listFavoriteJSON.add(favoriteJSON);
 			}// end for listFavorData
 		}
@@ -154,16 +159,19 @@ public class Manage {
 	 * 
 	 * @param creator
 	 * @param trafficID
+	 * @param modifyDate
 	 * @return
 	 */
 	@GET
 	@Path("/DeleteFavorite")
 	public String deleteFavorite(@QueryParam("creator") String creator,
-			@QueryParam("trafficID") String trafficID) {
+			@QueryParam("trafficID") String trafficID,
+			@QueryParam("modifyDate") Date modifyDate) {
 		if (creator != null && trafficID != null) {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
 			favoriteObj.setTrafficID(trafficID);
+			favoriteObj.setModifyDate(modifyDate);
 
 			FavoriteDAO favortiteDAO = new FavoriteDAOImpl();
 			Boolean result = favortiteDAO.delete(favoriteObj);
@@ -269,8 +277,8 @@ public class Manage {
 			reportShortJSON.setCreateDate(reportDTO.getCreateDate());
 			listReportShortJSON.add(reportShortJSON);
 		}
-		Gson gson = new GsonBuilder()
-		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
 		return gson.toJson(listReportShortJSON);
 	}
 
@@ -297,8 +305,8 @@ public class Manage {
 			reportJSON.setType(reportData.getType());
 			reportJSON.setContent(reportData.getContent());
 			reportJSON.setCreateDate(reportData.getCreateDate());
-			Gson gson = new GsonBuilder()
-			   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+			Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+					DateFormat.FULL).create();
 			return gson.toJson(reportJSON);
 		}
 		return null;
@@ -445,7 +453,7 @@ public class Manage {
 		}
 		return "Fail";
 	}
-	
+
 	/**
 	 * Set Staff Account
 	 * 
@@ -461,7 +469,7 @@ public class Manage {
 		}
 		return "Fail";
 	}
-	
+
 	/**
 	 * Unset Staff Account
 	 * 
@@ -482,7 +490,7 @@ public class Manage {
 	@POST
 	@Path("/SendMail")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public String sendEmail(@FormParam("email") String email) {		
+	public String sendEmail(@FormParam("email") String email) {
 		String subject = "Thử gửi mail";
 		String message = "<p><span style=\"font-size: medium;\">Thử chức năng</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\">HTML Conent</span>.</p>";
 		boolean result = MailUtil.sendEmail(email, subject, message);
@@ -490,6 +498,6 @@ public class Manage {
 			return "Success";
 		}
 		return "Fail";
-	}	
-	
+	}
+
 }

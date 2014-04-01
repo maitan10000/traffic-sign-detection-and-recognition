@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import json.FavoriteJSON;
 import dto.FavoriteDTO;
 
 public class FavoriteDAOImpl implements FavoriteDAO {
@@ -20,6 +19,7 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		try {
 			String creator = favorite.getCreator();
 			String trafficID = favorite.getTrafficID();
+			Date modifyDate = favorite.getModifyDate();
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("SELECT * FROM trafficdb.favorite WHERE creator = ? AND trafficID = ?");
@@ -29,18 +29,27 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			if (!result.next()) {
 				stm.close();
 				stm = connection
-						.prepareStatement("INSERT INTO favorite(creator,trafficID,createDate,isActive) VALUE (?,?,NOW(),?)");
+						.prepareStatement("INSERT INTO favorite(creator, trafficID, createDate, modifyDate, isActive) VALUE (?, ?, NOW(), NOW(), ?)");
 				stm.setString(1, creator);
 				stm.setString(2, trafficID);
 				stm.setBoolean(3, true);
 				return stm.executeUpdate() > 0;
 			} else {
 				stm.close();
-				stm = connection
-						.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ?");
-				stm.setBoolean(1, true);
-				stm.setString(2, creator);
-				stm.setString(3, trafficID);
+				if (modifyDate == null) {
+					stm = connection
+							.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ?");
+					stm.setBoolean(1, true);
+					stm.setString(2, creator);
+					stm.setString(3, trafficID);
+				} else {
+					stm = connection
+							.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ? AND ? > modifyDate");
+					stm.setBoolean(1, true);
+					stm.setString(2, creator);
+					stm.setString(3, trafficID);
+					stm.setDate(4, modifyDate);
+				}
 				stm.executeUpdate();
 				return stm.executeUpdate() > 0;
 			}
@@ -74,12 +83,23 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 		try {
 			String creator = favorite.getCreator();
 			String trafficID = favorite.getTrafficID();
+			Date modifyDate = favorite.getModifyDate();
 			connection = BaseDAO.getConnect();
-			stm = connection
-					.prepareStatement("UPDATE trafficdb.favorite SET isActive = ? WHERE creator = ? AND trafficID = ?");
-			stm.setBoolean(1, false);
-			stm.setString(2, creator);
-			stm.setString(3, trafficID);
+			if (modifyDate == null) {
+				stm = connection
+						.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ?");
+				stm.setBoolean(1, false);
+				stm.setString(2, creator);
+				stm.setString(3, trafficID);
+			} else {
+				stm = connection
+						.prepareStatement("UPDATE trafficdb.favorite SET isActive = ?, modifyDate = NOW() WHERE creator = ? AND trafficID = ? AND  ? > modifyDate");
+				stm.setBoolean(1, false);
+				stm.setString(2, creator);
+				stm.setString(3, trafficID);
+				stm.setDate(4, modifyDate);
+			}
+
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -139,7 +159,7 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 			while (rs.next()) {
 				FavoriteDTO favoriteDTO = new FavoriteDTO();
 				favoriteDTO.setTrafficID(rs.getString("trafficID"));
-				Timestamp tempTimeStamp = rs.getTimestamp("modifyDate");		
+				Timestamp tempTimeStamp = rs.getTimestamp("modifyDate");
 				Date tempDate = new Date(tempTimeStamp.getTime());
 				favoriteDTO.setModifyDate(tempDate);
 				favoriteData.add(favoriteDTO);
