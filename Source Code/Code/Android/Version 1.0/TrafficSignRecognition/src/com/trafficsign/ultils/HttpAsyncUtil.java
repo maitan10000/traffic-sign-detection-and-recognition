@@ -24,6 +24,7 @@ import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class HttpAsyncUtil extends AsyncTask<Void, Void, Void> {
 	private IAsyncHttpListener httpListener = null;
@@ -89,6 +90,7 @@ public class HttpAsyncUtil extends AsyncTask<Void, Void, Void> {
 		} else{ // if can not access to server
 			respond = "serverFail";
 		}
+		Log.e("http",respond);
 	
 		return null;
 	}

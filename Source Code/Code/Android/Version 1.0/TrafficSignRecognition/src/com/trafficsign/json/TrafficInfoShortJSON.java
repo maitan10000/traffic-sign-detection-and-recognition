@@ -1,6 +1,7 @@
 package com.trafficsign.json;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class TrafficInfoShortJSON implements Serializable{
 	private String trafficID;
@@ -8,7 +9,14 @@ public class TrafficInfoShortJSON implements Serializable{
 	private String image;
 	private int categoryID;
 	private String categoryName;
+	private Date modifyDate;
 	
+	public Date getModifyDate() {
+		return modifyDate;
+	}
+	public void setModifyDate(Date modifyDate) {
+		this.modifyDate = modifyDate;
+	}
 	public String getTrafficID() {
 		return trafficID;
 	}
