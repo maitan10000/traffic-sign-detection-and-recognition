@@ -22,6 +22,7 @@ import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.HttpDatabaseUtil;
+import com.trafficsign.ultils.HttpSyncUtil;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpImageListener;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
 import com.trafficsign.ultils.NetUtil;
@@ -47,6 +48,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	String user = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +58,30 @@ public class MainActivity extends Activity {
 		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
 		InputStream settingIS = getResources().openRawResource(R.raw.setting);
 		DBUtil.initResource(dbIS, settingIS, MainActivity.this);
+		// get user
+		final SharedPreferences pref = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+		user = pref.getString("user", "notLogin");
+		// sync favorite and history
+		SharedPreferences sharedPreferences = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+		boolean isSync = sharedPreferences.getBoolean("isSync", true);
+		if (isSync == false) {
+			HttpSyncUtil httpSyncUtil = new HttpSyncUtil(MainActivity.this);
+			httpSyncUtil.setUser(this.user);
+			httpSyncUtil.setHttpListener(new IAsyncHttpListener() {
 
+				@Override
+				public void onComplete(String respond) {
+					// TODO Auto-generated method stub
+					Editor editor = pref.edit();
+					editor.remove("isSync");
+					editor.putBoolean("isSync", true);
+					editor.commit();
+				}
+			});
+			httpSyncUtil.execute();
+		}
 		// Get and set event onclick for manual search button
 		ImageButton imgBtnManualSearch = (ImageButton) findViewById(R.id.imageButtonManualSearch);
 		imgBtnManualSearch.setOnClickListener(new View.OnClickListener() {
@@ -97,45 +122,12 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				// url for list favorite service
-				String url = Properties.serviceIp
-						+ Properties.MANAGE_FAVORITE_LIST + "?creator=";
-				url += Properties.USER_NAME;
-				//
-				HttpAsyncUtil httpUtil = new HttpAsyncUtil(MainActivity.this);
-				httpUtil.setHttpListener(new IAsyncHttpListener() {
+				if ("notLogin".equals(user) == false) {
+					Intent nextScreen = new Intent(getApplicationContext(),
+							FavouriteActivity.class);
+					startActivity(nextScreen);
+				}
 
-					@Override
-					public void onComplete(String respond) {
-						// parse Json to Object FavoriteJSON
-						try {
-							/*
-							 * Using trafficInfoShort, not user FavoriteJSON
-							 * because they are the same, instead of using
-							 * trafficInfoShort can reuse module
-							 * listTrafficArrayAdapter
-							 */
-							ArrayList<TrafficInfoShortJSON> listFavoriteJSON = new ArrayList<TrafficInfoShortJSON>();
-							Gson gson = new Gson();
-							Type type = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
-							}.getType();
-							listFavoriteJSON = gson.fromJson(respond, type);
-							Intent nextScreen = new Intent(
-									getApplicationContext(),
-									FavouriteActivity.class);
-							byte[] datBytes = ConvertUtil
-									.object2Bytes(listFavoriteJSON);
-							nextScreen.putExtra("listFavorite", datBytes);
-							startActivity(nextScreen);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-				});
-				httpUtil.setUrl(url);
-				httpUtil.execute();
 			}
 		});
 	}
@@ -152,7 +144,7 @@ public class MainActivity extends Activity {
 			MenuItem item = menu.getItem(0);
 			item.setTitle("Đăng xuất");
 		}
-		
+
 		return true;
 	}
 
@@ -168,16 +160,18 @@ public class MainActivity extends Activity {
 			if ("notLogin".equals(user) == false) {
 				Editor editor = pref.edit();
 				editor.remove("user");
+				editor.remove("isSync");
+				editor.putBoolean("isSync", true);
 				editor.commit();
+				this.user = "notLogin";
 				item.setTitle(R.string.login);
-				
+
 			} else {
 				Intent nextScreen = new Intent(getApplicationContext(),
 						LoginActivity.class);
 				startActivity(nextScreen);
 			}
-			
-			
+
 		default:
 			return super.onOptionsItemSelected(item);
 		}

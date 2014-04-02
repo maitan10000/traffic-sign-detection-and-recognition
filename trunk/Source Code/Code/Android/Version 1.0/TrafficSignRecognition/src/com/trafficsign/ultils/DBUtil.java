@@ -8,10 +8,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Locale;
 
 import org.apache.http.NameValuePair;
@@ -305,8 +306,8 @@ public class DBUtil {
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
 		// create cursor to access query result
-		Cursor cursor = db.query("result", null, "`resultID` = -1", null,
-				null, null, null);
+		Cursor cursor = db.query("result", null, "`resultID` = -1", null, null,
+				null, null);
 		ArrayList<ResultDB> listResult = new ArrayList<ResultDB>();
 		// move cursor to first and check if cursor is null
 		if (cursor.moveToFirst()) {
@@ -319,22 +320,137 @@ public class DBUtil {
 						.getColumnIndexOrThrow("listTraffic")));
 				temp.setCreator(cursor.getString(cursor
 						.getColumnIndexOrThrow("creator")));
-				temp.setCreateDate(cursor.getString(cursor.getColumnIndexOrThrow("createDate")));
+				temp.setCreateDate(cursor.getString(cursor
+						.getColumnIndexOrThrow("createDate")));
 				listResult.add(temp);
 			} while (cursor.moveToNext());
-			
+
 		}
 		db.close();
 		return listResult;
 	}
+
 	// delete a row in result table
-		public static int deleteSavedResult(String imagePath) {
-			SQLiteDatabase db = SQLiteDatabase.openDatabase(
-					GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
-					SQLiteDatabase.OPEN_READWRITE);
-			int output = db.delete("result", "uploadedImage = ?" , new String[]{imagePath});
+	public static int deleteSavedResult(String imagePath) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		int output = db.delete("result", "uploadedImage = ?",
+				new String[] { imagePath });
+		db.close();
+		return output;
+	}
+
+	// remove all in favorite table
+	public static int removeFavorite() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		int output = db.delete("favorite", null, null);
+		db.close();
+		return output;
+	}
+
+	// delete favorite table by trafficID
+	public static int deleteFavorite(String trafficID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		ContentValues value = new ContentValues();
+		value.put("isActive", false);
+		int output = db.update("favorite", value, "`trafficID` = '"+ trafficID + "'", null);
+		db.close();
+		return output;
+	}
+
+	/*
+	 * Add favorite Using trafficInfoShort, instead of FavoriteJSON because they
+	 * are the same, moreover using trafficInfoShort can reuse module
+	 * listTrafficArrayAdapter
+	 */
+	public static boolean addFavorite(TrafficInfoShortJSON input, String creator) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		// set image Path
+		String imagePath = GlobalValue.getAppFolder()
+				+ Properties.MAIN_IMAGE_FOLDER + input.getTrafficID() + ".jpg";
+		// set values to insert
+		ContentValues values = new ContentValues();
+		values.put("trafficID", input.getTrafficID());
+		values.put("creator", creator);
+		values.put("trafficName", input.getName());
+		values.put("createDate", dateFormat.format(input.getModifyDate()));
+		values.put("modifyDate", dateFormat.format(input.getModifyDate()));
+		values.put("isActive", true);
+		values.put("image", imagePath);
+		// commit insert
+		if (db.insert("favorite", null, values) != -1) {
 			db.close();
-			return output;
+			return true;
 		}
+		db.close();
+		return false;
+	}
+
+	// get all favorite isActive = true
+	public static ArrayList<TrafficInfoShortJSON> listFavorite() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		// create cursor to access query result
+		Cursor cursor = db.query("favorite", null, "`isActive` = 1", null,
+				null, null, null);
+		ArrayList<TrafficInfoShortJSON> output = new ArrayList<TrafficInfoShortJSON>();
+		// move cursor to first and check if cursor is null
+		if (cursor.moveToFirst()) {
+			do {
+				try {
+					String tempDate = "";
+					TrafficInfoShortJSON temp = new TrafficInfoShortJSON();
+					temp.setName(cursor.getString(cursor
+							.getColumnIndexOrThrow("trafficName")));
+					temp.setTrafficID(cursor.getString(cursor
+							.getColumnIndexOrThrow("trafficID")));
+					temp.setImage(cursor.getString(cursor
+							.getColumnIndexOrThrow("image")));
+					tempDate = cursor.getString(cursor
+							.getColumnIndexOrThrow("modifyDate"));
+					Date modifyDate;
+
+					modifyDate = new java.sql.Date(dateFormat.parse(tempDate)
+							.getTime());
+
+					temp.setModifyDate(modifyDate);
+					// add temp to list favorite
+					output.add(temp);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} while (cursor.moveToNext());
+		}
+
+		db.close();
+		return output;
+	}
+
+	// check favorite is added or not yet
+	public static boolean checkFavorite(String trafficID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		// create cursor to access query result
+		Cursor cursor = db.query("favorite", null, "`trafficID` LIKE '"
+				+ trafficID + "'", null, null, null, null);
+		if (cursor.moveToFirst()) {
+			return true;
+		}
+		return false;
+	}
 
 }

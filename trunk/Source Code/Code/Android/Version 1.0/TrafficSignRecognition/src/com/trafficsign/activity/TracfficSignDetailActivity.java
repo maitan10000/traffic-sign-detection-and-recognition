@@ -1,20 +1,37 @@
 package com.trafficsign.activity;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
+import com.trafficsign.json.TrafficInfoShortJSON;
 import com.trafficsign.ultils.ConvertUtil;
+import com.trafficsign.ultils.DBUtil;
+import com.trafficsign.ultils.GlobalValue;
+import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.ImageUtils;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpImageListener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +39,7 @@ import android.widget.Toast;
 public class TracfficSignDetailActivity extends Activity {
 
 	TrafficInfoJSON trafficInfo = null;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,8 +47,8 @@ public class TracfficSignDetailActivity extends Activity {
 		// TODO Auto-generated method stub
 		setContentView(R.layout.activity_traffic_sign_detail);
 		Intent intent = getIntent();
-		
-		// lay du lieu		
+
+		// lay du lieu
 		try {
 			trafficInfo = (TrafficInfoJSON) ConvertUtil.bytes2Object(intent
 					.getByteArrayExtra("trafficDetails"));
@@ -45,7 +63,74 @@ public class TracfficSignDetailActivity extends Activity {
 
 		// Set traffic sign detail to view
 		if (trafficInfo != null) {
-			//ImageView image = (ImageView) findViewById(R.id.trafficImage);
+			final ImageButton btnFavorite = (ImageButton) findViewById(R.id.btnFavourite);
+			// get user
+			SharedPreferences pref = getSharedPreferences(
+					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+			final String user = pref.getString("user", "notLogin");
+			btnFavorite.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					if (DBUtil.checkFavorite(trafficInfo.getTrafficID()) == false) {
+						// get user
+
+						//
+						TrafficInfoShortJSON infoShortJSON = new TrafficInfoShortJSON();
+						infoShortJSON.setImage(trafficInfo.getImage());
+						infoShortJSON.setName(trafficInfo.getName());
+						infoShortJSON.setTrafficID(trafficInfo.getTrafficID());
+						// set current dat
+						DateFormat dateFormat = new SimpleDateFormat(
+								"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+						Calendar cal = Calendar.getInstance();
+						infoShortJSON.setModifyDate(new Date(cal.getTime()
+								.getTime()));
+						// add favorite to db
+						DBUtil.addFavorite(infoShortJSON, user);
+						// add favorite to service if can access to server
+						ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
+						parameter.add(new BasicNameValuePair("creator", user));
+						parameter.add(new BasicNameValuePair("trafficID",
+								trafficInfo.getTrafficID()));
+						// change button image
+						btnFavorite
+								.setBackgroundResource(R.drawable.btn_star_big_on);
+						// url for add favorite
+						String url = GlobalValue.getServiceAddress()
+								+ Properties.MANAGE_FAVORITE_ADD;
+						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+						httpAsyncUtil.setMethod("POST");
+						httpAsyncUtil.setParameters(parameter);
+						httpAsyncUtil.setUrl(url);
+						httpAsyncUtil.execute();
+
+					} else {
+						// delete in db
+						DBUtil.deleteFavorite(trafficInfo.getTrafficID());
+						// change button image
+						btnFavorite
+								.setBackgroundResource(R.drawable.btn_star_big_off);
+						// url for delete favorite
+						String url = GlobalValue.getServiceAddress()
+								+ Properties.MANAGE_FAVORITE_DELETE + "?creator="
+								+ user + "&trafficID=";
+						url += trafficInfo.getTrafficID();
+						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+						httpAsyncUtil.setUrl(url);
+						httpAsyncUtil.execute();
+					}
+				}
+			});
+			// check favorite status to display button image
+			if (DBUtil.checkFavorite(trafficInfo.getTrafficID()) == false) {
+
+				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
+			} else {
+				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
+			}
+			// ImageView image = (ImageView) findViewById(R.id.trafficImage);
 			TextView name = (TextView) findViewById(R.id.trafficName);
 			TextView info = (TextView) findViewById(R.id.trafficContent);
 			TextView penaltyFee = (TextView) findViewById(R.id.trafficPenaltyFee);
@@ -59,31 +144,13 @@ public class TracfficSignDetailActivity extends Activity {
 			Bitmap bitmap = ImageUtils.convertToBimap(trafficInfo.getImage());
 			ImageView image = (ImageView) findViewById(R.id.imageResult);
 			image.setImageBitmap(bitmap);
-		
+
 		} else {
 			// handle null;
-			Toast.makeText(getApplicationContext(),
-					"Không có thông tin", Toast.LENGTH_LONG);
+			Toast.makeText(getApplicationContext(), "Không có thông tin",
+					Toast.LENGTH_LONG);
 		}
-		
+
 	}
-//	@Override
-//	protected void onStart() {
-//		// TODO Auto-generated method stub
-//		super.onStart();
-//		HttpImageUtils httpImgUtil = new HttpImageUtils();
-//		String imageLink = Properties.serviceIp + trafficInfo.getImage();
-//		httpImgUtil.setUrl(imageLink);
-//		httpImgUtil
-//				.setHttpImageListener(new IAsyncHttpImageListener() {
-//
-//					@Override
-//					public void onComplete(Bitmap bitmap,
-//							int extra) {
-//						ImageView image = (ImageView) findViewById(R.id.imageResult);
-//						image.setImageBitmap(bitmap);
-//					}
-//				});
-//		httpImgUtil.execute();
-//	}
+
 }
