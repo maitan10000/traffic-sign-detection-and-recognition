@@ -19,16 +19,16 @@
 </head>
 <body>
 	<!--Header-part-->
-	<div id="header" style=">
-	<div id="header-inner">
-	<!-- <img src="Admin/Content/images/logo.png" style="width: 100px; height: 100px; position:fix;"/> -->	
-		<h4>
-			<!--  <a href="#">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
+	<div id="header" >
+		<div id="header-inner">
+			<!-- <img src="Admin/Content/images/logo.png" style="width: 100px; height: 100px; position:fix;"/> -->
+			<h4>
+				<!--  <a href="#">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
 				LÝ</a>
 			-->
-			<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
-		</h4>
-	</div>
+				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+			</h4>
+		</div>
 	</div>
 	<!--close-Header-part-->
 
@@ -50,7 +50,8 @@
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
 			<li class=""><a title="" href="#"><i
-					class="icon icon-share-alt"></i> <span class="text">Đăng xuất</span></a></li>
+					class="icon icon-share-alt"></i> <span class="text">Đăng
+						xuất</span></a></li>
 		</ul>
 	</div>
 
@@ -62,10 +63,12 @@
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
-						lý biển báo</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
-						lý người dùng</span></a></li>
+			<li><a
+				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i
+					class="icon icon-th"></i> <span>Quản lý biển báo</span></a></li>
+			<li><a
+				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
+					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>
 			<li><a
 				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
 					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
@@ -85,18 +88,15 @@
 					class="tip-bottom"><i class="icon-home"></i>Trang chủ</a>
 			</div>
 		</div>
-		<div class="container-fluid">
-		
-		</div>
+		<div class="container-fluid"></div>
 	</div>
 	<div class="row-fluid">
 		<div id="footer" class="span12">
 			<p>
-				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b><br>
-			
-			<span style="font-size:11px;">"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
-				giao thông"</span>
-				</p>
+				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b><br> <span
+					style="font-size: 11px;">"Hệ thống giúp đỡ người dùng tra
+					cứu, học tập biển báo giao thông"</span>
+			</p>
 		</div>
 	</div>
 	<script src="Admin/Content/js/excanvas.min.js"></script>
