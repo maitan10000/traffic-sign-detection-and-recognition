@@ -287,4 +287,80 @@ public class AccountDAOImpl implements AccountDAO {
 			}
 			return false;
 		}
+		
+		// get Password by Email for function Forget Password
+		public AccountDTO getPassword(String email) {
+			Connection connection = null;
+			PreparedStatement stm = null;
+			ResultSet rs = null;
+			try {
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("SELECT userID,name,email,password FROM trafficdb.account WHERE email=?");
+				stm.setString(1, email);			
+				rs = stm.executeQuery();
+				if (rs.next()) {
+					AccountDTO accountData = new AccountDTO();
+					accountData.setUserID(rs.getString("userID"));
+					accountData.setPassword(rs.getString("password"));
+					accountData.setEmail(rs.getString("email"));
+					accountData.setName(rs.getString("name"));					
+					return accountData;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (stm != null) {
+					try {
+						stm.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return null;
+		}
+
+		public boolean updatePassword(String password) {
+			Connection connection = null;
+			PreparedStatement stm = null;
+			try {
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("UPDATE trafficdb.account SET password = ?");
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (stm != null) {
+					try {
+						stm.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				if (connection != null) {
+					try {
+						connection.close();
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return false;
+		}
+		
+		//Set new password
+		
 }

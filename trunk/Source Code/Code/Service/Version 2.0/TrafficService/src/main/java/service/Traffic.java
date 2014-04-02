@@ -7,8 +7,11 @@ import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -16,9 +19,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.xmlbeans.impl.common.GlobalLock;
 
 import json.CategoryJSON;
@@ -588,7 +597,8 @@ public class Traffic {
 			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
 			Boolean result = trafficDAO.edit(trafficObj);
 
-			if (mainImageDetail.getFileName() != null && !mainImageDetail.getFileName().isEmpty()) {
+			if (mainImageDetail.getFileName() != null
+					&& !mainImageDetail.getFileName().isEmpty()) {
 				// save to main Image folder
 				String newImagePath = GlobalValue.getWorkPath()
 						+ Constants.MAIN_IMAGE_FOLDER + trafficObj.getImage();
@@ -598,10 +608,10 @@ public class Traffic {
 			if (result == true) {
 				return "Success";
 			}
-		}		
+		}
 		return "Fail";
 	}
-	
+
 	/**
 	 * List traffic by cateID
 	 * 
@@ -628,13 +638,126 @@ public class Traffic {
 			trafficInfoShortJSON.setName(trafficInfoDTO.getName());
 			String imageLink = Constants.MAIN_IMAGE_SUB_LINK
 					+ trafficInfoDTO.getImage();
-			trafficInfoShortJSON.setImage(imageLink);			
+			trafficInfoShortJSON.setImage(imageLink);
 			trafficInfoShortJSON.setCategoryID(trafficInfoDTO.getCategoryID());
-			trafficInfoShortJSON.setCategoryName(cateDao.getCategoryName(trafficInfoDTO.getCategoryID()));			
+			trafficInfoShortJSON.setCategoryName(cateDao
+					.getCategoryName(trafficInfoDTO.getCategoryID()));
 			listTrafficShortJSON.add(trafficInfoShortJSON);
 		}
-		Gson gson = new GsonBuilder()
-		   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
 		return gson.toJson(listTrafficShortJSON);
 	}
+
+	/**
+	 * Add Train Image *
+	 * 
+	 * @param trafficID
+	 * @param image
+	 * @return
+	 */
+	@POST
+	@Path("/AddTrainImage")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String addTrainImage(
+			@FormDataParam("trafficID") String trafficID,
+			@FormDataParam("mainImage") InputStream mainImageStream,
+			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail) {
+		if (trafficID != null && !trafficID.isEmpty()) {
+
+			TrainImageDTO tranImageDTO = new TrainImageDTO();
+			tranImageDTO.setTrafficID(trafficID);
+			String newTrainImageID = trafficID + "-"
+					+ UUID.randomUUID().toString();
+			tranImageDTO.setImageID(newTrainImageID);
+			tranImageDTO.setImageName(newTrainImageID + ".jpg");
+			TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+			Boolean result = trainImageDAO.add(tranImageDTO);
+
+			if (result == true) {
+				String trainChildFolderPath = GlobalValue.getWorkPath()
+						+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
+				File trainChildFolder = new File(trainChildFolderPath);
+				// create if not exist
+				if (!trainChildFolder.exists()) {
+					trainChildFolder.mkdir();
+				}
+				// save to main Image folder
+				String newImagePath = trainChildFolderPath
+						+ tranImageDTO.getImageName();
+				Helper.writeToFile(mainImageStream, newImagePath);
+				return "Success";
+			}
+		}
+		return "Fail";
+	}
+
+//	@POST
+//	@Consumes(MediaType.MULTIPART_FORM_DATA)
+//	@Produces("text/plain")
+//	@Path("/AddTrainImage")
+//	public String registerWebService(@Context HttpServletRequest request) {
+//		String responseStatus = "Success";
+//		String trafficID = request.getParameter("trafficID");
+//
+//		// checks whether there is a file upload request or not
+//		if (ServletFileUpload.isMultipartContent(request)) {
+//			final FileItemFactory factory = new DiskFileItemFactory();
+//			final ServletFileUpload fileUpload = new ServletFileUpload(factory);
+//			try {
+//				/*
+//				 * parseRequest returns a list of FileItem but in old
+//				 * (pre-java5) style
+//				 */
+//				final List items = fileUpload.parseRequest(request);
+//
+//				if (items != null) {
+//					final Iterator iter = items.iterator();
+//
+//					while (iter.hasNext()) {
+//						final FileItem item = (FileItem) iter.next();
+//						String itemName = item.getName();
+//						final String fieldName = item.getFieldName();
+//						final String fieldValue = item.getString();
+//						TrainImageDTO tranImageDTO = new TrainImageDTO();
+//						tranImageDTO.setTrafficID(trafficID);
+//						itemName = trafficID + "-"
+//								+ UUID.randomUUID().toString();
+//						tranImageDTO.setImageID(itemName);
+//						tranImageDTO.setImageName(itemName + ".jpg");
+//						TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+//						Boolean result = trainImageDAO.add(tranImageDTO);					
+//						if (item.isFormField()) {
+//							trafficID = fieldValue;					
+//						} else{
+//							String trainChildFolderPath = GlobalValue
+//									.getWorkPath()
+//									+ Constants.TRAIN_IMAGE_FOLDER
+//									+ trafficID
+//									+ "/";
+//							File trainChildFolder = new File(
+//									trainChildFolderPath);
+//							// create if not exist
+//							if (!trainChildFolder.exists()) {
+//								trainChildFolder.mkdir();
+//							}
+//							final File savedFile = new File(
+//									trainChildFolderPath + File.separator
+//											+ itemName);							
+//							item.write(savedFile);
+//						}
+//
+//					}
+//				}
+//			} catch (FileUploadException fue) {
+//				responseStatus = "Fail";
+//				fue.printStackTrace();
+//			} catch (Exception e) {
+//				responseStatus = "Fail";
+//				e.printStackTrace();
+//			}
+//		}
+//		return responseStatus;
+//	}	
+
 }
