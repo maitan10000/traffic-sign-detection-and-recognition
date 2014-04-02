@@ -19,6 +19,7 @@ public final class Constants {
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
 	public final static String TRAFFIC_TRAFFIC_UPDATE = "rest/Traffic/UpdateTrafficInfo";
 	public final static String TRAFFIC_TRAFFIC_LIST = "rest/Traffic/ListTrafficByCateID";
+	public final static String TRAFFIC_TRAFFIC_ADDTRAINIMAGE = "rest/Traffic/AddTrainImage";
 	
 
 	// Favorite
@@ -43,11 +44,13 @@ public final class Constants {
 	public final static String ACTION_FARVORITE_VIEW_SHORT = "viewFavoriteShort";
 	public final static String ACTION_HISTORY_VIEW = "viewHistory";
 	public final static String ACTION_HISTORY_LIST = "listHistory";
+	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
 	
 	//Admin controler action
 	public final static String ACTION_LOGIN = "login";
 	public final static String ACTION_REGISTER = "register";
 	public final static String ACTION_LOGOUT = "logout";
+	
 	
 	public final static String ACTION_REPORT_LIST = "listReport";
 	public final static String ACTION_REPORT_VIEW = "viewReport";
@@ -89,6 +92,7 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
 	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
 	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
+	public final static String MANAGE_ACCOUNT_SENDMAIL = "rest/Manage/SendMail";
 	
 	//Session Constant
 	public final static String SESSION_USERID = "userid";

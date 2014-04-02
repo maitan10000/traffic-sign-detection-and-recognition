@@ -21,16 +21,21 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
 <style type="text/css">
-#paging-table_filter {
+<
+style>#paging-table_filter {
 	margin-left: 20px;
 }
-#trafficDetailModal{
-width: 800px;
-    margin-left: -400px;
+
+#trafficDetailModal {
+	width: 800px;
+	margin-left: -400px;
 }
-	
-	</style>
-	
+#AddTrafficModal{
+	width: 800px;
+	margin-left: -400px;
+}
+</style>
+
 </head>
 <%
 	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
@@ -63,9 +68,10 @@ width: 800px;
 	<div id="user-nav" class="navbar navbar-inverse">
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
-					<span class="text">Tài khoản</span></a></li>
-			<li class=""><a title="" href="login.html"><i
-					class="icon icon-share-alt"></i> <span class="text">Thoát</span></a></li>
+					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
+			<li class=""><a title="" href="#"><i
+					class="icon icon-share-alt" onclick="logout()"></i> <span
+					class="text">Thoát</span></a></li>
 		</ul>
 	</div>
 
@@ -77,8 +83,8 @@ width: 800px;
 		<ul>
 			<li class="active"><a href="index-2.html"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a
-				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFICINFO_ADD%>"><i
+			<li><a href=""
+				<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i
 					class="icon icon-th"></i> <span>Quản lý biển báo</span></a></li>
 			<li><a
 				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
@@ -109,20 +115,20 @@ width: 800px;
 					<div class="controls">
 						<span>Loại biển báo:</span> <select id="select-type" name="cateID"
 							onchange="listTraffic(this.value); return false;">							
-									<option class="font-Style" value="0">Tất Cả</option>
-									<%
-										for(int i = 0; i< listCat.size();i ++) {
-									%>
-									<option class="font-Style"
-										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
-									<%
-										}
-									%>
-								</select>
-						</select>
+							<option class="font-Style" value="0">Tất Cả</option>
+							<%
+								for(int i = 0; i< listCat.size();i ++) {
+							%>							
+							<option class="font-Style"
+								value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+							<%
+								}
+							%>
+						</select> </select>
 					</div>
 				</div>
-			</div>			
+				<div align="right"><button class="btn btn-primary" href="#AddTrainImageModal" onclick="addTraffic()">Thêm mới biển báo</button></div>	
+			</div>
 			<%
 				if( listTraffic != null){
 			%>
@@ -130,8 +136,8 @@ width: 800px;
 				<div id="table-show">
 					<table id="traffic-table" class="table table-bordered dataTable">
 						<thead>
-							<th>Hình Ảnh</th>
-							<th>Số Hiệu</th>
+							<th width="5%">STT</th>
+							<th width="5%">Số Hiệu</th>
 							<th>Tên Biển Báo</th>
 							<th>Danh Mục</th>
 							<th></th>
@@ -139,27 +145,27 @@ width: 800px;
 						<tbody>
 							<%
 								if( listTraffic.size()> 0){
-																																																																																for(int i = 0; i< listTraffic.size();i++){
+																																																																																					for(int i = 0; i< listTraffic.size();i++){
 							%>
 
 							<tr>
-								<td><img class="trafficImage"
-									src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>"
-									alt="Responsive image" /></td>
-								<td><%=listTraffic.get(i).getTrafficID()%></td>
-								<td><a href="#myModal" data-toggle="modal"
-									onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
+								<td style="text-align: center;"><%=i+1%></td>
+								<td style="text-align: center;"><%=listTraffic.get(i).getTrafficID()%></td>
+								<td><%=listTraffic.get(i).getName()%></td>
 								<td><%=listTraffic.get(i).getCategoryName()%></td>
-								<td><a href="#myModal" data-toggle="modal" onclick="showTrafficDetails(<%=listTraffic.get(i).getTrafficID()%>)">Sửa</a></td>								
+								<td><button class="btn btn-primary btn-mini" href="#myModal" data-toggle="modal"
+									onclick="showTrafficDetails(<%=listTraffic.get(i).getTrafficID()%>)">Sửa</button></td>
+								<%-- <td><a href="#myModal" data-toggle="modal" onclick="addTrafficTrainImage(<%=listTraffic.get(i).getTrafficID()%>)">Thêm ảnh mẫu</a></td> --%>
+
 							</tr>
 							<%
 								} 
-									}
+														}
 							%>
 						</tbody>
 					</table>
 				</div>
-			</div>			
+			</div>
 			<%
 				}
 			%>
@@ -188,8 +194,30 @@ width: 800px;
 	<!-- Traffic Detail modal -->
 	<div class="modal fade" id="trafficDetailModal" tabindex="-1"
 		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true" ></div>
+		aria-hidden="true"></div>
 	<!-- End detail modal-->
+	<!-- Add Train Image modal -->
+	<div class="modal fade" id="AddTrainImageModal" tabindex="-1"
+		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
+	<!-- End Add Train Image modal-->
+	<div id="myAlert" class="modal hide">
+		<div class="modal-header">
+			<button data-dismiss="modal" class="close" type="button">×</button>
+		</div>
+		<div class="modal-body">
+			<p></p>
+		</div>
+		<div class="modal-footer">
+			<a data-dismiss="modal" class="btn btn-primary" href="#">Đóng</a>
+		</div>
+	</div>
+	<!-- Add Train Image modal -->
+	<div class="modal fade" id="AddTrafficModal" tabindex="-1"
+		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
+	<!-- End Add Train Image modal-->
+	<!-- End Alert modal -->
 </body>
 <script src="Admin/Content/js/excanvas.min.js"></script>
 <script src="Admin/Content/js/jquery.min.js"></script>
@@ -211,7 +239,7 @@ $(document).ready(function() {
     oTable = $('#traffic-table').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
-        "sDom": '<"">t<"F"fp>',
+        "sDom": '<"F"f>t<""p>',
         "oLanguage": { 
         	"oPaginate": {
         		"sFirst":    "Đầu",
@@ -225,6 +253,15 @@ $(document).ready(function() {
     $("#select-type").select2('destroy'); 
 } );
 </script>
+<script type="text/javascript">
+function logout(){
+	var action = 'logout';
+	$.ajax({
+		url: '<%=Constants.CONTROLLER_ADMIN%>',
+		type: "GET",		
+	});
+}
+</script>
 <script type="text/javascript">	
 	function showTrafficDetails(trafficID){
 		var action = '<%=Constants.ACTION_TRAFFIC_VIEW%>';
@@ -236,6 +273,33 @@ $(document).ready(function() {
 				$("#myModal").modal('hide');
 				$("#trafficDetailModal").html(result);
 				$("#trafficDetailModal").modal('show');
+			}
+			
+		});
+	}	
+	function addTraffic(){
+		var action = '<%=Constants.ACTION_TRAFFICINFO_ADD%>';
+		$.ajax({
+			url: '<%=Constants.CONTROLLER_ADMIN%>',
+			type: "GET",
+			data: {action : action},
+			success: function (result) {
+				$("#AddTrafficModal").html(result);
+				$("#AddTrafficModal").modal('show');
+			}
+			
+		});
+	}
+	
+	function addTrafficImage(trafficID){
+		var action = '<%=Constants.ACTION_ADD_TRAINIMAGE%>';
+		$.ajax({
+			url: '<%=Constants.CONTROLLER_ADMIN%>',
+			type: "GET",
+			data: {action : action, trafficID: trafficID},
+			success: function (result) {
+				$("#AddTrainImageModal").html(result);
+				$("#AddTrainImageModal").modal('show');
 			}
 			
 		});

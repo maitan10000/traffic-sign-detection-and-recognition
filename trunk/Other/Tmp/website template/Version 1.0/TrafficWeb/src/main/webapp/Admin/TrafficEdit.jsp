@@ -10,6 +10,7 @@
 	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("cateList");
 	TrafficInfoJSON trafficDetails = (TrafficInfoJSON) request.getAttribute("trafficDetail");
 %>
+
 <script type="text/javascript">
 	function updateTrafficInfo() {
 		var xhr = new XMLHttpRequest();
@@ -59,9 +60,11 @@
 			$("#myAlert .modal-body").text("Cập nhật thất bại!");
 			$("#myAlert").modal("show");
 		}
+		$("#trafficDetailModal").modal('hide');
 		$("#myAlert .modal-body").text("Cập nhật thành công!");
 		$("#myAlert").modal("show");
-		$("#trafficDetailModal").modal('hide');
+		location.reload(); 
+		
 
 	}
 </script>
@@ -108,7 +111,7 @@
 										for(int i = 0; i< listCat.size();i ++) {
 									%>
 									<option class="font-Style"
-										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+										value="<%=listCat.get(i).getCategoryID()%>" selected="<%=trafficDetails.getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
 									<%
 										}
 									%>
@@ -137,9 +140,9 @@
 			</div>
 		</div>
 		<div id="footerViewDetail" class="modal-footer">
+			<button style="margin-right: 500px" type="submit" class="btn btn-primary" onclick="addTrafficImage(<%=trafficDetails.getTrafficID()%>); return false;">Thêm ảnh mẫu</button>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 			<button type="submit" class="btn btn-primary" onclick="updateTrafficInfo(); return false;">Sửa</button>
 		</div>
 	</div>
-</div>
 </div>

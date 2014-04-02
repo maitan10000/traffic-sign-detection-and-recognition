@@ -54,7 +54,7 @@
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="#"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
 						lý người dùng</span></a></li>
@@ -75,7 +75,7 @@
 		<ul>
 			<li class="active"><a href="index-2.html"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFICINFO_ADD%>"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
 					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>
@@ -134,26 +134,26 @@
 							<%
 								if(listAccount.get(i).getIsActive() == true){
 							%>
-							<td><a href="#"
-								onclick="deactiveAccount('<%=listAccount.get(i).getUserID()%>')">Khóa</a></td>
+							<td><button class="btn btn-danger btn-mini" href="#"
+								onclick="deactiveAccount('<%=listAccount.get(i).getUserID()%>')">Khóa</button></td>
 							<%
 								}else if(listAccount.get(i).getIsActive() == false){
 							%>
-							<td><a href="#"
-								onclick="activeAccount('<%=listAccount.get(i).getUserID()%>')">Kích hoạt</a></td>
+							<td><button class="btn btn-danger btn-mini" href="#"
+								onclick="activeAccount('<%=listAccount.get(i).getUserID()%>')">Kích hoạt</button></td>
 							<%
 								}
 							%>
 							<%
 								if("staff".equals(listAccount.get(i).getRole())){
 							%>
-							<td><a href="#"
-								onclick="unsetStaffAccount('<%=listAccount.get(i).getUserID()%>')">Unset Staff</a></td>
+							<td><button class="btn btn-primary btn-mini" href="#"
+								onclick="unsetStaffAccount('<%=listAccount.get(i).getUserID()%>')">Unset Staff</button></td>
 							<%
 								}else if("user".equals(listAccount.get(i).getRole())){
 							%>
-							<td><a href="#"
-								onclick="setStaffAccount('<%=listAccount.get(i).getUserID()%>')">Set Staff</a></td>
+							<td><button class="btn btn-primary btn-mini" href="#"
+								onclick="setStaffAccount('<%=listAccount.get(i).getUserID()%>')">Set Staff</button></td>
 							<%
 								}else{
 							%>
@@ -207,7 +207,7 @@ $(document).ready(function() {
     oTable = $('#account-table').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
-        "sDom": '<"">t<"F"fp>',
+        "sDom": '<"F"f>t<""p>',
         "oLanguage": { 
         	"oPaginate": {
         		"sFirst":    "Đầu",

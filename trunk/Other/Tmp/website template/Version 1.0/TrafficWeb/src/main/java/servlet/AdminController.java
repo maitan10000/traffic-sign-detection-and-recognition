@@ -108,8 +108,7 @@ public class AdminController extends HttpServlet {
 						MediaType.APPLICATION_FORM_URLENCODED).post(
 						ClientResponse.class, formData);
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 				String output = clientResponse.getEntity(String.class);
 				if (output != null) {
@@ -135,8 +134,7 @@ public class AdminController extends HttpServlet {
 						MediaType.APPLICATION_FORM_URLENCODED).post(
 						ClientResponse.class, params);
 				if (response.getStatus() != 200) {
-					throw new RuntimeException("Failed : HTTP error code : "
-							+ response.getStatus());
+					response.sendRedirect(Constants.ERROR_PAGE);
 				}
 				String result = clientResponse.getEntity(String.class).trim()
 						.toLowerCase();
@@ -153,7 +151,21 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher(urlRewrite);
 				rd.forward(request, response);
 
-			} else if (Constants.ACTION_REPORT_LIST.equals(action)) {
+			}else if("forgetPassword".equals(action)){
+				String email = request.getParameter("email");
+				String url = GlobalValue.getServiceAddress() + Constants.MANAGE_ACCOUNT_SENDMAIL;
+				Client client = Client.create();
+				WebResource webResource = client.resource(url);
+				ClientResponse clientResponse = webResource.type(
+						MediaType.APPLICATION_FORM_URLENCODED).post(
+						ClientResponse.class, email);
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				out.print(output);				
+ 			}
+			else if (Constants.ACTION_REPORT_LIST.equals(action)) {
 				// List Report
 				String type = request.getParameter("type");
 				if(type == null){
@@ -356,11 +368,10 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/ResultDetail.jsp");
 				rd.forward(request, response);
-			} else if (Constants.ACTION_TRAFFICINFO_ADD.equals(action)) {
-				// Add Traffic
+			} else if (Constants.ACTION_TRAFFICINFO_ADD.equals(action)) {				// Add Traffic
 
 				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/TrafficPage.jsp");
+						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");
 				rd.forward(request, response);			
 			}else if (Constants.TRAFFIC_TRAFFIC_UPDATE.equals(action)) {
 				//Add Traffic
@@ -468,7 +479,19 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrainImage.jsp");
 				rd.forward(request, response);
-			} else {
+			}else if(Constants.ACTION_ADD_TRAINIMAGE.equals(action)){
+				String trafficID = request.getParameter("trafficID");
+				request.setAttribute("trafficID", trafficID);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/AddTrainImageModal.jsp");
+				rd.forward(request, response);
+			}else if("logout".equals(action)){
+				session = request.getSession(false);
+				if(session != null)
+				session.invalidate();
+				request.getRequestDispatcher("/Login.jsp").forward(request,response);
+			}
+			else {
 				// redirect to home
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/Index.jsp");
