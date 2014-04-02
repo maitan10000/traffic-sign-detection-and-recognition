@@ -371,6 +371,8 @@ public class UserController extends HttpServlet {
 				if (response.getStatus() != 200) {
 					response.sendRedirect(Constants.ERROR_PAGE);
 				}
+				String output = clientResponse.getEntity(String.class);
+				out.print(output);
 			}
 
 		} catch (Exception e) {

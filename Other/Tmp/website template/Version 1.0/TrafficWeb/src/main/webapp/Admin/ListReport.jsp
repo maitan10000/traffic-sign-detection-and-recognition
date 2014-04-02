@@ -63,7 +63,7 @@ width: 800px;
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="#"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
 						lý người dùng</span></a></li>
@@ -126,10 +126,10 @@ width: 800px;
 						<thead>
 							<tr role="row">
 								<th width="5%">STT</th>
-								<th width="60%">Nội dung</th>
+								<th width="55%">Nội dung</th>
 								<th width="15%">Người gửi</th>
 								<th width="15%">Thời gian gửi</th>
-								<th width="5%"></th>
+								<th width="10%"></th>
 								<th width="5%"></th>
 							</tr>
 						</thead>
@@ -156,12 +156,12 @@ width: 800px;
 								<td style="text-align: center;"><%=listReport.get(i).getCreator()%></td>
 
 								<td style="text-align: center;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
-								<td style="text-align: center;"><a href="#myModal"
+								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
 									data-toggle="modal"
 									onclick="showDetails(<%=listReport.get(i).getReportID()%>)">Chi
-										tiết</a></td>
-								<td style="text-align: center;"><a href="#"
-									onclick="deleteReport(<%=listReport.get(i).getReportID()%>); return false;">Xóa</a></td>
+										tiết</button></td>
+								<td style="text-align: center;"><button class="btn btn btn-danger btn-mini"  href="#"
+									onclick="deleteReport(<%=listReport.get(i).getReportID()%>); return false;">Xóa</button></td>
 							</tr>
 							<%
 								}
@@ -236,7 +236,7 @@ $(document).ready(function() {
     oTable = $('#paging-table').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
-        "sDom": '<"">t<"F"fp>',
+        "sDom": '<"F"f>t<""p>',
         "oLanguage": { 
         	"oPaginate": {
         		"sFirst":    "Đầu",
@@ -310,8 +310,7 @@ function deleteReport(reportID) {
 					action : action,
 					reportID : reportID
 				},
-				success : function(result) {
-					// if delete ok, change buuton to luu bien bao
+				success : function(result) {					
 					if ("Success" == result.trim()) {									
 						 location.reload(); 
 												
