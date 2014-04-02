@@ -19,11 +19,14 @@
 </head>
 <body>
 	<!--Header-part-->
-	<div id="header">
+	<div id="header" style=">
 	<div id="header-inner">
+	<!-- <img src="Admin/Content/images/logo.png" style="width: 100px; height: 100px; position:fix;"/> -->	
 		<h4>
-			<a href="#">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
+			<!--  <a href="#">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
 				LÝ</a>
+			-->
+			<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
 		</h4>
 	</div>
 	</div>

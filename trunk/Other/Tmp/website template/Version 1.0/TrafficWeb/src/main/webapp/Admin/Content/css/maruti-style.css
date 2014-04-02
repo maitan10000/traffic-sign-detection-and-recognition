@@ -30,7 +30,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 
 /* Header */
 #header {
-	height: 62px;
+	height: 102px;
 	position: relative;
 	width: 100%;
 	z-index: -7;
@@ -50,27 +50,64 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 	display: block;
 }
 
-#header h4 {
-	font-style: italic;
-	font-family: times, Times New Roman, times-roman, georgia, serif;
-	font-size: 28px;
-	padding-top: 20px;
+@font-face
+{
+	font-family: myFirstFont;
+	src: url('font/UVNConThuy.ttf');
+}
+
+#header {
+	background: #2E363F url('Admin/Content/images/logo.png') top left no-repeat;
+	 background-size: 100px 100px; 
+	 padding-left: 100px;
+}
+#header h4
+{
+	padding-top: 35px;
 	padding-left: 20px;
 	height: 50px;
 	left: 15px;
-	top: 20px;
-	text-shadow: /*0 0 10px #fff,
+	top: 20px;	
+}
+#header h4 span {
+	
+	font-style: italic;
+	font-family: myFirstFont;
+		
+	/*
+	font-size: 40px;
+	text-shadow: 0 0 10px #fff,
 				0 0 20px #fff,
 				0 0 30px #fff,
 				0 0 40px #ff00de,
 				0 0 70px #ff00de,
 				0 0 80px #ff00de,
 				0 0 100px #ff00de,
-				0 0 150px #ff00de,*/ 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0
+				0 0 150px #ff00de,
+				 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0
 		4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba( 0, 0, 0, .1), 0 0 5px
 		rgba( 0, 0, 0, .1), 0 1px 3px rgba( 0, 0, 0, .3), 0 3px 5px rgba( 0, 0
 		, 0, .2), 0 5px 10px rgba( 0, 0, 0, .25), 0 10px 10px rgba( 0, 0, 0,
-		.2), 0 20px 20px rgba( 0, 0, 0, .15);
+		.2), 0 20px 20px rgba( 0, 0, 0, .15);*/
+	
+	/* yellow header
+	font-size: 40px;
+	color: #ffe !important;
+	text-shadow:
+      	0 0 .1em #ffe,
+        0 0 .5em #ffe,
+        0 0 1em #ffe;
+    -moz-transition: text-shadow 1s;
+    -ms-transition: text-shadow 1s;
+    -o-transition: text-shadow 1s;
+    -webkit-transition: text-shadow 1s;
+    transition: text-shadow 1s;
+    */
+    
+    /* red with white border */
+    font-size: 35px;
+    color: #9E0B0E; 
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white; 
 }
 
 .fl {
@@ -117,7 +154,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 	background: #49cced;
 	position: absolute;
 	clear: both;
-	top: 62px;
+	top: 102px;
 }
 
 #sidebar>ul {
