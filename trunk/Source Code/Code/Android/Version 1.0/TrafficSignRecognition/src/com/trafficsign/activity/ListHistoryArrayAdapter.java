@@ -1,7 +1,10 @@
 package com.trafficsign.activity;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
@@ -42,7 +45,9 @@ public class ListHistoryArrayAdapter extends ArrayAdapter<ResultShortJSON> {
 		TextView resultID = (TextView) convertView.findViewById(R.id.resultID);
 		TextView rowPosition = (TextView) convertView.findViewById(R.id.txtPosition);
 		
-		resultDate.setText(resultShort.getCreateDate().toLocaleString());
+		DateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+		resultDate.setText(dateFormat.format(resultShort.getCreateDate()));
 		resultID.setText(String.valueOf(resultShort.getResultID()));
 		rowPosition.setText(String.valueOf(position + 1));
 		return convertView;

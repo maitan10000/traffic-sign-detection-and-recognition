@@ -43,8 +43,9 @@ public final class Properties {
 	public final static String MANAGE_FAVORITE_LIST = "rest/Manage/ListFavorite";
 
 	// for view history
-	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
+	public final static String TRAFFIC_HISTORY_LIST = "rest/Traffic/ListHistory";
 	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
+	public final static String TRAFFIC_HISTORY_DELETE = "rest/Traffic/DeleteHistory";
 
 	// Train Image
 	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";

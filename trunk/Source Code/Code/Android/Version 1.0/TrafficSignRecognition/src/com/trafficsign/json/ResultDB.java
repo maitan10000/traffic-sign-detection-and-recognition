@@ -8,6 +8,14 @@ public class ResultDB {
 	private String locate;
 	private String creator;
 	private Date createDate;
+	private boolean isActive;
+	
+	public boolean isActive() {
+		return isActive;
+	}
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 	public int getResultID() {
 		return resultID;
 	}
