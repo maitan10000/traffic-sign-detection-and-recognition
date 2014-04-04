@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,10 +19,16 @@ import java.util.Locale;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.MainActivity;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
+import com.trafficsign.json.FavoriteJSON;
 import com.trafficsign.json.ResultDB;
+import com.trafficsign.json.ResultInput;
+import com.trafficsign.json.ResultJSON;
+import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
 
@@ -34,6 +41,11 @@ import android.os.Environment;
 import android.util.Log;
 
 public class DBUtil {
+	// Constant
+	public static final int ACTIVE = 1;
+	public static final int DEACTIVE = 0;
+	public static final int NOT_EXIST = 2;
+
 	// create folder for contain DB and inamge if not exist
 	public static void initResource(InputStream dbIS, InputStream settingIS,
 			Context ctx) {
@@ -275,6 +287,29 @@ public class DBUtil {
 		return trafficInfoJSON;
 	}
 
+	// insert result to result table
+	public static boolean addResult(ResultDB resultDB, String user) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		// set values to insert
+		ContentValues values = new ContentValues();
+		values.put("resultID", resultDB.getResultID());
+		values.put("uploadedImage", resultDB.getUploadedImage());
+		values.put("listTraffic", resultDB.getLocate());
+		values.put("creator", user);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		values.put("createDate", dateFormat.format(resultDB.getCreateDate()));
+		values.put("isActive", true);
+		if (db.insert("result", null, values) != -1) {
+			db.close();
+			return true;
+		}
+		db.close();
+		return false;
+	}
+
 	// insert to result table for autosearch later
 	public static boolean saveSearchInfo(String picturePath, String locateJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -291,13 +326,56 @@ public class DBUtil {
 				Locale.getDefault());
 		Calendar cal = Calendar.getInstance();
 		values.put("createDate", dateFormat.format(cal.getTime()));
-		values.put("isActive", true);
+		values.put("isActive", false);
 		if (db.insert("result", null, values) != -1) {
 			db.close();
 			return true;
 		}
 		db.close();
 		return false;
+	}
+
+	// get history from result table by ID
+	public static ResultJSON viewHistory(int resultID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		// create cursor to access query result
+		Cursor cursor = db.query("result", null, "`resultID` = " + resultID,
+				null, null, null, null);
+		ResultJSON output = new ResultJSON();
+		// move cursor to first and check if cursor is null
+		if (cursor.moveToFirst()) {
+			Gson gson = new Gson();
+			Type type = new TypeToken<ArrayList<ResultInput>>() {
+			}.getType();
+			// get result from cursor to Object
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+					Locale.getDefault());
+
+			output.setUploadedImage(cursor.getString(cursor
+					.getColumnIndexOrThrow("uploadedImage")));
+			String jsonLocate = cursor.getString(cursor
+					.getColumnIndexOrThrow("listTraffic"));
+			output.setCreator(cursor.getString(cursor
+					.getColumnIndexOrThrow("creator")));
+			String tempDateString = cursor.getString(cursor
+					.getColumnIndexOrThrow("createDate"));
+			ArrayList<ResultInput> listResultInput = gson.fromJson(
+					jsonLocate, type);
+			output.setListTraffic(listResultInput);
+			Date tempDate = null;
+			try {
+				tempDate = new java.sql.Date(dateFormat.parse(tempDateString)
+						.getTime());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			output.setCreateDate(tempDate);
+
+		}
+		db.close();
+		return output;
 	}
 
 	// get autoSerch from result table for upload and excute search
@@ -313,6 +391,9 @@ public class DBUtil {
 		if (cursor.moveToFirst()) {
 			// get result from cursor to Object
 			do {
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
 				ResultDB temp = new ResultDB();
 				temp.setUploadedImage(cursor.getString(cursor
 						.getColumnIndexOrThrow("uploadedImage")));
@@ -320,8 +401,53 @@ public class DBUtil {
 						.getColumnIndexOrThrow("listTraffic")));
 				temp.setCreator(cursor.getString(cursor
 						.getColumnIndexOrThrow("creator")));
-				temp.setCreateDate(cursor.getString(cursor
-						.getColumnIndexOrThrow("createDate")));
+				String tempDateString = cursor.getString(cursor
+						.getColumnIndexOrThrow("createDate"));
+				Date tempDate = null;
+				try {
+					tempDate = new java.sql.Date(dateFormat.parse(
+							tempDateString).getTime());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				temp.setCreateDate(tempDate);
+				listResult.add(temp);
+			} while (cursor.moveToNext());
+
+		}
+		db.close();
+		return listResult;
+	}
+
+	// get history result table where isActive = true
+	public static ArrayList<ResultShortJSON> listResult() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		// create cursor to access query result
+		Cursor cursor = db.query("result", null, "`isActive` = 1", null, null,
+				null, null);
+		ArrayList<ResultShortJSON> listResult = new ArrayList<ResultShortJSON>();
+		// move cursor to first and check if cursor is null
+		if (cursor.moveToFirst()) {
+			// get result from cursor to Object
+			do {
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+				ResultShortJSON temp = new ResultShortJSON();
+				temp.setResultID(cursor.getInt(cursor
+						.getColumnIndexOrThrow("resultID")));
+				String tempDateString = cursor.getString(cursor
+						.getColumnIndexOrThrow("createDate"));
+				Date tempDate = null;
+				try {
+					tempDate = new java.sql.Date(dateFormat.parse(
+							tempDateString).getTime());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				temp.setCreateDate(tempDate);
 				listResult.add(temp);
 			} while (cursor.moveToNext());
 
@@ -341,6 +467,16 @@ public class DBUtil {
 		return output;
 	}
 
+	// delete all in result table
+	public static int removeResult() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		int output = db.delete("result", null, null);
+		db.close();
+		return output;
+	}
+
 	// remove all in favorite table
 	public static int removeFavorite() {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -351,14 +487,38 @@ public class DBUtil {
 		return output;
 	}
 
-	// delete favorite table by trafficID
-	public static int deleteFavorite(String trafficID) {
+	// deactivate favorite table by trafficID
+	public static int deActivateFavorite(String trafficID) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
 		ContentValues value = new ContentValues();
 		value.put("isActive", false);
-		int output = db.update("favorite", value, "`trafficID` = '"+ trafficID + "'", null);
+		// get current datetime
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		Calendar cal = Calendar.getInstance();
+		value.put("modifyDate", dateFormat.format(cal.getTime()));
+		int output = db.update("favorite", value, "`trafficID` = '" + trafficID
+				+ "'", null);
+		db.close();
+		return output;
+	}
+
+	// activate favorite table by trafficID
+	public static int activateFavorite(String trafficID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		ContentValues value = new ContentValues();
+		value.put("isActive", true);
+		// get current datetime
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		Calendar cal = Calendar.getInstance();
+		value.put("modifyDate", dateFormat.format(cal.getTime()));
+		int output = db.update("favorite", value, "`trafficID` = '" + trafficID
+				+ "'", null);
 		db.close();
 		return output;
 	}
@@ -439,8 +599,72 @@ public class DBUtil {
 		return output;
 	}
 
-	// check favorite is added or not yet
-	public static boolean checkFavorite(String trafficID) {
+	// get all favorite
+	public static ArrayList<FavoriteJSON> listAllFavorite() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		// create cursor to access query result
+		Cursor cursor = db
+				.query("favorite", null, null, null, null, null, null);
+		ArrayList<FavoriteJSON> output = new ArrayList<FavoriteJSON>();
+		// move cursor to first and check if cursor is null
+		if (cursor.moveToFirst()) {
+			do {
+				try {
+					String tempDate = "";
+					FavoriteJSON temp = new FavoriteJSON();
+					temp.setName(cursor.getString(cursor
+							.getColumnIndexOrThrow("trafficName")));
+					temp.setTrafficID(cursor.getString(cursor
+							.getColumnIndexOrThrow("trafficID")));
+					temp.setImage(cursor.getString(cursor
+							.getColumnIndexOrThrow("image")));
+					temp.setActive(cursor.getInt(cursor
+							.getColumnIndexOrThrow("isActive")) > 0);
+					tempDate = cursor.getString(cursor
+							.getColumnIndexOrThrow("modifyDate"));
+					Date modifyDate;
+
+					modifyDate = new java.sql.Date(dateFormat.parse(tempDate)
+							.getTime());
+
+					temp.setModifyDate(modifyDate);
+					// add temp to list favorite
+					output.add(temp);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} while (cursor.moveToNext());
+		}
+
+		db.close();
+		return output;
+	}
+
+	// // check favorite is exist or not
+	// public static boolean checkFavorite(String trafficID) {
+	// SQLiteDatabase db = SQLiteDatabase.openDatabase(
+	// GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+	// SQLiteDatabase.OPEN_READWRITE);
+	// // create cursor to access query result
+	// Cursor cursor = db.query("favorite", null, "`trafficID` LIKE '"
+	// + trafficID + "'", null, null, null, null);
+	// if (cursor.moveToFirst()) {
+	// db.close();
+	// return true;
+	// }
+	// db.close();
+	// return false;
+	// }
+
+	// check favorite status (isActive is true or false) return 1 if isActive =
+	// true, 0 if isActive = false, 2 if not exist
+	public static int checkFavoriteStatus(String trafficID) {
+		int status = 2;
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
@@ -448,9 +672,11 @@ public class DBUtil {
 		Cursor cursor = db.query("favorite", null, "`trafficID` LIKE '"
 				+ trafficID + "'", null, null, null, null);
 		if (cursor.moveToFirst()) {
-			return true;
+			status = cursor.getInt(cursor.getColumnIndexOrThrow("isActive"));
+
 		}
-		return false;
+		db.close();
+		return status;
 	}
 
 }

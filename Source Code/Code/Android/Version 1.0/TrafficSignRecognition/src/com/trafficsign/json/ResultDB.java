@@ -7,7 +7,7 @@ public class ResultDB {
 	private String uploadedImage;
 	private String locate;
 	private String creator;
-	private String createDate;
+	private Date createDate;
 	public int getResultID() {
 		return resultID;
 	}
@@ -32,12 +32,15 @@ public class ResultDB {
 	public void setCreator(String creator) {
 		this.creator = creator;
 	}
-	public String getCreateDate() {
+	public Date getCreateDate() {
 		return createDate;
 	}
-	public void setCreateDate(String createDate) {
+	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+	
+	
+
 	
 
 }

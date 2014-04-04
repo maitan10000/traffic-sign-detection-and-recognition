@@ -73,10 +73,9 @@ public class TracfficSignDetailActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					if (DBUtil.checkFavorite(trafficInfo.getTrafficID()) == false) {
-						// get user
-
-						//
+					// if traffic is not add or delete before excute add
+					// favorite
+					if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
 						TrafficInfoShortJSON infoShortJSON = new TrafficInfoShortJSON();
 						infoShortJSON.setImage(trafficInfo.getImage());
 						infoShortJSON.setName(trafficInfo.getName());
@@ -106,28 +105,54 @@ public class TracfficSignDetailActivity extends Activity {
 						httpAsyncUtil.setUrl(url);
 						httpAsyncUtil.execute();
 
-					} else {
-						// delete in db
-						DBUtil.deleteFavorite(trafficInfo.getTrafficID());
+					} else
+					// if favorite is active, excute deactive
+					if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
+						// deactive in db
+						DBUtil.deActivateFavorite(trafficInfo.getTrafficID());
 						// change button image
 						btnFavorite
 								.setBackgroundResource(R.drawable.btn_star_big_off);
 						// url for delete favorite
 						String url = GlobalValue.getServiceAddress()
-								+ Properties.MANAGE_FAVORITE_DELETE + "?creator="
-								+ user + "&trafficID=";
+								+ Properties.MANAGE_FAVORITE_DELETE
+								+ "?creator=" + user + "&trafficID=";
 						url += trafficInfo.getTrafficID();
 						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+						httpAsyncUtil.setUrl(url);
+						httpAsyncUtil.execute();
+					} else
+					// favorite is deActive, excute active
+					{
+						// active in db
+						DBUtil.activateFavorite(trafficInfo.getTrafficID());
+						// change button image
+						btnFavorite
+								.setBackgroundResource(R.drawable.btn_star_big_on);
+						// add favorite to service if can access to server
+						ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
+						parameter.add(new BasicNameValuePair("creator", user));
+						parameter.add(new BasicNameValuePair("trafficID",
+								trafficInfo.getTrafficID()));
+						// change button image
+						btnFavorite
+								.setBackgroundResource(R.drawable.btn_star_big_on);
+						// url for add favorite
+						String url = GlobalValue.getServiceAddress()
+								+ Properties.MANAGE_FAVORITE_ADD;
+						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+						httpAsyncUtil.setMethod("POST");
+						httpAsyncUtil.setParameters(parameter);
 						httpAsyncUtil.setUrl(url);
 						httpAsyncUtil.execute();
 					}
 				}
 			});
 			// check favorite status to display button image
-			if (DBUtil.checkFavorite(trafficInfo.getTrafficID()) == false) {
+			if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.DEACTIVE) {
 
 				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
-			} else {
+			} else if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
 				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
 			}
 			// ImageView image = (ImageView) findViewById(R.id.trafficImage);

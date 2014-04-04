@@ -40,6 +40,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -130,6 +131,21 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		/* Set event onclick for histoy button */
+		ImageButton imgBtnHistory = (ImageButton) findViewById(R.id.imageButtonHistory);
+		imgBtnHistory.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if ("notLogin".equals(user) == false) {
+					Intent nextScreen = new Intent(getApplicationContext(),
+							HistoryActivity.class);
+					startActivity(nextScreen);
+				}
+
+			}
+		});
 	}
 
 	@Override
@@ -167,8 +183,10 @@ public class MainActivity extends Activity {
 				item.setTitle(R.string.login);
 
 			} else {
+				
 				Intent nextScreen = new Intent(getApplicationContext(),
 						LoginActivity.class);
+				finish();
 				startActivity(nextScreen);
 			}
 

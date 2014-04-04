@@ -1,6 +1,7 @@
 package com.trafficsign.ultils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -8,8 +9,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,6 +27,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.json.CategoryJSON;
+import com.trafficsign.json.ResultDB;
+import com.trafficsign.json.ResultJSON;
+import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
@@ -41,30 +47,27 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 	private String response;
 	private IAsyncHttpListener httpListener = null;
 
-	
 	public void setHttpListener(IAsyncHttpListener httpListener) {
 		this.httpListener = httpListener;
 	}
-
 
 	public HttpSyncUtil(Context context) {
 		this.context = context;
 		dialog = new ProgressDialog(this.context);
 	}
-	
 
 	public void setUser(String user) {
 		this.user = user;
 	}
-
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		// TODO Auto-generated method stub
 		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
 				DateFormat.FULL).create();
+		/* Sync favorite */
 		// URL for service
-		String urlListFavorite = Properties.serviceIp
+		String urlListFavorite = GlobalValue.getServiceAddress()
 				+ Properties.MANAGE_FAVORITE_LIST + "?creator=" + this.user;
 		// get all favorite from service and parse json to list Trafficinfoshort
 		String favoriteResponse = HttpUtil.get(urlListFavorite);
@@ -79,6 +82,50 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 				DBUtil.addFavorite(listFavorite.get(i), this.user);
 			}
 		}
+		/* End sync favorite */
+		/* Sync history */
+		// get listHistory
+		String urlListHistory = GlobalValue.getServiceAddress()
+				+ Properties.TRAFFIC_LIST_HISTORY + "?creator=" + this.user;
+		String listHistoryResponse = HttpUtil.get(urlListHistory);
+		ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
+		Type typeListHistory = new TypeToken<ArrayList<ResultShortJSON>>() {
+		}.getType();
+		listHistory = gson.fromJson(listHistoryResponse, typeListHistory);
+		// if listHistory is not empty
+		if (listHistory.size() > 0) {
+			DBUtil.removeResult(); // delete previous user's result
+			for (int i = 0; i < listHistory.size(); i++) {
+				String urlViewHistory = GlobalValue.getServiceAddress()
+						+ Properties.TRAFFIC_HISTORY_VIEW + "?id="
+						+ listHistory.get(i).getResultID();
+				ResultJSON resultJSON = new ResultJSON();
+				String historyDetail = HttpUtil.get(urlViewHistory);
+				Type typeResultJson = new TypeToken<ResultJSON>() {
+				}.getType();
+				resultJSON = gson.fromJson(historyDetail, typeResultJson);
+				// download uploaded image if image is not exist
+				String imagePath = GlobalValue.getAppFolder()
+						+ Properties.SAVE_IMAGE_FOLDER
+						+ splitImageName(resultJSON.getUploadedImage());
+				File image = new File(imagePath);
+				if (!image.exists()) {
+					String imageUrl = GlobalValue.getServiceAddress()
+							+ resultJSON.getUploadedImage();
+					HttpUtil.downloadImage(imageUrl, imagePath);
+				}
+				// save result to db
+				
+				ResultDB resultDB = new ResultDB();
+				resultDB.setCreateDate(resultJSON.getCreateDate());
+				resultDB.setCreator(resultJSON.getCreator());
+				resultDB.setLocate(gson.toJson(resultJSON.getListTraffic()));
+				resultDB.setResultID(resultJSON.getResultID());
+				resultDB.setUploadedImage(imagePath);
+				DBUtil.addResult(resultDB, user);
+			}
+		}
+		/* End sync history */
 		response = favoriteResponse;
 		return null;
 	}
@@ -105,6 +152,12 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 			}
 		}
 
+	}
+
+	public static String splitImageName(String input) {
+		String[] imagePath = input.split("/");
+
+		return imagePath[imagePath.length - 1];
 	}
 
 }
