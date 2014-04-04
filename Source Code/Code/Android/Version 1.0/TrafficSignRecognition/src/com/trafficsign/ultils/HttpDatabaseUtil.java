@@ -41,64 +41,67 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		// TODO Auto-generated method stub
-		Gson gson = new Gson();
-		// URL for service
-		String urlCategory = Properties.serviceIp
-				+ Properties.TRAFFIC_LIST_CATEGORY;
-		String urlGetListTraffic = Properties.serviceIp
-				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-		String urlGetTrafficDetail = Properties.serviceIp
-				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
+		if (NetUtil.isAccessService() == true) {
+			// TODO Auto-generated method stub
+			Gson gson = new Gson();
+			// URL for service
+			String urlCategory = Properties.serviceIp
+					+ Properties.TRAFFIC_LIST_CATEGORY;
+			String urlGetListTraffic = Properties.serviceIp
+					+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
+			String urlGetTrafficDetail = Properties.serviceIp
+					+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 
-		// get all category from service and parse json to list CategoryJSON
-		String catResponse = HttpUtil.get(urlCategory);
-		ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
-		Type typeListCategory = new TypeToken<ArrayList<CategoryJSON>>() {
-		}.getType();
-		listCategory = gson.fromJson(catResponse, typeListCategory);
-		// add category to DB
-		if (listCategory.size() > 0) {
-			Long dbReturn;
-			for (int i = 0; i < listCategory.size(); i++) {
-				dbReturn = DBUtil.insertCategory(listCategory.get(i));
-				Log.e("DB", dbReturn.toString());
+			// get all category from service and parse json to list CategoryJSON
+			String catResponse = HttpUtil.get(urlCategory);
+			ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
+			Type typeListCategory = new TypeToken<ArrayList<CategoryJSON>>() {
+			}.getType();
+			listCategory = gson.fromJson(catResponse, typeListCategory);
+			// add category to DB
+			if (listCategory.size() > 0) {
+				Long dbReturn;
+				for (int i = 0; i < listCategory.size(); i++) {
+					dbReturn = DBUtil.insertCategory(listCategory.get(i));
+					Log.e("DB", dbReturn.toString());
+				}
 			}
-		}
-		// End add category
+			// End add category
 
-		/*
-		 * get all traffic (short) from service and parse json to list
-		 * TrafficInfoJsonShort
-		 */
+			/*
+			 * get all traffic (short) from service and parse json to list
+			 * TrafficInfoJsonShort
+			 */
 
-		String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
-		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
-		Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
-		}.getType();
-		listInfoShortJSONs = gson.fromJson(listTrafficJSON,
-				typeListTrafficShort);
-		// get each traffic details and add to DB
-		if (listInfoShortJSONs.size() > 0) {
-			String urlGetTrafficDetailFull = "";
-			Long dbReturn; // variable to know db return
-			for (int i = 0; i < listInfoShortJSONs.size(); i++) {
-				urlGetTrafficDetailFull = urlGetTrafficDetail
-						+ listInfoShortJSONs.get(i).getTrafficID();
-				// get traffic detail from service and parse json
-				// TrafficInfoJson
-				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
-				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-				trafficInfoJSON = gson.fromJson(trafficJSON,
-						TrafficInfoJSON.class);
-				// add traffic to DB
-				dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
-				String savePath = GlobalValue.getAppFolder()
-						+ Properties.MAIN_IMAGE_FOLDER
-						+ trafficInfoJSON.getTrafficID() + ".jpg";
-				String imageLink = Properties.serviceIp + trafficInfoJSON.getImage();
-				HttpUtil.downloadImage(imageLink, savePath);				
-				Log.e("DB", dbReturn.toString());
+			String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
+			ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
+			Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
+			}.getType();
+			listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+					typeListTrafficShort);
+			// get each traffic details and add to DB
+			if (listInfoShortJSONs.size() > 0) {
+				String urlGetTrafficDetailFull = "";
+				Long dbReturn; // variable to know db return
+				for (int i = 0; i < listInfoShortJSONs.size(); i++) {
+					urlGetTrafficDetailFull = urlGetTrafficDetail
+							+ listInfoShortJSONs.get(i).getTrafficID();
+					// get traffic detail from service and parse json
+					// TrafficInfoJson
+					String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
+					TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+					trafficInfoJSON = gson.fromJson(trafficJSON,
+							TrafficInfoJSON.class);
+					// add traffic to DB
+					dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
+					String savePath = GlobalValue.getAppFolder()
+							+ Properties.MAIN_IMAGE_FOLDER
+							+ trafficInfoJSON.getTrafficID() + ".jpg";
+					String imageLink = Properties.serviceIp
+							+ trafficInfoJSON.getImage();
+					HttpUtil.downloadImage(imageLink, savePath);
+					Log.e("DB", dbReturn.toString());
+				}
 			}
 		}
 		return null;

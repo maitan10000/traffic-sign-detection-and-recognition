@@ -74,9 +74,14 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		ArrayList<TrafficInfoShortJSON> listFavorite = new ArrayList<TrafficInfoShortJSON>();
 		Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 		}.getType();
-		listFavorite = gson.fromJson(favoriteResponse, typeListFavorite);
+		try {
+			listFavorite = gson.fromJson(favoriteResponse, typeListFavorite);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		// remove previous user's favorite list
-		DBUtil.removeFavorite();
+		DBUtil.removeAllFavorite();
 		if (listFavorite.size() > 0) {
 			for (int i = 0; i < listFavorite.size(); i++) {
 				DBUtil.addFavorite(listFavorite.get(i), this.user);
@@ -86,7 +91,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		/* Sync history */
 		// get listHistory
 		String urlListHistory = GlobalValue.getServiceAddress()
-				+ Properties.TRAFFIC_LIST_HISTORY + "?creator=" + this.user;
+				+ Properties.TRAFFIC_HISTORY_LIST + "?creator=" + this.user;
 		String listHistoryResponse = HttpUtil.get(urlListHistory);
 		ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
 		Type typeListHistory = new TypeToken<ArrayList<ResultShortJSON>>() {
@@ -94,7 +99,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		listHistory = gson.fromJson(listHistoryResponse, typeListHistory);
 		// if listHistory is not empty
 		if (listHistory.size() > 0) {
-			DBUtil.removeResult(); // delete previous user's result
+			DBUtil.deleteAllResult(); // delete previous user's result
 			for (int i = 0; i < listHistory.size(); i++) {
 				String urlViewHistory = GlobalValue.getServiceAddress()
 						+ Properties.TRAFFIC_HISTORY_VIEW + "?id="
@@ -115,7 +120,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 					HttpUtil.downloadImage(imageUrl, imagePath);
 				}
 				// save result to db
-				
+
 				ResultDB resultDB = new ResultDB();
 				resultDB.setCreateDate(resultJSON.getCreateDate());
 				resultDB.setCreator(resultJSON.getCreator());

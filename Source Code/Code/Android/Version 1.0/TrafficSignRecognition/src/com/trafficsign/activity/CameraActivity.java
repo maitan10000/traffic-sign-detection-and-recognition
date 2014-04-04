@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.LocateJSON;
+import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
 import com.trafficsign.ultils.ConvertUtil;
@@ -51,6 +52,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.os.Environment;
@@ -85,6 +87,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private CascadeClassifier type2Detector = null;
 	private int blinkCount = 0;
 	private ImageButton btnTakeImage;
+	private String user = "";
 
 	static {
 	   if (!OpenCVLoader.initDebug())
@@ -116,6 +119,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// get user
+		final SharedPreferences pref = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+		user = pref.getString("user", "");
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_camera);
 
@@ -375,7 +382,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					// create post data
 					ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();
 					parameters.add(new BasicNameValuePair("userID",
-							Properties.USER_NAME));
+							user));
 					ArrayList<ResultInput> tempListResultInput = new ArrayList<ResultInput>();
 					for (Rect rect : listLocateInput) {
 						ResultInput tempResultInput = new ResultInput();
@@ -431,6 +438,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							}
 
 							// ResultInput resultTmp = resultInput.get(0);
+							// save result to db in mobile
+							ResultDB resultDB = new ResultDB();
+							resultDB.setCreateDate(resultJson.getCreateDate());
+							resultDB.setCreator(resultJson.getCreator());
+							resultDB.setLocate(gson.toJson(resultJson.getListTraffic()));
+							resultDB.setResultID(resultJson.getResultID());
+							resultDB.setUploadedImage(fileName);
+							DBUtil.addResult(resultDB, user);
 							// create intent
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
@@ -453,7 +468,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					} else { // in case can not access to server
 						isTaken = false;
 						// save searchInfo to DB
-						boolean result = DBUtil.saveSearchInfo(fileName, listLocateJSON);
+						 DBUtil.saveSearchInfo(fileName, listLocateJSON);
 						Intent nextScreen = new Intent(getApplicationContext(),
 								MainActivity.class);
 						startActivity(nextScreen);

@@ -361,8 +361,8 @@ public class DBUtil {
 					.getColumnIndexOrThrow("creator")));
 			String tempDateString = cursor.getString(cursor
 					.getColumnIndexOrThrow("createDate"));
-			ArrayList<ResultInput> listResultInput = gson.fromJson(
-					jsonLocate, type);
+			ArrayList<ResultInput> listResultInput = gson.fromJson(jsonLocate,
+					type);
 			output.setListTraffic(listResultInput);
 			Date tempDate = null;
 			try {
@@ -456,6 +456,55 @@ public class DBUtil {
 		return listResult;
 	}
 
+	// get autoSerch from result table for upload and excute search
+	public static ArrayList<ResultDB> listAllHistory() {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		// create cursor to access query result
+		Cursor cursor = db.query("result", null, "`resultID` > 0", null, null,
+				null, null);
+		ArrayList<ResultDB> listResult = new ArrayList<ResultDB>();
+		// move cursor to first and check if cursor is null
+		if (cursor.moveToFirst()) {
+			// get result from cursor to Object
+			do {
+				DateFormat dateFormat = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+				ResultDB temp = new ResultDB();
+				temp.setResultID(cursor.getInt(cursor
+						.getColumnIndexOrThrow("resultID")));
+				temp.setUploadedImage(cursor.getString(cursor
+						.getColumnIndexOrThrow("uploadedImage")));
+				temp.setLocate(cursor.getString(cursor
+						.getColumnIndexOrThrow("listTraffic")));
+				temp.setCreator(cursor.getString(cursor
+						.getColumnIndexOrThrow("creator")));
+				temp.setActive(true);
+				int active = cursor.getInt(cursor
+						.getColumnIndexOrThrow("isActive"));
+				if (active == 0) {
+					temp.setActive(false);
+				}
+				String tempDateString = cursor.getString(cursor
+						.getColumnIndexOrThrow("createDate"));
+				Date tempDate = null;
+				try {
+					tempDate = new java.sql.Date(dateFormat.parse(
+							tempDateString).getTime());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				temp.setCreateDate(tempDate);
+				listResult.add(temp);
+			} while (cursor.moveToNext());
+
+		}
+		db.close();
+		return listResult;
+	}
+
 	// delete a row in result table
 	public static int deleteSavedResult(String imagePath) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -468,7 +517,7 @@ public class DBUtil {
 	}
 
 	// delete all in result table
-	public static int removeResult() {
+	public static int deleteAllResult() {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
@@ -477,8 +526,30 @@ public class DBUtil {
 		return output;
 	}
 
+	// delete result by resultID
+	public static int deleteResult(int resultID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		int output = db.delete("result", "`resultID` =" + resultID, null);
+		db.close();
+		return output;
+	}
+
+	// deactive result by resultID
+	public static int deActivateResult(int resultID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		ContentValues value = new ContentValues();
+		value.put("isActive", false);
+		int output = db.update("result", value,"`resultID` ="+ resultID , null);
+		db.close();
+		return output;
+	}
+
 	// remove all in favorite table
-	public static int removeFavorite() {
+	public static int removeAllFavorite() {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);

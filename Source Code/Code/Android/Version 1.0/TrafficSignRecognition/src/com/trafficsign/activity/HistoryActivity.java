@@ -2,6 +2,8 @@ package com.trafficsign.activity;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.trafficsign.activity.R;
 import com.trafficsign.json.ResultJSON;
@@ -9,16 +11,26 @@ import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
+import com.trafficsign.ultils.GlobalValue;
+import com.trafficsign.ultils.HttpUtil;
+import com.trafficsign.ultils.NetUtil;
+import com.trafficsign.ultils.Properties;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class HistoryActivity extends Activity {
 
@@ -32,6 +44,7 @@ public class HistoryActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
 		listResultShortJSONs = DBUtil.listResult();
+		Collections.sort(listResultShortJSONs);
 		// TODO Auto-generated method stub
 		lv = (ListView) findViewById(R.id.listHistory);
 		listHistoryArrayAdapter = new ListHistoryArrayAdapter(this,
@@ -70,6 +83,58 @@ public class HistoryActivity extends Activity {
 			}
 		});
 
+		registerForContextMenu(lv);
+
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		// TODO Auto-generated method stub
+		System.out.println("...on create context menu...");
+		super.onCreateContextMenu(menu, v, menuInfo);
+		if (v.getId() == R.id.listHistory) {
+			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+			menu.setHeaderTitle("Title");
+			menu.add(Menu.NONE, 0, 0, "Xóa");
+
+		}
+	}
+
+	int resultID;
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		int menuItemIndex = item.getItemId();
+		if (menuItemIndex == 0) {
+			// delete
+			resultID = listResultShortJSONs.get(info.position).getResultID();
+			listResultShortJSONs.remove(info.position);
+			listHistoryArrayAdapter.notifyDataSetChanged();
+			Thread thread = new Thread(new Runnable() {
+				public void run() {					
+					String urlDeleteHistory = GlobalValue.getServiceAddress()
+							+ Properties.TRAFFIC_HISTORY_DELETE + "?id="
+							+ resultID;
+					if (NetUtil.isAccessService() == true) {
+						String response = HttpUtil.get(urlDeleteHistory);
+						if("Success".equals(response)){
+							DBUtil.deleteResult(resultID);
+						}
+					}else{
+						DBUtil.deActivateResult(resultID);
+					}
+				}
+			});
+			thread.start();
+		}
+		return true;
+	}
 }
