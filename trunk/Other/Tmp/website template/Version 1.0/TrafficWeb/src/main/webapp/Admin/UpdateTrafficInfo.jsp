@@ -74,25 +74,26 @@ TrafficInfoJSON trafficDetails = (TrafficInfoJSON) request.getAttribute("traffic
 
 	<div id="sidebar">
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
-			Dashboard2</a>
+			Trang chủ</a>
 		<ul>
-			<li class="active"><a href="index-2.html"><i
+			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFICINFO_ADD%>"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
-					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
+						lý người dùng</span></a></li>
 			<li><a
 				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
 					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
 						hồi</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-signal"></i> <span>Thống
+			<li><a href="#"><i class="icon icon-signal"></i> <span>Thống
 						kê</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-cog"></i> <span>Thiếp
+			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
 
 		</ul>
 	</div>
+	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">

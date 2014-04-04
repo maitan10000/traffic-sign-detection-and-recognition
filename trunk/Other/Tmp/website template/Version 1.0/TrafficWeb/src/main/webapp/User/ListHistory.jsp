@@ -103,7 +103,7 @@
 							</thead>
 							<tbody>
 								<%								
-									SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+									SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 									if( listHistory.size()> 0){
 															for(int i = listHistory.size() -1; i >= 0 ;i--){
 								%>

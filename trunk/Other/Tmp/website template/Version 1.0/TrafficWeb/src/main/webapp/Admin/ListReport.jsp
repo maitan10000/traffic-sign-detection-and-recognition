@@ -59,7 +59,7 @@ width: 800px;
 
 	<div id="sidebar">
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
-			Dashboard2</a>
+			Trang chủ</a>
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
@@ -78,6 +78,7 @@ width: 800px;
 
 		</ul>
 	</div>
+	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
