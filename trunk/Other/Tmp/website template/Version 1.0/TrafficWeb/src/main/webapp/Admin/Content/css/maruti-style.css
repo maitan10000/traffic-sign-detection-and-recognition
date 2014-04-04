@@ -57,7 +57,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 }
 
 #header {
-	 background: #2E363F url('../images/logo.png') top left no-repeat;
+	 background: #2E363F url('../images/m3.png') top left no-repeat;
 	 background-size: 100px 100px; 
 	 padding-left: 100px;
 }
@@ -90,24 +90,25 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 		, 0, .2), 0 5px 10px rgba( 0, 0, 0, .25), 0 10px 10px rgba( 0, 0, 0,
 		.2), 0 20px 20px rgba( 0, 0, 0, .15);*/
 	
-	/* yellow header
-	font-size: 40px;
+	/* yellow header */
+	font-size: 35px;
 	color: #ffe !important;
 	text-shadow:
       	0 0 .1em #ffe,
-        0 0 .5em #ffe,
-        0 0 1em #ffe;
+        0 0 .1em #ffe,
+        0 0 .1em #ffe;
     -moz-transition: text-shadow 1s;
     -ms-transition: text-shadow 1s;
     -o-transition: text-shadow 1s;
     -webkit-transition: text-shadow 1s;
     transition: text-shadow 1s;
-    */
     
-    /* red with white border */ 
+    
+    /* red with white border 
     font-size: 35px;
     color: #9E0B0E; 
 	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	*/
 	
 	
 	/* 3D text 
