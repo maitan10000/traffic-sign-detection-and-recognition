@@ -72,7 +72,6 @@ public class HttpUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Log.e("HttpUtil", respond);
 		return respond;
 	}
 
@@ -127,9 +126,10 @@ public class HttpUtil {
 			httpConnection.setRequestMethod("GET");
 			httpConnection.connect();
 
-			if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				stream = httpConnection.getInputStream();
-			}
+			//if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				
+			//}			
+			stream = httpConnection.getInputStream();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

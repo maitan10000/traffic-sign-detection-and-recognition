@@ -10,7 +10,15 @@ public class FavoriteJSON implements Serializable{
 	private int categoryID;
 	private String categoryName;
 	private Date modifyDate;
+	private boolean isActive;
 	
+	
+	public boolean isActive() {
+		return isActive;
+	}
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
 	public Date getModifyDate() {
 		return modifyDate;
 	}
