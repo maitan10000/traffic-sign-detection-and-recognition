@@ -58,7 +58,7 @@
             android:src="@drawable/history" />
 
         <TextView
-            android:id="@+id/TextView01"
+            android:id="@+id/txtPosition"
             android:layout_column="0"
             android:layout_gravity="right|top"
             android:layout_marginLeft="0dp"
