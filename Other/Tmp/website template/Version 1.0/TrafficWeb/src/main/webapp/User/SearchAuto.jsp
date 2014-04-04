@@ -241,6 +241,7 @@ border: red thin solid;
 							}
 							
 							init();
+							*/
 						    
 							//<!-- Resize image -->
 							function dataURItoBlob(dataURI) {
@@ -250,7 +251,7 @@ border: red thin solid;
 							        array.push(binary.charCodeAt(i));
 							    }
 							    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
-							}*/
+							}
 							
 							//<!-- Javascript function to add thumbnails and progress bars to the grid -->
 							function showThumbnails() {
@@ -286,14 +287,14 @@ border: red thin solid;
 							         ctx.drawImage(this, 0, 0, tempW, tempH);
 							         var data = canvas.toDataURL("image/jpeg");
 							         image.src = data;
-							         if($('#detect-Manual').checked)
-							         {
+							         //if($('#detect-Manual').checked)
+							        // {
 						         		var blodFile = dataURItoBlob(data);							
 								 		uploadFile(blodFile);
-							         }else
-							         {
-								         console.log('Khoanh bang tay');
-							         }
+							        // }else
+							        // {
+								      //   console.log('Khoanh bang tay');
+							        // }
 								};
 							         
 								var fileReader = new FileReader();

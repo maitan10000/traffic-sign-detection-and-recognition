@@ -4,7 +4,7 @@ $(document).ready(function(){
 	
 	
 	// === Prepare peity charts === //
-	maruti.peity();
+	//maruti.peity();
 	
 	// === Prepare the chart data ===/
 	var sin = [], cos = [];
