@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
 		// TODO Auto-generated method stub
 		final EditText txtUsername = (EditText) findViewById(R.id.txtUsername);
 		final EditText txtPassword = (EditText) findViewById(R.id.txtPassword);
-		Button btnLogin = (Button) findViewById(R.id.btnLogin);
+		Button btnLogin = (Button) findViewById(R.id.btnRegister);
 		btnLogin.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -49,10 +49,12 @@ public class LoginActivity extends Activity {
 					Toast.makeText(getApplicationContext(),
 							"Vui lòng nhập tên tài khoản", Toast.LENGTH_SHORT)
 							.show();
+					txtUsername.requestFocus();
 				} else if (password.length() == 0) {
 					Toast.makeText(getApplicationContext(),
 							"Vui lòng nhập mật khẩu", Toast.LENGTH_SHORT)
 							.show();
+					txtPassword.requestFocus();
 				} else { // if username and password is entered
 					// url login
 					String urlLogin = GlobalValue.getServiceAddress()
@@ -77,8 +79,8 @@ public class LoginActivity extends Activity {
 								// save userID into sahre preference
 								SharedPreferences sharedPreferences = getSharedPreferences(Properties.SHARE_PREFERENCE_LOGIN,MODE_PRIVATE );
 								SharedPreferences.Editor editor = sharedPreferences.edit();
-								editor.putString("user", username);
-								editor.putBoolean("isSync", false);
+								editor.putString(Properties.SHARE_PREFERENCE__KEY_USER, username);
+								editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, false);
 								editor.commit();
 								// Move to main activity
 								Intent nexscreen = new Intent(getApplicationContext(),MainActivity.class);

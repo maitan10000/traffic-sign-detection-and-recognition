@@ -27,12 +27,14 @@ import com.trafficsign.json.TrafficInfoShortJSON;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private ProgressDialog dialog;
+	private int networkFlag;
 
 	public HttpDatabaseUtil(Context context) {
 		this.context = context;
@@ -41,7 +43,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... params) {
-		if (NetUtil.isAccessService() == true) {
+		if (NetUtil.networkState(context) > networkFlag) {
 			// TODO Auto-generated method stub
 			Gson gson = new Gson();
 			// URL for service
@@ -109,6 +111,14 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPreExecute() {
+		final SharedPreferences pref = context.getSharedPreferences(
+				Properties.SHARE_PREFERENCE_SETTING, Context.MODE_PRIVATE);
+		boolean wifiStatus = pref.getBoolean(
+				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
+		networkFlag = 1;
+		if (wifiStatus == false) {
+			networkFlag = 0;
+		}
 		if (dialog != null) {
 			dialog.setMessage("Loading");
 			dialog.setCancelable(false);
