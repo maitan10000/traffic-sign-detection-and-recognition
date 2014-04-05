@@ -21,11 +21,7 @@
 	<!--Header-part-->
 	<div id="header" >
 		<div id="header-inner">
-			<!-- <img src="Admin/Content/images/logo.png" style="width: 100px; height: 100px; position:fix;"/> -->
-			<h4>
-				<!--  <a href="#">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
-				LÝ</a>
-			-->
+			<h4>				
 				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
 			</h4>
 		</div>
@@ -49,17 +45,17 @@
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="" data-toggle="modal" href="#logout-Modal"><i
+			<li class=""><a title="" href="#"><i
 					class="icon icon-share-alt"></i> <span class="text">Đăng
 						xuất</span></a></li>
-		</ul>		
+		</ul>
 	</div>
 
 	<!--close-top-Header-menu-->
 
 	<div id="sidebar">
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
-			Trang chủ</a>
+			Dashboard2</a>
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
@@ -88,70 +84,7 @@
 					class="tip-bottom"><i class="icon-home"></i>Trang chủ</a>
 			</div>
 		</div>
-		<div class="container-fluid">
-
-			<div class="row-fluid">
-				<div class="widget-box">
-					<div class="widget-title">
-						<span class="icon"><i class="icon-tasks"></i></span>
-						<h5>Site Analytics</h5>
-						<div class="buttons">
-							<a href="#" class="btn btn-mini btn-success"><i
-								class="icon-refresh"></i> Update stats</a>
-						</div>
-					</div>
-					<div class="widget-content">
-						<div class="row-fluid">
-							<div class="span8">
-								<div class="chart"></div>
-							</div>
-							<div class="span4">
-								<ul class="stat-boxes2">
-									<li>
-										<div class="left peity_bar_neutral">
-											<span><span style="display: none;">2,4,9,7,12,10,12</span>
-												<canvas width="50" height="24"></canvas> </span>+10%
-										</div>
-										<div class="right">
-											<strong>15598</strong> Visits
-										</div>
-									</li>
-									<li>
-										<div class="left peity_line_neutral">
-											<span><span style="display: none;">10,15,8,14,13,10,10,15</span>
-												<canvas width="50" height="24"></canvas> </span>10%
-										</div>
-										<div class="right">
-											<strong>150</strong> New Users
-										</div>
-									</li>
-									<li>
-										<div class="left peity_bar_bad">
-											<span><span style="display: none;">3,5,6,16,8,10,6</span>
-												<canvas width="50" height="24"></canvas> </span>-40%
-										</div>
-										<div class="right">
-											<strong>4560</strong> Orders
-										</div>
-									</li>
-									<li>
-										<div class="left peity_line_good">
-											<span><span style="display: none;">12,6,9,13,14,10,17</span>
-												<canvas width="50" height="24"></canvas> </span>+60%
-										</div>
-										<div class="right">
-											<strong>936</strong> Register
-										</div>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-
+		<div class="container-fluid"></div>
 	</div>
 	<div class="row-fluid">
 		<div id="footer" class="span12">
@@ -197,21 +130,6 @@
 			document.gomenu.selector.selectedIndex = 2;
 		}
 	</script>
-
-	<!-- Logout confirm  modal -->
-	<div id="logout-Modal" class="modal hide">
-		<div class="modal-header">
-			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h3>Xác nhận đăng xuất</h3>
-		</div>
-		<div class="modal-body">
-			<p>Bạn có chắc chắn muốn đăng xuất</p>
-		</div>
-		<div class="modal-footer">
-			<a class="btn btn-primary" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>">Đồng ý</a>
-			<a data-dismiss="modal" class="btn" href="#">Hủy</a>
-		</div>
-	</div>
 </body>
 
 </html>

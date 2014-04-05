@@ -92,11 +92,12 @@
 <body>
 
 	<!--Header-part-->
-	<div id="header">
-		<h4>
-			<a href="dashboard.html">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
-				LÝ</a>
-		</h4>
+	<div id="header" >
+		<div id="header-inner">
+			<h4>				
+				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+			</h4>
+		</div>
 	</div>
 	<!--close-Header-part-->
 
@@ -126,13 +127,13 @@
 
 	<div id="sidebar">
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
-			Trang chủ</a>
+			Dashboard2</a>
 		<ul>
 			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="#"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
+			<li><a href="#"><i class="icon icon-user"></i> <span>Quản
 						lý người dùng</span></a></li>
 			<li><a
 				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
