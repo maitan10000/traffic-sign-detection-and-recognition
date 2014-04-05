@@ -29,10 +29,9 @@
 <body>
 	<!--Header-part-->
 	<div id="header">
-		<h4>
-			<a href="dashboard.html">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
-				LÝ</a>
-		</h4>
+		<h4>				
+				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+			</h4>
 	</div>
 	<!--close-Header-part-->
 
@@ -69,7 +68,27 @@
 
 		</ul>
 	</div>
+	<div id="sidebar">
+		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
+			Dashboard2</a>
+		<ul>
+			<li class="active"><a href="index-2.html"><i
+					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
+						lý biển báo</span></a></li>
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
+					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>
+			<li><a
+				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
+					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
+						hồi</span></a></li>
+			<li><a href="grid.html"><i class="icon icon-signal"></i> <span>Thống
+						kê</span></a></li>
+			<li><a href="grid.html"><i class="icon icon-cog"></i> <span>Thiết
+						lập hệ thống</span></a></li>
 
+		</ul>
+	</div>
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">

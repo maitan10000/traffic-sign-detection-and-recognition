@@ -37,11 +37,12 @@ width: 800px;
 %>
 <body>
 	<!--Header-part-->
-	<div id="header">
-		<h4>
-			<a href="dashboard.html">HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN
-				LÝ</a>
-		</h4>
+	<div id="header" >
+		<div id="header-inner">
+			<h4>				
+				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+			</h4>
+		</div>
 	</div>
 	<!--close-Header-part-->
 
@@ -78,7 +79,6 @@ width: 800px;
 
 		</ul>
 	</div>
-	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
