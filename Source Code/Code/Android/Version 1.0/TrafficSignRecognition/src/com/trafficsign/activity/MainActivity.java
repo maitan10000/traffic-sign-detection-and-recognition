@@ -62,27 +62,31 @@ public class MainActivity extends Activity {
 		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		user = pref.getString("user", "notLogin");
-		// sync favorite and history
-		SharedPreferences sharedPreferences = getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		boolean isSync = sharedPreferences.getBoolean("isSync", true);
-		if (isSync == false) {
-			HttpSyncUtil httpSyncUtil = new HttpSyncUtil(MainActivity.this);
-			httpSyncUtil.setUser(this.user);
-			httpSyncUtil.setHttpListener(new IAsyncHttpListener() {
+		user = pref
+				.getString(Properties.SHARE_PREFERENCE__KEY_USER, "notLogin");
+		if ("notLogin".equals(user) == false) {
+			// sync favorite and history
+			SharedPreferences sharedPreferences = getSharedPreferences(
+					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+			boolean isSync = sharedPreferences.getBoolean("isSync", true);
+			if (isSync == false) {
+				HttpSyncUtil httpSyncUtil = new HttpSyncUtil(MainActivity.this);
+				httpSyncUtil.setUser(this.user);
+				httpSyncUtil.setHttpListener(new IAsyncHttpListener() {
 
-				@Override
-				public void onComplete(String respond) {
-					// TODO Auto-generated method stub
-					Editor editor = pref.edit();
-					editor.remove("isSync");
-					editor.putBoolean("isSync", true);
-					editor.commit();
-				}
-			});
-			httpSyncUtil.execute();
+					@Override
+					public void onComplete(String respond) {
+						// TODO Auto-generated method stub
+						Editor editor = pref.edit();
+						editor.remove("isSync");
+						editor.putBoolean("isSync", true);
+						editor.commit();
+					}
+				});
+				httpSyncUtil.execute();
+			}
 		}
+
 		// Get and set event onclick for manual search button
 		ImageButton imgBtnManualSearch = (ImageButton) findViewById(R.id.imageButtonManualSearch);
 		imgBtnManualSearch.setOnClickListener(new View.OnClickListener() {
@@ -149,50 +153,65 @@ public class MainActivity extends Activity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		// if user has been logged in
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		String user = pref.getString("user", "notLogin");
+		user = pref
+				.getString(Properties.SHARE_PREFERENCE__KEY_USER, "notLogin");
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		
+		// if user has been logged in
+
 		if ("notLogin".equals(user) == false) {
-			MenuItem item = menu.getItem(0);
-			item.setTitle("Đăng xuất");
+			getMenuInflater().inflate(R.menu.main_login, menu);
+		} else {
+			getMenuInflater().inflate(R.menu.main_not_login, menu);
 		}
 
 		return true;
+	}
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		switch (item.getItemId()) {
-		case R.id.action_checklogin:
+		if (item.getItemId() == R.id.action_checklogin) {
 			// user has been logged in
+
+			Intent nextScreen = new Intent(getApplicationContext(),
+					LoginActivity.class);
+			finish();
+			startActivity(nextScreen);
+
+		} else if (item.getItemId() == R.id.action_checkLogout) {
 			SharedPreferences pref = getSharedPreferences(
 					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-			String user = pref.getString("user", "notLogin");
-			if ("notLogin".equals(user) == false) {
-				Editor editor = pref.edit();
-				editor.remove("user");
-				editor.remove("isSync");
-				editor.putBoolean("isSync", true);
-				editor.commit();
-				this.user = "notLogin";
-				item.setTitle(R.string.login);
-
-			} else {
-				
-				Intent nextScreen = new Intent(getApplicationContext(),
-						LoginActivity.class);
-				finish();
-				startActivity(nextScreen);
-			}
-
-		default:
-			return super.onOptionsItemSelected(item);
+			Editor editor = pref.edit();
+			editor.remove(Properties.SHARE_PREFERENCE__KEY_USER);
+			editor.remove(Properties.SHARE_PREFERENCE__KEY_SYNC);
+			editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, true);
+			editor.commit();
+			this.user = "notLogin";
+		} else if (item.getItemId() == R.id.action_settings) {
+			Intent nextScreen = new Intent(getApplicationContext(),
+					SettingActivity.class);
+			startActivity(nextScreen);
+		} else if (item.getItemId() == R.id.action_register) {
+			Intent nextScreen = new Intent(getApplicationContext(),
+					RegisterActivity.class);
+			startActivity(nextScreen);
 		}
+		return true;
 
 	}
 

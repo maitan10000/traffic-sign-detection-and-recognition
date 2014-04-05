@@ -15,6 +15,11 @@ public final class Properties {
 	
 	//Share preference constant
 	public static final String SHARE_PREFERENCE_LOGIN = "pref_login";
+	public static final String SHARE_PREFERENCE_SETTING = "pref_setting";
+	public static final String SHARE_PREFERENCE_KEY_WIFI = "wifiSetting";
+	public static final String SHARE_PREFERENCE__KEY_NOTI = "notiSetting";
+	public static final String SHARE_PREFERENCE__KEY_USER = "userID";
+	public static final String SHARE_PREFERENCE__KEY_SYNC = "isSync";
 	
 	//folder constant
 	public static final String APP_FOLDER = "TSRT/";
@@ -61,6 +66,8 @@ public final class Properties {
 
 	// for login
 	public final static String MANAGE_LOGIN = "rest/Manage/Login";
+	
+
 
 }
 

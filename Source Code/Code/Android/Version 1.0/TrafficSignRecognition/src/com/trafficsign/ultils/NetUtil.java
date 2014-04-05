@@ -12,7 +12,7 @@ import android.net.NetworkInfo;
 public class NetUtil {
 	/**
 	 * Check connection state Return 2 if wifi Return 1 if not type wifi Return
-	 * 0 if no internet connection
+	 * 0 if can not access to server
 	 */
 	public static int networkState(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
@@ -30,16 +30,16 @@ public class NetUtil {
 	}
 
 	public static Boolean isAccessService() {
-		try{
-			//Test connect with timeout 2s
-	        URL myUrl = new URL(GlobalValue.getServiceAddress());
-	        URLConnection connection = myUrl.openConnection();
-	        connection.setConnectTimeout(2000);
-	        connection.connect();
-	        return true;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+		try {
+			// Test connect with timeout 2s
+			URL myUrl = new URL(GlobalValue.getServiceAddress());
+			URLConnection connection = myUrl.openConnection();
+			connection.setConnectTimeout(2000);
+			connection.connect();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 }
