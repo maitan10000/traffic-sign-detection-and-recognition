@@ -89,11 +89,15 @@ legend {
 
 #canvasDraw
 {
-border: red thin solid;
+	border: red thin solid;
+}
+.hidden-class
+{
+	display: none;
 }
 
 </style>
-<title>Traffic Sign Recognition</title>
+<title>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</title>
 </head>
 <body>
 	<div class="wrapper">
@@ -109,6 +113,11 @@ border: red thin solid;
 					<!--   _____________ -->
 					<%
 						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
+					if(userID == null)
+					{
+						userID = "";
+					}
+					
 					if(userID != null && !userID.isEmpty())
 					{
 					%>
@@ -161,8 +170,8 @@ border: red thin solid;
 					<div class="content-title">NHẬN DIỆN TỰ ĐỘNG</div>
 					<div class="list-result">
 						<fieldset>
-							<legend>Kết quả: <button id="btn-wrong-recognize" class="btn btn-warning"
-												onclick="reportWrongRecognize(this.value); return false;" disabled="disabled">Sai
+							<legend>Kết quả: <button id="btn-wrong-recognize" class="btn btn-warning hidden-class"
+												onclick="reportWrongRecognize(this.value); return false;" >Sai
 												kết quả</button></legend>
 							<ol>
 							</ol>
@@ -195,7 +204,7 @@ border: red thin solid;
 
 						<script>
 						var server = '<%=GlobalValue.getServiceAddress()%>';
-						var userID = 'user1';
+						var userID = '<%=userID%>';
 
 							//<!--  Detect Manual -->	
 							/*						
@@ -338,15 +347,19 @@ border: red thin solid;
 
 							function showResult(resultData, fileName) {
 								//add list result
-								var resultJSON = JSON.parse(resultData);
-								if(resultJSON.resultID != -1)
+								var resultJSON = JSON.parse(resultData);								
+								if(userID != "" && resultJSON.resultID != -1)
 								{
 									$('#btn-wrong-recognize').val(resultJSON.resultID);
-									$('#btn-wrong-recognize').prop("disabled",false);
+									$('#btn-wrong-recognize').removeClass("hidden-class");
+									//$('#btn-wrong-recognize').prop("disabled",false);
 								}else
 								{
-									$('#btn-wrong-recognize').prop("disabled",true);
+									$('#btn-wrong-recognize').addClass("hidden-class");
+									//$('#btn-wrong-recognize').prop("disabled",true);
+									
 								}
+								
 								
 								$('.list-result ol').html('');
 								var listTraffic = resultJSON.listTraffic;
@@ -458,6 +471,7 @@ border: red thin solid;
 									},
 									success : function(result) {
 										$('#reportModal').modal('hide');
+										$('#btn-wrong-recognize').addClass("hidden-class");
 									}
 
 								});

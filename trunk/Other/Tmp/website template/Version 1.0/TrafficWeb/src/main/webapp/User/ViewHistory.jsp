@@ -103,6 +103,10 @@ legend {
 					<!--   _____________ -->
 					<%
 						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
+					if(userID == null)
+					{
+						userID = "";
+					}
 					if(userID != null && !userID.isEmpty())
 					{
 					%>
