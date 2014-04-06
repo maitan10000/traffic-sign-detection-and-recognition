@@ -67,8 +67,8 @@ public class UserController extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		PrintWriter out = response.getWriter();
 		// create sample session for testing
-		HttpSession sessionTest = request.getSession(true);
-		sessionTest.setAttribute("user", "user1");
+		//HttpSession sessionTest = request.getSession(true);
+		//sessionTest.setAttribute("user", "user1");
 		try {
 			// get action parameter
 			String action = request.getParameter("action");
@@ -173,7 +173,7 @@ public class UserController extends HttpServlet {
 				// get trafficID and userID
 				String trafficID = request.getParameter("trafficID");
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
@@ -205,7 +205,7 @@ public class UserController extends HttpServlet {
 				// get trafficID and userID
 				String trafficID = request.getParameter("trafficID");
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
@@ -237,7 +237,7 @@ public class UserController extends HttpServlet {
 				// get trafficID and userID
 				String trafficID = request.getParameter("trafficID");
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				if (userID == null) {
 					out.println("notlogin");
 				} else {
@@ -268,7 +268,7 @@ public class UserController extends HttpServlet {
 			if ("viewFavorite".equals(action)
 					|| "viewFavoriteShort".equals(action)) {
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
@@ -304,7 +304,7 @@ public class UserController extends HttpServlet {
 			} else if (Constants.ACTION_HISTORY_LIST.equals(action)) {
 				// if action is view history
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				if (userID == null) {
 					response.sendRedirect(Constants.SESSION_ERROR_PAGE);
 				} else {
