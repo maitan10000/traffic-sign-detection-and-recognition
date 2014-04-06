@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,6 +35,7 @@ import org.opencv.objdetect.Objdetect;
 import org.opencv.core.*;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.LocateJSON;
@@ -146,7 +148,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
-		user = pref.getString("user", "");
+		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_camera);
 
@@ -247,9 +249,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		final ToggleButton btnAuto = (ToggleButton) findViewById(R.id.cameraType);
 		isAuto = btnAuto.isChecked();
 		btnAuto.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
 				// TODO Auto-generated method stub
 				isAuto = btnAuto.isChecked();
 			}
@@ -427,11 +430,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					Toast.LENGTH_SHORT).show();
 		}
 		isTaken = true;
-		// Create dialog
-		dialog = new ProgressDialog(CameraActivity.this);
-		dialog.setMessage("Vui lòng đợi trong giây lát");
-		dialog.setCancelable(false);
 
+		runOnUiThread(new Runnable() {
+			public void run() {
+				// Create dialog
+				dialog = new ProgressDialog(CameraActivity.this);
+				dialog.setMessage("Vui lòng đợi trong giây lát");
+				dialog.setCancelable(false);
+			}
+		});
 		// upload file ****************************
 		final String upLoadServerUri = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_AUTO;
@@ -447,7 +454,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							}
 						}
 					});
-					
 
 					Thread.sleep(2000);
 					// Resize
@@ -477,7 +483,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						tempListResultInput.add(tempResultInput);
 					}
 					// JSON string listlocate
-					Gson gson = new Gson();
+					Gson gson = new GsonBuilder().setDateFormat(
+							DateFormat.FULL, DateFormat.FULL).create();
 					String listLocateJSON = gson.toJson(tempListResultInput);
 					// if access to server ok
 					if (NetUtil.networkState(CameraActivity.this) > networkFlag) {
@@ -528,7 +535,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									.getListTraffic()));
 							resultDB.setResultID(resultJson.getResultID());
 							resultDB.setUploadedImage(fileName);
-							// DBUtil.addResult(resultDB, user);
+							DBUtil.addResult(resultDB, user);
 							// create intent
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
@@ -547,7 +554,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										}
 									}
 								});
-								
 
 								startActivity(nextScreen);
 							} catch (IOException e) {
@@ -561,7 +567,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					} else { // in case can not access to server
 						isTaken = false;
 						// save searchInfo to DB
-						DBUtil.saveSearchInfo(fileName, listLocateJSON);
+						DBUtil.saveSearchInfo(fileName, listLocateJSON, user);
 						Intent nextScreen = new Intent(getApplicationContext(),
 								MainActivity.class);
 						runOnUiThread(new Runnable() {
@@ -575,7 +581,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										Toast.LENGTH_SHORT).show();
 							}
 						});
-						
+
 						finish();
 						startActivity(nextScreen);
 					}

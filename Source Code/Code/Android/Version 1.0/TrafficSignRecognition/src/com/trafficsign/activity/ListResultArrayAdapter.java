@@ -45,7 +45,13 @@ public class ListResultArrayAdapter extends ArrayAdapter<ResultInput> {
 		ImageView img = (ImageView) convertView.findViewById(R.id.trafficImage);
 		// set info
 		name.setText(resultInput.getTrafficName());
-		id.setText(resultInput.getTrafficID());
+		if (resultInput.getTrafficID() != null
+				&& "".equals(resultInput.getTrafficID()) == false) {
+			id.setText(resultInput.getTrafficID());
+		} else {
+			id.setText("Không rõ");
+		}
+
 		if (resultInput.getTrafficID() != null
 				|| !"".equals(resultInput.getTrafficID())) {
 			// get image path
@@ -54,6 +60,8 @@ public class ListResultArrayAdapter extends ArrayAdapter<ResultInput> {
 					+ ".jpg";
 			Bitmap bitmap = ImageUtils.convertToBimap(imagePath);
 			img.setImageBitmap(bitmap);
+		} else {
+			img.setImageResource(R.drawable.cameraicon);
 		}
 
 		return convertView;
