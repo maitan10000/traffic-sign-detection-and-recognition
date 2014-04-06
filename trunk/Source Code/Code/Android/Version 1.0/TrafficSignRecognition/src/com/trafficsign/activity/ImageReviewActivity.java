@@ -32,6 +32,7 @@ import com.trafficsign.ultils.Properties;
 import com.trafficsign.ultils.UploadUtils;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,60 +47,96 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ImageReviewActivity extends Activity {
-String imagePath;
-private String user = "";
-static {
-	if (!OpenCVLoader.initDebug())
-		Log.d("debug", "Unable to load OpenCV List result");
-	else
-		Log.d("debug", "OpenCV loaded List result");
-}
-
-private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-	@Override
-	public void onManagerConnected(int status) {
-		switch (status) {
-		case LoaderCallbackInterface.SUCCESS: {
-			// Log.i(TAG, "OpenCV loaded successfully");
-			// mOpenCvCameraView.enableView();
-			// mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
-		}
-			break;
-		default: {
-			super.onManagerConnected(status);
-		}
-			break;
-		}
+	String imagePath;
+	ProgressDialog dialog;
+	private String user = "";
+	private int networkFlag;
+	static {
+		if (!OpenCVLoader.initDebug())
+			Log.d("debug", "Unable to load OpenCV List result");
+		else
+			Log.d("debug", "OpenCV loaded List result");
 	}
-};
+
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+		@Override
+		public void onManagerConnected(int status) {
+			switch (status) {
+			case LoaderCallbackInterface.SUCCESS: {
+				// Log.i(TAG, "OpenCV loaded successfully");
+				// mOpenCvCameraView.enableView();
+				// mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
+			}
+				break;
+			default: {
+				super.onManagerConnected(status);
+			}
+				break;
+			}
+		}
+	};
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.activity_image_review);
-	    // get user
-	    final SharedPreferences pref = getSharedPreferences(
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_image_review);
+		// get network setting
+		final SharedPreferences pref2 = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+		boolean wifiStatus = pref2.getBoolean(
+				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
+		networkFlag = 1;
+		if (wifiStatus == false) {
+			networkFlag = 0;
+		}
+		// get user
+		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
 		user = pref.getString("user", "");
-	    // TODO Auto-generated method stub
+		// TODO Auto-generated method stub
 		Intent intent = getIntent();
-		 imagePath = intent.getStringExtra("imagePath");
+		imagePath = intent.getStringExtra("imagePath");
 		Bitmap image = BitmapFactory.decodeFile(imagePath);
 		// set image to imageview
 		ImageView imageView = (ImageView) findViewById(R.id.imageUpload);
 		imageView.setImageBitmap(image);
+
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		// Create dialog
+		dialog = new ProgressDialog(ImageReviewActivity.this);
+		dialog.setMessage("Vui lòng đợi trong giây lát");
+		dialog.setCancelable(false);
 		// upload file ****************************
 		final String upLoadServerUri = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_AUTO;
 		new Thread(new Runnable() {
 
-
 			public void run() {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+				runOnUiThread(new Runnable() {
+					public void run() {
+						if (dialog != null) {
+							dialog.show();
+						}
+					}
+				});
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				SimpleDateFormat sdf = new SimpleDateFormat(
+						"yyyy-MM-dd_HH-mm-ss");
 				String currentDateandTime = sdf.format(new Date());
-				String fileName = GlobalValue.getAppFolder() + Properties.SAVE_IMAGE_FOLDER
-						+ currentDateandTime + ".jpg";
+				String fileName = GlobalValue.getAppFolder()
+						+ Properties.SAVE_IMAGE_FOLDER + currentDateandTime
+						+ ".jpg";
 				// coppy image to saveimage folder
 				Helper.copyFileUsingStream(imagePath, fileName);
 				// get screen size
@@ -121,24 +158,22 @@ private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 				ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();
 				parameters.add(new BasicNameValuePair("userID", user));
 				// if access to server ok
-				if (NetUtil.networkState(ImageReviewActivity.this) > Properties.INTERNET_SETTING) {
-
+				if (NetUtil.networkState(ImageReviewActivity.this) > networkFlag) {
 
 					String jsonString = UploadUtils.uploadFile(fileName,
 							upLoadServerUri, parameters);
 
 					if (jsonString.contains("null")
 							|| jsonString.trim().isEmpty()) {
-						Toast.makeText(getApplicationContext(),
-								jsonString, Toast.LENGTH_LONG)
-								.show();
+						Toast.makeText(getApplicationContext(), jsonString,
+								Toast.LENGTH_LONG).show();
 
 					} else {
-						Log.e("JsonString: " , jsonString);
+						Log.e("JsonString: ", jsonString);
 						Gson gson = new Gson();
 						ResultJSON resultJson = new ResultJSON();
-						resultJson = gson.fromJson(jsonString,
-								ResultJSON.class);
+						resultJson = gson
+								.fromJson(jsonString, ResultJSON.class);
 						// ResultInput resultTmp = resultInput.get(0);
 						// save result to db in mobile
 						ResultDB resultDB = new ResultDB();
@@ -148,18 +183,24 @@ private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 								.getListTraffic()));
 						resultDB.setResultID(resultJson.getResultID());
 						resultDB.setUploadedImage(fileName);
-						//DBUtil.addResult(resultDB, user);
+						// DBUtil.addResult(resultDB, user);
 						// create intent
-						Intent nextScreen = new Intent(
-								getApplicationContext(),
+						Intent nextScreen = new Intent(getApplicationContext(),
 								ListResultActivity.class);
 						nextScreen.putExtra("imagePath", fileName);
 						/* put resultInput to the next screen */
 						byte[] dataBytes;
 						try {
-							dataBytes = ConvertUtil
-									.object2Bytes(resultJson);
+							dataBytes = ConvertUtil.object2Bytes(resultJson);
 							nextScreen.putExtra("resultJson", dataBytes);
+							runOnUiThread(new Runnable() {
+								public void run() {
+									if (dialog != null) {
+										dialog.dismiss();
+									}
+								}
+							});
+							finish();
 							startActivity(nextScreen);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -170,11 +211,22 @@ private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 						}
 					}
 				} else { // in case can not access to server
-					isTaken = false;
 					// save searchInfo to DB
 					DBUtil.saveSearchInfo(fileName, "");
 					Intent nextScreen = new Intent(getApplicationContext(),
 							MainActivity.class);
+					runOnUiThread(new Runnable() {
+						public void run() {
+							if (dialog != null) {
+								dialog.dismiss();
+								Toast.makeText(
+										getApplicationContext(),
+										"Không thể kết nổi tới máy chủ hoặc bị giới hạn gói dữ liệu. Kết quả sẽ được trả về sau",
+										Toast.LENGTH_SHORT).show();
+							}
+						}
+					});
+					finish();
 					startActivity(nextScreen);
 				}
 

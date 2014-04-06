@@ -45,6 +45,8 @@
          android:layout_alignLeft="@+id/take"
          android:layout_alignParentBottom="true"
          android:layout_marginBottom="20dp"
-         android:text="ToggleButton" />
+         android:text="ToggleButton" 
+         android:textOn="@string/textAutoOn"
+         android:textOff="@string/textAutoOff"/>
 
 </RelativeLayout>
