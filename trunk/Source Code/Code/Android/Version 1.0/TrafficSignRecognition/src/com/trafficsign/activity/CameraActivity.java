@@ -1,6 +1,7 @@
 package com.trafficsign.activity;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -53,9 +54,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.hardware.Camera.Size;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,6 +71,7 @@ import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
@@ -87,21 +95,22 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private CascadeClassifier type2Detector = null;
 	private int blinkCount = 0;
 	private ImageButton btnTakeImage;
+	private ImageButton btnUpload;
 	private String user = "";
 
 	static {
-	   if (!OpenCVLoader.initDebug())
-            Log.d("debug", "Unable to load OpenCV");
-        else
-            Log.d("debug", "OpenCV loaded");
+		if (!OpenCVLoader.initDebug())
+			Log.d("debug", "Unable to load OpenCV");
+		else
+			Log.d("debug", "OpenCV loaded");
 	}
-	
+
 	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
 		@Override
 		public void onManagerConnected(int status) {
 			switch (status) {
 			case LoaderCallbackInterface.SUCCESS: {
-				//Log.i(TAG, "OpenCV loaded successfully");
+				// Log.i(TAG, "OpenCV loaded successfully");
 				mOpenCvCameraView.enableView();
 				mOpenCvCameraView.setOnTouchListener(CameraActivity.this);
 			}
@@ -131,15 +140,50 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		Log.i(TAG, "Create successully");
+		// set event for upload button
+		btnUpload = (ImageButton) findViewById(R.id.upload);
+		btnUpload.setOnClickListener(new OnClickListener() {
 
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(
+						Intent.ACTION_PICK,
+						android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+				startActivityForResult(i, 1);
+			}
+		});
+		// set event onclick for button take
 		btnTakeImage = (ImageButton) findViewById(R.id.take);
 		btnTakeImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				captureAndUploadImage(listLocate);
+				
 			}
 		});
-		// end upload file **************************************
+
+	}
+	// on event get selected image ok
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		 if (resultCode == RESULT_OK) {
+		        if (requestCode == 1) {
+		            Uri selectedImageUri = data.getData();
+		           
+		                String selectedImagePath = getPath(selectedImageUri);
+		                Log.e("image", selectedImagePath);
+		                Intent nextScreen = new Intent(getApplicationContext(),
+								ImageReviewActivity.class);
+		                nextScreen.putExtra("imagePath", selectedImagePath);
+		                finish();
+						startActivity(nextScreen);
+		            
+		        }
+		    }
 	}
 
 	@Override
@@ -182,8 +226,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	public void onResume() {
 		super.onResume();
 		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-//		OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
-//				mLoaderCallback);
+		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
+		// mLoaderCallback);
 	}
 
 	public void onDestroy() {
@@ -359,7 +403,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		isTaken = true;
 
 		// upload file ****************************
-		final String upLoadServerUri = serviceIp
+		final String upLoadServerUri = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_AUTO;
 		new Thread(new Runnable() {
 			volatile boolean running = true;
@@ -381,8 +425,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 					// create post data
 					ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();
-					parameters.add(new BasicNameValuePair("userID",
-							user));
+					parameters.add(new BasicNameValuePair("userID", user));
 					ArrayList<ResultInput> tempListResultInput = new ArrayList<ResultInput>();
 					for (Rect rect : listLocateInput) {
 						ResultInput tempResultInput = new ResultInput();
@@ -404,7 +447,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 						jsonString = UploadUtils.uploadFile(fileName,
 								upLoadServerUri, parameters);
-
+						Log.e("jsonUpload", jsonString);
 						if (jsonString.contains("null")
 								|| jsonString.trim().isEmpty()) {
 							runOnUiThread(new Runnable() {
@@ -442,10 +485,11 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							ResultDB resultDB = new ResultDB();
 							resultDB.setCreateDate(resultJson.getCreateDate());
 							resultDB.setCreator(resultJson.getCreator());
-							resultDB.setLocate(gson.toJson(resultJson.getListTraffic()));
+							resultDB.setLocate(gson.toJson(resultJson
+									.getListTraffic()));
 							resultDB.setResultID(resultJson.getResultID());
 							resultDB.setUploadedImage(fileName);
-							DBUtil.addResult(resultDB, user);
+							//DBUtil.addResult(resultDB, user);
 							// create intent
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
@@ -454,7 +498,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							/* put resultInput to the next screen */
 							byte[] dataBytes;
 							try {
-								dataBytes = ConvertUtil.object2Bytes(resultJson);
+								dataBytes = ConvertUtil
+										.object2Bytes(resultJson);
 								nextScreen.putExtra("resultJson", dataBytes);
 								startActivity(nextScreen);
 							} catch (IOException e) {
@@ -468,7 +513,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					} else { // in case can not access to server
 						isTaken = false;
 						// save searchInfo to DB
-						 DBUtil.saveSearchInfo(fileName, listLocateJSON);
+						DBUtil.saveSearchInfo(fileName, listLocateJSON);
 						Intent nextScreen = new Intent(getApplicationContext(),
 								MainActivity.class);
 						startActivity(nextScreen);
@@ -481,5 +526,23 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 			}
 		}).start();
+	}
+
+	/**
+	 * helper to retrieve the path of an image URI
+	 */
+	public String getPath(Uri uri) {
+		if (uri == null) {
+			return null;
+		}
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery(uri, projection, null, null, null);
+		if (cursor != null) {
+			int column_index = cursor
+					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+			cursor.moveToFirst();
+			return cursor.getString(column_index);
+		}
+		return uri.getPath();
 	}
 }
