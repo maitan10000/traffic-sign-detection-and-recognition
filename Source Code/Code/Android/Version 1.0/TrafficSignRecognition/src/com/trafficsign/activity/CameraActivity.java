@@ -50,6 +50,7 @@ import com.trafficsign.view.CameraView;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -74,14 +75,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.view.View.OnTouchListener;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import static com.trafficsign.ultils.Properties.*;
 
 public class CameraActivity extends Activity implements CvCameraViewListener2,
 		OnTouchListener {
+	ProgressDialog dialog;
+	private int networkFlag;
 	private int count = 0;
 	private boolean isAuto = false;
 	private boolean flag = false;
@@ -128,6 +134,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// get network setting
+		final SharedPreferences pref2 = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+		boolean wifiStatus = pref2.getBoolean(
+				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
+		networkFlag = 1;
+		if (wifiStatus == false) {
+			networkFlag = 0;
+		}
 		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
@@ -160,30 +175,31 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			@Override
 			public void onClick(View view) {
 				captureAndUploadImage(listLocate);
-				
+
 			}
 		});
 
 	}
+
 	// on event get selected image ok
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		 if (resultCode == RESULT_OK) {
-		        if (requestCode == 1) {
-		            Uri selectedImageUri = data.getData();
-		           
-		                String selectedImagePath = getPath(selectedImageUri);
-		                Log.e("image", selectedImagePath);
-		                Intent nextScreen = new Intent(getApplicationContext(),
-								ImageReviewActivity.class);
-		                nextScreen.putExtra("imagePath", selectedImagePath);
-		                finish();
-						startActivity(nextScreen);
-		            
-		        }
-		    }
+		if (resultCode == RESULT_OK) {
+			if (requestCode == 1) {
+				Uri selectedImageUri = data.getData();
+
+				String selectedImagePath = getPath(selectedImageUri);
+				Log.e("image", selectedImagePath);
+				Intent nextScreen = new Intent(getApplicationContext(),
+						ImageReviewActivity.class);
+				nextScreen.putExtra("imagePath", selectedImagePath);
+				finish();
+				startActivity(nextScreen);
+
+			}
+		}
 	}
 
 	@Override
@@ -228,6 +244,16 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
 		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
 		// mLoaderCallback);
+		final ToggleButton btnAuto = (ToggleButton) findViewById(R.id.cameraType);
+		isAuto = btnAuto.isChecked();
+		btnAuto.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
+				isAuto = btnAuto.isChecked();
+			}
+		});
 	}
 
 	public void onDestroy() {
@@ -250,7 +276,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 	Mat frame;
 	ArrayList<Rect> listLocate;
-	
+
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
 		if (isTaken == false) {
@@ -327,25 +353,25 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 		// Begin detect
 		{
-			listLocate = new ArrayList<Rect>();			
+			listLocate = new ArrayList<Rect>();
 			Rect[] tempResult = detectTS(type1Detector, frame);
 			// copy result
-			
+
 			for (int i = 0; i < tempResult.length; i++) {
 				listLocate.add((Rect) tempResult[i]);
 			}
-			
+
 			tempResult = detectTS(type2Detector, frame);
 			for (int i = 0; i < tempResult.length; i++) {
 				listLocate.add((Rect) tempResult[i]);
-			}			
+			}
 
 			// Draw detect area
 			for (int i = 0; i < listLocate.size(); i++) {
 				Core.rectangle(frame, listLocate.get(i).tl(), listLocate.get(i)
 						.br(), new Scalar(204, 51, 204), 3);
 			}
-			
+
 			// Auto take picture and submit
 			count++;
 			if (listLocate.size() > 0 && count > 20 && isTaken == false
@@ -367,14 +393,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 	// detect traffic sign
 	//
-	Rect[] detectTS(CascadeClassifier detector, Mat frameInput) {		
+	Rect[] detectTS(CascadeClassifier detector, Mat frameInput) {
 		MatOfRect results = new MatOfRect();
 		org.opencv.core.Size minSize = new org.opencv.core.Size();
-		minSize.height = frameInput.width()/10;
+		minSize.height = frameInput.width() / 10;
 		minSize.width = minSize.height;
 
 		org.opencv.core.Size maxSize = new org.opencv.core.Size();
-		maxSize.height = frameInput.width()/4;
+		maxSize.height = frameInput.width() / 4;
 		maxSize.width = maxSize.height;
 		// Mat frame_gray = frame.clone();
 		// Imgproc.cvtColor(frame, frame_gray, 6);
@@ -401,6 +427,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					Toast.LENGTH_SHORT).show();
 		}
 		isTaken = true;
+		// Create dialog
+		dialog = new ProgressDialog(CameraActivity.this);
+		dialog.setMessage("Vui lòng đợi trong giây lát");
+		dialog.setCancelable(false);
 
 		// upload file ****************************
 		final String upLoadServerUri = GlobalValue.getServiceAddress()
@@ -410,6 +440,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 			public void run() {
 				try {
+					runOnUiThread(new Runnable() {
+						public void run() {
+							if (dialog != null) {
+								dialog.show();
+							}
+						}
+					});
+					
+
 					Thread.sleep(2000);
 					// Resize
 					Size cameraSize = mOpenCvCameraView.getResolution();
@@ -441,7 +480,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					Gson gson = new Gson();
 					String listLocateJSON = gson.toJson(tempListResultInput);
 					// if access to server ok
-					if (NetUtil.networkState(CameraActivity.this) > Properties.INTERNET_SETTING) {
+					if (NetUtil.networkState(CameraActivity.this) > networkFlag) {
 						parameters.add(new BasicNameValuePair("listLocate",
 								listLocateJSON));
 
@@ -489,7 +528,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									.getListTraffic()));
 							resultDB.setResultID(resultJson.getResultID());
 							resultDB.setUploadedImage(fileName);
-							//DBUtil.addResult(resultDB, user);
+							// DBUtil.addResult(resultDB, user);
 							// create intent
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
@@ -501,6 +540,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 								dataBytes = ConvertUtil
 										.object2Bytes(resultJson);
 								nextScreen.putExtra("resultJson", dataBytes);
+								runOnUiThread(new Runnable() {
+									public void run() {
+										if (dialog != null) {
+											dialog.dismiss();
+										}
+									}
+								});
+								
+
 								startActivity(nextScreen);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -516,6 +564,19 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						DBUtil.saveSearchInfo(fileName, listLocateJSON);
 						Intent nextScreen = new Intent(getApplicationContext(),
 								MainActivity.class);
+						runOnUiThread(new Runnable() {
+							public void run() {
+								if (dialog != null) {
+									dialog.dismiss();
+								}
+								Toast.makeText(
+										getApplicationContext(),
+										"Không thể kết nổi tới máy chủ hoặc bị giới hạn gói dữ liệu. Kết quả sẽ được trả về sau",
+										Toast.LENGTH_SHORT).show();
+							}
+						});
+						
+						finish();
 						startActivity(nextScreen);
 					}
 

@@ -9,5 +9,6 @@
 	<string name="login">Đăng nhập</string>
 	<string name="logout">Đăng xuất</string>
 	<string name="register">Đăng ký</string>
-	
+	<string name="textAutoOn">Auto On</string>
+	<string name="textAutoOff">Auto Off</string>
 </resources>
