@@ -62,9 +62,8 @@ public class MainActivity extends Activity {
 		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		user = pref
-				.getString(Properties.SHARE_PREFERENCE__KEY_USER, "notLogin");
-		if ("notLogin".equals(user) == false) {
+		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+		if ("".equals(user) == false) {
 			// sync favorite and history
 			SharedPreferences sharedPreferences = getSharedPreferences(
 					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
@@ -127,7 +126,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if ("notLogin".equals(user) == false) {
+				if ("".equals(user) == false) {
 					Intent nextScreen = new Intent(getApplicationContext(),
 							FavouriteActivity.class);
 					startActivity(nextScreen);
@@ -142,7 +141,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if ("notLogin".equals(user) == false) {
+				if ("".equals(user) == false) {
 					Intent nextScreen = new Intent(getApplicationContext(),
 							HistoryActivity.class);
 					startActivity(nextScreen);
@@ -158,17 +157,16 @@ public class MainActivity extends Activity {
 		super.onResume();
 		SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		user = pref
-				.getString(Properties.SHARE_PREFERENCE__KEY_USER, "notLogin");
+		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		
+
 		// if user has been logged in
 
-		if ("notLogin".equals(user) == false) {
+		if ("".equals(user) == false) {
 			getMenuInflater().inflate(R.menu.main_login, menu);
 		} else {
 			getMenuInflater().inflate(R.menu.main_not_login, menu);
@@ -176,6 +174,7 @@ public class MainActivity extends Activity {
 
 		return true;
 	}
+
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
@@ -194,14 +193,23 @@ public class MainActivity extends Activity {
 			startActivity(nextScreen);
 
 		} else if (item.getItemId() == R.id.action_checkLogout) {
-			SharedPreferences pref = getSharedPreferences(
-					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-			Editor editor = pref.edit();
-			editor.remove(Properties.SHARE_PREFERENCE__KEY_USER);
-			editor.remove(Properties.SHARE_PREFERENCE__KEY_SYNC);
-			editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, true);
-			editor.commit();
-			this.user = "notLogin";
+			if ("".equals(user)) {
+				Intent nextScreen = new Intent(getApplicationContext(),
+						LoginActivity.class);
+				finish();
+				startActivity(nextScreen);
+			} else {
+				SharedPreferences pref = getSharedPreferences(
+						Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+				Editor editor = pref.edit();
+				editor.remove(Properties.SHARE_PREFERENCE__KEY_USER);
+				editor.remove(Properties.SHARE_PREFERENCE__KEY_SYNC);
+				editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, true);
+				editor.commit();
+				this.user = "";
+				item.setTitle("Đăng nhập");
+			}
+			
 		} else if (item.getItemId() == R.id.action_settings) {
 			Intent nextScreen = new Intent(getApplicationContext(),
 					SettingActivity.class);
