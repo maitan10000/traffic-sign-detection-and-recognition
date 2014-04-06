@@ -144,6 +144,23 @@ public class DBUtil {
 		db.close();
 		return dbReturn;
 	}
+	// update traffic sign
+	public static int updateTraffic(TrafficInfoJSON trafficInfoJSON) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		ContentValues values = new ContentValues();
+		values.put("name", trafficInfoJSON.getName());
+		values.put("image", trafficInfoJSON.getImage());
+		values.put("categoryID", trafficInfoJSON.getCategoryID());
+		values.put("information", trafficInfoJSON.getInformation());
+		values.put("penaltyfee", trafficInfoJSON.getPenaltyfee());
+		// insert to DB
+		int dbReturn = db.update("trafficinformation", values, " `trafficID` LIKE '"
+				+ trafficInfoJSON.getTrafficID() + "'", null);
+		db.close();
+		return dbReturn;
+	}
 
 	// get all category
 	public static ArrayList<CategoryJSON> getAllCategory() {
@@ -311,7 +328,7 @@ public class DBUtil {
 	}
 
 	// insert to result table for autosearch later
-	public static boolean saveSearchInfo(String picturePath, String locateJSON) {
+	public static boolean saveSearchInfo(String picturePath, String locateJSON, String user) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
@@ -320,7 +337,7 @@ public class DBUtil {
 		values.put("resultID", -1);
 		values.put("uploadedImage", picturePath);
 		values.put("listTraffic", locateJSON);
-		values.put("creator", Properties.USER_NAME);
+		values.put("creator", user);
 		// get current datetime
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 				Locale.getDefault());

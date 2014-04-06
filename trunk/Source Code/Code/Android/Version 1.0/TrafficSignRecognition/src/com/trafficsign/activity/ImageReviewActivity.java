@@ -4,6 +4,7 @@ import static com.trafficsign.ultils.Properties.isTaken;
 import static com.trafficsign.ultils.Properties.serviceIp;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.trafficsign.json.LocateJSON;
 import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultInput;
@@ -93,7 +95,7 @@ public class ImageReviewActivity extends Activity {
 		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
-		user = pref.getString("user", "");
+		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		// TODO Auto-generated method stub
 		Intent intent = getIntent();
 		imagePath = intent.getStringExtra("imagePath");
@@ -170,7 +172,8 @@ public class ImageReviewActivity extends Activity {
 
 					} else {
 						Log.e("JsonString: ", jsonString);
-						Gson gson = new Gson();
+						Gson gson = new GsonBuilder().setDateFormat(
+								DateFormat.FULL, DateFormat.FULL).create();
 						ResultJSON resultJson = new ResultJSON();
 						resultJson = gson
 								.fromJson(jsonString, ResultJSON.class);
@@ -183,7 +186,7 @@ public class ImageReviewActivity extends Activity {
 								.getListTraffic()));
 						resultDB.setResultID(resultJson.getResultID());
 						resultDB.setUploadedImage(fileName);
-						// DBUtil.addResult(resultDB, user);
+						 DBUtil.addResult(resultDB, user);
 						// create intent
 						Intent nextScreen = new Intent(getApplicationContext(),
 								ListResultActivity.class);
@@ -212,7 +215,7 @@ public class ImageReviewActivity extends Activity {
 					}
 				} else { // in case can not access to server
 					// save searchInfo to DB
-					DBUtil.saveSearchInfo(fileName, "");
+					DBUtil.saveSearchInfo(fileName, "", user);
 					Intent nextScreen = new Intent(getApplicationContext(),
 							MainActivity.class);
 					runOnUiThread(new Runnable() {

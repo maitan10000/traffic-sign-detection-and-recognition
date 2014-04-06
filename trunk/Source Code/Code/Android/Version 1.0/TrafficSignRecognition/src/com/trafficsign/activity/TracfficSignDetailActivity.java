@@ -67,7 +67,15 @@ public class TracfficSignDetailActivity extends Activity {
 			// get user
 			SharedPreferences pref = getSharedPreferences(
 					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-			final String user = pref.getString("user", "notLogin");
+			final String user = pref.getString(
+					Properties.SHARE_PREFERENCE__KEY_USER, "");
+			// check favorite status to display button image
+			if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.DEACTIVE || DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
+
+				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
+			} else if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
+				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
+			}
 			btnFavorite.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -148,13 +156,7 @@ public class TracfficSignDetailActivity extends Activity {
 					}
 				}
 			});
-			// check favorite status to display button image
-			if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.DEACTIVE) {
 
-				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
-			} else if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
-				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
-			}
 			// ImageView image = (ImageView) findViewById(R.id.trafficImage);
 			TextView name = (TextView) findViewById(R.id.trafficName);
 			TextView info = (TextView) findViewById(R.id.trafficContent);

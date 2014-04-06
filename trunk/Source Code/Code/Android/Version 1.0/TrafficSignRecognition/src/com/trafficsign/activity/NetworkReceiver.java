@@ -19,6 +19,7 @@ import com.trafficsign.json.FavoriteJSON;
 import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultJSON;
 import com.trafficsign.json.ResultShortJSON;
+import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
@@ -94,7 +95,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 										.get(i).getUploadedImage(),
 										upLoadServerUri, parameters);
 								ResultJSON resultJson = new ResultJSON();
-								Gson gson = new Gson();
+								Gson gson = new GsonBuilder().setDateFormat(
+										DateFormat.FULL, DateFormat.FULL)
+										.create();
 								resultJson = gson.fromJson(jsonString,
 										ResultJSON.class);
 								byte[] dataBytes = null;
@@ -167,7 +170,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 						}
 						/* end auto search */
 						/* Sync process */
-						if ("".equals(userID)) {
+						if ("".equals(userID) == false) {
 							// Sync favorite
 							ArrayList<FavoriteJSON> listFavorite = new ArrayList<FavoriteJSON>();
 							listFavorite = DBUtil.listAllFavorite();
@@ -375,4 +378,53 @@ public class NetworkReceiver extends BroadcastReceiver {
 		}).start();
 	}
 
+	// update traffic sign from server
+	public static void updateTraffic() {
+		Gson gson = new Gson();
+		// URL for service
+		String urlGetListTraffic = Properties.serviceIp
+				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
+		String urlGetTrafficDetail = Properties.serviceIp
+				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
+		/*
+		 * get all traffic (short) from service and parse json to list
+		 * TrafficInfoJsonShort
+		 */
+
+		String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
+		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
+		Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
+		}.getType();
+		listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+				typeListTrafficShort);
+		// get each traffic details and add to DB
+		if (listInfoShortJSONs.size() > 0) {
+			String urlGetTrafficDetailFull = "";
+			int dbReturn; // variable to know db return
+			for (int i = 0; i < listInfoShortJSONs.size(); i++) {
+				urlGetTrafficDetailFull = urlGetTrafficDetail
+						+ listInfoShortJSONs.get(i).getTrafficID();
+				// get traffic detail from service and parse json
+				// TrafficInfoJson
+				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
+				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+				trafficInfoJSON = gson.fromJson(trafficJSON,
+						TrafficInfoJSON.class);
+				// add traffic to DB
+				dbReturn = DBUtil.updateTraffic(trafficInfoJSON);
+				// download image if not exist
+				String savePath = GlobalValue.getAppFolder()
+						+ Properties.MAIN_IMAGE_FOLDER
+						+ trafficInfoJSON.getTrafficID() + ".jpg";
+				File image = new File(savePath);
+				if (!image.exists()) {
+					String imageLink = Properties.serviceIp
+							+ trafficInfoJSON.getImage();
+					HttpUtil.downloadImage(imageLink, savePath);
+				}
+
+				Log.e("DB", dbReturn + "");
+			}
+		}
+	}
 }

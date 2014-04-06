@@ -33,6 +33,7 @@ public class FavouriteActivity extends Activity {
 	ListTrafficArrayAdapter arrayAdapter;
 	ArrayList<TrafficInfoShortJSON> listFavorite = null;
 	static ListView lv = null;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,13 @@ public class FavouriteActivity extends Activity {
 		Intent intent = getIntent();
 		this.setTitle("Danh sách đã lưu");
 
+		
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
 		listFavorite = DBUtil.listFavorite();
 		/*********************/
 		lv = (ListView) findViewById(R.id.listFavorite);
@@ -68,48 +76,10 @@ public class FavouriteActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 
 	}
-//	@Override
-//	protected void onStart() {
-//		// TODO Auto-generated method stub
-//		super.onStart();
-//		// display image
-//				for (int i = 0; i < listFavorite.size(); i++) {
-//					try {
-//						int wantedPosition = i;
-//						if (listFavorite.get(wantedPosition).getTrafficID() != null
-//								&& listFavorite.get(wantedPosition).getTrafficID()
-//										.length() > 0) {
-//							HttpImageUtils httpImgUtil = new HttpImageUtils();
-//							httpImgUtil.setUrl(serviceIp
-//									+ listFavorite.get(wantedPosition).getImage() + "?size=small");
-//							httpImgUtil.setExtra(wantedPosition);
-//							httpImgUtil
-//									.setHttpImageListener(new IAsyncHttpImageListener() {
-//
-//										@Override
-//										public void onComplete(Bitmap bitmap, int extra) {									
-//											try{
-//											View tmpView = lv.getChildAt(extra);
-//											ImageView icon = (ImageView) tmpView
-//													.findViewById(R.id.trafficImage);
-//											icon.setImageBitmap(bitmap);
-//											}catch(Exception e)
-//											{
-//												e.printStackTrace();
-//											}
-//										}
-//									});
-//							httpImgUtil.execute();
-//						}// end if length > 0
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//				}// end for
-//	}
 
 }
