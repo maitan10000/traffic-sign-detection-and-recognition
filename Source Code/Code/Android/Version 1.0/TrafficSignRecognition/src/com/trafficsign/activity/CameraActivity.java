@@ -206,10 +206,9 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 	Mat frame;
 	ArrayList<Rect> listLocate;
-
+	
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-		// TODO Auto-generated method stub
 		if (isTaken == false) {
 			frame = inputFrame.rgba();
 		} else {
@@ -284,24 +283,25 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 		// Begin detect
 		{
-			listLocate = new ArrayList<Rect>();
+			listLocate = new ArrayList<Rect>();			
 			Rect[] tempResult = detectTS(type1Detector, frame);
 			// copy result
+			
 			for (int i = 0; i < tempResult.length; i++) {
 				listLocate.add((Rect) tempResult[i]);
 			}
-
+			
 			tempResult = detectTS(type2Detector, frame);
 			for (int i = 0; i < tempResult.length; i++) {
 				listLocate.add((Rect) tempResult[i]);
-			}
+			}			
 
 			// Draw detect area
 			for (int i = 0; i < listLocate.size(); i++) {
 				Core.rectangle(frame, listLocate.get(i).tl(), listLocate.get(i)
 						.br(), new Scalar(204, 51, 204), 3);
 			}
-
+			
 			// Auto take picture and submit
 			count++;
 			if (listLocate.size() > 0 && count > 20 && isTaken == false
@@ -323,15 +323,15 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 	// detect traffic sign
 	//
-	Rect[] detectTS(CascadeClassifier detector, Mat frameInput) {
+	Rect[] detectTS(CascadeClassifier detector, Mat frameInput) {		
 		MatOfRect results = new MatOfRect();
 		org.opencv.core.Size minSize = new org.opencv.core.Size();
-		minSize.height = 20;
-		minSize.width = 20;
+		minSize.height = frameInput.width()/10;
+		minSize.width = minSize.height;
 
 		org.opencv.core.Size maxSize = new org.opencv.core.Size();
-		maxSize.height = 250;
-		maxSize.width = 250;
+		maxSize.height = frameInput.width()/4;
+		maxSize.width = maxSize.height;
 		// Mat frame_gray = frame.clone();
 		// Imgproc.cvtColor(frame, frame_gray, 6);
 		// Imgproc.equalizeHist(frame_gray, frame_gray);
