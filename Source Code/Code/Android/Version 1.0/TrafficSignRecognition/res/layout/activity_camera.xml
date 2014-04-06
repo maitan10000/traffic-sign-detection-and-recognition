@@ -36,7 +36,7 @@
         android:layout_marginRight="20dp"
          android:layout_marginTop="20dp"
         android:gravity="center_vertical"
-        android:src="@android:drawable/ic_menu_gallery" />
+        android:src="@android:drawable/ic_menu_upload_you_tube" />
 
      <ToggleButton
          android:id="@+id/cameraType"
