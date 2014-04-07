@@ -429,27 +429,6 @@ legend {
 
 										});
 							}
-							// ajax send report
-							function sendReport(trafficID){
-								var type = '2';
-								var content = document.getElementById("txtContent").value;
-								var action = "reportTraffic";
-								$.ajax({
-									url : "/TrafficWeb/UserController",
-									type : "GET",
-									data : {
-										action : action,
-										trafficID : trafficID,
-										type : type,
-										content : content
-									},
-									success : function(result) {
-										$('#reportModal').modal('hide');
-									}
-
-								});
-								
-							}
 							// function show popup for send report
 							function showFromReport(trafficID) {
 								$('#reference_id').val(trafficID);
