@@ -76,6 +76,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					%>
 				</div>
 				</header>
+				
 				<div class="menu-container">
 					<nav class="olegnax">
 					<ul id="nav">
@@ -88,6 +89,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
+						<%if(userID != null || "".equals(userID) == false){ %>
 						<li class="level0 nav-4 level-top"><a
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
@@ -96,6 +98,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_LIST%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
+						<%} %>
 					</ul>
 					</nav>
 					<div style="clear: both"></div>

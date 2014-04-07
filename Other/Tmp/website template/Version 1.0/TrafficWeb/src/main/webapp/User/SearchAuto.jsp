@@ -87,15 +87,13 @@ legend {
 	margin-left: 0px;
 }
 
-#canvasDraw
-{
+#canvasDraw {
 	border: red thin solid;
 }
-.hidden-class
-{
+
+.hidden-class {
 	display: none;
 }
-
 </style>
 <title>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</title>
 </head>
@@ -104,62 +102,75 @@ legend {
 		<div class="page">
 			<div class="header-container">
 				<header>
-				<div class="clearfix">
-					<div class="card-top"></div>
-				</div>
-				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
-						BÁO</h2>
-					<!--   _____________ -->
-					<%
-						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
-					if(userID == null)
-					{
-						userID = "";
-					}
-					
-					if(userID != null && !userID.isEmpty())
-					{
-					%>
-					<ul class="links">
-						<li><a href="#"
-							title=""><%=userID %></a></li>
-						<li class="separator">|</li>
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng xuất</a></li>
-						<li class="separator">
-					</ul>
-					<%}else{ %>
-					<ul class="links">
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
-							title="Đăng nhập">Đăng Nhập</a></li>
-						<li class="separator">|</li>
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>" title="Đăng ký">Đăng Ký</a></li>
-						<li class="separator">
-					</ul>
-					<%}//end if session useID %>
-				</div>
+					<div class="clearfix">
+						<div class="card-top"></div>
+					</div>
+					<div class="logo-Container">
+						<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA
+							CỨU BIỂN BÁO</h2>
+						<!--   _____________ -->
+						<%
+							String userID = (String) session
+									.getAttribute(Constants.SESSION_USERID);
+							if (userID == null) {
+								userID = "";
+							}
+
+							if (userID != null && !userID.isEmpty()) {
+						%>
+						<ul class="links">
+							<li><a href="#" title=""><%=userID%></a></li>
+							<li class="separator">|</li>
+							<li><a
+								href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng
+									xuất</a></li>
+							<li class="separator">
+						</ul>
+						<%
+							} else {
+						%>
+						<ul class="links">
+							<li><a
+								href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
+								title="Đăng nhập">Đăng Nhập</a></li>
+							<li class="separator">|</li>
+							<li><a
+								href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>"
+								title="Đăng ký">Đăng Ký</a></li>
+							<li class="separator">
+						</ul>
+						<%
+							}//end if session useID
+						%>
+					</div>
 				</header>
 				<div class="menu-container">
 					<nav class="olegnax">
-					<ul id="nav">
-						<li class="level0 nav-4 level-top"><a
-							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
+						<ul id="nav">
+							<li class="level0 nav-4 level-top"><a
+								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
 								"
-							class="level-top"> <span>Nhận Diện Tự Động</span>
-						</a></li>
-						<li class="level0 nav-3 level-top"><a
-							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
-							class="level-top"> <span>Tra Cứu Biển Báo</span>
-						</a></li>
-						<li class="level0 nav-4 level-top"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
-							class="level-top"> <span>Danh Sách Đã Lưu</span>
-						</a></li>
-						<li class="level0 nav-5 level-top last"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
-							class="level-top"> <span>Lịch Sử</span>
-						</a></li>
-					</ul>
+								class="level-top"> <span>Nhận Diện Tự Động</span>
+							</a></li>
+							<li class="level0 nav-3 level-top"><a
+								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
+								class="level-top"> <span>Tra Cứu Biển Báo</span>
+							</a></li>
+							<%
+								if (userID != null || "".equals(userID) == false) {
+							%>
+							<li class="level0 nav-4 level-top"><a
+								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
+								class="level-top"> <span>Danh Sách Đã Lưu</span>
+							</a></li>
+							<li class="level0 nav-5 level-top last"><a
+								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_LIST%>"
+								class="level-top"> <span>Lịch Sử</span>
+							</a></li>
+							<%
+								}
+							%>
+						</ul>
 					</nav>
 					<div style="clear: both"></div>
 
@@ -170,9 +181,13 @@ legend {
 					<div class="content-title">NHẬN DIỆN TỰ ĐỘNG</div>
 					<div class="list-result">
 						<fieldset>
-							<legend>Kết quả: <button id="btn-wrong-recognize" class="btn btn-warning hidden-class"
-												onclick="reportWrongRecognize(this.value); return false;" >Sai
-												kết quả</button></legend>
+							<legend>
+								Kết quả:
+								<button id="btn-wrong-recognize"
+									class="btn btn-warning hidden-class"
+									onclick="reportWrongRecognize(this.value); return false;">Sai
+									kết quả</button>
+							</legend>
 							<ol>
 							</ol>
 						</fieldset>
@@ -187,19 +202,19 @@ legend {
 										<legend>
 											Tải hình ảnh: <input type="file" id="file" accept="image/*"
 												name="file" onchange="showThumbnails()" />
-											<!-- <input type="checkbox" id="detect-Manual"><span style="font-size: 12px;"> Khoanh vùng biển báo bằng tay</span>  --> 
+											<!-- <input type="checkbox" id="detect-Manual"><span style="font-size: 12px;"> Khoanh vùng biển báo bằng tay</span>  -->
 										</legend>
 										<div id="preview"></div>
 										<div class="image-result">
-											<img id="image-result" class="image-result-resize" />											
+											<img id="image-result" class="image-result-resize" />
 											<div class="draw-div"></div>
 										</div>
 										<!-- <canvas id="canvasDraw" width="500" height="500"></canvas>-->
 									</fieldset>
 								</form>
-								
+
 							</div>
-			
+
 						</div>
 
 						<script>
@@ -546,7 +561,8 @@ legend {
 								var action = "checkFavorite";
 								$
 										.ajax({
-											url : '<%=Constants.CONTROLLER_USER%>',
+											url : '<%=Constants.CONTROLLER_USER%>
+							',
 											type : "GET",
 											data : {
 												action : action,
@@ -554,28 +570,29 @@ legend {
 											},
 											success : function(result) {
 												if ('true' == result) {
-													$("#btnAddFavorite").remove();
+													$("#btnAddFavorite")
+															.remove();
 													$("#footerViewDetail")
 															.append(
 																	'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42addFavorite(\''
 																			+ trafficID
 																			+ '\')\42>Lưu biển báo</button>');
 												} else if ('false' == result) {
-													$("#btnAddFavorite").remove();
+													$("#btnAddFavorite")
+															.remove();
 													$("#footerViewDetail")
 															.append(
 																	'<button id=\42btnAddFavorite\42 type=\42button\42 class=\42btn btn-primary\42 onclick=\42deleteFavorite(\''
 																			+ trafficID
 																			+ '\')\42>Xóa biển báo</button>');
 												} else {
-													$("#btnAddFavorite").remove();
+													$("#btnAddFavorite")
+															.remove();
 												}
 											}
 
 										});
 							}
-							
-							
 						</script>
 					</div>
 					<div style="clear: both"></div>
@@ -585,65 +602,65 @@ legend {
 			</div>
 		</div>
 		<div class="footer-container">
-					<div class="footer">
-						<div class="footer-brands">
-							<div class="brands"></div>
-						</div>
-						<div class="footer-left">
-							<p>
-								<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
-							</p>
-							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
-								giao thông."</p>
-						</div>
-						<div class="footer-left">
-							<p>
-								<span style="border-bottom: dotted 1px #fafafa;">TRƯỜNG
-									ĐẠI HOC FPT</span>
-							</p>
-							<p style="padding-bottom: 7px;">
-								Công viên phần mềm Quang Trung - Quận 12 - TP Hồ Chí Minh <a
-									class="location" href="#">&nbsp;</a>
-							</p>
-						</div>
-						<div class="footer-left">
-							<ul class="social">
-								<li><a href="#"><span class="facebook icon"></span>Join
-										us on Facebook</a></li>
-								<li><a href="#"><span class="email icon"></span>Send an
-										Email</a></li>
-								<li><a href="#"><span class="rss icon"></span>Subscrible
-										RSS Feed</a></li>
-							</ul>
-						</div>
-					</div>
+			<div class="footer">
+				<div class="footer-brands">
+					<div class="brands"></div>
 				</div>
+				<div class="footer-left">
+					<p>
+						<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
+					</p>
+					<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo giao
+						thông."</p>
+				</div>
+				<div class="footer-left">
+					<p>
+						<span style="border-bottom: dotted 1px #fafafa;">TRƯỜNG ĐẠI
+							HOC FPT</span>
+					</p>
+					<p style="padding-bottom: 7px;">
+						Công viên phần mềm Quang Trung - Quận 12 - TP Hồ Chí Minh <a
+							class="location" href="#">&nbsp;</a>
+					</p>
+				</div>
+				<div class="footer-left">
+					<ul class="social">
+						<li><a href="#"><span class="facebook icon"></span>Join
+								us on Facebook</a></li>
+						<li><a href="#"><span class="email icon"></span>Send an
+								Email</a></li>
+						<li><a href="#"><span class="rss icon"></span>Subscrible
+								RSS Feed</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
 	</div>
 	</div>
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
-		
-<!-- Modal for report-->
-		<div id="reportModal" class="modal hide fade" tabindex="-1"
-			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h3 id="myModalLabel">Gửi Ý Kiến</h3>
-			</div>
-			<div class="modal-body">
-				<strong>Nội dung ý kiến :</strong><br>
-				<textarea rows="3" cols="12" id="txtContent"
-					style="width: 515px; resize: none;"></textarea>
-				<input type="hidden" id="reference_id" />
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
-				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
-					Ý Kiến</button>
-			</div>
+
+	<!-- Modal for report-->
+	<div id="reportModal" class="modal hide fade" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Gửi Ý Kiến</h3>
 		</div>
+		<div class="modal-body">
+			<strong>Nội dung ý kiến :</strong><br>
+			<textarea rows="3" cols="12" id="txtContent"
+				style="width: 515px; resize: none;"></textarea>
+			<input type="hidden" id="reference_id" />
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
+			<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
+				Ý Kiến</button>
+		</div>
+	</div>
 </body>
 </html>
