@@ -20,7 +20,9 @@ public final class Constants {
 	public final static String TRAFFIC_TRAFFIC_UPDATE = "rest/Traffic/UpdateTrafficInfo";
 	public final static String TRAFFIC_TRAFFIC_LIST = "rest/Traffic/ListTrafficByCateID";
 	public final static String TRAFFIC_TRAFFIC_ADDTRAINIMAGE = "rest/Traffic/AddTrainImage";
-	
+	public final static String TRAFFIC_TRAFFIC_VIEWLISTTRAINIMAGE = "rest/Traffic/ViewTrainImage";
+	public final static String TRAFFIC_TRAFFIC_DELETE = "rest/Traffic/DeleteTrafficInfo";
+	public final static String TRAFFIC_TRAFFIC_DELETETRAINIMAGE = "rest/Traffic/DeleteTrainImage";
 
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
@@ -45,29 +47,29 @@ public final class Constants {
 	public final static String ACTION_HISTORY_VIEW = "viewHistory";
 	public final static String ACTION_HISTORY_LIST = "listHistory";
 	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
-	
-	//Admin controler action
+	public final static String ACTION_DELETE_TRAINIMAGE = "deleteTrainImage";
+
+	// Admin controler action
 	public final static String ACTION_LOGIN = "login";
 	public final static String ACTION_REGISTER = "register";
 	public final static String ACTION_LOGOUT = "logout";
-	
-	
+
 	public final static String ACTION_REPORT_LIST = "listReport";
 	public final static String ACTION_REPORT_VIEW = "viewReport";
 	public final static String ACTION_REPORT_DELETE = "deleteReport";
-	
+
 	public final static String ACTION_ACCOUNT_LIST = "listAccount";
 	public final static String ACTION_ACCOUNT_DEACTIVE = "deactiveAcccount";
 	public final static String ACTION_ACCOUNT_ACTIVE = "activeAccount";
 	public final static String ACTION_ACCOUNT_SETSTAFF = "setStaff";
 	public final static String ACTION_ACCOUNT_UNSETSTAFF = "unsetStaff";
-	
+	public final static String ACTION_ACCOUNT_FORGOTPASSWORD = "forgotpassword";
+
 	public final static String ACTION_TRAFFIC_VIEW = "viewTraffic";
 	public final static String ACTION_TRAFFIC_LIST = "listTraffic";
-	
-	
-	
-	
+	public final static String ACTION_TRAFFIC_VIEWTRAINIMAGE = "viewTrainImage";
+	public final static String ACTION_TRAFFIC_DELETE = "deleteTrafficInfo";
+
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
 	public final static String CONTROLLER_ADMIN = "/TrafficWeb/AdminController";
@@ -93,9 +95,10 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
 	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
 	public final static String MANAGE_ACCOUNT_SENDMAIL = "rest/Manage/SendMail";
-	
-	//Session Constant
+	public final static String MANAGE_ACCOUNT_FORGOTPASSWORD = "rest/Manage/ForgotPassword";
+
+	// Session Constant
 	public final static String SESSION_USERID = "userid";
 	public final static String SESSION_ROLE = "role";
-	
+
 }
