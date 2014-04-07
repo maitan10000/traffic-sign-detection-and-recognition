@@ -23,12 +23,14 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.xmlbeans.impl.common.GlobalLock;
+/*
+ import org.apache.commons.fileupload.FileItem;
+ import org.apache.commons.fileupload.FileItemFactory;
+ import org.apache.commons.fileupload.FileUploadException;
+ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+ import org.apache.commons.fileupload.servlet.ServletFileUpload;
+ import org.apache.xmlbeans.impl.common.GlobalLock;
+ */
 
 import json.CategoryJSON;
 import json.FavoriteJSON;
@@ -41,6 +43,7 @@ import json.TrafficInfoShortJSON;
 import json.TrainImageJSON;
 import utility.Constants;
 import utility.GlobalValue;
+import utility.GsonUtils;
 import utility.Helper;
 import utility.ImageUtil;
 import utility.ResultInputCompare;
@@ -57,6 +60,7 @@ import java.lang.reflect.Type;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.core.util.Base64;
+import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.FormDataParam;
 
 import dao.CategoryDAO;
@@ -101,8 +105,7 @@ public class Traffic {
 			categoryJSON.setCategoryName(categoryDTO.getCategoryName());
 			listCateJSON.add(categoryJSON);
 		}
-		Gson gson = new Gson();
-		return gson.toJson(listCateJSON);
+		return GsonUtils.toJson(listCateJSON);
 	}
 
 	/**
@@ -151,8 +154,7 @@ public class Traffic {
 					.getCategoryName(trafficInfo.getCategoryID()));
 			listTrafficInfoShortJSON.add(trafficInfoShortJSON);
 		}
-		Gson gson = new Gson();
-		return gson.toJson(listTrafficInfoShortJSON);
+		return GsonUtils.toJson(listTrafficInfoShortJSON);
 	}
 
 	/**
@@ -211,14 +213,13 @@ public class Traffic {
 			@FormDataParam("userID") String userID,
 			@FormDataParam("listLocate") String listLocate) {
 
-		
 		ResultDTO result = new ResultDTO();
 		result.setCreator(userID);
 		result.setUploadedImage("");
 		ResultDAO resultDAO = new ResultDAOImpl();
 		int resultID = resultDAO.add(result);
-		
-		String fileSaveName = resultID+"";
+
+		String fileSaveName = resultID + "";
 		if (userID != null) {
 			fileSaveName += "-" + userID;
 		}
@@ -230,8 +231,7 @@ public class Traffic {
 		// save file
 		Helper.writeToFile(uploadedInputStream, uploadedFileLocation);
 
-		
-		//recognize
+		// recognize
 		String imagePath = uploadedFileLocation;
 		String appDic = GlobalValue.getWorkPath();
 		String tmpresult = "";
@@ -297,8 +297,7 @@ public class Traffic {
 		// short listResult by locate for easy view in result
 		Collections.sort(listResult, new ResultInputCompare());
 
-		Gson gson = new Gson();
-		String output = gson.toJson(listResult);
+		String output = GsonUtils.toJson(listResult);
 
 		result.setResultID(resultID);
 		result.setUploadedImage(fileSaveName);
@@ -307,9 +306,11 @@ public class Traffic {
 		resultDAO.edit(result);
 
 		// get return info
+		result = resultDAO.getResultByID(resultID);
 		ResultJSON resultJSON = new ResultJSON();
 		resultJSON.setResultID(resultID);
 		resultJSON.setCreator(result.getCreator());
+		resultJSON.setCreateDate(result.getCreateDate());
 		for (ResultInput resultInput : listResult) {
 			TrafficInfoDAO trafficInfoDAO2 = new TrafficInfoDAOImpl();
 			TrafficInfoDTO trafficInfoDTO = trafficInfoDAO2
@@ -326,7 +327,7 @@ public class Traffic {
 		resultJSON.setUploadedImage(Constants.UPLOAD_IMAGE_SUB_LINK
 				+ result.getUploadedImage());
 
-		return gson.toJson(resultJSON);
+		return GsonUtils.toJson(resultJSON);
 	}
 
 	/**
@@ -352,10 +353,7 @@ public class Traffic {
 			resultShortJSON.setCreateDate(resultDTO.getCreateDate());
 			listResultShortJSON.add(resultShortJSON);
 		}
-		// Gson gson = new Gson();
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
-		return gson.toJson(listResultShortJSON);
+		return GsonUtils.toJson(listResultShortJSON);
 	}
 
 	/**
@@ -374,11 +372,11 @@ public class Traffic {
 			ResultJSON resultJSON = new ResultJSON();
 			resultJSON.setResultID(resultDTO.getResultID());
 			resultJSON.setCreator(resultDTO.getCreator());
-			Gson gson = new Gson();
-			Type t = new TypeToken<ArrayList<ResultInput>>() {
+			Type type = new TypeToken<ArrayList<ResultInput>>() {
 			}.getType();
-			ArrayList<ResultInput> listTraffic = new ArrayList<ResultInput>();
-			listTraffic = gson.fromJson(resultDTO.getListTraffic(), t);
+
+			ArrayList<ResultInput> listTraffic = GsonUtils.fromJson(
+					resultDTO.getListTraffic(), type);
 
 			for (ResultInput resultInput : listTraffic) {
 				TrafficInfoDAO trafficInfoDAO2 = new TrafficInfoDAOImpl();
@@ -396,9 +394,27 @@ public class Traffic {
 					+ resultDTO.getUploadedImage();
 			resultJSON.setUploadedImage(uploadedImageLink);
 			resultJSON.setCreateDate(resultDTO.getCreateDate());
-			return gson.toJson(resultJSON);
+			return GsonUtils.toJson(resultJSON);
 		}
 		return "";
+	}
+
+	/**
+	 * Delete History
+	 * 
+	 * @param resultID
+	 * @return
+	 */
+	@GET
+	@Path("/DeleteHistory")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String deleteHistory(@QueryParam("id") int resultID) {
+		ResultDAO resultDAO = new ResultDAOImpl();
+		Boolean result = resultDAO.delete(resultID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
 	}
 
 	/**
@@ -451,6 +467,191 @@ public class Traffic {
 	}
 
 	/**
+	 * Delete Traffic Info
+	 * 
+	 * @param trafficID
+	 * @return
+	 */
+	@GET
+	@Path("/DeleteTrafficInfo")
+	public String deleteReport(@QueryParam("trafficID") String trafficID) {
+		if (trafficID != null && !trafficID.isEmpty()) {
+			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
+			Boolean result = trafficDAO.delete(trafficID);
+			if (result == true) {
+				return "Success";
+			}
+		}
+		return "Fail";
+	}
+
+	/**
+	 * Add Train Image *
+	 * 
+	 * @param trafficID
+	 * @param image
+	 * @return
+	 */
+	@POST
+	@Path("/AddTrainImage")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String addTrainImage(FormDataMultiPart multiPart) {
+		String trafficID = multiPart.getField("trafficID").getEntityAs(
+				String.class);
+		if (trafficID != null && !trafficID.isEmpty()) {
+			for (int i = 0; i < multiPart.getBodyParts().size() - 1; i++) {
+				byte[] imageData = multiPart.getBodyParts().get(i)
+						.getEntityAs(byte[].class);
+				TrainImageDTO tranImageDTO = new TrainImageDTO();
+				tranImageDTO.setTrafficID(trafficID);
+				String newTrainImageID = trafficID + "-"
+						+ UUID.randomUUID().toString();
+				tranImageDTO.setImageID(newTrainImageID);
+				tranImageDTO.setImageName(newTrainImageID + ".jpg");
+				TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+				Boolean result = trainImageDAO.add(tranImageDTO);
+
+				if (result == true) {
+					String trainChildFolderPath = GlobalValue.getWorkPath()
+							+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
+					File trainChildFolder = new File(trainChildFolderPath);
+					// create if not exist
+					if (!trainChildFolder.exists()) {
+						trainChildFolder.mkdir();
+					}
+					// save to main Image folder
+					String newImagePath = trainChildFolderPath
+							+ tranImageDTO.getImageName();
+					Helper.writeToFile(imageData, newImagePath);
+				}
+			}// end for
+
+			// Auto retrain
+			GlobalValue.ReTrainCount += multiPart.getBodyParts().size();
+			if (GlobalValue.ReTrainCount >= GlobalValue.getReTrainNum()
+					&& GlobalValue.isReTraining == false) {
+				GlobalValue.isReTraining = true;
+				Helper.trainSVM(GlobalValue.getWorkPath());
+				GlobalValue.isReTraining = false;
+				GlobalValue.ReTrainCount = 0;
+			}
+			return "Success";
+		}// end if trafficID
+
+		return "Fail";
+	}
+
+	/**
+	 * Update traffic sign information
+	 * 
+	 * @param trafficID
+	 * @param name
+	 * @param image
+	 * @param categoryID
+	 * @param information
+	 * @param penaltyfee
+	 * @param creator
+	 * @return
+	 */
+	@POST
+	@Path("/EditTrafficInfo")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	public String editTrafficInfo(
+			@FormDataParam("trafficID") String trafficID,
+			@FormDataParam("name") String name,
+			@FormDataParam("mainImage") InputStream mainImageStream,
+			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail,
+			@FormDataParam("categoryID") int categoryID,
+			@FormDataParam("information") String information,
+			@FormDataParam("penaltyfee") String penaltyfee,
+			@FormDataParam("creator") String creator) {
+		if (trafficID != null && name != null && information != null
+				&& creator != null && !trafficID.isEmpty() && !name.isEmpty()
+				&& !information.isEmpty() && !creator.isEmpty()) {
+			TrafficInfoDTO trafficObj = new TrafficInfoDTO();
+			trafficObj.setTrafficID(trafficID);
+			trafficObj.setName(name);
+			trafficObj.setImage(trafficID + ".jpg");
+			trafficObj.setCategoryID(categoryID);
+			trafficObj.setInformation(information);
+			trafficObj.setPenaltyfee(penaltyfee);
+			trafficObj.setCreator(creator);
+			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
+			Boolean result = trafficDAO.edit(trafficObj);
+
+			if (mainImageDetail.getFileName() != null
+					&& !mainImageDetail.getFileName().isEmpty()) {
+				// save to main Image folder
+				String newImagePath = GlobalValue.getWorkPath()
+						+ Constants.MAIN_IMAGE_FOLDER + trafficObj.getImage();
+				Helper.writeToFile(mainImageStream, newImagePath);
+			}
+
+			if (result == true) {
+				return "Success";
+			}
+		}
+		return "Fail";
+	}
+
+	/**
+	 * ListTrainImageByTrafficID
+	 * 
+	 * @param trafficID
+	 * @return
+	 */
+	@GET
+	@Path("/ListTrainImageByTrafficID")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listTrainImageByTrafficID(
+			@QueryParam("trafficID") String trafficID) {
+		TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+		ArrayList<TrainImageDTO> trainImageInfo = trainImageDAO
+				.listTrainImageByTrafficID(trafficID);
+
+		// get return info
+		ArrayList<TrainImageJSON> listTrainImageJSON = new ArrayList<TrainImageJSON>();
+		for (TrainImageDTO trainImageDTO : trainImageInfo) {
+			TrainImageJSON trainImageJSON = new TrainImageJSON();
+			trainImageJSON.setTrafficID(trainImageDTO.getTrafficID());
+			trainImageJSON.setImageID(trainImageDTO.getImageID());
+			trainImageJSON.setImageName(trainImageDTO.getImageName());
+			String imageLink = Constants.TRAIN_IMAGE_SUB_LINK + trafficID + "/"
+					+ trainImageDTO.getImageName();
+			trainImageJSON.setImageName(imageLink);
+			listTrainImageJSON.add(trainImageJSON);
+		}
+		return GsonUtils.toJson(listTrainImageJSON);
+	}
+
+	/**
+	 * Delete TrainImageByID
+	 * 
+	 * @param trainImageID
+	 * @return
+	 */
+	@GET
+	@Path("/DeleteTrainImageByID")
+	public String deleteTrainImage(
+			@QueryParam("trainImageID") String trainImageID) {
+		if (trainImageID != null && !trainImageID.isEmpty()) {
+			String imageName = trainImageID + ".jpg";
+			TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+			String trafficID = trainImageDAO.getTrafficInfoID(imageName);
+			String location = GlobalValue.getWorkPath()
+					+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
+			Boolean result = trainImageDAO.deleteByImageID(trainImageID);
+			if (result == true) {
+				File delete = new File(location, imageName);
+				if (delete.delete() == true) {
+					return "Success";
+				}
+			}
+		}
+		return "Fail";
+	}
+
+	/**
 	 * Add Train Image From Report
 	 * 
 	 * @param resultID
@@ -474,17 +675,16 @@ public class Traffic {
 		ResultDAO resultDAO = new ResultDAOImpl();
 		ResultDTO resultDTO = resultDAO.getResultByID(resultID);
 		if (resultDTO != null) {
-			Gson gson = new Gson();
 			Type t = new TypeToken<ArrayList<ResultInput>>() {
 			}.getType();
 			ArrayList<ResultInput> listTraffic = new ArrayList<ResultInput>();
-			listTraffic = gson.fromJson(resultDTO.getListTraffic(), t);
+			listTraffic = GsonUtils.fromJson(resultDTO.getListTraffic(), t);
 			if (order < listTraffic.size()) {
 				// save back result to db
 				ResultInput tempResultInput = listTraffic.get(order);
 				tempResultInput.setTrafficID(trafficID);
 				listTraffic.set(order, tempResultInput);
-				resultDTO.setListTraffic(gson.toJson(listTraffic));
+				resultDTO.setListTraffic(GsonUtils.toJson(listTraffic));
 				resultDAO.edit(resultDTO);
 
 				// crop image and save to train folder
@@ -562,276 +762,72 @@ public class Traffic {
 		return result;
 	}
 
-	/**
-	 * Update traffic sign information
-	 * 
-	 * @param trafficID
-	 * @param name
-	 * @param image
-	 * @param categoryID
-	 * @param information
-	 * @param penaltyfee
-	 * @param creator
-	 * @return
-	 */
-	@POST
-	@Path("/UpdateTrafficInfo")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String updateTrafficInfo(
-			@FormDataParam("trafficID") String trafficID,
-			@FormDataParam("name") String name,
-			@FormDataParam("mainImage") InputStream mainImageStream,
-			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail,
-			@FormDataParam("categoryID") int categoryID,
-			@FormDataParam("information") String information,
-			@FormDataParam("penaltyfee") String penaltyfee,
-			@FormDataParam("creator") String creator) {
-		if (trafficID != null && name != null && information != null
-				&& creator != null && !trafficID.isEmpty() && !name.isEmpty()
-				&& !information.isEmpty() && !creator.isEmpty()) {
-			TrafficInfoDTO trafficObj = new TrafficInfoDTO();
-			trafficObj.setTrafficID(trafficID);
-			trafficObj.setName(name);
-			trafficObj.setImage(trafficID + ".jpg");
-			trafficObj.setCategoryID(categoryID);
-			trafficObj.setInformation(information);
-			trafficObj.setPenaltyfee(penaltyfee);
-			trafficObj.setCreator(creator);
-			TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
-			Boolean result = trafficDAO.edit(trafficObj);
+	// @POST
+	// @Consumes(MediaType.MULTIPART_FORM_DATA)
+	// @Produces("text/plain")
+	// @Path("/AddTrainImage")
+	// public String registerWebService(@Context HttpServletRequest request) {
+	// String responseStatus = "Success";
+	// String trafficID = request.getParameter("trafficID");
+	//
+	// // checks whether there is a file upload request or not
+	// if (ServletFileUpload.isMultipartContent(request)) {
+	// final FileItemFactory factory = new DiskFileItemFactory();
+	// final ServletFileUpload fileUpload = new ServletFileUpload(factory);
+	// try {
+	// /*
+	// * parseRequest returns a list of FileItem but in old
+	// * (pre-java5) style
+	// */
+	// final List items = fileUpload.parseRequest(request);
+	//
+	// if (items != null) {
+	// final Iterator iter = items.iterator();
+	//
+	// while (iter.hasNext()) {
+	// final FileItem item = (FileItem) iter.next();
+	// String itemName = item.getName();
+	// final String fieldName = item.getFieldName();
+	// final String fieldValue = item.getString();
+	// TrainImageDTO tranImageDTO = new TrainImageDTO();
+	// tranImageDTO.setTrafficID(trafficID);
+	// itemName = trafficID + "-"
+	// + UUID.randomUUID().toString();
+	// tranImageDTO.setImageID(itemName);
+	// tranImageDTO.setImageName(itemName + ".jpg");
+	// TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+	// Boolean result = trainImageDAO.add(tranImageDTO);
+	// if (item.isFormField()) {
+	// trafficID = fieldValue;
+	// } else{
+	// String trainChildFolderPath = GlobalValue
+	// .getWorkPath()
+	// + Constants.TRAIN_IMAGE_FOLDER
+	// + trafficID
+	// + "/";
+	// File trainChildFolder = new File(
+	// trainChildFolderPath);
+	// // create if not exist
+	// if (!trainChildFolder.exists()) {
+	// trainChildFolder.mkdir();
+	// }
+	// final File savedFile = new File(
+	// trainChildFolderPath + File.separator
+	// + itemName);
+	// item.write(savedFile);
+	// }
+	//
+	// }
+	// }
+	// } catch (FileUploadException fue) {
+	// responseStatus = "Fail";
+	// fue.printStackTrace();
+	// } catch (Exception e) {
+	// responseStatus = "Fail";
+	// e.printStackTrace();
+	// }
+	// }
+	// return responseStatus;
+	// }
 
-			if (mainImageDetail.getFileName() != null
-					&& !mainImageDetail.getFileName().isEmpty()) {
-				// save to main Image folder
-				String newImagePath = GlobalValue.getWorkPath()
-						+ Constants.MAIN_IMAGE_FOLDER + trafficObj.getImage();
-				Helper.writeToFile(mainImageStream, newImagePath);
-			}
-
-			if (result == true) {
-				return "Success";
-			}
-		}
-		return "Fail";
-	}
-
-	/**
-	 * List traffic by cateID
-	 * 
-	 * @param type
-	 *            (0 or null for all type, 1: for type 1, 2 for type2)
-	 * @return
-	 */
-	@GET
-	@Path("/ListTrafficByCateID")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String listTrafficByCateID(@QueryParam("cateID") Integer cateID) {
-		ArrayList<TrafficInfoDTO> trafficData = new ArrayList<TrafficInfoDTO>();
-		TrafficInfoDAO trafficinfoDAO = new TrafficInfoDAOImpl();
-		if (cateID == null) {
-			cateID = 0;
-		}
-		trafficData = trafficinfoDAO.searchByCateID(cateID);
-		// get return info
-		CategoryDAO cateDao = new CategoryDAOImpl();
-		ArrayList<TrafficInfoShortJSON> listTrafficShortJSON = new ArrayList<TrafficInfoShortJSON>();
-		for (TrafficInfoDTO trafficInfoDTO : trafficData) {
-			TrafficInfoShortJSON trafficInfoShortJSON = new TrafficInfoShortJSON();
-			trafficInfoShortJSON.setTrafficID(trafficInfoDTO.getTrafficID());
-			trafficInfoShortJSON.setName(trafficInfoDTO.getName());
-			String imageLink = Constants.MAIN_IMAGE_SUB_LINK
-					+ trafficInfoDTO.getImage();
-			trafficInfoShortJSON.setImage(imageLink);
-			trafficInfoShortJSON.setCategoryID(trafficInfoDTO.getCategoryID());
-			trafficInfoShortJSON.setCategoryName(cateDao
-					.getCategoryName(trafficInfoDTO.getCategoryID()));
-			listTrafficShortJSON.add(trafficInfoShortJSON);
-		}
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
-		return gson.toJson(listTrafficShortJSON);
-	}
-
-	/**
-	 * Add Train Image *
-	 * 
-	 * @param trafficID
-	 * @param image
-	 * @return
-	 */
-	@POST
-	@Path("/AddTrainImage")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public String addTrainImage(
-			@FormDataParam("trafficID") String trafficID,
-			@FormDataParam("mainImage") InputStream mainImageStream,
-			@FormDataParam("mainImage") FormDataContentDisposition mainImageDetail) {
-		if (trafficID != null && !trafficID.isEmpty()) {
-
-			TrainImageDTO tranImageDTO = new TrainImageDTO();
-			tranImageDTO.setTrafficID(trafficID);
-			String newTrainImageID = trafficID + "-"
-					+ UUID.randomUUID().toString();
-			tranImageDTO.setImageID(newTrainImageID);
-			tranImageDTO.setImageName(newTrainImageID + ".jpg");
-			TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
-			Boolean result = trainImageDAO.add(tranImageDTO);
-
-			if (result == true) {
-				String trainChildFolderPath = GlobalValue.getWorkPath()
-						+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
-				File trainChildFolder = new File(trainChildFolderPath);
-				// create if not exist
-				if (!trainChildFolder.exists()) {
-					trainChildFolder.mkdir();
-				}
-				// save to main Image folder
-				String newImagePath = trainChildFolderPath
-						+ tranImageDTO.getImageName();
-				Helper.writeToFile(mainImageStream, newImagePath);
-				return "Success";
-			}
-		}
-		return "Fail";
-	}
-
-//	@POST
-//	@Consumes(MediaType.MULTIPART_FORM_DATA)
-//	@Produces("text/plain")
-//	@Path("/AddTrainImage")
-//	public String registerWebService(@Context HttpServletRequest request) {
-//		String responseStatus = "Success";
-//		String trafficID = request.getParameter("trafficID");
-//
-//		// checks whether there is a file upload request or not
-//		if (ServletFileUpload.isMultipartContent(request)) {
-//			final FileItemFactory factory = new DiskFileItemFactory();
-//			final ServletFileUpload fileUpload = new ServletFileUpload(factory);
-//			try {
-//				/*
-//				 * parseRequest returns a list of FileItem but in old
-//				 * (pre-java5) style
-//				 */
-//				final List items = fileUpload.parseRequest(request);
-//
-//				if (items != null) {
-//					final Iterator iter = items.iterator();
-//
-//					while (iter.hasNext()) {
-//						final FileItem item = (FileItem) iter.next();
-//						String itemName = item.getName();
-//						final String fieldName = item.getFieldName();
-//						final String fieldValue = item.getString();
-//						TrainImageDTO tranImageDTO = new TrainImageDTO();
-//						tranImageDTO.setTrafficID(trafficID);
-//						itemName = trafficID + "-"
-//								+ UUID.randomUUID().toString();
-//						tranImageDTO.setImageID(itemName);
-//						tranImageDTO.setImageName(itemName + ".jpg");
-//						TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
-//						Boolean result = trainImageDAO.add(tranImageDTO);					
-//						if (item.isFormField()) {
-//							trafficID = fieldValue;					
-//						} else{
-//							String trainChildFolderPath = GlobalValue
-//									.getWorkPath()
-//									+ Constants.TRAIN_IMAGE_FOLDER
-//									+ trafficID
-//									+ "/";
-//							File trainChildFolder = new File(
-//									trainChildFolderPath);
-//							// create if not exist
-//							if (!trainChildFolder.exists()) {
-//								trainChildFolder.mkdir();
-//							}
-//							final File savedFile = new File(
-//									trainChildFolderPath + File.separator
-//											+ itemName);							
-//							item.write(savedFile);
-//						}
-//
-//					}
-//				}
-//			} catch (FileUploadException fue) {
-//				responseStatus = "Fail";
-//				fue.printStackTrace();
-//			} catch (Exception e) {
-//				responseStatus = "Fail";
-//				e.printStackTrace();
-//			}
-//		}
-//		return responseStatus;
-//	}	
-
-	/**
-	 * View list trainImage
-	 * 
-	 * @param trafficID
-	 * @return
-	 */
-	@GET
-	@Path("/ViewTrainImage")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String viewTrainmage(@QueryParam("trafficID") String trafficID) {
-		ArrayList<TrainImageDTO> trainImageInfo = new ArrayList<TrainImageDTO>();
-		TrainImageDAO trainImageDAO	 = new TrainImageDAOImpl();
-		trainImageInfo = trainImageDAO.listTrainImageByTrafficID(trafficID);
-
-		// get return info
-		
-		ArrayList<TrainImageJSON> listTrainImageJSON = new ArrayList<TrainImageJSON>();
-		for(TrainImageDTO trainImageDTO: trainImageInfo){
-			TrainImageJSON trainImageJSON = new TrainImageJSON();
-			trainImageJSON.setTrafficID(trainImageDTO.getTrafficID());
-			trainImageJSON.setImageID(trainImageDTO.getImageID());
-			trainImageJSON.setImageName(trainImageDTO.getImageName());;
-			String imageLink = Constants.TRAIN_IMAGE_SUB_LINK + trafficID + "/"
-					+ trainImageDTO.getImageName();
-			trainImageJSON.setImageName(imageLink);
-			listTrainImageJSON.add(trainImageJSON);		
-		}
-		Gson gson = new Gson();
-		return gson.toJson(listTrainImageJSON);
-	}
-	
-
-	/**
-	 * Delete Traffic Info
-	 * 
-	 * @param trafficID
-	 * @return
-	 */
-	@GET
-	@Path("/DeleteTrafficInfo")
-	public String deleteReport(@QueryParam("trafficID") String trafficID) {
-		TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
-		Boolean result = trafficDAO.delete(trafficID);
-		if (result == true) {
-			return "Success";
-		}
-		return "Fail";
-	}
-	
-	/**
-	 * Delete TrainImage
-	 * 
-	 * @param trafficID
-	 * @return
-	 */
-	@GET
-	@Path("/DeleteTrainImage")
-	public String deleteTrainImage(@QueryParam("trainImageID") String trainImageID) {	
-	String imageName = trainImageID + ".jpg";	
-	TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
-	String trafficID = trainImageDAO.getTrafficInfoID(imageName);
-	String location = GlobalValue.getWorkPath()
-			+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
-	Boolean result = trainImageDAO.deleteByImageID(trainImageID);	
-		if (result == true) {
-			File delete = new File(location, imageName);
-			delete.delete();
-			return "Success";
-		}
-		return "Fail";
-	}
 }

@@ -1,9 +1,11 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import dto.TrafficInfoDTO;
@@ -75,24 +77,24 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			if (cateID == 0 && limit == 0) {
 				//search in all category and no limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ?");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 			} else if (cateID == 0 && limit != 0) {
 				//search in all category with limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? LIMIT ?");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? LIMIT ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, limit);
 			} else if (cateID != 0 && limit == 0) {
 				//search in one cate and not limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ?");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, cateID);
 			} else {
 				//search in one cate with limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? LIMIT ?");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? LIMIT ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, cateID);
 				stm.setInt(3, limit);
@@ -138,7 +140,7 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT trafficID, name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE trafficID = ?");
+					.prepareStatement("SELECT trafficID, name,image,information,penaltyfee,categoryID,createDate FROM trafficinformation WHERE trafficID = ?");
 			stm.setString(1, id);
 			ResultSet rs = stm.executeQuery();
 			if (rs.next()) {
@@ -149,7 +151,9 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 				trafficObj.setInformation(rs.getString("information"));
 				trafficObj.setPenaltyfee(rs.getString("penaltyfee"));
 				trafficObj.setCategoryID(rs.getInt("categoryID"));
-
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				trafficObj.setCreateDate(tempDate);
 				return trafficObj;
 			}
 		} catch (Exception ex) {

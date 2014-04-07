@@ -92,17 +92,18 @@ public class Server {
 
 		try {
 			// delete old data
-			new File(mainFolderPath).delete();
-			new File(trainFolderPath).delete();
+			FileUtils.deleteDirectory(new File(mainFolderPath));
+			FileUtils.deleteDirectory(new File(trainFolderPath));
 			// recreate folder
 			new File(mainFolderPath).mkdir();
 			new File(trainFolderPath).mkdir();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//delete train image db
-		
+
+		// delete train image db
+		TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+		trainImageDAO.deleteAll();
 
 		// upload
 		String output = "";
@@ -126,8 +127,8 @@ public class Server {
 		try {
 			file = new FileInputStream(new File(tempExcelFilePath));
 			// Get the workbook instance for XLS file
-			XSSFWorkbook workbook = new XSSFWorkbook(file);					
-			
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+
 			// Get first sheet from the workbook
 			XSSFSheet sheet = workbook.getSheetAt(0);
 
@@ -228,8 +229,7 @@ public class Server {
 			}
 
 			// copy and insert train image
-			TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
-			
+
 			for (TrafficInfoDTO trafficInfoDTO : listTrafficInfo) {
 				// add each train image of traffic
 				String tempTrainChildFolderPath = tempTrainFolderPath
@@ -313,8 +313,9 @@ public class Server {
 
 		String output = "";
 		// Create data folder and copy image
-		//String workingFolderPath = GlobalValue.getWorkPath() + "/Data/";
-		String tempFolderPath = GlobalValue.getWorkPath() + Constants.TEMP_FOLDER ;
+		// String workingFolderPath = GlobalValue.getWorkPath() + "/Data/";
+		String tempFolderPath = GlobalValue.getWorkPath()
+				+ Constants.TEMP_FOLDER;
 
 		File tempFolder = new File(tempFolderPath + "Data/");
 		// delete old folder if exist
@@ -331,12 +332,17 @@ public class Server {
 			// create data folder
 			if (tempFolder.mkdir()) {
 				// if create success
-				String mainFolderPath = GlobalValue.getWorkPath() + Constants.MAIN_IMAGE_FOLDER;
-				String trainFolderPath = GlobalValue.getWorkPath() + Constants.TRAIN_IMAGE_FOLDER;
+				String mainFolderPath = GlobalValue.getWorkPath()
+						+ Constants.MAIN_IMAGE_FOLDER;
+				String trainFolderPath = GlobalValue.getWorkPath()
+						+ Constants.TRAIN_IMAGE_FOLDER;
 
-				String tempExcelFilePath = tempFolderPath + Constants.EXCEL_PATH;
-				String tempMainFolderPath = tempFolderPath + Constants.MAIN_IMAGE_FOLDER;
-				String tempTrainFolderPath = tempFolderPath + Constants.TRAIN_IMAGE_FOLDER;
+				String tempExcelFilePath = tempFolderPath
+						+ Constants.EXCEL_PATH;
+				String tempMainFolderPath = tempFolderPath
+						+ Constants.MAIN_IMAGE_FOLDER;
+				String tempTrainFolderPath = tempFolderPath
+						+ Constants.TRAIN_IMAGE_FOLDER;
 
 				// create excel file
 				XSSFWorkbook workbook = new XSSFWorkbook();
@@ -353,43 +359,45 @@ public class Server {
 				Cell cellInfo = row.createCell(cellNum++);
 				cellInfo.setCellValue("Thông tin");
 				Cell cellPenaltyFee = row.createCell(cellNum++);
-				cellPenaltyFee.setCellValue("Mức phạt");			    
+				cellPenaltyFee.setCellValue("Mức phạt");
 				Cell cellCateID = row.createCell(cellNum++);
 				cellCateID.setCellValue("Loại biển báo");
-				
-				 // When the comment box is visible, have it show in a 1x3 space
+
+				// When the comment box is visible, have it show in a 1x3 space
 				CreationHelper factory = workbook.getCreationHelper();
-			    ClientAnchor anchor = factory.createClientAnchor();
-			    anchor.setCol1(cellCateID.getColumnIndex());
-			    anchor.setCol2(cellCateID.getColumnIndex()+1);
-			    anchor.setRow1(row.getRowNum());
-			    anchor.setRow2(row.getRowNum()+3);
-			    Drawing drawing = sheet.createDrawingPatriarch();
+				ClientAnchor anchor = factory.createClientAnchor();
+				anchor.setCol1(cellCateID.getColumnIndex());
+				anchor.setCol2(cellCateID.getColumnIndex() + 1);
+				anchor.setRow1(row.getRowNum());
+				anchor.setRow2(row.getRowNum() + 3);
+				Drawing drawing = sheet.createDrawingPatriarch();
 				Comment comment = drawing.createCellComment(anchor);
-			    RichTextString str = factory.createRichTextString("Đối chiếu loại biển báo với sheet bên!");
-			    comment.setString(str);
-			    comment.setAuthor("Service");
-			    cellCateID.setCellComment(comment);
-			    
-			    //create category table in excel file
-			    XSSFSheet cateSheet = workbook.createSheet("Loại biển báo");
-			    CategoryDAO categoryDAO = new CategoryDAOImpl();
-			    ArrayList<CategoryDTO> listCategoryDTO = categoryDAO.listAllCategory();
-			    int cateRow = 0;
-			    Row rowCate = null;
-			    //header
-			    rowCate = cateSheet.createRow(cateRow++);
+				RichTextString str = factory
+						.createRichTextString("Đối chiếu loại biển báo với sheet bên!");
+				comment.setString(str);
+				comment.setAuthor("Service");
+				cellCateID.setCellComment(comment);
+
+				// create category table in excel file
+				XSSFSheet cateSheet = workbook.createSheet("Loại biển báo");
+				CategoryDAO categoryDAO = new CategoryDAOImpl();
+				ArrayList<CategoryDTO> listCategoryDTO = categoryDAO
+						.listAllCategory();
+				int cateRow = 0;
+				Row rowCate = null;
+				// header
+				rowCate = cateSheet.createRow(cateRow++);
 				Cell cellCateName = rowCate.createCell(0);
 				cellCateName.setCellValue("Tên biển báo");
-				Cell cellCateID1 = rowCate.createCell(1);			   
+				Cell cellCateID1 = rowCate.createCell(1);
 				cellCateID1.setCellValue("ID");
-				
-			    for (CategoryDTO categoryDTO : listCategoryDTO) {
-			    	rowCate = cateSheet.createRow(cateRow++);
+
+				for (CategoryDTO categoryDTO : listCategoryDTO) {
+					rowCate = cateSheet.createRow(cateRow++);
 					cellCateName = rowCate.createCell(0);
 					cellCateName.setCellValue(categoryDTO.getCategoryName());
-					cellCateID1 = rowCate.createCell(1);			   
-					cellCateID1.setCellValue(categoryDTO.getCategoryID());			    	
+					cellCateID1 = rowCate.createCell(1);
+					cellCateID1.setCellValue(categoryDTO.getCategoryID());
 				}
 
 				// create temp folder
@@ -425,7 +433,8 @@ public class Server {
 							tempTrainChildFolder.mkdir();
 							// copy list train image
 							for (int i = 0; i < listTrainImage.size(); i++) {
-								String trainImagePath = trainFolderPath+trafficID+"/"
+								String trainImagePath = trainFolderPath
+										+ trafficID + "/"
 										+ listTrainImage.get(i).getImageName();
 								String tempTrainImagePath = tempTrainChildFolderPath
 										+ trafficID + "-" + (i + 1) + ".jpg";
@@ -452,7 +461,8 @@ public class Server {
 						cellInfo = row.createCell(cellNum++);
 						cellInfo.setCellValue(trafficInfoDTO.getInformation());
 						cellPenaltyFee = row.createCell(cellNum++);
-						cellPenaltyFee.setCellValue(trafficInfoDTO.getPenaltyfee());
+						cellPenaltyFee.setCellValue(trafficInfoDTO
+								.getPenaltyfee());
 						cellCateID = row.createCell(cellNum++);
 						cellCateID.setCellValue(trafficInfoDTO.getCategoryID());
 					}
@@ -466,7 +476,7 @@ public class Server {
 				workbook.write(out);
 				out.close();
 
-				// zip temp data folder				
+				// zip temp data folder
 				String zipFilePath = tempFolderPath + "Export.zip";
 				File zipFile1 = new File(zipFilePath);
 				if (zipFile1.exists()) {
@@ -484,12 +494,13 @@ public class Server {
 							.setCompressionLevel(Zip4jConstants.DEFLATE_LEVEL_NORMAL);
 					// Add folder to the zip file
 					zipFile.addFolder(tempFolder.getPath(), parameters);
-					
-					//Delete temp folder
+
+					// Delete temp folder
 					try {
 						FileUtils.deleteQuietly(new File(tempExcelFilePath));
 						FileUtils.deleteDirectory(new File(tempMainFolderPath));
-						FileUtils.deleteDirectory(new File(tempTrainFolderPath));
+						FileUtils
+								.deleteDirectory(new File(tempTrainFolderPath));
 						tempFolder.delete();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -499,11 +510,13 @@ public class Server {
 					// return result
 					ResponseBuilder response = Response.ok(new FileInputStream(
 							zipFilePath));
-					Date date = new Date() ;
-					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss") ;
-					String fileName = "Export-"+ dateFormat.format(date)+".zip";
+					Date date = new Date();
+					SimpleDateFormat dateFormat = new SimpleDateFormat(
+							"yyyy-MM-dd_HH-mm-ss");
+					String fileName = "Export-" + dateFormat.format(date)
+							+ ".zip";
 					response.header("Content-Disposition",
-							"attachment; filename=\""+fileName+"\"");
+							"attachment; filename=\"" + fileName + "\"");
 					return response.build();
 
 				} catch (ZipException e) {

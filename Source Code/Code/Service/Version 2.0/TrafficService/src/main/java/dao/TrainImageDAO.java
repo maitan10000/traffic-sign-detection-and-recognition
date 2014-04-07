@@ -12,6 +12,8 @@ public interface TrainImageDAO {
 	public Boolean deleteByImageID(String trainImageID);
 
 	public Boolean deleteByTrafficID(String trafficID);
+	
+	public Boolean deleteAll();
 
 	public ArrayList<TrainImageDTO> listTrainImageByTrafficID(String trafficID);
 }

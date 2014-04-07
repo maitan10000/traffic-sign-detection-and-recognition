@@ -28,7 +28,9 @@ public class ResultDAOImpl implements ResultDAO {
 				resultData.setUploadedImage(rs.getString("uploadedImage"));
 				resultData.setListTraffic(rs.getString("listTraffic"));
 				resultData.setCreator(rs.getString("creator"));
-				resultData.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				resultData.setCreateDate(tempDate);
 				resultData.setIsActive(rs.getBoolean("isActive"));
 				return resultData;
 			}
@@ -62,12 +64,9 @@ public class ResultDAOImpl implements ResultDAO {
 		try {
 			String uploadedImage = result.getUploadedImage();
 			String creator = result.getCreator();
-			java.util.Date utilDate = new java.util.Date();
-			Date createDate = new Date(utilDate.getTime());
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("INSERT INTO result(uploadedImage, creator, createDate,isActive) VALUES(?,?,NOW(),?)");
-			;
 			stm.setString(1, uploadedImage);
 			stm.setString(2, creator);
 			stm.setBoolean(3, false);
@@ -117,13 +116,11 @@ public class ResultDAOImpl implements ResultDAO {
 			connection = BaseDAO.getConnect();
 			stm = connection
 					.prepareStatement("UPDATE trafficdb.result SET listTraffic = ?,uploadedImage = ?, isActive = ? WHERE resultID=?");
-			;
 			stm.setString(1, listTraffic);
 			stm.setString(2, imagePath);
 			stm.setBoolean(3, isActive);
 			stm.setInt(4, resultID);
-			stm.executeUpdate();
-			return true;
+			return stm.executeUpdate() > 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -191,5 +188,38 @@ public class ResultDAOImpl implements ResultDAO {
 			}
 		}
 		return resultData;
+	}
+
+	@Override
+	public Boolean delete(int id) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {			
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("UPDATE trafficdb.result SET isActive = false WHERE resultID=?");
+			stm.setInt(1, id);
+			return stm.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
 	}
 }
