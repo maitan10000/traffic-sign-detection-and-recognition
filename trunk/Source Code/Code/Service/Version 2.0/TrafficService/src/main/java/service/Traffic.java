@@ -38,6 +38,7 @@ import json.ResultJSON;
 import json.ResultShortJSON;
 import json.TrafficInfoJSON;
 import json.TrafficInfoShortJSON;
+import json.TrainImageJSON;
 import utility.Constants;
 import utility.GlobalValue;
 import utility.Helper;
@@ -62,6 +63,8 @@ import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import dao.FavoriteDAO;
 import dao.FavoriteDAOImpl;
+import dao.ReportDAO;
+import dao.ReportDAOImpl;
 import dao.ResultDAO;
 import dao.ResultDAOImpl;
 import dao.TrafficInfoDAO;
@@ -760,4 +763,75 @@ public class Traffic {
 //		return responseStatus;
 //	}	
 
+	/**
+	 * View list trainImage
+	 * 
+	 * @param trafficID
+	 * @return
+	 */
+	@GET
+	@Path("/ViewTrainImage")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String viewTrainmage(@QueryParam("trafficID") String trafficID) {
+		ArrayList<TrainImageDTO> trainImageInfo = new ArrayList<TrainImageDTO>();
+		TrainImageDAO trainImageDAO	 = new TrainImageDAOImpl();
+		trainImageInfo = trainImageDAO.listTrainImageByTrafficID(trafficID);
+
+		// get return info
+		
+		ArrayList<TrainImageJSON> listTrainImageJSON = new ArrayList<TrainImageJSON>();
+		for(TrainImageDTO trainImageDTO: trainImageInfo){
+			TrainImageJSON trainImageJSON = new TrainImageJSON();
+			trainImageJSON.setTrafficID(trainImageDTO.getTrafficID());
+			trainImageJSON.setImageID(trainImageDTO.getImageID());
+			trainImageJSON.setImageName(trainImageDTO.getImageName());;
+			String imageLink = Constants.TRAIN_IMAGE_SUB_LINK + trafficID + "/"
+					+ trainImageDTO.getImageName();
+			trainImageJSON.setImageName(imageLink);
+			listTrainImageJSON.add(trainImageJSON);		
+		}
+		Gson gson = new Gson();
+		return gson.toJson(listTrainImageJSON);
+	}
+	
+
+	/**
+	 * Delete Traffic Info
+	 * 
+	 * @param trafficID
+	 * @return
+	 */
+	@GET
+	@Path("/DeleteTrafficInfo")
+	public String deleteReport(@QueryParam("trafficID") String trafficID) {
+		TrafficInfoDAO trafficDAO = new TrafficInfoDAOImpl();
+		Boolean result = trafficDAO.delete(trafficID);
+		if (result == true) {
+			return "Success";
+		}
+		return "Fail";
+	}
+	
+	/**
+	 * Delete TrainImage
+	 * 
+	 * @param trafficID
+	 * @return
+	 */
+	@GET
+	@Path("/DeleteTrainImage")
+	public String deleteTrainImage(@QueryParam("trainImageID") String trainImageID) {	
+	String imageName = trainImageID + ".jpg";	
+	TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+	String trafficID = trainImageDAO.getTrafficInfoID(imageName);
+	String location = GlobalValue.getWorkPath()
+			+ Constants.TRAIN_IMAGE_FOLDER + trafficID + "/";
+	Boolean result = trainImageDAO.deleteByImageID(trainImageID);	
+		if (result == true) {
+			File delete = new File(location, imageName);
+			delete.delete();
+			return "Success";
+		}
+		return "Fail";
+	}
 }

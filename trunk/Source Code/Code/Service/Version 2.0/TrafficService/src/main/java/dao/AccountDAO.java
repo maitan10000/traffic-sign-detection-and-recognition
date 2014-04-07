@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import dto.AccountDTO;
 
 public interface AccountDAO {
-	public String addAccount(AccountDTO accountDAO);
+	public boolean addAccount(AccountDTO accountDAO);
 
 	public AccountDTO getAccount(String userID);
 
@@ -21,6 +21,8 @@ public interface AccountDAO {
 	
 	public AccountDTO getPassword(String email);
 	
-	public boolean updatePassword(String password);
+	public boolean updatePassword(String password, String email);
+	
+	public boolean verifyAccount(String email, String password);
 
 }

@@ -17,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import utility.Constants;
+import utility.GlobalValue;
 import utility.MailUtil;
 import json.AccountJSON;
 import json.FavoriteJSON;
@@ -49,7 +50,6 @@ import dto.TrafficInfoDTO;
 
 @Path("/Manage")
 public class Manage {
-
 
 	/**
 	 * Add Favorite
@@ -341,25 +341,39 @@ public class Manage {
 			@FormParam("password") String password,
 			@FormParam("email") String email, @FormParam("name") String name) {
 		try {
-			AccountDTO accountObj = new AccountDTO();
-			accountObj.setUserID(userID);
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			byte[] thedigest = md.digest(password.getBytes("UTF-8"));
-			StringBuffer sb = new StringBuffer();
-			for (byte b : thedigest) {
-				sb.append(Integer.toHexString((int) (b & 0xff)));
+			if (userID != null && password != null && email != null
+					&& name != null && !userID.isEmpty() && !password.isEmpty()
+					&& !email.isEmpty() && !name.isEmpty()) {
+				AccountDTO accountObj = new AccountDTO();
+				accountObj.setUserID(userID);
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+				StringBuffer sb = new StringBuffer();
+				for (byte b : thedigest) {
+					sb.append(Integer.toHexString((int) (b & 0xff)));
+				}
+				String md5password = new String(sb.toString());
+				accountObj.setPassword(md5password);
+				accountObj.setEmail(email);
+				accountObj.setName(name);
+				accountObj.setRole("user");
+
+				AccountDAO accountDAO = new AccountDAOImpl();
+				boolean result = accountDAO.addAccount(accountObj);
+				if (result == true) {
+					String subject = "Thử gửi mail";
+					String message = "<div style=\"overflow: hidden;\" class=\"a3s\" id=\":x7\"><p><span style=\"font-size:medium\">Vui lòng nhấp vào link để kích hoạt:</span><a href=http://localhost:8080/TrafficService/rest/Manage/verifyAccount?email="
+							+ email
+							+ "&code="
+							+ md5password
+							+ "><span style=\"color:#ff0000\">Kích hoạt</span><a>.</p><div class=\"yj6qo\"></div></div>";
+					boolean result1 = MailUtil.sendEmail(email, subject,
+							message);
+					return Response.status(200).entity("Success").build();
+
+				}
+
 			}
-			String md5password = new String(sb.toString());
-			accountObj.setPassword(md5password);
-			accountObj.setEmail(email);
-			accountObj.setName(name);
-			accountObj.setRole("user");
-
-			AccountDAO accountDAO = new AccountDAOImpl();
-			String result = accountDAO.addAccount(accountObj);
-			// Send mail verify
-			return Response.status(200).entity(result).build();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -492,7 +506,8 @@ public class Manage {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public String sendEmail(@FormParam("email") String email) {
 		String subject = "Thử gửi mail";
-		String message = "<p><span style=\"font-size: medium;\">Thử chức năng</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\">HTML Conent</span>.</p>";
+		String message = "<p><span style=\"font-size: medium;\">Vui lòng nhấp vào link để kích hoạt</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\"><a\"href="
+				+ "http://localhost:8080/TrafficService/rest/Manage/verifyAccount?email=nghiahd92@gmail.com&password=827ccbeea8a706c4c34a16891f84e7b\">Kích hoạt</a></span>.</p>";
 		boolean result = MailUtil.sendEmail(email, subject, message);
 		if (result == true) {
 			return "Success";
@@ -500,4 +515,54 @@ public class Manage {
 		return "Fail";
 	}
 
+	/**
+	 * Verify Account
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/verifyAccount")
+	public String verifyAccount(@QueryParam("email") String email,
+			@QueryParam("code") String password) {
+		AccountDAO accountDAO = new AccountDAOImpl();
+		boolean result = accountDAO.verifyAccount(email, password);
+		if (result == true) {
+			return "Kích hoạt tài khoản thành công";
+		}
+		return "Fail";
+	}
+
+	//
+	@POST
+	@Path("/ForgotPassword")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public Response forgotPassord(@FormParam("email") String email,
+			@FormParam("password") String password) {
+		try {
+			if (password != null && email != null && !password.isEmpty()
+					&& !email.isEmpty()) {
+				AccountDTO accountObj = new AccountDTO();				
+				MessageDigest md = MessageDigest.getInstance("MD5");
+				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
+				StringBuffer sb = new StringBuffer();
+				for (byte b : thedigest) {
+					sb.append(Integer.toHexString((int) (b & 0xff)));
+				}
+				String md5password = new String(sb.toString());
+				accountObj.setPassword(md5password);
+				accountObj.setEmail(email);
+				AccountDAO accountDAO = new AccountDAOImpl();
+				boolean result = accountDAO.updatePassword(md5password, email);
+				if (result == true) {					
+					return Response.status(200).entity("Success").build();
+
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return Response.status(200).entity("Fail").build();
+
+	}
 }
