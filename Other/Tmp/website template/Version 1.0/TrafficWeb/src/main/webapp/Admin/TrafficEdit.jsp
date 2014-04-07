@@ -53,7 +53,7 @@
 			//$("#progress").html('<span class="bar" style="width: 100%"></span>');
 			//console.log("%: 100");
 		}, false);
-		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_UPDATE%>');
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_EDIT%>');
 		//xhr.overrideMimeType('text/plain; charset=utf-8');
 		xhr.send(formData);
 	}

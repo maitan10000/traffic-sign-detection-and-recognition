@@ -7,13 +7,23 @@
 
 <!-- Mirrored from themedesigner.in/demo/maruti-admin/login.html by HTTrack Website Copier/3.x [XR&CO'2013], Mon, 24 Mar 2014 10:09:12 GMT -->
 <head>
-<title>Maruti Admin</title>
+<title></title>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="Admin/Content/css/bootstrap.min.css" />
 <link rel="stylesheet"
 	href="Admin/Content/css/bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-login.css" />
+<style>
+#loginbox
+{
+width: 400px;
+}
+#loginbox .label
+{
+text-align: left;
+}
+</style>
 </head>
 <body>
 	<div id="loginbox">
@@ -26,18 +36,22 @@
 			</div>
 			<div class="control-group">
 				<div class="row-fluid">
-					<label class="span4">Tên đăng nhập:</label>
-					<div class="span8" align="left">
-						<input type="text" name="txtUser" />
+					<div class="main_input_box">
+						<label class="span4">Tên đăng nhập:</label>
+						<div class="span8" align="left">
+							<input type="text" name="txtUser" />
+						</div>
 					</div>
 				</div>
 
 			</div>
 			<div class="control-group">
 				<div class="row-fluid">
+				<div class="main_input_box">
 					<label class="span4">Mật khẩu:</label>
 					<div class="span8" align="left">
 						<input type="password" name="txtPassword" />
+					</div>
 					</div>
 				</div>
 			</div>
@@ -77,5 +91,4 @@
 </body>
 
 
-<!-- Mirrored from themedesigner.in/demo/maruti-admin/login.html by HTTrack Website Copier/3.x [XR&CO'2013], Mon, 24 Mar 2014 10:09:12 GMT -->
 </html>

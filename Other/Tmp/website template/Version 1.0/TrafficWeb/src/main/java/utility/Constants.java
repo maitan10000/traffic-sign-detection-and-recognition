@@ -14,21 +14,33 @@ public final class Constants {
 	public final static String TRAFFIC_SEARCH_MANUAL = "rest/Traffic/SearchManual";
 	public final static String TRAFFIC_SEARCH_AUTO = "rest/Traffic/SearchAuto";
 
-	// for view traffic detail
+	// for traffic info
 	public final static String TRAFFIC_TRAFFIC_VIEW = "rest/Traffic/ViewDetail";
 	public final static String TRAFFIC_TRAFFIC_ADD = "rest/Traffic/AddTrafficInfo";
-	public final static String TRAFFIC_TRAFFIC_UPDATE = "rest/Traffic/UpdateTrafficInfo";
+	public final static String TRAFFIC_TRAFFIC_EDIT = "rest/Traffic/EditTrafficInfo";	
 	public final static String TRAFFIC_TRAFFIC_LIST = "rest/Traffic/ListTrafficByCateID";
-	public final static String TRAFFIC_TRAFFIC_ADDTRAINIMAGE = "rest/Traffic/AddTrainImage";
-	public final static String TRAFFIC_TRAFFIC_VIEWLISTTRAINIMAGE = "rest/Traffic/ViewTrainImage";
 	public final static String TRAFFIC_TRAFFIC_DELETE = "rest/Traffic/DeleteTrafficInfo";
-	public final static String TRAFFIC_TRAFFIC_DELETETRAINIMAGE = "rest/Traffic/DeleteTrainImage";
+	
+	// for traffic train image
+	public final static String TRAFFIC_TRAFFIC_TRAIN_IMAGE_ADD = "rest/Traffic/AddTrainImage";
+	public final static String TRAFFIC_TRAFFIC_TRAIN_IMAGE_LIST = "rest/Traffic/ListTrainImageByTrafficID";
+	public final static String TRAFFIC_TRAFFIC_TRAIN_IMAGE_DELETE = "rest/Traffic/DeleteTrainImageByID";
+	
+	// for view history
+	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
+	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
+	
+	// Train Image
+	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
 
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
 	public final static String MANAGE_FAVORITE_ADD = "rest/Manage/AddFavorite";
 	public final static String MANAGE_FAVORITE_DELETE = "rest/Manage/DeleteFavorite";
 	public final static String MANAGE_FAVORITE_LIST = "rest/Manage/ListFavorite";
+	// Export, import
+	public final static String SERVER_IMPORT = "rest/Server/ImportFile";
+	public final static String SERVER_EXPORT = "rest/Server/ExportFile";
 
 	// for view history
 	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
@@ -40,8 +52,7 @@ public final class Constants {
 
 	// action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
-	public final static String ACTION_TRAFFICINFO_ADD = "addTrafficInfo";
-	public final static String ACTION_SEARCH_AUTO = "searchAuto";
+	public final static String ACTION_SEARCH_AUTO = "searchAuto";	
 	public final static String ACTION_TRAIN_IMAGE_ADD_FROM_REPORT = "addTrainImageFromReport";
 	public final static String ACTION_FAVORITE_VIEW = "viewFavorite";
 	public final static String ACTION_FARVORITE_VIEW_SHORT = "viewFavoriteShort";
@@ -67,10 +78,14 @@ public final class Constants {
 	public final static String ACTION_ACCOUNT_UNSETSTAFF = "unsetStaff";
 	public final static String ACTION_ACCOUNT_FORGOTPASSWORD = "forgotpassword";
 
-	public final static String ACTION_TRAFFIC_VIEW = "viewTraffic";
+	public final static String ACTION_TRAFFIC_ADD = "addTraffic";
+	public final static String ACTION_TRAFFIC_EDIT = "editTraffic";
 	public final static String ACTION_TRAFFIC_LIST = "listTraffic";
+	public final static String ACTION_TRAFFIC_DELETE = "deleteTraffic";
+	
+	
 	public final static String ACTION_TRAFFIC_VIEWTRAINIMAGE = "viewTrainImage";
-	public final static String ACTION_TRAFFIC_DELETE = "deleteTrafficInfo";
+	
 
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
@@ -82,10 +97,8 @@ public final class Constants {
 	public final static String MANAGE_REPORT_DELETE = "rest/Manage/DeleteReport";
 	public final static String MANAGE_REPORT_SEND = "rest/Manage/SendReport";
 
-	// for register
+	// register, login
 	public final static String MANAGE_REGISTER = "rest/Manage/Register";
-
-	// for login
 	public final static String MANAGE_LOGIN = "rest/Manage/Login";
 
 	// for inActive Report

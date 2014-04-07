@@ -271,7 +271,7 @@ function showDetails(reportID){
 	});
 }
 function showTrafficDetails(trafficID){
-	var action = '<%=Constants.ACTION_TRAFFIC_VIEW%>';
+	var action = '<%=Constants.ACTION_TRAFFIC_EDIT%>';
 	$.ajax({
 		url: '<%=Constants.CONTROLLER_ADMIN%>',
 		type: "GET",

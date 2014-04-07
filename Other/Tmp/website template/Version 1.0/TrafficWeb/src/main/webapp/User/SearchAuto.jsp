@@ -362,6 +362,7 @@ legend {
 
 							function showResult(resultData, fileName) {
 								//add list result
+								console.log(resultData);
 								var resultJSON = JSON.parse(resultData);								
 								if(userID != "" && resultJSON.resultID != -1)
 								{
@@ -561,8 +562,7 @@ legend {
 								var action = "checkFavorite";
 								$
 										.ajax({
-											url : '<%=Constants.CONTROLLER_USER%>
-							',
+											url : '<%=Constants.CONTROLLER_USER%>',
 											type : "GET",
 											data : {
 												action : action,

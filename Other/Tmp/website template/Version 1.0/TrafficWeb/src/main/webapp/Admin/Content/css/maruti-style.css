@@ -91,7 +91,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 		.2), 0 20px 20px rgba( 0, 0, 0, .15);*/
 	
 	/* yellow header */
-	font-size: 35px;
+	font-size: 25px;
 	color: #ffe !important;
 	text-shadow:
       	0 0 .1em #ffe,
