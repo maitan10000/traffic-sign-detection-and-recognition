@@ -320,7 +320,7 @@ legend {
 								var action = "reportTraffic";
 								$.ajax({
 									url : '<%=Constants.CONTROLLER_USER%>',
-									type : "POST",
+									type : "GET",
 									data : {
 										action : action,
 										trafficID : trafficID,
