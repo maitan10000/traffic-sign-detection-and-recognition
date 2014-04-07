@@ -213,6 +213,11 @@ public class Traffic {
 			@FormDataParam("userID") String userID,
 			@FormDataParam("listLocate") String listLocate) {
 
+		if(userID == null || userID.isEmpty())
+		{
+			userID = "guest";			
+		}
+		
 		ResultDTO result = new ResultDTO();
 		result.setCreator(userID);
 		result.setUploadedImage("");
