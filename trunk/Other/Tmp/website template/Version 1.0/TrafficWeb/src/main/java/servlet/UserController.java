@@ -82,7 +82,11 @@ public class UserController extends HttpServlet {
 			} else
 			// load searchmanual page with all category
 			if ("searchManual".equals(action)) {
-				String searchKey = request.getParameter("searchKey");
+				request.setCharacterEncoding("UTF-8");
+				String searchKey = "";
+				if(request.getParameter("searchKey") != null){
+					 searchKey = new String(request.getParameter("searchKey").getBytes("iso-8859-1"), "UTF-8");
+				}
 				String catID = request.getParameter("catID");
 				// get all category and set to attribute category for display in
 				// selectbox

@@ -38,30 +38,38 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
-						BÁO</h2>
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA
+						CỨU BIỂN BÁO</h2>
 					<!--   _____________ -->
 					<%
 						String userID = (String)session.getAttribute(Constants.SESSION_USERID);
-					if(userID != null && !userID.isEmpty())
-					{
+														if(userID != null && !userID.isEmpty())
+														{
 					%>
 					<ul class="links">
-						<li><a href="#"
-							title=""><%=userID %></a></li>
+						<li><a href="#" title=""><%=userID%></a></li>
 						<li class="separator">|</li>
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng xuất</a></li>
+						<li><a
+							href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%> ">Đăng
+								xuất</a></li>
 						<li class="separator">
 					</ul>
-					<%}else{ %>
+					<%
+						}else{
+					%>
 					<ul class="links">
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
+						<li><a
+							href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>"
 							title="Đăng nhập">Đăng Nhập</a></li>
 						<li class="separator">|</li>
-						<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>" title="Đăng ký">Đăng Ký</a></li>
+						<li><a
+							href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>"
+							title="Đăng ký">Đăng Ký</a></li>
 						<li class="separator">
 					</ul>
-					<%}//end if session useID %>
+					<%
+						}//end if session useID
+					%>
 				</div>
 				</header>
 				<div class="menu-container">
@@ -77,11 +85,11 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
 						<li class="level0 nav-4 level-top"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
 						<li class="level0 nav-5 level-top last"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_LIST%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 					</ul>
@@ -94,30 +102,43 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				<div class="main-content content-cat notHomepage">
 					<div class="content-title">TRA CỨU BIỂN BÁO</div>
 					<form action="UserController"
-						enctype="application/x-www-form-urlencoded">
+						enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
 						<div class="options">
-							<div class="searchName" style="margin-right: 30px;">
-								Tên biển báo: <input name="searchKey" type="text" />
+
+							<div class="fillOption" style="margin-left: 150px">
+								<div class="searchName" style="margin-right: 30px;">
+
+									Tên biển báo: <input id="searchKey" class="searchKey" name="searchKey" type="text" />
+									<div class="autoSearch">
+									<!--	<div class="autoResult">
+											<img class="imgAuto"
+												src="http://bienbaogiaothong.tk/TrafficService/rest/Image/Main/102.jpg">
+												<a href="#">Cấm đi ngược chiều</a>
+										</div> -->
+									</div>
+								</div>
+
+								<div class="content-Selectbox font-StyleTitle needMargin">
+									Loại Biển Báo: <select class="sortBy font-Style" id="catID"
+										name="catID">
+										<option class="font-Style" value="0">Tất Cả</option>
+										<%
+											for(int i = 0; i< listCat.size();i ++) {
+										%>
+										<option class="font-Style"
+											value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+										<%
+											}
+										%>
+									</select>
+								</div>
+								<div class="searchName" style="padding-bottom: 5px">
+									<button type="submit" class="btn btn-default btn-sm"
+										value="searchManual" name="action">Tìm kiếm</button>
+								</div>
+								<div style="clear: both"></div>
 							</div>
-							<div class="content-Selectbox font-StyleTitle needMargin">
-								Loại Biển Báo: <select class="sortBy font-Style" id="catID"
-									name="catID">
-									<option class="font-Style" value="0">Tất Cả</option>
-									<%
-										for(int i = 0; i< listCat.size();i ++) {
-									%>
-									<option class="font-Style"
-										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
-									<%
-										}
-									%>
-								</select>
-							</div>
-							<div class="searchName" style="padding-bottom: 5px">
-								<button type="submit" class="btn btn-default btn-sm"
-									value="searchManual" name="action">Tìm kiếm</button>
-							</div>
-							<div style="clear: both"></div>
+
 						</div>
 					</form>
 					<%
@@ -135,13 +156,15 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							<tbody>
 								<%
 									if( listTraffic.size()> 0){
-																																																																											for(int i = 0; i< listTraffic.size();i++){
+																																																																																													for(int i = 0; i< listTraffic.size();i++){
 								%>
 
 								<tr>
-									<td><img class="trafficImage"
-										src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>"
-										alt="Responsive image" /></td>
+									<td><a href="#myModal" data-toggle="modal"
+										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><img
+											class="trafficImage"
+											src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>"
+											alt="Responsive image" /></a></td>
 									<td><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
@@ -150,7 +173,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 								</tr>
 								<%
 									} 
-																																																																																	}
+																																																																																																			}
 								%>
 							</tbody>
 						</table>
@@ -233,6 +256,46 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 	pager.showPage(1);
 </script>
 <script type="text/javascript">
+var server = '<%=GlobalValue.getServiceAddress()%>';
+$( ".searchKey" ).keyup(function() {
+	  var catID = document.getElementById("catID").value;
+	  var keyWord = document.getElementById("searchKey").value;
+	  autoComplete(keyWord, catID);
+	});
+	// function auto searchManual
+		function autoComplete(keyword, catID){		
+		$.ajax({
+			url : server + '<%=Constants.TRAFFIC_SEARCH_MANUAL%>',
+			type : "GET",
+			data : {
+				name : keyword,
+				cateID : catID,
+				limit : 5
+			},
+			success : function(resultJSON) {
+				//console.log(resultJSON.length);
+				appendListResult(resultJSON);
+			}
+		});
+	}
+	//
+	function appendListResult(resultJSON){
+		var content = '';
+		for(var i = 0; i < resultJSON.length; i++)
+		{
+			var trafficName = resultJSON[i].name;
+			var imageLink = server + resultJSON[i].image;
+			content += '<div class="autoResult"> <img class="imgAuto" src="'+ imageLink +'"> <a href="#" onclick="selectAuto(\''+trafficName+'\')">'+ trafficName +'</a> </div>';
+		}
+		$(".autoSearch").html(content);
+	}
+	//
+	function selectAuto(key){
+		
+		var input = document.getElementById("searchKey");
+		input.value = key;
+		$(".autoSearch").empty();
+	}
 	//ajax to get traffic detail when click link
 	function showDetails(trafficID) {
 		var action = "viewDetail";
