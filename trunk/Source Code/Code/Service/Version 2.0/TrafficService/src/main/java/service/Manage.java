@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 
 import utility.Constants;
 import utility.GlobalValue;
+import utility.GsonUtils;
 import utility.MailUtil;
 import json.AccountJSON;
 import json.FavoriteJSON;
@@ -67,13 +68,12 @@ public class Manage {
 	public String addFavorite(@FormParam("creator") String creator,
 			@FormParam("trafficID") String trafficID,
 			@FormParam("modifyDate") String modifyDate) {
-		if (creator != null && trafficID != null) {					
+		if (creator != null && trafficID != null) {
 			FavoriteDTO favoriteDTO = new FavoriteDTO();
 			favoriteDTO.setCreator(creator);
 			favoriteDTO.setTrafficID(trafficID);
-			
-			if(modifyDate != null)
-			{
+
+			if (modifyDate != null) {
 				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
 						DateFormat.FULL).create();
 				Date tempDate = gson.fromJson(modifyDate, Date.class);
@@ -179,8 +179,7 @@ public class Manage {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
 			favoriteObj.setTrafficID(trafficID);
-			if(modifyDate != null)
-			{
+			if (modifyDate != null) {
 				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
 						DateFormat.FULL).create();
 				Date tempDate = gson.fromJson(modifyDate, Date.class);
@@ -450,6 +449,31 @@ public class Manage {
 		return gson.toJson(listAccountJSON);
 	}
 
+	@GET
+	@Path("/ListAccountByRole")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listAccountRole(@QueryParam("role") String role) {
+		ArrayList<AccountJSON> listAccountJSON = new ArrayList<AccountJSON>();
+		if (role != null && !role.isEmpty()) {
+			AccountDAO accountDAO = new AccountDAOImpl();
+			ArrayList<AccountDTO> accountData = accountDAO.getAccountByRole(
+					role, true);
+
+			// get return info
+			for (AccountDTO accountDTO : accountData) {
+				AccountJSON accountJSON = new AccountJSON();
+				accountJSON.setUserID(accountDTO.getUserID());
+				accountJSON.setEmail(accountDTO.getEmail());
+				accountJSON.setName(accountDTO.getName());
+				accountJSON.setRole(accountDTO.getRole());
+				accountJSON.setCreateDate(accountDTO.getCreateDate());
+				accountJSON.setIsActive(accountDTO.getIsActive());
+				listAccountJSON.add(accountJSON);
+			}
+		}
+		return GsonUtils.toJson(listAccountJSON);
+	}
+
 	/**
 	 * Deactive Accont
 	 * 
@@ -555,7 +579,7 @@ public class Manage {
 		try {
 			if (password != null && email != null && !password.isEmpty()
 					&& !email.isEmpty()) {
-				AccountDTO accountObj = new AccountDTO();				
+				AccountDTO accountObj = new AccountDTO();
 				MessageDigest md = MessageDigest.getInstance("MD5");
 				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
 				StringBuffer sb = new StringBuffer();
@@ -567,7 +591,7 @@ public class Manage {
 				accountObj.setEmail(email);
 				AccountDAO accountDAO = new AccountDAOImpl();
 				boolean result = accountDAO.updatePassword(md5password, email);
-				if (result == true) {					
+				if (result == true) {
 					return Response.status(200).entity("Success").build();
 
 				}

@@ -17,17 +17,17 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
-			if(cateID == 0){
+			if (cateID == 0) {
 				connection = BaseDAO.getConnect();
 				stm = connection
 						.prepareStatement("SELECT * FROM trafficdb.trafficinformation WHERE isActive= ?");
 				stm.setBoolean(1, true);
-			}else{
-			connection = BaseDAO.getConnect();
-			stm = connection
-					.prepareStatement("SELECT trafficID,name,image,categoryID FROM trafficdb.trafficinformation WHERE categoryID = ? AND isActive = ?");
-			stm.setInt(1, cateID);
-			stm.setBoolean(2, true);
+			} else {
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("SELECT trafficID,name,image,categoryID FROM trafficdb.trafficinformation WHERE categoryID = ? AND isActive = ?");
+				stm.setInt(1, cateID);
+				stm.setBoolean(2, true);
 			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
@@ -63,38 +63,38 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		return null;
 	}
 
-	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID)
-	{
+	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID) {
 		return searchTraffic(name, cateID, 0);
 	}
-	
-	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID, int limit) {
+
+	public ArrayList<TrafficInfoDTO> searchTraffic(String name, int cateID,
+			int limit) {
 		ArrayList<TrafficInfoDTO> listResult = new ArrayList<TrafficInfoDTO>();
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
 			if (cateID == 0 && limit == 0) {
-				//search in all category and no limit
+				// search in all category and no limit
 				stm = connection
 						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 			} else if (cateID == 0 && limit != 0) {
-				//search in all category with limit
+				// search in all category with limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? LIMIT ? AND isActive = true");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND isActive = true LIMIT ?");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, limit);
 			} else if (cateID != 0 && limit == 0) {
-				//search in one cate and not limit
+				// search in one cate and not limit
 				stm = connection
 						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? AND isActive = true");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, cateID);
 			} else {
-				//search in one cate with limit
+				// search in one cate with limit
 				stm = connection
-						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? LIMIT ? AND isActive = true");
+						.prepareStatement("SELECT trafficID,name,image,information,penaltyfee,categoryID FROM trafficinformation WHERE name LIKE ? AND categoryID = ? AND isActive = true LIMIT ?");
 				stm.setString(1, "%" + name + "%");
 				stm.setInt(2, cateID);
 				stm.setInt(3, limit);
@@ -183,21 +183,25 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
-			connection = BaseDAO.getConnect();
-			stm = connection
-					.prepareStatement("INSERT INTO trafficdb.trafficinformation"
-							+ " (trafficID, name, image, categoryID, information,"
-							+ " penaltyfee, creator, createDate, modifyDate, isActive)"
-							+ " VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NULL, ?)");
-			stm.setString(1, trafficDTO.getTrafficID());
-			stm.setString(2, trafficDTO.getName());
-			stm.setString(3, trafficDTO.getImage());
-			stm.setInt(4, trafficDTO.getCategoryID());
-			stm.setString(5, trafficDTO.getInformation());
-			stm.setString(6, trafficDTO.getPenaltyfee());
-			stm.setString(7, trafficDTO.getCreator());
-			stm.setBoolean(8, true);
-			return stm.executeUpdate() > 0;
+			if (this.getDetail(trafficDTO.getTrafficID()) != null) {
+				return this.edit(trafficDTO);
+			} else {
+				connection = BaseDAO.getConnect();
+				stm = connection
+						.prepareStatement("INSERT INTO trafficdb.trafficinformation"
+								+ " (trafficID, name, image, categoryID, information,"
+								+ " penaltyfee, creator, createDate, modifyDate, isActive)"
+								+ " VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NULL, ?)");
+				stm.setString(1, trafficDTO.getTrafficID());
+				stm.setString(2, trafficDTO.getName());
+				stm.setString(3, trafficDTO.getImage());
+				stm.setInt(4, trafficDTO.getCategoryID());
+				stm.setString(5, trafficDTO.getInformation());
+				stm.setString(6, trafficDTO.getPenaltyfee());
+				stm.setString(7, trafficDTO.getCreator());
+				stm.setBoolean(8, true);
+				return stm.executeUpdate() > 0;
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		} finally {

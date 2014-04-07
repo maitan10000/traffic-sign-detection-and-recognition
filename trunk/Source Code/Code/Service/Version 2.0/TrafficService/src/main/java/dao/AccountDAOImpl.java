@@ -402,4 +402,69 @@ public class AccountDAOImpl implements AccountDAO {
 		return false;
 	}
 
+	
+	/**
+	 * 
+	 */
+	@Override
+	public ArrayList<AccountDTO> getAccountByRole(String role, Boolean getInActive) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		ArrayList<AccountDTO> accountData = new ArrayList<AccountDTO>();
+		try {
+			connection = BaseDAO.getConnect();
+			if(getInActive == true)
+			{
+			stm = connection
+					.prepareStatement("SELECT userID, email, name, role, createDate, isActive FROM trafficdb.account WHERE role =?");
+			}else
+			{
+				stm = connection
+						.prepareStatement("SELECT userID, email, name, role, createDate, isActive FROM trafficdb.account WHERE role =? AND isActive = true");
+			}
+			stm.setString(1, role.toLowerCase());
+			rs = stm.executeQuery();
+			while (rs.next()) {
+				AccountDTO accountDTO = new AccountDTO();
+				accountDTO.setUserID(rs.getString("userID"));
+				accountDTO.setEmail(rs.getString("email"));
+				accountDTO.setName(rs.getString("name"));
+				accountDTO.setRole(rs.getString("role"));
+				accountDTO.setCreateDate(rs.getDate("createDate"));
+				accountDTO.setIsActive(rs.getBoolean("isActive"));
+				accountData.add(accountDTO);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return accountData;
+	}
+
+	
+	/**
+	 * 
+	 */
+	public ArrayList<AccountDTO> getAccountByRole(String role) {
+		return getAccountByRole(role, false);
+	}
+	
 }

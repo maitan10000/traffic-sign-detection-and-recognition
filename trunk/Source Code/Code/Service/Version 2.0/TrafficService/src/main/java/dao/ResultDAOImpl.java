@@ -222,4 +222,46 @@ public class ResultDAOImpl implements ResultDAO {
 		}
 		return false;
 	}
+
+	@Override
+	public ArrayList<ResultDTO> getResultInLastXDay(int days) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ArrayList<ResultDTO> resultData = new ArrayList<ResultDTO>();
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT resultID, createDate FROM trafficdb.result WHERE createDate >= DATE_SUB(NOW(),INTERVAL ? DAY) ORDER BY createDate DESC");
+			stm.setInt(1, days);
+			
+			ResultSet rs = stm.executeQuery();
+			while (rs.next()) {
+				ResultDTO resultObject = new ResultDTO();
+				resultObject.setResultID(rs.getInt("resultID"));				
+				resultObject.setCreateDate(rs.getDate("createDate"));
+				resultData.add(resultObject);
+			}
+			return resultData;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultData;
+	}
 }

@@ -10,4 +10,5 @@ public interface ResultDAO {
 	public Boolean edit(ResultDTO result);
 	public Boolean delete(int id);
 	public ArrayList<ResultDTO> getResultByCreator(String creator, Boolean isActive);
+	public ArrayList<ResultDTO> getResultInLastXDay(int days);	
 }

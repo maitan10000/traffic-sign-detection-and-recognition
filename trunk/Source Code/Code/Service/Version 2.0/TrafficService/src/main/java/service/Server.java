@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,14 +15,17 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import json.LastXDayJSON;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -41,6 +44,7 @@ import org.apache.poi.ss.usermodel.Comment;
 
 import utility.Constants;
 import utility.GlobalValue;
+import utility.GsonUtils;
 import utility.Helper;
 
 import com.sun.jersey.core.header.FormDataContentDisposition;
@@ -48,11 +52,14 @@ import com.sun.jersey.multipart.FormDataParam;
 
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
+import dao.ResultDAO;
+import dao.ResultDAOImpl;
 import dao.TrafficInfoDAO;
 import dao.TrafficInfoDAOImpl;
 import dao.TrainImageDAO;
 import dao.TrainImageDAOImpl;
 import dto.CategoryDTO;
+import dto.ResultDTO;
 import dto.TrafficInfoDTO;
 import dto.TrainImageDTO;
 
@@ -510,7 +517,8 @@ public class Server {
 					// return result
 					ResponseBuilder response = Response.ok(new FileInputStream(
 							zipFilePath));
-					Date date = new Date();
+					java.util.Date utilDate = new java.util.Date();
+					Date date = new Date(utilDate.getTime());
 					SimpleDateFormat dateFormat = new SimpleDateFormat(
 							"yyyy-MM-dd_HH-mm-ss");
 					String fileName = "Export-" + dateFormat.format(date)
@@ -532,6 +540,42 @@ public class Server {
 		}
 
 		return Response.status(200).entity(output).build();
+	}
+
+	@GET
+	@Path("/StatisticLastXDay")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String addFavorite(@QueryParam("day") Integer days) {
+		ArrayList<LastXDayJSON> listLastXDay = new ArrayList<LastXDayJSON>();
+		if (days != null) {
+			ResultDAO resultDAO = new ResultDAOImpl();
+			ArrayList<ResultDTO> listResultDTO = resultDAO
+					.getResultInLastXDay(days);
+
+			// get return info			
+			if (listResultDTO.size() > 0) {
+				Date tempDate = listResultDTO.get(0).getCreateDate();
+				int count = 1;
+				for (int i = 1; i < listResultDTO.size(); i++) {					
+					if(!tempDate.equals(listResultDTO.get(i).getCreateDate()) || i == listResultDTO.size()-1)					
+					{
+						LastXDayJSON lastXDayJSON = new LastXDayJSON();
+						lastXDayJSON.setDate(tempDate);
+						lastXDayJSON.setNum(count+1);
+						listLastXDay.add(lastXDayJSON);
+						tempDate = listResultDTO.get(i).getCreateDate();
+						count=1;
+					}else
+					{
+						count++;
+					}
+				}
+				
+			}// end if size> 0
+			
+		}
+
+		return GsonUtils.toJson(listLastXDay);
 	}
 
 }

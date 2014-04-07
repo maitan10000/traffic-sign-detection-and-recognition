@@ -10,6 +10,10 @@ public interface AccountDAO {
 	public AccountDTO getAccount(String userID);
 
 	public ArrayList<AccountDTO> getAllAccount();
+	
+	public ArrayList<AccountDTO> getAccountByRole(String role);
+	
+	public ArrayList<AccountDTO> getAccountByRole(String role, Boolean getInActive);
 
 	public boolean deactiveAccount(String userID);
 
