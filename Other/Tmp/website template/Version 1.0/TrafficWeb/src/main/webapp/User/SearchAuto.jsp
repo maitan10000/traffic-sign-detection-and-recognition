@@ -157,7 +157,7 @@ legend {
 								class="level-top"> <span>Tra Cứu Biển Báo</span>
 							</a></li>
 							<%
-								if (userID != null || "".equals(userID) == false) {
+								if (userID != null && "".equals(userID) == false) {
 							%>
 							<li class="level0 nav-4 level-top"><a
 								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
