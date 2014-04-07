@@ -360,7 +360,10 @@ public class UserController extends HttpServlet {
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				String trafficID = request.getParameter("trafficID");
-				String content = request.getParameter("content");
+				String content = "";
+				if(request.getParameter("content") != null){
+					content = new String(request.getParameter("content").getBytes("iso-8859-1"), "UTF-8");
+				}
 				String type = request.getParameter("type");
 				// url for send report
 				String urlSendReport = GlobalValue.getServiceAddress()
