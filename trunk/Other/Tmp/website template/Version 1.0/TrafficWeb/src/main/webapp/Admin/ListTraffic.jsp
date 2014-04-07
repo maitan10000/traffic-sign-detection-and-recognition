@@ -1,3 +1,5 @@
+<%@page import="java.io.PrintWriter"%>
+<%@page import="json.CategoryJSON"%>
 <%@page import="json.TrafficInfoShortJSON"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="utility.Constants"%>
@@ -19,10 +21,11 @@
 <link rel="stylesheet" href="Admin/Content/css/fullcalendar.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
-	class="skin-color" />
+	class="skin-color" />	
+<link rel="stylesheet" href="Admin/Content/css/jquery.gritter.css" />
 <style type="text/css">
-<
-style>#paging-table_filter {
+
+#paging-table_filter {
 	margin-left: 20px;
 }
 
@@ -30,16 +33,62 @@ style>#paging-table_filter {
 	width: 800px;
 	margin-left: -400px;
 }
+
 #AddTrafficModal{
 	width: 800px;
 	margin-left: -400px;
+}
+
+#traffic-table_filter
+{
+	margin-left: 30px;
+}
+
+ .modal-body
+{
+	padding: 0;
+	max-height: 500px;
+}
+
+.modal.fade.in
+{
+	top:2%;
+}
+
+#gritter-notice-wrapper
+{
+	z-index: 99999;
+}
+
+#EditTrafficModal{
+	width: 800px;
+	margin-left: -400px;
+}
+
+.trainImage-resize
+{
+	width:50px;
+}
+
+.trainImage-resize .actions
+{
+	margin: 0;
+	padding: 0;
+	left: 45%;
+	width: 16px;
+}
+
+#ImportFileModal .modal.fade.in
+{
+	top:10%;
 }
 </style>
 
 </head>
 <%
-	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
+	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("category");
 	ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
+	int currentCate = request.getAttribute("cateID")!=null ? Integer.parseInt((String)request.getAttribute("cateID")):0;	
 %>
 
 <body>
@@ -70,9 +119,9 @@ style>#paging-table_filter {
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="" href="#"><i
+			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
 					class="icon icon-share-alt" onclick="logout()"></i> <span
-					class="text">Thoát</span></a></li>
+					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
 
@@ -82,9 +131,9 @@ style>#paging-table_filter {
 		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
 			Dashboard2</a>
 		<ul>
-			<li class="active"><a href="index-2.html"><i
+			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href=""
+			<li><a href="
 				<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i
 					class="icon icon-th"></i> <span>Quản lý biển báo</span></a></li>
 			<li><a
@@ -104,8 +153,8 @@ style>#paging-table_filter {
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
-				<a href="index-2.html" title="Go to Home" class="tip-bottom"><i
-					class="icon-home"></i> Home</a>
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>" title="Quản lý biển báo" class="tip-bottom"><i
+					class="icon-th"></i>Quản lý biển báo</a>
 			</div>
 		</div>
 		<div class="container-fluid">
@@ -114,21 +163,31 @@ style>#paging-table_filter {
 				<h5>Quản lý biển báo</h5>
 				<div id="show-type" align="right" class="control-group">
 					<div class="controls">
-						<span>Loại biển báo:</span> <select id="select-type" name="cateID"
-							onchange="listTraffic(this.value); return false;">							
+						<span>Loại biển báo:</span><select id="select-type" name="cateID"
+							onchange="listTrafficByCate(this.value); return false;">							
 							<option class="font-Style" value="0">Tất Cả</option>
 							<%
-								for(int i = 0; i< listCat.size();i ++) {
+								for(int i = listCat.size() - 1; i>=0 ;i--) {
 							%>							
 							<option class="font-Style"
-								value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+								value="<%=listCat.get(i).getCategoryID()%>" 
+								<%
+								if(listCat.get(i).getCategoryID().equals(currentCate+""))
+								{
+									out.print("selected");
+								}
+								%>><%=listCat.get(i).getCategoryName()%></option>
 							<%
 								}
 							%>
 						</select> </select>
 					</div>
 				</div>
-				<div align="right"><button class="btn btn-primary" href="#AddTrainImageModal" onclick="addTraffic()">Thêm mới biển báo</button></div>	
+				<div align="right">
+				<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;">Thêm mới biển báo</button>
+				<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;">Nhập từ tập tin</button>
+				<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>">Xuất ra tập tin</a>
+				</div>	
 			</div>
 			<%
 				if( listTraffic != null){
@@ -138,25 +197,28 @@ style>#paging-table_filter {
 					<table id="traffic-table" class="table table-bordered dataTable">
 						<thead>
 							<th width="5%">STT</th>
-							<th width="5%">Số Hiệu</th>
+							<th width="7%">Hình ảnh</th>
+							<th width="7%">Số Hiệu</th>
 							<th>Tên Biển Báo</th>
 							<th>Danh Mục</th>
+							<th></th>
 							<th></th>
 						</thead>
 						<tbody>
 							<%
 								if( listTraffic.size()> 0){
-																																																																																					for(int i = 0; i< listTraffic.size();i++){
+								for(int i = 0; i< listTraffic.size();i++){
 							%>
 
 							<tr>
 								<td style="text-align: center;"><%=i+1%></td>
+								<td style="text-align: center;padding: 3px 2px 3px 2px; "><img style="width: 30px; height: 30px;" src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>?size=small"/></td>
 								<td style="text-align: center;"><%=listTraffic.get(i).getTrafficID()%></td>
 								<td><%=listTraffic.get(i).getName()%></td>
-								<td><%=listTraffic.get(i).getCategoryName()%></td>
-								<td><button class="btn btn-primary btn-mini" href="#myModal" data-toggle="modal"
-									onclick="showTrafficDetails(<%=listTraffic.get(i).getTrafficID()%>)">Sửa</button></td>
-								<%-- <td><a href="#myModal" data-toggle="modal" onclick="addTrafficTrainImage(<%=listTraffic.get(i).getTrafficID()%>)">Thêm ảnh mẫu</a></td> --%>
+								<td style="text-align: center;"><%=listTraffic.get(i).getCategoryName()%></td>
+								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#" data-toggle="modal"
+									onclick="showEditTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;">Sửa</button></td>
+								<td style="text-align: center;"><button class="btn btn-danger btn-mini" href="#" onclick="showDeleteTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;">Xóa</button></td>
 
 							</tr>
 							<%
@@ -181,27 +243,81 @@ style>#paging-table_filter {
 				thông."</p>
 		</div>
 	</div>
+	
+	<!-- Add Traffic modal -->
+	<div class="modal fade" id="AddTrafficModal" tabindex="-1"
+		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
+	<!-- End Add Traffic modal-->
+	
+	<!-- Edit Traffic modal -->
+	<div class="modal fade" id="EditTrafficModal" tabindex="-1" role="dialog"
+		style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
+	<!-- End Edit Traffic modal-->
+		
+	<!-- Delete Traffic modal-->
+        <div id="DeleteTrafficModal" class="modal hide">
+        <input id="delete-trafficID" type="hidden"/>
+          <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button">×</button>
+            <h3>Xác nhận xóa</h3>
+          </div>
+          <div class="modal-body" style="text-align: center;">   
+          <p>Xác nhận xóa</p>         
+          </div>
+          <div class="modal-footer"> 
+	          <a data-dismiss="modal" class="btn btn-primary" href="#" onclick="deteleTrafficInfo(); return false;">Đồng ý</a> 
+	          <a data-dismiss="modal" class="btn" href="#">Hủy</a> 
+          </div>
+        </div>
+	<!-- End Delete Traffic modal-->
+	
+	<!-- Import File modal-->
+	<div class="modal fade" id="ImportFileModal" tabindex="-1" role="dialog"
+		style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true">
+		 <div class="modal-header">
+            <button data-dismiss="modal" class="close" type="button">×</button>
+            <h3>Nhập thông tin từ tập tin</h3>
+          </div>
+          <div class="modal-body">             
+          <form id="import-form" method="post"
+			enctype="multipart/form-data">
+			Chọn tập tin:<input type="file" name="file" />	  
+          <input type="hidden" name="userID" value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
+			</form>						
+          </div>          
+          <div class="modal-footer"> 
+	          <a class="btn btn-primary" href="#" onclick="importFile(); return false;">Gửi</a> 
+	          <a data-dismiss="modal" class="btn" href="#">Hủy</a> 
+          </div>
+	</div>
+	<!-- End Import File modal-->
+	
+	
+	
+	
+	
+	
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
 	<!-- End modal 1 -->
-
-	<!-- Detail modal -->
-	<div class="modal fade" id="detailModal" tabindex="-1" role="dialog"
-		style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
-	<!-- End detail modal-->
+	
 	<!-- Traffic Detail modal -->
-	<div class="modal fade" id="trafficDetailModal" tabindex="-1"
+	<div class="modal fade" id="EditTrafficModal" tabindex="-1"
 		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
 	<!-- End detail modal-->
+	
 	<!-- Add Train Image modal -->
 	<div class="modal fade" id="AddTrainImageModal" tabindex="-1"
 		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
 	<!-- End Add Train Image modal-->
+	
 	<div id="myAlert" class="modal hide">
 		<div class="modal-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
@@ -213,11 +329,6 @@ style>#paging-table_filter {
 			<a data-dismiss="modal" class="btn btn-primary" href="#">Đóng</a>
 		</div>
 	</div>
-	<!-- Add Train Image modal -->
-	<div class="modal fade" id="AddTrafficModal" tabindex="-1"
-		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
-	<!-- End Add Train Image modal-->
 	<!-- End Alert modal -->
 </body>
 <script src="Admin/Content/js/excanvas.min.js"></script>
@@ -228,6 +339,7 @@ style>#paging-table_filter {
 <script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
 <script src="Admin/Content/js/fullcalendar.min.js"></script>
+<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 <script src="Admin/Content/js/maruti.js"></script>
 <script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
 <script src="Admin/Content/js/maruti.calendar.js"></script>
@@ -263,23 +375,11 @@ function logout(){
 	});
 }
 </script>
-<script type="text/javascript">	
-	function showTrafficDetails(trafficID){
-		var action = '<%=Constants.ACTION_TRAFFIC_VIEW%>';
-		$.ajax({
-			url: '<%=Constants.CONTROLLER_ADMIN%>',
-			type: "GET",
-			data: {action : action, trafficID : trafficID},
-			success: function (result) {
-				$("#myModal").modal('hide');
-				$("#trafficDetailModal").html(result);
-				$("#trafficDetailModal").modal('show');
-			}
-			
-		});
-	}	
-	function addTraffic(){
-		var action = '<%=Constants.ACTION_TRAFFICINFO_ADD%>';
+
+
+<script type="text/javascript">		
+	function showAddTrafficModal(){
+		var action = '<%=Constants.ACTION_TRAFFIC_ADD%>';
 		$.ajax({
 			url: '<%=Constants.CONTROLLER_ADMIN%>',
 			type: "GET",
@@ -292,27 +392,84 @@ function logout(){
 		});
 	}
 	
-	function addTrafficImage(trafficID){
-		var action = '<%=Constants.ACTION_ADD_TRAINIMAGE%>';
+	function showEditTrafficModal(trafficID){
+		var action = '<%=Constants.ACTION_TRAFFIC_EDIT%>';
 		$.ajax({
 			url: '<%=Constants.CONTROLLER_ADMIN%>',
 			type: "GET",
-			data: {action : action, trafficID: trafficID},
+			data: {action : action, trafficID : trafficID},
 			success: function (result) {
-				$("#AddTrainImageModal").html(result);
-				$("#AddTrainImageModal").modal('show');
+				//$("#myModal").modal('hide');
+				$("#EditTrafficModal").html(result);
+				$("#EditTrafficModal").modal('show');
 			}
 			
 		});
+	}	
+	
+	function showDeleteTrafficModal(trafficID)
+	{
+		$("#DeleteTrafficModal").modal("show");
+		//$("#DeleteTrafficModal .modal-body").html('Xác nhận xóa');
+		$("#DeleteTrafficModal #delete-trafficID").val(trafficID);
 	}
-	function listTraffic(cateID){
-		window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>&cateID="+cateID;	
+	
+	function deteleTrafficInfo()
+	{
+		var trafficID = $('#delete-trafficID').val();
+		$.ajax({
+			url: '<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_DELETE%>',
+			type: "GET",
+			data: {trafficID : trafficID},
+			success: function (result) {
+				if("Success" == result.trim())
+				{
+					location.reload();
+				}
+			}
+			
+		});		
+	}
+
+	function listTrafficByCate(cateID)
+	{
+		window.location.href='<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>&cateID='+cateID;	
+	}
+	
+	function showImportFileModal()
+	{
+		$("#ImportFileModal").modal("show");
+	}
+	
+	function importFile()
+	{		
+		var xhr = new XMLHttpRequest();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4) {
+				showResult(xhr.responseText);
+			}
+		}
+		var tmpForm = document.getElementById("import-form");		
+		
+		var formData = new FormData();
+		formData.append("file", tmpForm.file.files[0]);
+		formData.append("userID", tmpForm.userID.value);		
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_IMPORT%>');
+		xhr.overrideMimeType('text/plain; charset=utf-8');
+		xhr.send(formData);
+	}
+
+	function showResult(result) {
+		if (result.trim() != "Success") {
+			$.gritter.add({
+				title : 'Thông báo',
+				text : 'Nhập tập tin thất bại',
+				sticky : false
+			});
+		} else {	
+			$("#ImportFileModal").modal('hide');
+		}
 	}
 </script>
 
-
-
-
-
-<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
 </html>

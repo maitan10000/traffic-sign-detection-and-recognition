@@ -40,8 +40,9 @@
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="" href="#"><i
-					class="icon icon-share-alt"></i> <span class="text">Đăng xuất</span></a></li>
+			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" onclick="logout()"></i> <span
+					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
 

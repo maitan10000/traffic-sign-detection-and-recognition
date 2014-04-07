@@ -39,7 +39,7 @@
 			//$("#progress").html('<span class="bar" style="width: 100%"></span>');
 			//console.log("%: 100");
 		}, false);
-		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_ADDTRAINIMAGE%>');
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_TRAIN_IMAGE_ADD%>');
 		//xhr.overrideMimeType('text/plain; charset=utf-8');
 		xhr.send(formData);
 		}

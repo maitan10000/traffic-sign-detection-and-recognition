@@ -79,7 +79,7 @@ TrafficInfoJSON trafficDetails = (TrafficInfoJSON) request.getAttribute("traffic
 		<ul>
 			<li class="active"><a href="index-2.html"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFICINFO_ADD%>"><i class="icon icon-th"></i> <span>Quản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_ADD%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
 					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>

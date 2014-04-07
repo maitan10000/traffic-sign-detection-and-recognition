@@ -1,17 +1,20 @@
-<%@page import="java.util.ArrayList"%>
-<%@page import="json.TrafficInfoShortJSON"%>
+<%@page import="javax.swing.text.StyledEditorKit.ForegroundAction"%>
 <%@page import="utility.GlobalValue"%>
+<%@page import="json.TrafficInfoJSON"%>
 <%@page import="utility.Constants"%>
 <%@page import="json.CategoryJSON"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="json.TrainImageJSON"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%
 	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("cateList");
+	TrafficInfoJSON trafficDetails = (TrafficInfoJSON) request.getAttribute("trafficDetail");
+	ArrayList<TrainImageJSON> listTrainImage = (ArrayList<TrainImageJSON>) request.getAttribute("listTrainImage");
 %>
 <script type="text/javascript">
-	function addTraffic() {
+	function editTraffic() {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
@@ -28,7 +31,7 @@
 		formData.append("information", tmpForm.information.value);
 		formData.append("penaltyfee", tmpForm.penaltyfee.value);
 		formData.append('creator', tmpForm.creator.value);
-		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_ADD%>');
+		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_EDIT%>');
 		xhr.overrideMimeType('text/plain; charset=utf-8');
 		xhr.send(formData);
 	}
@@ -38,7 +41,7 @@
 		if (result.trim() != "Success") {
 			$.gritter.add({
 				title : 'Thông báo',
-				text : 'Thêm mới thất bại',
+				text : 'Sửa thất bại',
 				sticky : false
 			});
 		} else {
@@ -76,6 +79,21 @@
 		}
 	}
 	
+	function deteleTrainImage(trainImageID)
+	{
+		$.ajax({
+			url: '<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_TRAIN_IMAGE_DELETE%>',
+			type: "GET",
+			data: {trainImageID : trainImageID},
+			success: function (result) {
+				if("Success" == result.trim())
+				{
+					$('#'+trainImageID).remove();
+				}
+			}
+			
+		});
+	}
 </script>
 <div class="modal-dialog">
 	<div class="modal-content">
@@ -95,19 +113,23 @@
 						<label class="control-label">Số hiệu biển báo:</label>
 						<div class="controls">
 							<input style="width: 300px;" id="required" name="trafficID"
-								type="text" class="span2" />
+								type="text" class="span2" value="<%=trafficDetails.getTrafficID()%>" disabled="disabled" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Tên biển báo:</label>
 						<div class="controls">
 							<input style="width: 300px;" name="name" type="text"
-								class="span2" />
+								class="span2" value="<%=trafficDetails.getName()%>" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Hình ảnh:</label>
 						<div class="controls">
+							<img style="margin: auto;"
+								class="imageDetails"
+								src="<%=GlobalValue.getServiceAddress()%><%=trafficDetails.getImage()%>?size=small"
+								alt="Responsive image" />
 							<input style="width: 300px;" name="mainImage" type="file"
 								class="span2" />
 						</div>
@@ -131,20 +153,37 @@
 						<label class="control-label">Thông tin:</label>
 						<div class="controls">
 							<textarea style="width: 500px; height: 150px;" class="span4"
-								name="information"></textarea>
+								name="information"><%=trafficDetails.getInformation()%></textarea>
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Mức phạt:</label>
 						<div class="controls">
 							<input style="width: 300px;" name="penaltyfee" type="text"
-								class="span2" />
+								class="span2" value="<%=trafficDetails.getPenaltyfee()%>"/>
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Ảnh nhận diện:</label>
-						<div class="controls">
+						<label class="control-label">Ảnh nhận diện:</label>						
+						<div class="controls">						
 							<input type="file" name="trainImage" multiple/>
+						</div>
+						<div class="controls">						
+							 <ul id="list-train-image" class="thumbnails">
+							 <%
+							 for(int i = 0; i < listTrainImage.size(); i++)
+							 {
+							 %>
+                                <li id="<%=listTrainImage.get(i).getImageID()%>" class="span2 trainImage-resize">									
+										<img class="thumbnail lightbox_trigger" src="<%=GlobalValue.getServiceAddress()%><%=listTrainImage.get(i).getImageName()%>?size=small" alt="" >
+									<div class="actions">
+										<a title="" href="#" onclick="deteleTrainImage('<%=listTrainImage.get(i).getImageID()%>'); return false;"><i class="icon-remove icon-white"></i></a>
+									</div>
+								</li>
+							<%
+							 }//emd for
+							%>
+							</ul>
 						</div>
 					</div>
 				</form>				
@@ -154,7 +193,9 @@
 		<div id="footerViewDetail" class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 			<button type="submit" class="btn btn-success"
-				onclick="addTraffic(); return false;" value="submit">Lưu</button>
+				onclick="editTraffic(); return false;" value="submit">Lưu</button>
 		</div>
 	</div>
 </div>
+
+
