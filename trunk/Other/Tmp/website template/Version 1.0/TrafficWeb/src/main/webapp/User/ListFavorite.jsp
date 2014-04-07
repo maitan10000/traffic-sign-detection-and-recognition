@@ -79,14 +79,16 @@
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
 							class="level-top"> <span>Tra Cứu Biển Báo</span>
 						</a></li>
+						<%if(userID != null || "".equals(userID)){ %>
 						<li class="level0 nav-4 level-top"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_FAVORITE_VIEW%>"
 							class="level-top"> <span>Danh Sách Đã Lưu</span>
 						</a></li>
 						<li class="level0 nav-5 level-top last"><a
-							href="<%=Constants.CONTROLLER_USER %>?action=<%=Constants.ACTION_HISTORY_LIST%>"
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_LIST%>"
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
+						<%} %>
 					</ul>
 					</nav>
 					<div style="clear: both"></div>
