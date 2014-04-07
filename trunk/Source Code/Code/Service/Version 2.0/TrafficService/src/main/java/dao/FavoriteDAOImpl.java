@@ -48,7 +48,7 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 					stm.setBoolean(1, true);
 					stm.setString(2, creator);
 					stm.setString(3, trafficID);
-					stm.setDate(4, modifyDate);
+					stm.setTimestamp(4, new Timestamp(modifyDate.getTime()));
 				}
 				stm.executeUpdate();
 				return stm.executeUpdate() > 0;
@@ -97,9 +97,8 @@ public class FavoriteDAOImpl implements FavoriteDAO {
 				stm.setBoolean(1, false);
 				stm.setString(2, creator);
 				stm.setString(3, trafficID);
-				stm.setDate(4, modifyDate);
+				stm.setTimestamp(4, new Timestamp(modifyDate.getTime()));
 			}
-
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();

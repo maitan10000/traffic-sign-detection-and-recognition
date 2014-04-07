@@ -66,12 +66,19 @@ public class Manage {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public String addFavorite(@FormParam("creator") String creator,
 			@FormParam("trafficID") String trafficID,
-			@FormParam("modifyDate") Date modifyDate) {
-		if (creator != null && trafficID != null) {
+			@FormParam("modifyDate") String modifyDate) {
+		if (creator != null && trafficID != null) {					
 			FavoriteDTO favoriteDTO = new FavoriteDTO();
 			favoriteDTO.setCreator(creator);
 			favoriteDTO.setTrafficID(trafficID);
-			favoriteDTO.setModifyDate(modifyDate);
+			
+			if(modifyDate != null)
+			{
+				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+						DateFormat.FULL).create();
+				Date tempDate = gson.fromJson(modifyDate, Date.class);
+				favoriteDTO.setModifyDate(tempDate);
+			}
 
 			FavoriteDAO favoriteDAO = new FavoriteDAOImpl();
 			boolean result = favoriteDAO.add(favoriteDTO);
@@ -151,7 +158,8 @@ public class Manage {
 		}
 		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
 				DateFormat.FULL).create();
-		return gson.toJson(listFavoriteJSON);
+		String output = gson.toJson(listFavoriteJSON);
+		return output;
 	}
 
 	/**
@@ -166,12 +174,18 @@ public class Manage {
 	@Path("/DeleteFavorite")
 	public String deleteFavorite(@QueryParam("creator") String creator,
 			@QueryParam("trafficID") String trafficID,
-			@QueryParam("modifyDate") Date modifyDate) {
+			@QueryParam("modifyDate") String modifyDate) {
 		if (creator != null && trafficID != null) {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
 			favoriteObj.setTrafficID(trafficID);
-			favoriteObj.setModifyDate(modifyDate);
+			if(modifyDate != null)
+			{
+				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+						DateFormat.FULL).create();
+				Date tempDate = gson.fromJson(modifyDate, Date.class);
+				favoriteObj.setModifyDate(tempDate);
+			}
 
 			FavoriteDAO favortiteDAO = new FavoriteDAOImpl();
 			Boolean result = favortiteDAO.delete(favoriteObj);

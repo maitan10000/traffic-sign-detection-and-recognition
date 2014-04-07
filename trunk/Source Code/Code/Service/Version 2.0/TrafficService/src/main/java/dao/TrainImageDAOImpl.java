@@ -25,7 +25,7 @@ public class TrainImageDAOImpl implements TrainImageDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			if (stm != null) {
 				try {
 					stm.close();
@@ -180,7 +180,6 @@ public class TrainImageDAOImpl implements TrainImageDAO {
 				trainImageDTO.setImageName(rs.getString("imageName"));
 				listResult.add(trainImageDTO);
 			}
-			return listResult;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -201,7 +200,39 @@ public class TrainImageDAOImpl implements TrainImageDAO {
 				}
 			}
 		}
-		return null;
+		return listResult;
+	}
+
+	@Override
+	public Boolean deleteAll() {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("DELETE FROM trainimage");
+			return stm.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
 	}
 
 }

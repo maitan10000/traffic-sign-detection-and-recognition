@@ -2,6 +2,7 @@ package utility;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+
+import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.STEditAs;
 
 import json.ResultInput;
 
@@ -67,6 +70,7 @@ public class Helper {
 	public static String trainSVM(String appDic) {
 		ArrayList<String> listCommand = new ArrayList<String>();
 		listCommand.add("-l");
+		listCommand.add("10000");
 		return runTSRT(appDic, listCommand);
 	}
 
@@ -76,11 +80,9 @@ public class Helper {
 	 * @param inputStream
 	 * @param fileLocation
 	 */
-	public static void writeToFile(InputStream inputStream,
-			String fileLocation) {
+	public static void writeToFile(InputStream inputStream, String fileLocation) {
 		try {
-			OutputStream out = new FileOutputStream(new File(
-					fileLocation));
+			OutputStream out = new FileOutputStream(new File(fileLocation));
 			int read = 0;
 			byte[] bytes = new byte[1024];
 
@@ -93,6 +95,28 @@ public class Helper {
 		} catch (IOException e) {
 
 			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Write byte[] to file
+	 * @param data
+	 * @param fileLocation
+	 */
+	public static void writeToFile(byte[] data, String fileLocation) {
+		FileOutputStream stream = null;
+		try {
+			stream = new FileOutputStream(fileLocation);
+			stream.write(data);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 	}
 }
