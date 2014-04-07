@@ -33,6 +33,7 @@ public final class Constants {
 	// for view history
 	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
 	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
+	public final static String TRAFFIC_HISTORY_DELETE = "rest/Traffic/DeleteHistory";
 
 	// Train Image
 	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
@@ -46,6 +47,7 @@ public final class Constants {
 	public final static String ACTION_FARVORITE_VIEW_SHORT = "viewFavoriteShort";
 	public final static String ACTION_HISTORY_VIEW = "viewHistory";
 	public final static String ACTION_HISTORY_LIST = "listHistory";
+	public final static String ACTION_HISTORY_LIST_SHORT = "listHistoryShort";
 	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
 	public final static String ACTION_DELETE_TRAINIMAGE = "deleteTrainImage";
 

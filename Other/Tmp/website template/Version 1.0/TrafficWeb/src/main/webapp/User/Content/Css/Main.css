@@ -13,7 +13,7 @@ div {
 .wrapper {
 	height: auto;
 	min-height: 100%;
-	min-width: 1018px;
+	min-width: 918px;
 }
 
 .page {
@@ -28,7 +28,7 @@ div {
 
 header {
 	margin: auto;
-	width: 1010px;
+	width: 910px;
 }
 
 .clearfix {
@@ -102,7 +102,7 @@ header .links li.separator {
 
 .menu-container {
 	position: relative;
-	width: 1008px;
+	width: 908px;
 	margin: 0 auto;
 	background: #1d1c1b;
 	border: 1px solid #242424;
@@ -114,7 +114,7 @@ header .links li.separator {
 }
 
 .menu-container {
-	width: 1008px;
+	width: 908px;
 	margin: 0 auto;
 	background: #1d1c1b;
 	border: 1px solid #242424;
@@ -199,7 +199,7 @@ nav {
 /*#nav ul,*/
 #nav div.sub-wrapper {
 	position: absolute;
-	width: 970px;
+	width: 870px;
 	padding: 20px;
 	margin: 61px 0 0 -1px;
 	left: -10000px;
@@ -453,7 +453,7 @@ nav {
 	min-height: 300px;
 	background: #F0F0F0;
 	margin: auto;
-	width: 1011px;
+	width: 911px;
 	height: auto;
 	z-index: 100;
 	padding-bottom: 30px;
@@ -541,7 +541,7 @@ nav {
 .bottom {
 	padding-left: 20px;
 	padding-right: 20px;
-	width: 968 px;
+	width: 868 px;
 	height: auto;
 }
 
@@ -680,7 +680,7 @@ nav {
 }
 
 .footer {
-	width: 1010px;
+	width: 910px;
 	height: 100%;
 	margin: 0 auto;
 	border: none;
@@ -688,7 +688,7 @@ nav {
 }
 
 .footer-brands {
-	width: 954px;
+	width: 854px;
 	margin: 0 auto;
 	padding: 22px 27px;
 	background-color: #1d1c1b;
@@ -702,7 +702,7 @@ nav {
 }
 
 .footer-left {
-	padding: 10px 0 0 35px;
+	padding: 10px 0 0 0;
 	width: 300px;
 	float: left;
 }
@@ -802,7 +802,7 @@ nav {
 }
 
 .content-cat {
-	width: 991px;
+	width: 891px;
 	padding-left: 10px;
 	padding-right: 10px;
 	padding-top: 20px;

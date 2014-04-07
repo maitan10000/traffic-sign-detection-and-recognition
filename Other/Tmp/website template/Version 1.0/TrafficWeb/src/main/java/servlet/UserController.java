@@ -305,7 +305,7 @@ public class UserController extends HttpServlet {
 							.getRequestDispatcher(address);
 					rd.forward(request, response);
 				}
-			} else if (Constants.ACTION_HISTORY_LIST.equals(action)) {
+			} else if (Constants.ACTION_HISTORY_LIST.equals(action)|| Constants.ACTION_HISTORY_LIST_SHORT.equals(action)) {
 				// if action is view history
 				HttpSession session = request.getSession();
 				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
@@ -333,9 +333,13 @@ public class UserController extends HttpServlet {
 					}.getType();
 					listHistory = gson.fromJson(output, type);
 					request.setAttribute("listHistory", listHistory);
+					String address = "User/ListHistory.jsp";
+					if(Constants.ACTION_HISTORY_LIST_SHORT.equals(action)){
+						 address = "User/ListHistoryShort.jsp";
+					}
 					// request to ListFavorite.jsp
 					RequestDispatcher rd = request
-							.getRequestDispatcher("User/ListHistory.jsp");
+							.getRequestDispatcher(address);
 					rd.forward(request, response);
 				}
 			} else if (Constants.ACTION_HISTORY_VIEW.equals(action)) {
@@ -354,7 +358,7 @@ public class UserController extends HttpServlet {
 			} else if ("reportTraffic".equals(action)) {
 				// if action is sendreport for traffic
 				HttpSession session = request.getSession();
-				String userID = (String) session.getAttribute("user");
+				String userID = (String) session.getAttribute(Constants.SESSION_USERID);
 				String trafficID = request.getParameter("trafficID");
 				String content = request.getParameter("content");
 				String type = request.getParameter("type");
