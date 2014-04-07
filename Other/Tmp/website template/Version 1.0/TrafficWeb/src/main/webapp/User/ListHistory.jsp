@@ -102,11 +102,11 @@
 						if( listHistory != null){
 					%>
 					<div class="contentTable " style="margin-top: 20px">
-						<table id="resultTable"
-							class="table table-bordered dataTable">
+						<table id="resultTable" 
+							class="table table-bordered dataTable" style="width: 700px; margin-left: 80px;">
 							<thead>
-								<th>STT</th>
-								<th>Ngày tạo</th>
+								<th style="text-align: center;width: 70px;">STT</th>
+								<th style="text-align: center;">Ngày tạo</th>
 								<th></th>
 							</thead>
 							<tbody>
@@ -117,9 +117,9 @@
 								%>
 
 								<tr id="<%=listHistory.get(i).getResultID()%>">
-									<td><%=listHistory.size() - i%></td>
-									<td><a href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>" data-toggle="modal"><%=dateFormat.format(listHistory.get(i).getCreateDate()) %></a></td>
-									<td><button class="btn btn-inverse"
+									<td style="text-align: center; width: 70px;"><%=listHistory.size() - i%></td>
+									<td style="text-align: center; width: 200px;"><a href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>" data-toggle="modal"><%=dateFormat.format(listHistory.get(i).getCreateDate()) %></a></td>
+									<td style=" width: 100px;"><button style="margin-left: 60px" class="btn btn-inverse"
 											onclick="deleteHistory('<%=listHistory.get(i).getResultID()%>')">Xóa</button></td>
 								</tr>
 								<%
