@@ -16,6 +16,8 @@ public interface TrafficInfoDAO {
 	public boolean add(TrafficInfoDTO trafficDTO);
 
 	public boolean edit(TrafficInfoDTO trafficDTO);
+	 
+	public boolean delete(String id);
 
 	public ArrayList<String> listAllID();
 }

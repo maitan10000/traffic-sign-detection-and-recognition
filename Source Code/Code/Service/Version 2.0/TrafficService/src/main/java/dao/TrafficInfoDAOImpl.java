@@ -18,12 +18,14 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			if(cateID == 0){
 				connection = BaseDAO.getConnect();
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.trafficinformation");
+						.prepareStatement("SELECT * FROM trafficdb.trafficinformation WHERE isActive= ?");
+				stm.setBoolean(1, true);
 			}else{
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT trafficID,name,image,categoryID FROM trafficdb.trafficinformation WHERE categoryID = ?");
+					.prepareStatement("SELECT trafficID,name,image,categoryID FROM trafficdb.trafficinformation WHERE categoryID = ? AND isActive = ?");
 			stm.setInt(1, cateID);
+			stm.setBoolean(2, true);
 			}
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
@@ -299,6 +301,40 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 			}
 		}
 		return null;
+	}
+
+	public boolean delete(String trafficID) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("UPDATE trafficdb.trafficinformation SET isActive=? WHERE trafficID = ?");
+			stm.setBoolean(1, false);
+			stm.setString(2, trafficID);
+			return stm.executeUpdate() > 0;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
 	}
 
 }
