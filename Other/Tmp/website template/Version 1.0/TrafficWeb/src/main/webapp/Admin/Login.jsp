@@ -3,59 +3,78 @@
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-    
+
 
 <!-- Mirrored from themedesigner.in/demo/maruti-admin/login.html by HTTrack Website Copier/3.x [XR&CO'2013], Mon, 24 Mar 2014 10:09:12 GMT -->
 <head>
-        <title>Maruti Admin</title><meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="Admin/Content/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="Admin/Content/css/bootstrap-responsive.min.css" />
-        <link rel="stylesheet" href="Admin/Content/css/maruti-login.css" />
-    </head>
-    <body>
-        <div id="loginbox">            
-            <form id="loginform" class="form-vertical" action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
-				 <div class="control-group normal_text"> <h3><img src="img/logo.png" alt="Logo" /></h3></div>
-                <div class="control-group">
-                    <div class="controls">
-                        <div class="main_input_box">
-                            <span class="add-on"><i class="icon-user"></i></span><input type="text" placeholder="Username" name="txtUser"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="controls">
-                        <div class="main_input_box">
-                            <span class="add-on"><i class="icon-lock"></i></span><input type="password" placeholder="Password" name="txtPassword"/>
-                        </div>
-                    </div>
-                </div>                            
-                <div class="form-actions">
-                	<span class="pull"><a href="Register.jsp" class="flip-link btn btn-info">Đăng ký</a></span>                	
-<!--                     <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Quên mật khẩu</a></span> -->
-                    <span class="pull-right"><button type="submit" class="btn btn-success"  name="action" value="<%=Constants.ACTION_LOGIN%>">Đăng nhập</button></span>
-                </div>
-            </form>
-<%--             <form id="recoverform" class="form-vertical" action="<%=Constants.CONTROLLER_ADMIN%>" method="post"> --%>
-<!-- 				<p class="normal_text">Nhập vào mail tái khoản của bạn !</p> -->
-				
-<!--                     <div class="controls"> -->
-<!--                         <div class="main_input_box"> -->
-<!--                             <span class="add-on"><i class="icon-envelope"></i></span><input type="text" placeholder="E-mail address" name="email"/> -->
-<!--                         </div> -->
-<!--                     </div> -->
-               
-<!--                 <div class="form-actions"> -->
-<!--                     <span class="pull-left"><a href="#" class="flip-link btn btn-inverse" id="to-login">&laquo; Trở về đăng nhập</a></span> -->
-<!--                     <span class="pull-right"><button class="btn btn-info"  name="action" value="forgetPassword">Xác nhận</button></span> -->
-<!--                 </div> -->
-<!--             </form> -->
-        </div>
-        
-        <script src="Admin/Content/js/jquery.min.js"></script>  
-        <script src="Admin/Content/js/maruti.login.js"></script> 
-    </body>
+<title>Maruti Admin</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="Admin/Content/css/bootstrap.min.css" />
+<link rel="stylesheet"
+	href="Admin/Content/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="Admin/Content/css/maruti-login.css" />
+</head>
+<body>
+	<div id="loginbox">
+		<form id="loginform" class="form-vertical"
+			action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
+			<div class="control-group normal_text">
+				<h3>
+					<img src="img/logo.png" alt="Đăng nhập" />
+				</h3>
+			</div>
+			<div class="control-group">
+				<div class="row-fluid">
+					<label class="span4">Tên đăng nhập:</label>
+					<div class="span8" align="left">
+						<input type="text" name="txtUser" />
+					</div>
+				</div>
+
+			</div>
+			<div class="control-group">
+				<div class="row-fluid">
+					<label class="span4">Mật khẩu:</label>
+					<div class="span8" align="left">
+						<input type="password" name="txtPassword" />
+					</div>
+				</div>
+			</div>
+			<div class="form-actions">
+				<span class="pull"> <!-- <a href="#"
+					class="flip-link btn btn-inverse" id="to-recover">Quên mật
+						khẩu?</a>  --><a href="Admin/Register.jsp" class="flip-link btn btn-info">Đăng
+						ký</a></span>
+				<!--                     <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Quên mật khẩu</a></span> -->
+				<span class="pull-right"><button type="submit"
+						class="btn btn-success" name="action"
+						value="<%=Constants.ACTION_LOGIN%>">Đăng nhập</button></span>
+			</div>
+		</form>
+		<form id="recoverform" class="form-vertical"
+			action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
+			<p class="normal_text">Nhập vào mail tài khoản của bạn !</p>
+			<div class="controls">
+				<div class="main_input_box">
+					<span class="add-on"><i class="icon-envelope"></i></span><input
+						type="text" placeholder="Địa chỉ email" name="email" />
+				</div>
+			</div>
+
+			<div class="form-actions">
+				<span class="pull-left"><a href="#"
+					class="flip-link btn btn-inverse" id="to-login">&laquo; Trở về
+						đăng nhập</a></span> <span class="pull-right"><button
+						class="btn btn-info" name="action" value="sendmail">Xác
+						nhận</button></span>
+			</div>
+		</form>
+	</div>
+
+	<script src="Admin/Content/js/jquery.min.js"></script>
+	<script src="Admin/Content/js/maruti.login.js"></script>
+</body>
 
 
 <!-- Mirrored from themedesigner.in/demo/maruti-admin/login.html by HTTrack Website Copier/3.x [XR&CO'2013], Mon, 24 Mar 2014 10:09:12 GMT -->

@@ -2,10 +2,14 @@
 <%@page import="json.TrafficInfoShortJSON"%>
 <%@page import="utility.GlobalValue"%>
 <%@page import="utility.Constants"%>
+<%@page import="json.CategoryJSON"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-
+<%
+	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("cateList");
+%>
 <script type="text/javascript">
 	function uploadFile() {
 		var xhr = new XMLHttpRequest();
@@ -51,8 +55,7 @@
 	}
 
 	function showResult(result) {
-		if (result.trim() != "Success") {
-			$("#AddTrafficModal").modal('hide');
+		if (result.trim() != "Success") {			
 			$("#myAlert .modal-body").text("Thêm mới thất bại!");
 			$("#myAlert").modal("show");		
 
@@ -62,16 +65,11 @@
 			$("#myAlert").modal("show");
 			location.reload();
 		}
-	}
-	function validateForm() {
-		var x = document.forms["add-traffic"]["trafficID"].value;
-		if (x == null || x == "") {
-			alert("Số hiệu biển báo phải được điền!!!");
-			return false;
-		}
-	}
+	}	
 </script>
 <div class="modal-dialog">
+<form id="add_traffic_form" method="post"
+					class="form-horizontal" onsubmit="return validateForm()">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
@@ -81,8 +79,7 @@
 		<div class="modal-body">
 			<div class="trafficDetail">
 				<div class="contentImgDetails"></div>
-				<form name="add-traffic" id="add_traffic_form" method="post"
-					class="form-horizontal" onsubmit="return validateForm()">
+				
 					<div class="control-group" align="left">
 						<label class="control-label">Số hiệu Biển Báo :</label>
 						<div class="controls">
@@ -101,12 +98,19 @@
 							<input name="mainImage" type="file" class="span2" />
 						</div>
 					</div>
-					<div class="control-group" align="left">
-						<label class="control-label">Loại biển báo</label>
+				<div class="control-group" align="left">
+						<label class="control-label">Loại biển báo: </label>
 						<div class="controls">
-							<select name="categoryID">
-								<option value="1">Biển báo cấm</option>
-								<option value="2">Biển báo nguy hiểm</option>
+							<select name="categoryID">											
+									<%						
+									
+										for(int i = 0; i< listCat.size();i ++) {
+									%>
+									<option class="font-Style"
+										value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+									<%
+										}
+									%>
 							</select>
 						</div>
 					</div>
@@ -128,15 +132,14 @@
 							<input type="hidden" name="creator"
 								value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 						</div>
-					</div>
-				</form>
+					</div>			
 			</div>
 		</div>
 		<div id="footerViewDetail" class="modal-footer">
 			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 			<button type="submit" class="btn btn-success"
-				onclick="uploadFile(); return false;">Lưu</button>
+				onclick="uploadFile(); return false;" value="submit">Lưu</button>
 		</div>
 	</div>
-</div>
+</form>
 </div>
