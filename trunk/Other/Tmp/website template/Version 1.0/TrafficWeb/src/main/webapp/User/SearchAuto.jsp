@@ -19,7 +19,7 @@
 <style>
 .list-result {
 	min-height: 350px;
-	width: 300px;
+	width: 250px;
 	/*border: red thin solid;*/
 	float: left;
 	padding-bottom: 20px;
@@ -28,7 +28,7 @@
 
 .search-area {
 	min-height: 350px;
-	width: 600px;
+	width: 550px;
 	/*border: blue thin solid;*/
 	float: right;
 	position: relative;
@@ -457,6 +457,7 @@ legend {
 
 							// ajax send report
 							function sendReport(trafficID){
+								console.log("sendreport" +trafficID);
 								var type = '1';
 								var content = document.getElementById("txtContent").value;
 								var action = "reportTraffic";
@@ -480,6 +481,7 @@ legend {
 							$(document).ready(function() {								
 								// event on shown to set onclick
 								$('#reportModal').on('show', function() {
+									console.log(trafficID);
 									document.getElementById("txtContent").value = '';
 									var trafficID = document.getElementById("reference_id").value;
 									var functionName = 'sendReport("' + trafficID +'")';
@@ -572,34 +574,8 @@ legend {
 
 										});
 							}
-							// ajax send report
-							function sendReport(trafficID){
-								var type = '2';
-								var content = document.getElementById("txtContent").value;
-								var action = "reportTraffic";
-								$.ajax({
-									url : '<%=Constants.CONTROLLER_USER%>',
-									type : "GET",
-									data : {
-										action : action,
-										trafficID : trafficID,
-										type : type,
-										content : content
-									},
-									success : function(result) {
-										$('#reportModal').modal('hide');
-									}
-
-								});
-								
-							}
-							// function show popup for send report
-							function showFromReport(trafficID) {
-								$('#reference_id').val(trafficID);
-								$('#myModal').modal('hide');
-								$('#reportModal').modal('show');
-
-							}
+							
+							
 						</script>
 					</div>
 					<div style="clear: both"></div>
@@ -648,25 +624,26 @@ legend {
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 		style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
-	<!-- Modal for report-->
-	<div id="reportModal" class="modal hide fade" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal"
-				aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Gửi Ý Kiến</h3>
+		
+<!-- Modal for report-->
+		<div id="reportModal" class="modal hide fade" tabindex="-1"
+			role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h3 id="myModalLabel">Gửi Ý Kiến</h3>
+			</div>
+			<div class="modal-body">
+				<strong>Nội dung ý kiến :</strong><br>
+				<textarea rows="3" cols="12" id="txtContent"
+					style="width: 515px; resize: none;"></textarea>
+				<input type="hidden" id="reference_id" />
+			</div>
+			<div class="modal-footer">
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
+				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
+					Ý Kiến</button>
+			</div>
 		</div>
-		<div class="modal-body">
-			<strong>Nội dung ý kiến :</strong><br>
-			<textarea rows="3" cols="12" id="txtContent"
-				style="width: 515px; resize: none;"></textarea>
-			<input type="hidden" id="reference_id" />
-		</div>
-		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
-			<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
-				Ý Kiến</button>
-		</div>
-	</div>
 </body>
 </html>

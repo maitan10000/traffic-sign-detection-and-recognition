@@ -12,15 +12,19 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
-<link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
-	type="text/css" />
-<link href="User/Content/Css/paging.css" rel="stylesheet"
-	type="text/css" />
+
+<link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+<link href="User/Content/Css/jquery.dataTables.css" rel="stylesheet" type="text/css"/>
+<!-- <link href="User/Content/Css/paging.css" rel="stylesheet" -->
+<!-- 	type="text/css" /> -->
 <script type="text/javascript"
 	src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript"
+	src="User/Content/Scripts/jquery.dataTables.min.js"></script>
 <script type="text/javascript"
 	src="User/Content/bootstrap/js/bootstrap.js"></script>
 <script type="text/javascript" src="User/Content/Scripts/paging.js"></script>
+
 <title>Traffic Sign Recognition</title>
 </head>
 
@@ -105,7 +109,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 						enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
 						<div class="options">
 
-							<div class="fillOption" style="margin-left: 150px">
+							<div class="fillOption" style="margin-left: 80px">
 								<div class="searchName" style="margin-right: 30px;">
 
 									Tên biển báo: <input id="searchKey" class="searchKey" name="searchKey" type="text" />
@@ -146,7 +150,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 					%>
 					<div class="contentTable " style="margin-top: 20px">
 						<table id="resultTable"
-							class="table table-striped .table-condensed">
+							class="table table-bordered dataTable">
 							<thead>
 								<th>Hình Ảnh</th>
 								<th>Số Hiệu</th>
@@ -178,7 +182,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 							</tbody>
 						</table>
 					</div>
-					<div id="pageNavPosition" style="padding-top: 20px" align="center"></div>
+				
 					<%
 						}
 					%>
@@ -241,20 +245,132 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				<input type="hidden" id="reference_id" />
 			</div>
 			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
 				<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
 					Ý Kiến</button>
 			</div>
 		</div>
 	</div>
-
-</body>
 <script type="text/javascript">
-	var pager = new Pager('resultTable', 5);
-	pager.init();
-	pager.showPageNav('pager', 'pageNavPosition');
-	pager.showPage(1);
+$.extend( $.fn.dataTableExt.oStdClasses, {
+	"sSortAsc": "header headerSortDown",
+	"sSortDesc": "header headerSortUp",
+	"sSortable": "header"
+} );
+
+/* API method to get paging information */
+$.fn.dataTableExt.oApi.fnPagingInfo = function ( oSettings )
+{
+	return {
+		"iStart":         oSettings._iDisplayStart,
+		"iEnd":           oSettings.fnDisplayEnd(),
+		"iLength":        oSettings._iDisplayLength,
+		"iTotal":         oSettings.fnRecordsTotal(),
+		"iFilteredTotal": oSettings.fnRecordsDisplay(),
+		"iPage":          Math.ceil( oSettings._iDisplayStart / oSettings._iDisplayLength ),
+		"iTotalPages":    Math.ceil( oSettings.fnRecordsDisplay() / oSettings._iDisplayLength )
+	};
+}
+
+/* Bootstrap style pagination control */
+$.extend( $.fn.dataTableExt.oPagination, {
+	"bootstrap": {
+		"fnInit": function( oSettings, nPaging, fnDraw ) {
+			var oLang = oSettings.oLanguage.oPaginate;
+			var fnClickHandler = function ( e ) {
+				e.preventDefault();
+				if ( oSettings.oApi._fnPageChange(oSettings, e.data.action) ) {
+					fnDraw( oSettings );
+				}
+			};
+
+			$(nPaging).addClass('pagination').append(
+				'<ul>'+
+					'<li class="prev disabled"><a href="#">&larr; '+oLang.sPrevious+'</a></li>'+
+					'<li class="next disabled"><a href="#">'+oLang.sNext+' &rarr; </a></li>'+
+				'</ul>'
+			);
+			var els = $('a', nPaging);
+			$(els[0]).bind( 'click.DT', { action: "previous" }, fnClickHandler );
+			$(els[1]).bind( 'click.DT', { action: "next" }, fnClickHandler );
+		},
+
+		"fnUpdate": function ( oSettings, fnDraw ) {
+			var iListLength = 5;
+			var oPaging = oSettings.oInstance.fnPagingInfo();
+			var an = oSettings.aanFeatures.p;
+			var i, j, sClass, iStart, iEnd, iHalf=Math.floor(iListLength/2);
+
+			if ( oPaging.iTotalPages < iListLength) {
+				iStart = 1;
+				iEnd = oPaging.iTotalPages;
+			}
+			else if ( oPaging.iPage <= iHalf ) {
+				iStart = 1;
+				iEnd = iListLength;
+			} else if ( oPaging.iPage >= (oPaging.iTotalPages-iHalf) ) {
+				iStart = oPaging.iTotalPages - iListLength + 1;
+				iEnd = oPaging.iTotalPages;
+			} else {
+				iStart = oPaging.iPage - iHalf + 1;
+				iEnd = iStart + iListLength - 1;
+			}
+
+			for ( i=0, iLen=an.length ; i<iLen ; i++ ) {
+				// Remove the middle elements
+				$('li:gt(0)', an[i]).filter(':not(:last)').remove();
+
+				// Add the new list items and their event handlers
+				for ( j=iStart ; j<=iEnd ; j++ ) {
+					sClass = (j==oPaging.iPage+1) ? 'class="active"' : '';
+					$('<li '+sClass+'><a href="#">'+j+'</a></li>')
+						.insertBefore( $('li:last', an[i])[0] )
+						.bind('click', function (e) {
+							e.preventDefault();
+							oSettings._iDisplayStart = (parseInt($('a', this).text(),10)-1) * oPaging.iLength;
+							fnDraw( oSettings );
+						} );
+				}
+
+				// Add / remove disabled classes from the static elements
+				if ( oPaging.iPage === 0 ) {
+					$('li:first', an[i]).addClass('disabled');
+				} else {
+					$('li:first', an[i]).removeClass('disabled');
+				}
+
+				if ( oPaging.iPage === oPaging.iTotalPages-1 || oPaging.iTotalPages === 0 ) {
+					$('li:last', an[i]).addClass('disabled');
+				} else {
+					$('li:last', an[i]).removeClass('disabled');
+				}
+			}
+		}
+	}
+} );
+$(document).ready(function() {
+	
+	
+    oTable = $('#resultTable').dataTable({
+        "bJQueryUI": true,
+        "sPaginationType": "full_numbers",
+        "sDom": '<"F">t<""p>',
+        "sPaginationType": "bootstrap",
+        "oLanguage": { 
+        	"oPaginate": {
+        		"sFirst":    "Đầu",
+        		"sPrevious": "Trước",
+        		"sNext":     "Sau",
+        		"sLast":     "Cuối"
+        	},
+        "sSearch":"Tìm kiếm"
+        }
+    });
+    //$("#select-type").select2('destroy'); 
+} );
 </script>
+</body>
+
 <script type="text/javascript">
 var server = '<%=GlobalValue.getServiceAddress()%>';
 $( ".searchKey" ).keyup(function() {

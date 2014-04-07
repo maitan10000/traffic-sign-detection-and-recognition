@@ -1,44 +1,6 @@
-<%@page import="utility.GlobalValue"%>
-<%@page import="json.FavoriteJSON"%>
-<%@page import="model.Category"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="utility.Constants" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%
-ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttribute("listTraffic");
-%>
-
-<table id="resultTable" class="table table-bordered dataTable">
-							<thead>
-								<th>Hình Ảnh</th>
-								<th>Số Hiệu</th>
-								<th>Tên Biển Báo</th>
-								<th></th>
-							</thead>
-							<tbody>
-								<%
-									if( listTraffic.size()> 0){
-										for(int i = 0; i< listTraffic.size();i++){
-								%>
-
-								<tr>
-									<td><img class="trafficImage"
-										src="<%=GlobalValue.getServiceAddress() %><%=listTraffic.get(i).getImage()%>"
-										alt="Responsive image" /></td>
-									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal"
-										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
-									<td><button class="btn btn-inverse" onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
-								</tr>
-								<%
-									} 
-																																							}
-								%>
-							</tbody>
-						</table>
-						<script type="text/javascript">
+/**
+ * 
+ */
 $.extend( $.fn.dataTableExt.oStdClasses, {
 	"sSortAsc": "header headerSortDown",
 	"sSortDesc": "header headerSortUp",
@@ -135,24 +97,3 @@ $.extend( $.fn.dataTableExt.oPagination, {
 		}
 	}
 } );
-$(document).ready(function() {
-	
-	
-    oTable = $('#resultTable').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "sDom": '<"F">t<""p>',
-        "sPaginationType": "bootstrap",
-        "oLanguage": { 
-        	"oPaginate": {
-        		"sFirst":    "Đầu",
-        		"sPrevious": "Trước",
-        		"sNext":     "Sau",
-        		"sLast":     "Cuối"
-        	},
-        "sSearch":"Tìm kiếm"
-        }
-    });
-    //$("#select-type").select2('destroy'); 
-} );
-</script>

@@ -19,7 +19,7 @@
 <style>
 .list-result {
 	min-height: 350px;
-	width: 300px;
+	width: 250px;
 	/*border: red thin solid;*/
 	float: left;
 	padding-bottom: 20px;
@@ -28,7 +28,7 @@
 
 .search-area {
 	min-height: 350px;
-	width: 600px;
+	width: 550px;
 	/*border: blue thin solid;*/
 	float: right;
 	position: relative;
