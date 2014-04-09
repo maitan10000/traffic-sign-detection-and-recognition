@@ -26,13 +26,7 @@ public final class Constants {
 	public final static String TRAFFIC_TRAFFIC_TRAIN_IMAGE_LIST = "rest/Traffic/ListTrainImageByTrafficID";
 	public final static String TRAFFIC_TRAFFIC_TRAIN_IMAGE_DELETE = "rest/Traffic/DeleteTrainImageByID";
 	
-	// for view history
-	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
-	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
 	
-	// Train Image
-	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
-
 	// Favorite
 	public final static String MANAGE_FAVORITE_CHECK = "rest/Manage/CheckFavorite";
 	public final static String MANAGE_FAVORITE_ADD = "rest/Manage/AddFavorite";
@@ -49,6 +43,8 @@ public final class Constants {
 
 	// Train Image
 	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
+	public final static String TRAFFIC_TRAIN_IMAGE_RETRAIN_ALL = "rest/Traffic/ReTrainAll";
+	
 
 	// action constant
 	public final static String ACTION_SEARCH_MANUAL = "searchManual";
@@ -61,10 +57,12 @@ public final class Constants {
 	public final static String ACTION_HISTORY_LIST_SHORT = "listHistoryShort";
 	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
 	public final static String ACTION_DELETE_TRAINIMAGE = "deleteTrainImage";
+	
 
 	// Admin controler action
 	public final static String ACTION_LOGIN = "login";
 	public final static String ACTION_REGISTER = "register";
+	public final static String ACTION_VERIFY = "verify";
 	public final static String ACTION_LOGOUT = "logout";
 
 	public final static String ACTION_REPORT_LIST = "listReport";
@@ -76,7 +74,8 @@ public final class Constants {
 	public final static String ACTION_ACCOUNT_ACTIVE = "activeAccount";
 	public final static String ACTION_ACCOUNT_SETSTAFF = "setStaff";
 	public final static String ACTION_ACCOUNT_UNSETSTAFF = "unsetStaff";
-	public final static String ACTION_ACCOUNT_FORGOTPASSWORD = "forgotpassword";
+	public final static String ACTION_FORGOT_PASSWORD = "forgotpassword";
+	public final static String ACTION_CHANGE_PASSWORD = "changepassword";
 
 	public final static String ACTION_TRAFFIC_ADD = "addTraffic";
 	public final static String ACTION_TRAFFIC_EDIT = "editTraffic";
@@ -100,17 +99,20 @@ public final class Constants {
 	// register, login
 	public final static String MANAGE_REGISTER = "rest/Manage/Register";
 	public final static String MANAGE_LOGIN = "rest/Manage/Login";
-
+	public final static String MANAGE_FORGOT_PASSWORD = "rest/Manage/ForgotPassword";
+	public final static String MANAGE_CHANGE_PASSWORD = "rest/Manage/ChangePassword";
+	public final static String MANAGE_ACCOUNT_VERIFY = "rest/Manage/Verify";
+	
 	// for inActive Report
 
 	// Account Service
-	public final static String MANAGE_ACCOUNT_LIST = "rest/Manage/ListAllAccount";
+	public final static String MANAGE_ACCOUNT_LIST = "rest/Manage/ListAccountByRole";
 	public final static String MANAGE_ACCOUNT_DEACTIVE = "rest/Manage/Deactive";
 	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
 	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
 	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
 	public final static String MANAGE_ACCOUNT_SENDMAIL = "rest/Manage/SendMail";
-	public final static String MANAGE_ACCOUNT_FORGOTPASSWORD = "rest/Manage/ForgotPassword";
+	
 
 	// Session Constant
 	public final static String SESSION_USERID = "userid";

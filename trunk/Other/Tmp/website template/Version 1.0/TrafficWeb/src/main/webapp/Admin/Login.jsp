@@ -4,8 +4,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- Mirrored from themedesigner.in/demo/maruti-admin/login.html by HTTrack Website Copier/3.x [XR&CO'2013], Mon, 24 Mar 2014 10:09:12 GMT -->
 <head>
 <title></title>
 <meta charset="UTF-8" />
@@ -14,81 +12,96 @@
 <link rel="stylesheet"
 	href="Admin/Content/css/bootstrap-responsive.min.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-login.css" />
+<link rel="stylesheet" href="Admin/Content/css/uniform.css" />
+<link rel="stylesheet" href="Admin/Content/css/select2.css" />
+<link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
+<link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
+	class="skin-color" />
 <style>
-#loginbox
-{
-width: 400px;
+#content {
+	margin: 0px;
+	min-height: 96%;
 }
-#loginbox .label
-{
-text-align: left;
+#loginbox {
+	width: 400px;
+}
+
+#loginbox .label {
+	text-align: left;
+}
+
+#loginform {
+	margin-top: 150px;
 }
 </style>
 </head>
 <body>
-	<div id="loginbox">
-		<form id="loginform" class="form-vertical"
-			action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
-			<div class="control-group normal_text">
-				<h3>
-					<img src="img/logo.png" alt="Đăng nhập" />
-				</h3>
-			</div>
-			<div class="control-group">
-				<div class="row-fluid">
-					<div class="main_input_box">
-						<label class="span4">Tên đăng nhập:</label>
-						<div class="span8" align="left">
-							<input type="text" name="txtUser" />
+	<div id="content">
+		<div id="loginbox">
+			<form id="loginform" class="form-vertical" action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
+				<div class="control-group normal_text">
+					<h3>Đăng nhập</h3>
+				</div>
+				<div class="control-group">
+					<div class="row-fluid">
+						<div class="main_input_box">
+							<label class="span4">Tên đăng nhập:</label>
+							<div class="span8" align="left">
+								<input type="text" name="txtUser" id="txtUser" />
+							</div>
 						</div>
 					</div>
 				</div>
-
-			</div>
-			<div class="control-group">
-				<div class="row-fluid">
-				<div class="main_input_box">
-					<label class="span4">Mật khẩu:</label>
-					<div class="span8" align="left">
-						<input type="password" name="txtPassword" />
-					</div>
+				<div class="control-group">
+					<div class="row-fluid">
+						<div class="main_input_box">
+							<label class="span4">Mật khẩu:</label>
+							<div class="span8" align="left">
+								<input type="password" name="txtPassword" id="txtPassword" />
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="form-actions">
-				<span class="pull"> <!-- <a href="#"
-					class="flip-link btn btn-inverse" id="to-recover">Quên mật
-						khẩu?</a>  --><a href="Admin/Register.jsp" class="flip-link btn btn-info">Đăng
-						ký</a></span>
-				<!--                     <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Quên mật khẩu</a></span> -->
-				<span class="pull-right"><button type="submit"
-						class="btn btn-success" name="action"
-						value="<%=Constants.ACTION_LOGIN%>">Đăng nhập</button></span>
-			</div>
-		</form>
-		<form id="recoverform" class="form-vertical"
-			action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
-			<p class="normal_text">Nhập vào mail tài khoản của bạn !</p>
-			<div class="controls">
-				<div class="main_input_box">
-					<span class="add-on"><i class="icon-envelope"></i></span><input
-						type="text" placeholder="Địa chỉ email" name="email" />
+				<div class="form-actions">
+					<span class="pull"> <a
+						href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>"
+						class="flip-link btn btn-info">Đăng ký</a>
+						<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_FORGOT_PASSWORD%>"
+						class="flip-link btn btn-primary btn-small">Quên mật khẩu</a>
+					</span>				
+					<span class="pull-right">
+						<button type="submit" class="btn btn-success" name="action"
+							value="<%=Constants.ACTION_LOGIN%>">Đăng nhập</button>
+					</span>
 				</div>
-			</div>
-
-			<div class="form-actions">
-				<span class="pull-left"><a href="#"
-					class="flip-link btn btn-inverse" id="to-login">&laquo; Trở về
-						đăng nhập</a></span> <span class="pull-right"><button
-						class="btn btn-info" name="action" value="sendmail">Xác
-						nhận</button></span>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
-
 	<script src="Admin/Content/js/jquery.min.js"></script>
-	<script src="Admin/Content/js/maruti.login.js"></script>
+	<script src="Admin/Content/js/jquery.validate.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("#loginform").validate({
+				rules : {
+					txtUser : {
+						required : true
+					},
+					txtPassword : {
+						required : true
+					}
+				},
+				errorClass : "help-inline",
+				errorElement : "span",
+				highlight : function(element, errorClass, validClass) {
+					$(element).parents('.control-group').addClass('error');
+				},
+				unhighlight : function(element, errorClass, validClass) {
+					$(element).parents('.control-group').removeClass('error');
+					$(element).parents('.control-group').addClass('success');
+				}
+			});
+		});
+	</script>
 </body>
-
-
 </html>

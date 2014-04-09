@@ -30,12 +30,12 @@
 	
 }
 
-#registerform {
-	margin-top: 50px;
+#changePassForm {
+	margin-top: 100px;
 }
 
 #loginbox {
-	width: 400px !important;
+	width: 600px !important;
 }
 
 .row-fluid label {
@@ -46,71 +46,36 @@
 <body>
 	<div id="content">
 		<div id="loginbox">
-			<form id="registerform" class="form-vertical"
+			<form id="changePassForm" class="form-vertical"
 				action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
 				<div class="control-group normal_text">
-					<h3>Đăng ký</h3>
+					<h3>Thay đổi mật khẩu</h3>
 				</div>
 				<div class="control-group">
 					<div class="row-fluid">
 						<div class="main_input_box">
-							<label class="span4">Tên đăng nhập:</label>
+							<label class="span4">Mật khẩu mới:</label>
 							<div class="span8" align="left">
-								<input type="text" name="txtUser" id="txtUser" />
+								<input type="text" name="txtPassword" id="txtPassword" />
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="control-group">
-					<div class="row-fluid">
-						<div class="main_input_box">
-							<label class="span4">Mật khẩu:</label>
-							<div class="span8" align="left">
-								<input type="password" name="txtPassword" id="txtPassword" />
-							</div>
-						</div>
-					</div>
-				</div>
+				</div>		
 				<div class="control-group">
 					<div class="row-fluid">
 						<div class="main_input_box">
 							<label class="span4">Nhập lại mật khẩu:</label>
 							<div class="span8" align="left">
-								<input type="password" name="txtRePassword" id="txtRePassword" />
+								<input type="text" name="txtRePassword" id="txtRePassword" />
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="control-group">
-					<div class="row-fluid">
-						<div class="main_input_box">
-							<label class="span4">Tên:</label>
-							<div class="span8" align="left">
-								<input type="text" name="txtName" id="txtName" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="row-fluid">
-						<div class="main_input_box">
-							<label class="span4">Email:</label>
-							<div class="span8" align="left">
-								<input type="email" name="txtEmail" id="txtEmail" />
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="form-actions">
-					<span class="pull"> <!-- <a href="#"
-					class="flip-link btn btn-inverse" id="to-recover">Quên mật
-						khẩu?</a>  --> <a href="#" onclick="goBack()"
-						class="flip-link btn btn-info">Trở về</a></span>
-					<!--                     <span class="pull-left"><a href="#" class="flip-link btn btn-info" id="to-recover">Quên mật khẩu</a></span> -->
+				</div>			
+				<div class="form-actions">					
 					<span class="pull-right">
 
 						<button type="submit" class="btn btn-success" name="action"
-							onclick="register(); return false;">Đăng ký</button>
+							onclick="changePass(); return false;">Đổi mật khẩu</button>
 					</span>
 				</div>
 			</form>
@@ -118,10 +83,10 @@
 		<div id="messageModal" class="modal hide">
              <div class="modal-header">
                <button data-dismiss="modal" class="close" type="button">×</button>
-               <h3 id="message-header"></h3>
+               <h3 id="message-header">Thông báo</h3>
              </div>
              <div class="modal-body">
-               
+               <p id="message">Mật khẩu đã được thay đổi.</p>
              </div>
            </div>
 		<script src="Admin/Content/js/jquery.min.js"></script>
@@ -133,30 +98,24 @@
 		<script src="Admin/Content/js/maruti.js"></script>
 		<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 		<script>
+		var userDefine= '<%=(String)request.getAttribute("userDefine") %>';
 		function goBack()
 		  {
 			  window.history.back();
 		  }
 		
 			$(document).ready(function() {
-				$("#registerform").validate({
+				$("#changePassForm").validate({
 					rules : {
-						txtUser : {
-							required : true
-						},
 						txtPassword : {
 							required : true,
 							minlength : 6,
 							maxlength : 30
 						},
-						txtRePassword : {
+						txtRePassword:{
 							required : true,
 							equalTo : "#txtPassword"
-						},
-						txtEmail : {
-							required : true,
-							email : true
-						},
+						}
 					},
 					errorClass : "help-inline",
 					errorElement : "span",
@@ -170,48 +129,35 @@
 				});
 			});
 
-			function register() {
-				var result = $("#registerform").valid();
-				if (result == true) {	
-					$('#messageModal .modal-body').html('<center><img src="Admin/Content/images/loading2.gif"/></center>');
-					$('#messageModal').modal('show');
-					var tmpForm = document.getElementById("registerform");
+			function changePass() {
+				var result = $("#changePassForm").valid();
+				if (result == true) {					
+					var tmpForm = document.getElementById("changePassForm");
 					var url = "<%=GlobalValue.getServiceAddress()%>"
-							+"<%=Constants.MANAGE_REGISTER%>";
+							+"<%=Constants.MANAGE_CHANGE_PASSWORD%>";
 					$.ajax({
 						url : url,
 						type : "POST",
 						data : {
-							userID : tmpForm.txtUser.value,
-							password : tmpForm.txtPassword.value,
-							name : tmpForm.txtName.value,
-							email : tmpForm.txtEmail.value
+							userDefine : userDefine,
+							newPassword: tmpForm.txtPassword.value
 						},
 						success : function(result) {
-							if (tmpForm.txtUser.value == result.trim()) {
-									$('#messageModal .modal-body').html('<p id="message">Vui lòng kiểm tra email để kich hoạt tài khoản.</p>');
-							} else if ("User exist" == result.trim()) {
+							console.log(result);
+							if ('Success' == result.trim()) {
+									$('#messageModal').modal('show');
+							} else if ("User and email not exist" == result.trim()) {
 								$('#txtUser').focus();
-								$('#messageModal').modal('hide');
 								$.gritter.add({
 									title : 'Thông báo',
-									text : 'Tên đăng nhập đã được sử dụng',
+									text : 'Tên đăng nhập không tồn tại',
 									sticky : false
 								});
-							} else if ("Email exist" == result.trim()) {
-								$('#txtEmail').focus();
-								$('#messageModal').modal('hide');
-								$.gritter.add({
-									title : 'Thông báo',
-									text : 'Email đã được sử dụng',
-									sticky : false
-								});
-							}else
+							} else
 							{
-								$('#messageModal').modal('hide');
 								$.gritter.add({
 									title : 'Thông báo',
-									text : 'Đăng ký không thành công vui lòng thử lại sau',
+									text : 'Không thành công vui lòng thử lại sau',
 									sticky : false
 								});
 							}
@@ -219,10 +165,8 @@
 					});
 				}
 			}
-			$('#messageModal').on('hidden', function () {				
-				if($('#messageModal .modal-body').html().indexOf("Vui lòng kiểm tra email để kich hoạt tài khoản") >-1 ){
-			    	window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>";
-				}
+			$('#messageModal').on('hidden', function () {
+			    window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>";
 			});
 		</script>
 </body>
