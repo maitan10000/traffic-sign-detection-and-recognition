@@ -21,10 +21,16 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
+<!-- <link rel="stylesheet" href="Admin/Content/css/uniform.css" /> -->
 <style type="text/css">
 	.dataTables_filter {
 		margin-left: 20px;
 	}
+	#table-show tbody .btn
+	{
+		width: 80px;
+	}
+	
 	</style>
 </head>
 <%
@@ -112,7 +118,7 @@
 			<%
 				if( listAccount != null){
 			%>
-			<div class="widget-content nopadding">
+			
 			<div id="table-show">
 				<table id="account-table" class="table table-bordered dataTable">
 					<thead>
@@ -127,10 +133,11 @@
 							if("admin".equals(role))
 							{
 							%>
-							<th></th>
+							 <th></th>
 							<%
 							} 
 							%>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -184,15 +191,12 @@
 						%>
 					</tbody>
 				</table>
-				<div id="pageNavPosition" style="padding-top: 20px" align="right"></div>
-				</div>
-				<%
-					}
-				%>
 			</div>
+			<%
+				}
+			%>			
 		</div>
-	
-
+	</div>
 	<div class="row-fluid">
 		<div id="footer" class="span12">
 			<p>
@@ -202,7 +206,6 @@
 				thông."</p>
 		</div>
 	</div>
-</body>
 <script src="Admin/Content/js/excanvas.min.js"></script>
 <script src="Admin/Content/js/jquery.min.js"></script>
 <script src="Admin/Content/js/jquery.ui.custom.js"></script>
@@ -214,31 +217,12 @@
 <script src="Admin/Content/js/maruti.js"></script>
 <script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
 <script src="Admin/Content/js/maruti.calendar.js"></script>
-<script src="Admin/Content/js/jquery.uniform.js"></script>
+<!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
-<script src="Admin/Content/js/maruti.tables.js"></script>
+<!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/tsrt.main.js"></script>
 <script type="text/javascript">
-$(document).ready(function() {
-    oTable = $('#account-table').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "sDom": '<"F"f>t<""p>',
-        "oLanguage": { 
-        	"oPaginate": {
-        		"sFirst":    "Đầu",
-        		"sPrevious": "Trước",
-        		"sNext":     "Sau",
-        		"sLast":     "Cuối"
-        	},
-        "sSearch":"Tìm kiếm"
-        }
-    });
-    $("#select-type").select2('destroy'); 
-} );
-</script>
-<script type="text/javascript">
-
 
 function deactiveAccount(userID) {
 	var action = '<%=Constants.ACTION_ACCOUNT_DEACTIVE%>';
@@ -304,5 +288,5 @@ function unsetStaffAccount(userID) {
 			});
 }
 </script>
-
+</body>
 </html>

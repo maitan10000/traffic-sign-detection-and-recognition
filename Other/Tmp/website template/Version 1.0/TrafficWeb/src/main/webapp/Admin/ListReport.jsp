@@ -40,6 +40,10 @@ width: 800px;
 	left: 45%;
 	width: 16px;
 }
+#table-show tbody .btn
+{
+	width: 60px;
+}
 </style>
 </head>
 <%
@@ -142,8 +146,8 @@ width: 800px;
 								<th width="55%">Nội dung</th>
 								<th width="15%">Người gửi</th>
 								<th width="15%">Thời gian gửi</th>
-								<th width="10%"></th>
-								<th width="5%"></th>
+								<th colspan="1"></th>
+								<th ></th>
 							</tr>
 						</thead>
 						<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -244,33 +248,9 @@ width: 800px;
 <script src="Admin/Content/js/jquery.uniform.js"></script>
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
-<script src="Admin/Content/js/maruti.tables.js"></script>
+<!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/tsrt.main.js"></script>
 
-
-<script type="text/javascript">
-$(document).ready(function() {
-    oTable = $('#paging-table').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "sDom": '<"F"f>t<""p>',
-        "oLanguage": { 
-        	"oPaginate": {
-        		"sFirst":    "Đầu",
-        		"sPrevious": "Trước",
-        		"sNext":     "Sau",
-        		"sLast":     "Cuối"
-        	},
-        "sSearch":"Tìm kiếm"
-        }
-    });
-    $("#select-type").select2('destroy'); 
-} );
-
-// var pager = new Pager('resultTable', 8);
-// pager.init();
-// pager.showPageNav('pager', 'pageNavPosition');
-// pager.showPage(1);
-</script>
 <script type="text/javascript">
 
 function showDetails(reportID){
@@ -344,8 +324,4 @@ function listReport(type){
 
 </script>
 
-
-
-
-<!-- Mirrored from wbpreview.com/previews/WB0CTJ195/tables.html by HTTrack Website Copier/3.x [XR&CO'2013], Tue, 18 Mar 2014 03:37:07 GMT -->
 </html>

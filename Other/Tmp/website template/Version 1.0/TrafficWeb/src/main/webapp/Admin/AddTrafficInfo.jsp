@@ -75,6 +75,10 @@
 			location.reload();
 		}
 	}
+	$(document).ready(function(){		
+		//$('input[type=checkbox],input[type=radio],input[type=file]').uniform();		
+	});
+
 	
 </script>
 <div class="modal-dialog">
@@ -135,7 +139,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Mức phạt:</label>
+						<label class="control-label">Mức phạt tham khảo:</label>
 						<div class="controls">
 							<input style="width: 300px;" name="penaltyfee" type="text"
 								class="span2" />

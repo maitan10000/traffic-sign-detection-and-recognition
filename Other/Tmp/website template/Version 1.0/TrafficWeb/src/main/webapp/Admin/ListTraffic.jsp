@@ -83,6 +83,11 @@
 	top:10%;
 }
 
+#action-panel
+{
+	margin: 5px 20px 5px 0px;
+	text-align: right;
+}
 </style>
 
 </head>
@@ -121,7 +126,7 @@
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
 			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
-					class="icon icon-share-alt" onclick="logout()"></i> <span
+					class="icon icon-share-alt" onclick="logout(); return false;"></i> <span
 					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
@@ -158,6 +163,12 @@
 					class="icon-th"></i>Quản lý biển báo</a>
 			</div>
 		</div>
+		<div id="action-panel">
+					<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;">Thêm mới biển báo</button>
+					<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;">Nhập từ tập tin</button>
+					<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>">Xuất ra tập tin</a>
+					<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;">Tạo mẫu</button>
+		</div>	
 		<div class="container-fluid">
 			<div class="widget-title">
 				<span class="icon"><i class="icon-th"></i></span>
@@ -184,12 +195,7 @@
 						</select> </select>
 					</div>
 				</div>
-				<div align="right">
-				<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;">Thêm mới biển báo</button>
-				<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;">Nhập từ tập tin</button>
-				<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>">Xuất ra tập tin</a>
-				<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;">Tạo mẫu</button>
-				</div>	
+				
 			</div>
 			<%
 				if( listTraffic != null){
@@ -202,9 +208,9 @@
 							<th width="7%">Hình ảnh</th>
 							<th width="7%">Số Hiệu</th>
 							<th>Tên Biển Báo</th>
-							<th>Danh Mục</th>
-							<th></th>
-							<th></th>
+							<th>Loại biển báo</th>
+							<th colspan="1"></th>
+							<th colspan="1"></th>
 						</thead>
 						<tbody>
 							<%
@@ -283,13 +289,15 @@
             <button data-dismiss="modal" class="close" type="button">×</button>
             <h3>Nhập thông tin từ tập tin</h3>
           </div>
-          <div class="modal-body">             
-          <form id="import-form" method="post"
-			enctype="multipart/form-data">			
-			Chọn tập tin:<input type="file" name="file" />	
-			 
-          <input type="hidden" name="userID" value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
-			</form>						
+          <div class="modal-body">   
+	          <div style="text-align: center;">          
+		          <form id="import-form" method="post"
+					enctype="multipart/form-data">			
+					Chọn tập tin:<input type="file" name="file" />	
+					 
+		          <input type="hidden" name="userID" value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
+					</form>
+				</div>						
           </div>          
           <div class="modal-footer">
           	<img id="loading-image" src="Admin/Content/images/loading2.gif"/>  
@@ -347,29 +355,11 @@
 <script src="Admin/Content/js/maruti.js"></script>
 <script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
 <script src="Admin/Content/js/maruti.calendar.js"></script>
-<script src="Admin/Content/js/jquery.uniform.js"></script>
+<!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
-<script src="Admin/Content/js/maruti.tables.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    oTable = $('#traffic-table').dataTable({
-        "bJQueryUI": true,
-        "sPaginationType": "full_numbers",
-        "sDom": '<"F"f>t<""p>',
-        "oLanguage": { 
-        	"oPaginate": {
-        		"sFirst":    "Đầu",
-        		"sPrevious": "Trước",
-        		"sNext":     "Sau",
-        		"sLast":     "Cuối"
-        	},
-        "sSearch":"Tìm kiếm"
-        }
-    });
-    $("#select-type").select2('destroy'); 
-} );
-</script>
+<!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/tsrt.main.js"></script>
 <script type="text/javascript">
 function logout(){
 	var action = 'logout';
