@@ -1,6 +1,10 @@
 package service;
 
+import java.io.Console;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,8 +17,10 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import utility.Constants;
 import utility.GlobalValue;
@@ -28,6 +34,7 @@ import json.TrafficInfoShortJSON;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.multipart.FormDataParam;
 
 import dao.AccountDAO;
@@ -346,17 +353,40 @@ public class Manage {
 
 	// Check email da ton tai chua
 
-	// Register
+	/**
+	 * Register
+	 * 
+	 * @param userID
+	 * @param password
+	 * @param email
+	 * @param name
+	 * @param uriInfo
+	 * @return
+	 */
 	@POST
 	@Path("/Register")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response addAccount(@FormParam("userID") String userID,
+	public String registerAccount(@FormParam("userID") String userID,
 			@FormParam("password") String password,
-			@FormParam("email") String email, @FormParam("name") String name) {
+			@FormParam("email") String email, @FormParam("name") String name,
+			@Context UriInfo uriInfo) {
 		try {
 			if (userID != null && password != null && email != null
 					&& name != null && !userID.isEmpty() && !password.isEmpty()
 					&& !email.isEmpty() && !name.isEmpty()) {
+				AccountDAO accountDAO = new AccountDAOImpl();
+				// check userID
+				AccountDTO accountDTO = accountDAO.getAccount(userID);
+				if (accountDTO != null) {
+					return "User exist";
+				}
+
+				// check email
+				accountDTO = accountDAO.getAccountByEmail(email);
+				if (accountDTO != null) {
+					return "Email exist";
+				}
+
 				AccountDTO accountObj = new AccountDTO();
 				accountObj.setUserID(userID);
 				MessageDigest md = MessageDigest.getInstance("MD5");
@@ -371,30 +401,60 @@ public class Manage {
 				accountObj.setName(name);
 				accountObj.setRole("user");
 
-				AccountDAO accountDAO = new AccountDAOImpl();
 				boolean result = accountDAO.addAccount(accountObj);
 				if (result == true) {
-					String subject = "Thử gửi mail";
-					String message = "<div style=\"overflow: hidden;\" class=\"a3s\" id=\":x7\"><p><span style=\"font-size:medium\">Vui lòng nhấp vào link để kích hoạt:</span><a href=http://localhost:8080/TrafficService/rest/Manage/verifyAccount?email="
-							+ email
-							+ "&code="
-							+ md5password
-							+ "><span style=\"color:#ff0000\">Kích hoạt</span><a>.</p><div class=\"yj6qo\"></div></div>";
+					String subject = "Kích hoạt tài khoản";
+					String currentUrl = uriInfo.getAbsolutePath() + "";
+					currentUrl = currentUrl.replace(
+							"TrafficService/rest/Manage/Register",
+							"TrafficWeb/AdminController?action=verify");
+					String urlActive = currentUrl + "&key="
+							+ URLEncoder.encode(new String(Base64.encode(userID)));
+					String message = "<div><p><span>Vui lòng nhấp vào link để kích hoạt: </span><a href="
+							+ urlActive
+							+ "><span style=\"color:#ff0000\">Kích hoạt</span></a>.</p><p>Hoặc truy cập link sau:<br>"
+							+ urlActive + "</p></div>";
 					boolean result1 = MailUtil.sendEmail(email, subject,
 							message);
-					return Response.status(200).entity("Success").build();
-
+					if (result1 == true) {
+						return userID;
+					}
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Response.status(200).entity("Fail").build();
+		return "Fail";
 
 	}
 
-	// Login Service
+	/**
+	 * Verify
+	 * 
+	 * @param key
+	 * @return
+	 */
+	@GET
+	@Path("/Verify")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String verifyAccount(@QueryParam("key") String key) {
+		if (key != null && !key.isEmpty()) {
+			String userID = new String(Base64.decode(key));
+			AccountDAO accountDAO = new AccountDAOImpl();
+			if (accountDAO.verifyAccount(userID, GlobalValue.getActiveDay()) == true) {
+				return "Success";
+			}
+		}
+		return "Fail";
+	}
+
+	/**
+	 * Login
+	 * 
+	 * @param userID
+	 * @param password
+	 * @return
+	 */
 	@POST
 	@Path("/Login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -422,33 +482,6 @@ public class Manage {
 		return "";
 	}
 
-	/**
-	 * List all account in db
-	 * 
-	 * @return
-	 */
-	@GET
-	@Path("/ListAllAccount")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String listAllAccount() {
-		ArrayList<AccountDTO> accountData = new ArrayList<AccountDTO>();
-		AccountDAO accountDAO = new AccountDAOImpl();
-		accountData = accountDAO.getAllAccount();
-		ArrayList<AccountJSON> listAccountJSON = new ArrayList<AccountJSON>();
-		for (AccountDTO accountDTO : accountData) {
-			AccountJSON accountJSON = new AccountJSON();
-			accountJSON.setUserID(accountDTO.getUserID());
-			accountJSON.setEmail(accountDTO.getEmail());
-			accountJSON.setName(accountDTO.getName());
-			accountJSON.setRole(accountDTO.getRole());
-			accountJSON.setCreateDate(accountDTO.getCreateDate());
-			accountJSON.setIsActive(accountDTO.getIsActive());
-			listAccountJSON.add(accountJSON);
-		}
-		Gson gson = new Gson();
-		return gson.toJson(listAccountJSON);
-	}
-
 	@GET
 	@Path("/ListAccountByRole")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -472,6 +505,90 @@ public class Manage {
 			}
 		}
 		return GsonUtils.toJson(listAccountJSON);
+	}
+
+	@POST
+	@Path("/ChangePassword")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	public String changePassword(@FormParam("userDefine") String userDefine,
+			@FormParam("newPassword") String newpassword) {
+		if (userDefine != null && newpassword != null && !userDefine.isEmpty()
+				&& !newpassword.isEmpty()) {
+			AccountDAO accountDAO = new AccountDAOImpl();
+
+			// get account to update password
+			AccountDTO accountDTO = accountDAO.getAccount(userDefine);
+			if (accountDTO == null) {
+				accountDTO = accountDAO.getAccountByEmail(userDefine);
+			}
+
+			if (accountDTO == null) {
+				return "User and email not exist";
+			} else {
+				try {
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					byte[] thedigest = md.digest(newpassword.getBytes("UTF-8"));
+					StringBuffer sb = new StringBuffer();
+					for (byte b : thedigest) {
+						sb.append(Integer.toHexString((int) (b & 0xff)));
+					}
+					String md5password = new String(sb.toString());
+					accountDTO.setPassword(md5password);
+
+					boolean result = accountDAO.editAccount(accountDTO);
+					if (result == true) {
+						return "Success";
+					}
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return "Fail";
+	}
+
+	@GET
+	@Path("/ForgotPassword")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String forgotPassword(@QueryParam("userDefine") String userDefine,
+			@Context UriInfo uriInfo) {
+		if (userDefine != null && !userDefine.isEmpty()) {
+			AccountDAO accountDAO = new AccountDAOImpl();
+
+			// check exist account
+			AccountDTO accountDTO = accountDAO.getAccount(userDefine);
+			if (accountDTO == null) {
+				accountDTO = accountDAO.getAccountByEmail(userDefine);
+			}
+
+			if (accountDTO == null) {
+				return "User and email not exist";
+			} else {
+				String subject = "Đổi mật khẩu";
+				String currentUrl = uriInfo.getAbsolutePath() + "";
+				currentUrl = currentUrl.replace("ForgotPassword",
+						"ChangePassword");
+				currentUrl = currentUrl.replace(
+						"TrafficService/rest/Manage/ChangePassword",
+						"TrafficWeb/AdminController?action=changepassword");
+				String urlActive = currentUrl + "&key="
+						+  URLEncoder.encode(new String(Base64.encode(accountDTO.getUserID())));
+				String message = "<div><p><span>Vui lòng nhấp vào link để thay đổi mật khẩu: </span><a href="
+						+ urlActive
+						+ "><span style=\"color:#ff0000\">Thay đổi mật khẩu</span></a>.</p><p>Hoặc truy cập link sau:<br>"
+						+ urlActive + "</p></div>";
+				boolean result1 = MailUtil.sendEmail(accountDTO.getEmail(),
+						subject, message);
+				if (result1 == true) {
+					return "Success";
+				}
+			}
+		}
+		return "Fail";
 	}
 
 	/**
@@ -538,69 +655,6 @@ public class Manage {
 		return "Fail";
 	}
 
-	// For test send mail function not real service
-	@POST
-	@Path("/SendMail")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public String sendEmail(@FormParam("email") String email) {
-		String subject = "Thử gửi mail";
-		String message = "<p><span style=\"font-size: medium;\">Vui lòng nhấp vào link để kích hoạt</span> <span style=\"font-size: x-large;\">gửi mail</span> <strong>cho người d&ugrave;ng</strong>. <span style=\"color: #ff0000;\"><a\"href="
-				+ "http://localhost:8080/TrafficService/rest/Manage/verifyAccount?email=nghiahd92@gmail.com&password=827ccbeea8a706c4c34a16891f84e7b\">Kích hoạt</a></span>.</p>";
-		boolean result = MailUtil.sendEmail(email, subject, message);
-		if (result == true) {
-			return "Success";
-		}
-		return "Fail";
-	}
-
-	/**
-	 * Verify Account
-	 * 
-	 * @return
-	 */
-	@GET
-	@Path("/verifyAccount")
-	public String verifyAccount(@QueryParam("email") String email,
-			@QueryParam("code") String password) {
-		AccountDAO accountDAO = new AccountDAOImpl();
-		boolean result = accountDAO.verifyAccount(email, password);
-		if (result == true) {
-			return "Kích hoạt tài khoản thành công";
-		}
-		return "Fail";
-	}
-
 	//
-	@POST
-	@Path("/ForgotPassword")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public Response forgotPassord(@FormParam("email") String email,
-			@FormParam("password") String password) {
-		try {
-			if (password != null && email != null && !password.isEmpty()
-					&& !email.isEmpty()) {
-				AccountDTO accountObj = new AccountDTO();
-				MessageDigest md = MessageDigest.getInstance("MD5");
-				byte[] thedigest = md.digest(password.getBytes("UTF-8"));
-				StringBuffer sb = new StringBuffer();
-				for (byte b : thedigest) {
-					sb.append(Integer.toHexString((int) (b & 0xff)));
-				}
-				String md5password = new String(sb.toString());
-				accountObj.setPassword(md5password);
-				accountObj.setEmail(email);
-				AccountDAO accountDAO = new AccountDAOImpl();
-				boolean result = accountDAO.updatePassword(md5password, email);
-				if (result == true) {
-					return Response.status(200).entity("Success").build();
 
-				}
-
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Response.status(200).entity("Fail").build();
-
-	}
 }

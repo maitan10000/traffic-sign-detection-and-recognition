@@ -19,6 +19,7 @@ public class GlobalValue {
 	private static String gmailUsername = "";
 	private static String gmailPassword = "";
 	private static int reTrainNum = 0;
+	private static int activeDay = 1;
 
 	public static int ReTrainCount = 0;
 	public static boolean isReTraining = false;
@@ -48,6 +49,13 @@ public class GlobalValue {
 				try {
 					reTrainNum = Integer.parseInt(prop
 							.getProperty("reTrainNum").trim());
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					activeDay = Integer.parseInt(prop.getProperty("activeDay")
+							.trim());
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
@@ -83,6 +91,7 @@ public class GlobalValue {
 		prop.setProperty("gmailUsername", gmailUsername);
 		prop.setProperty("gmailPassword", gmailPassword);
 		prop.setProperty("reTrainNum", reTrainNum + "");
+		prop.setProperty("activeDay", activeDay+"");
 
 		File f = new File(configPath);
 		OutputStream out;
@@ -126,5 +135,13 @@ public class GlobalValue {
 
 	public static int getReTrainNum() {
 		return reTrainNum;
+	}
+
+	public static int getActiveDay() {
+		return activeDay;
+	}
+
+	public static void setActiveDay(int activeDay) {
+		GlobalValue.activeDay = activeDay;
 	}
 }
