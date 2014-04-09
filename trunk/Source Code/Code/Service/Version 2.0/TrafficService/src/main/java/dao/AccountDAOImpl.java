@@ -67,6 +67,47 @@ public class AccountDAOImpl implements AccountDAO {
 		return false;
 	}
 
+	/***
+	 * 
+	 */
+	@Override
+	public boolean editAccount(AccountDTO accountDTO) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("UPDATE trafficdb.account SET password = ?, email = ?, name=?, role=?, isActive=? WHERE userID = ?");
+			stm.setString(1, accountDTO.getPassword());
+			stm.setString(2, accountDTO.getEmail());
+			stm.setString(3, accountDTO.getName());
+			stm.setString(4, accountDTO.getRole());
+			stm.setBoolean(5, accountDTO.getIsActive());
+			stm.setString(6, accountDTO.getUserID());
+			return stm.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+
 	public AccountDTO getAccount(String userID) {
 		Connection connection = null;
 		PreparedStatement stm = null;
@@ -74,8 +115,52 @@ public class AccountDAOImpl implements AccountDAO {
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ? AND isActive = true");
+					.prepareStatement("SELECT * FROM trafficdb.account WHERE userID = ?");
 			stm.setString(1, userID);
+			rs = stm.executeQuery();
+			if (rs.next()) {
+				AccountDTO accountData = new AccountDTO();
+				accountData.setUserID(rs.getString("userID"));
+				accountData.setPassword(rs.getString("password"));
+				accountData.setEmail(rs.getString("email"));
+				accountData.setName(rs.getString("name"));
+				accountData.setRole(rs.getString("role"));
+				accountData.setCreateDate(rs.getDate("createDate"));
+				accountData.setIsActive(rs.getBoolean("isActive"));
+				return accountData;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+
+	public AccountDTO getAccountByEmail(String email) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT * FROM trafficdb.account WHERE email = ?");
+			stm.setString(1, email);
 			rs = stm.executeQuery();
 			if (rs.next()) {
 				AccountDTO accountData = new AccountDTO();
@@ -368,16 +453,16 @@ public class AccountDAOImpl implements AccountDAO {
 	}
 
 	//
-	public boolean verifyAccount(String email, String password) {
+	public boolean verifyAccount(String userID, int days) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("UPDATE trafficdb.account SET isActive = ? WHERE email = ? AND password=?");
+					.prepareStatement("UPDATE trafficdb.account SET isActive = ? WHERE userID = ? AND createDate >= DATE_SUB(NOW(),INTERVAL ? DAY)");
 			stm.setBoolean(1, true);
-			stm.setString(2, email);
-			stm.setString(3, password);
+			stm.setString(2, userID);
+			stm.setInt(3, days);
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -402,24 +487,22 @@ public class AccountDAOImpl implements AccountDAO {
 		return false;
 	}
 
-	
 	/**
 	 * 
 	 */
 	@Override
-	public ArrayList<AccountDTO> getAccountByRole(String role, Boolean getInActive) {
+	public ArrayList<AccountDTO> getAccountByRole(String role,
+			Boolean getInActive) {
 		Connection connection = null;
 		PreparedStatement stm = null;
 		ResultSet rs = null;
 		ArrayList<AccountDTO> accountData = new ArrayList<AccountDTO>();
 		try {
 			connection = BaseDAO.getConnect();
-			if(getInActive == true)
-			{
-			stm = connection
-					.prepareStatement("SELECT userID, email, name, role, createDate, isActive FROM trafficdb.account WHERE role =?");
-			}else
-			{
+			if (getInActive == true) {
+				stm = connection
+						.prepareStatement("SELECT userID, email, name, role, createDate, isActive FROM trafficdb.account WHERE role =?");
+			} else {
 				stm = connection
 						.prepareStatement("SELECT userID, email, name, role, createDate, isActive FROM trafficdb.account WHERE role =? AND isActive = true");
 			}
@@ -459,12 +542,11 @@ public class AccountDAOImpl implements AccountDAO {
 		return accountData;
 	}
 
-	
 	/**
 	 * 
 	 */
 	public ArrayList<AccountDTO> getAccountByRole(String role) {
 		return getAccountByRole(role, false);
 	}
-	
+
 }

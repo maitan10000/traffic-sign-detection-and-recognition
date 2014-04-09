@@ -8,12 +8,19 @@ public interface AccountDAO {
 	public boolean addAccount(AccountDTO accountDAO);
 
 	public AccountDTO getAccount(String userID);
-
-	public ArrayList<AccountDTO> getAllAccount();
+	
+	public AccountDTO getAccountByEmail(String email);	
 	
 	public ArrayList<AccountDTO> getAccountByRole(String role);
 	
 	public ArrayList<AccountDTO> getAccountByRole(String role, Boolean getInActive);
+	
+	public boolean editAccount(AccountDTO account);
+	
+	
+	
+	
+	public ArrayList<AccountDTO> getAllAccount();
 
 	public boolean deactiveAccount(String userID);
 
@@ -27,6 +34,6 @@ public interface AccountDAO {
 	
 	public boolean updatePassword(String password, String email);
 	
-	public boolean verifyAccount(String email, String password);
+	public boolean verifyAccount(String userID, int days);
 
 }
