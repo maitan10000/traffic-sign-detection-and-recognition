@@ -473,7 +473,7 @@ public class AdminController extends HttpServlet {
 				// list traffic info
 
 				// get list category
-				int cateID = 0;
+				int cateID = 3;
 				try {
 					cateID = Integer.parseInt(request.getParameter("cateID"));
 				} catch (Exception e) {

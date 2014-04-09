@@ -2124,3 +2124,7 @@ form {
 		text-align: center;
 	}
 }
+
+.dataTable thead th {
+    background: #49CCED;
+}

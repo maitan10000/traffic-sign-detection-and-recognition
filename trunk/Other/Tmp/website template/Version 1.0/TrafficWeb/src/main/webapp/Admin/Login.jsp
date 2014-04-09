@@ -65,7 +65,7 @@
 				<div class="form-actions">
 					<span class="pull"> <a
 						href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REGISTER%>"
-						class="flip-link btn btn-info">Đăng ký</a>
+						class="flip-link btn btn-info btn-small">Đăng ký</a>
 						<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_FORGOT_PASSWORD%>"
 						class="flip-link btn btn-primary btn-small">Quên mật khẩu</a>
 					</span>				
