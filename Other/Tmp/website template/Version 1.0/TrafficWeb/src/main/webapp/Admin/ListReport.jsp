@@ -28,7 +28,18 @@
 width: 800px;
     margin-left: -400px;
 }
+.trainImage-resize
+{
+	width:50px;
+}
 
+.trainImage-resize .actions
+{
+	margin: 0;
+	padding: 0;
+	left: 45%;
+	width: 16px;
+}
 </style>
 </head>
 <%
@@ -51,8 +62,9 @@ width: 800px;
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="" href="#"><i
-					class="icon icon-share-alt"></i> <span class="text">Đăng xuất</span></a></li>
+			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" onclick="logout()"></i> <span
+					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
 
@@ -82,8 +94,8 @@ width: 800px;
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
-				<a href="Index.jsp" title="Go to Home" class="tip-bottom"><i
-					class="icon-home"></i>Trang chủ</a>
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>" title="Quản lý phản hồi" class="tip-bottom"><i
+					class="icon-home"></i>Quản lý phản hồi</a>
 			</div>
 		</div>
 		<div class="container-fluid">
@@ -152,17 +164,17 @@ width: 800px;
 								<td><%=listReport.get(i).getContent()%></td>
 								<%
 									}
-																																													SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+								SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 								%>
 								<td style="text-align: center;"><%=listReport.get(i).getCreator()%></td>
 
-								<td style="text-align: center;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
+								<td style="text-align: center; font-size: 12px;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
 									data-toggle="modal"
-									onclick="showDetails(<%=listReport.get(i).getReportID()%>)">Chi
+									onclick="showDetails('<%=listReport.get(i).getReportID()%>'); return false;">Chi
 										tiết</button></td>
 								<td style="text-align: center;"><button class="btn btn btn-danger btn-mini"  href="#"
-									onclick="deleteReport(<%=listReport.get(i).getReportID()%>); return false;">Xóa</button></td>
+									onclick="deleteReport('<%=listReport.get(i).getReportID()%>'); return false;">Xóa</button></td>
 							</tr>
 							<%
 								}
@@ -198,11 +210,14 @@ width: 800px;
 		style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true"></div>
 	<!-- End detail modal-->
+	
 	<!-- Traffic Detail modal -->
 	<div class="modal fade" id="trafficDetailModal" tabindex="-1"
 		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
 		aria-hidden="true" ></div>
 	<!-- End detail modal-->
+	
+	
 	<!-- Alert modal -->
 	<div id="myAlert" class="modal hide">
               <div class="modal-header">

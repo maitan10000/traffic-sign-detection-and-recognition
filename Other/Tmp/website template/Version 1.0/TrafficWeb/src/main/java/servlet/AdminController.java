@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import json.AccountJSON;
 import json.CategoryJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
@@ -38,6 +39,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 /**
@@ -86,48 +88,51 @@ public class AdminController extends HttpServlet {
 			}
 
 			if (validRole == false && !Constants.ACTION_REGISTER.equals(action)
-					&& !Constants.ACTION_LOGIN.equals(action)) {
+					&& !Constants.ACTION_LOGIN.equals(action)
+					&& !Constants.ACTION_FORGOT_PASSWORD.equals(action)
+					&& !Constants.ACTION_CHANGE_PASSWORD.equals(action)
+					&& !Constants.ACTION_VERIFY.equals(action)) {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/Login.jsp");
 				rd.forward(request, response);
 			} else if (Constants.ACTION_REGISTER.equals(action)) {
 				// Register
-				String userID = request.getParameter("txtUser");
-				String password = request.getParameter("txtPassword");
-				String email = request.getParameter("txtEmail");
-				String name = request.getParameter("txtName");
-				String confirmPass = request.getParameter("txtConfirmPassword");
-				if (password.equals(confirmPass) && userID != null
-						&& password != null && email != null && name != null
-						&& !userID.isEmpty() && !password.isEmpty()
-						&& !email.isEmpty() && !name.isEmpty()) {
-					String urlCreator = GlobalValue.getServiceAddress()
-							+ Constants.MANAGE_REGISTER;
-					Client client = Client.create();
-					client.setFollowRedirects(true);
-					WebResource resource = client.resource(urlCreator);
-					MultivaluedMap formData = new MultivaluedMapImpl();
-					formData.add("userID", userID);
-					formData.add("password", password);
-					formData.add("email", email);
-					formData.add("name", name);
-					ClientResponse clientResponse = resource.type(
-							MediaType.APPLICATION_FORM_URLENCODED).post(
-							ClientResponse.class, formData);
 
-					if (response.getStatus() != 200) {
-						response.sendRedirect(Constants.ERROR_PAGE);
-					}
-					String output = clientResponse.getEntity(String.class);
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Register.jsp");
+				rd.forward(request, response);
+			} else if (Constants.ACTION_VERIFY.equals(action)) {
+				// Verify
 
-					if ("Success".equals(output)) {
-						RequestDispatcher rd = request
-								.getRequestDispatcher("Admin/Login.jsp");
-						rd.forward(request, response);
-					}
+				String key = request.getParameter("key");
+				String url = "Admin/Login.jsp";
+				if (key != null && !key.isEmpty()) {
+					url = "Admin/Verify.jsp";
+					request.setAttribute("key", key);
 				}
+				RequestDispatcher rd = request.getRequestDispatcher(url);
+				rd.forward(request, response);
+			} else if (Constants.ACTION_FORGOT_PASSWORD.equals(action)) {
+				// Forgot pass
+
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/ForgotPassword.jsp");
+				rd.forward(request, response);
+			} else if (Constants.ACTION_CHANGE_PASSWORD.equals(action)) {
+				// Change pass
+				String key = request.getParameter("key");
+				String url = "Admin/Login.jsp";
+				if (key != null && !key.isEmpty()) {
+					url = "Admin/ChangePassword.jsp";
+					key = new String(Base64.decode(key));
+					request.setAttribute("userDefine", key);
+				}
+
+				RequestDispatcher rd = request.getRequestDispatcher(url);
+				rd.forward(request, response);
 			} else if (Constants.ACTION_LOGIN.equals(action)) {
-				// login
+				// Login
+
 				String userID = request.getParameter("txtUser");
 				String password = request.getParameter("txtPassword");
 				String url = GlobalValue.getServiceAddress()
@@ -249,9 +254,11 @@ public class AdminController extends HttpServlet {
 				out.print(output);
 			} else if (Constants.ACTION_ACCOUNT_LIST.equals(action)) {
 				// List Account
+				ArrayList<AccountJSON> listAccount = new ArrayList<AccountJSON>();
 
+				// List all user
 				String url = GlobalValue.getServiceAddress()
-						+ Constants.MANAGE_ACCOUNT_LIST;
+						+ Constants.MANAGE_ACCOUNT_LIST + "?role=user";
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
 				ClientResponse clientResponse = webResource.accept(
@@ -260,19 +267,36 @@ public class AdminController extends HttpServlet {
 					throw new RuntimeException("Failed : HTTP error code : "
 							+ response.getStatus());
 				}
-
 				String output = clientResponse.getEntity(String.class);
-				ArrayList<Account> listAccount = new ArrayList<Account>();
-				Gson gson = new Gson();
-				Type type = new TypeToken<ArrayList<Account>>() {
+				Type type = new TypeToken<ArrayList<AccountJSON>>() {
 				}.getType();
-				listAccount = gson.fromJson(output, type);
+				ArrayList<AccountJSON> listUser = GsonUtils.fromJson(output,
+						type);
+
+				if ("admin".equals(role)) {
+					url = GlobalValue.getServiceAddress()
+							+ Constants.MANAGE_ACCOUNT_LIST + "?role=staff";
+					client = Client.create();
+					webResource = client.resource(url);
+					clientResponse = webResource.accept("application/json")
+							.get(ClientResponse.class);
+					if (response.getStatus() != 200) {
+						throw new RuntimeException(
+								"Failed : HTTP error code : "
+										+ response.getStatus());
+					}
+					output = clientResponse.getEntity(String.class);
+					ArrayList<AccountJSON> listStaff = GsonUtils.fromJson(
+							output, type);
+					listAccount = listStaff;
+				}
+				listAccount.addAll(listUser);
 				request.setAttribute("listAccount", listAccount);
-				// request to AccountPage.jsp
-				request.setAttribute("account", output);
+
 				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/AccountPage.jsp");
+						.getRequestDispatcher("Admin/ListAccount.jsp");
 				rd.forward(request, response);
+
 			} else if (Constants.ACTION_ACCOUNT_DEACTIVE.equals(action)) {
 				// Deactive Account
 
@@ -514,57 +538,6 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrainImage.jsp");
 				rd.forward(request, response);
-			} else if (Constants.ACTION_ACCOUNT_FORGOTPASSWORD.equals(action)) {
-				// Register
-
-				String password = request.getParameter("txtPassword");
-				String email = request.getParameter("txtEmail");
-
-				if (password != null && email != null && !password.isEmpty()
-						&& !email.isEmpty()) {
-					String urlCreator = GlobalValue.getServiceAddress()
-							+ Constants.MANAGE_ACCOUNT_FORGOTPASSWORD;
-					Client client = Client.create();
-					client.setFollowRedirects(true);
-					WebResource resource = client.resource(urlCreator);
-					MultivaluedMap formData = new MultivaluedMapImpl();
-					formData.add("email", email);
-					formData.add("password", password);
-					ClientResponse clientResponse = resource.type(
-							MediaType.APPLICATION_FORM_URLENCODED).post(
-							ClientResponse.class, formData);
-
-					if (response.getStatus() != 200) {
-						response.sendRedirect(Constants.ERROR_PAGE);
-					}
-					String output = clientResponse.getEntity(String.class);
-
-					if ("Success".equals(output)) {
-						RequestDispatcher rd = request
-								.getRequestDispatcher("Admin/Login.jsp");
-						rd.forward(request, response);
-					}
-				}
-			} else if ("sendmail".equals(action)) {
-				String email = request.getParameter("email");
-				String url = GlobalValue.getServiceAddress()
-						+ Constants.MANAGE_ACCOUNT_SENDMAIL;
-				Client client = Client.create();
-				WebResource webRsource = client.resource(url);
-				MultivaluedMap formData = new MultivaluedMapImpl();
-				formData.add("email", email);
-				ClientResponse clientResponse = webRsource.type(
-						MediaType.APPLICATION_FORM_URLENCODED).post(
-						ClientResponse.class, formData);
-				if (response.getStatus() != 200) {
-					response.sendRedirect(Constants.ERROR_PAGE);
-				}
-				String output = clientResponse.getEntity(String.class);
-				if ("Success".equals(output)) {
-					RequestDispatcher rd = request
-							.getRequestDispatcher("Admin/Login.jsp");
-					rd.forward(request, response);
-				}
 			} else if (Constants.ACTION_LOGOUT.equals(action)) {
 				session = request.getSession();
 				if (session != null) {

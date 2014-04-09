@@ -9,7 +9,7 @@
 ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 %>
 
-<div class="modal-dialog">\
+<div class="modal-dialog">
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -26,18 +26,18 @@ ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 				<%
 					}else if (reportDetails.getType() == 2){
 				%>
-				<br><strong>Sửa thông tin: </strong><a href="#myModal" data-toggle="modal" onclick="showTrafficDetails(<%=reportDetails.getReferenceID()%>)">Sửa</a>
+				<br><strong>Sửa thông tin: </strong><a href="#myModal" data-toggle="modal" onclick="showTrafficDetails('<%=reportDetails.getReferenceID()%>'); return false;">Sửa</a>
 				<%
 					}
 				%>
 				<%
 					if(reportDetails.getType() == 1){
 				%>
-					<br><strong>Loại phản hồi:</strong> <font>Nhận diện sai</font>
+					<br><strong>Loại phản hồi: </strong> <font>Nhận diện sai</font>
 				<%
 					}else{
 				%>
-					<br><strong>Loại phản hồi:</strong><font>Thông tin biển báo sai</font>
+					<br><strong>Loại phản hồi: </strong><font>Thông tin biển báo sai</font>
 				<%
 					}
 				%>
@@ -52,7 +52,7 @@ ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 		</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-				<button type="button" class="btn btn-primary" onclick="deleteReport(<%=reportDetails.getReportID()%>)">Xóa phản hồi</button>
+				<button type="button" class="btn btn-primary" onclick="deleteReport('<%=reportDetails.getReportID()%>'); return false;">Xóa phản hồi</button>
 			</div>
 	</div>
 </div>

@@ -82,6 +82,7 @@
 {
 	top:10%;
 }
+
 </style>
 
 </head>
@@ -143,9 +144,9 @@
 				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
 					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
 						hồi</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-signal"></i> <span>Thống
+			<li><a href="#"><i class="icon icon-signal"></i> <span>Thống
 						kê</span></a></li>
-			<li><a href="grid.html"><i class="icon icon-cog"></i> <span>Thiếp
+			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
 
 		</ul>
@@ -187,6 +188,7 @@
 				<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;">Thêm mới biển báo</button>
 				<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;">Nhập từ tập tin</button>
 				<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>">Xuất ra tập tin</a>
+				<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;">Tạo mẫu</button>
 				</div>	
 			</div>
 			<%
@@ -283,12 +285,14 @@
           </div>
           <div class="modal-body">             
           <form id="import-form" method="post"
-			enctype="multipart/form-data">
-			Chọn tập tin:<input type="file" name="file" />	  
+			enctype="multipart/form-data">			
+			Chọn tập tin:<input type="file" name="file" />	
+			 
           <input type="hidden" name="userID" value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 			</form>						
           </div>          
-          <div class="modal-footer"> 
+          <div class="modal-footer">
+          	<img id="loading-image" src="Admin/Content/images/loading2.gif"/>  
 	          <a class="btn btn-primary" href="#" onclick="importFile(); return false;">Gửi</a> 
 	          <a data-dismiss="modal" class="btn" href="#">Hủy</a> 
           </div>
@@ -439,10 +443,12 @@ function logout(){
 	function showImportFileModal()
 	{
 		$("#ImportFileModal").modal("show");
+		$('#loading-image').hide();
 	}
 	
 	function importFile()
 	{		
+		$('#loading-image').show();
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
@@ -468,7 +474,33 @@ function logout(){
 			});
 		} else {	
 			$("#ImportFileModal").modal('hide');
+			$.gritter.add({
+				title : 'Thông báo',
+				text : 'Thông tin đã được nhập',
+				sticky : false
+			});
 		}
+	}
+	
+	function showForceTrainModal()
+	{
+		$.gritter.add({
+			title : 'Thông báo',
+			text : 'Đang tạo lại mẫu',
+			sticky : false
+		});
+		$.ajax({
+			url: '<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAIN_IMAGE_RETRAIN_ALL%>',
+			type: "GET",
+			success: function (result) {
+				$.gritter.add({
+					title : 'Thông báo',
+					text : 'Tạo mẫu hoàn thành',
+					sticky : false
+				});
+			}
+			
+		});		
 	}
 </script>
 
