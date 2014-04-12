@@ -22,7 +22,7 @@ ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 						int id = Integer.parseInt(reportDetails.getReferenceID());
 					
 				%>				
-				<br><strong>Sửa thông tin: </strong><a  href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT%>&resultID=<%=reportDetails.getReferenceID()%>" data-toggle="modal"  >Sửa</a>
+				<br><strong>Sửa thông tin: </strong><a  href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT%>&resultID=<%=reportDetails.getReferenceID()%>&reportID=<%=reportDetails.getReportID()%>" data-toggle="modal"  >Sửa</a>
 				<%
 					}else if (reportDetails.getType() == 2){
 				%>

@@ -158,10 +158,11 @@ width: 800px;
 					<table id="paging-table" class="table table-bordered dataTable">
 						<thead>
 							<tr role="row">
-								<th width="5%">STT</th>
-								<th width="55%">Nội dung</th>
-								<th width="15%">Người gửi</th>
-								<th width="15%">Thời gian gửi</th>
+								<th width="4%">STT</th>
+								<th width="45%">Nội dung</th>
+								<th width="9%">Người gửi</th>
+								<th width="15%">Loại phản hồi</th>
+								<th width="17%">Thời gian gửi</th>
 								<th ></th>
 								<th ></th>
 							</tr>
@@ -174,8 +175,8 @@ width: 800px;
 
 								<td style="text-align: center;"><%=i+1%></td>
 								<%
-									if (listReport.get(i).getContent().length() > 100){									
-																																														String content = listReport.get(i).getContent().substring(0, 97) + "...";
+									if (listReport.get(i).getContent().length() > 45){									
+								String content = listReport.get(i).getContent().substring(0, 42) + "...";
 								%>
 								<td><%=content%></td>
 								<%
@@ -187,7 +188,17 @@ width: 800px;
 								SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 								%>
 								<td style="text-align: center;"><%=listReport.get(i).getCreator()%></td>
-
+								<td style="text-align: center;">
+								<%
+								if(listReport.get(i).getType() == 1)
+								{
+									out.print("<span class='label label-warning'>Nhận diện sai</span>");
+								}else
+								{
+									out.print("<span class='label label-important'>Thông tin sai</span>");
+								}
+								%>
+								</td>								
 								<td style="text-align: center; font-size: 12px;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
 									data-toggle="modal"
