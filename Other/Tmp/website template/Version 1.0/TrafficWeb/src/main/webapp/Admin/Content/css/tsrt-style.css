@@ -1,0 +1,11 @@
+.dataTable thead th {
+    background: #49CCED !important;
+}
+.container-fluid table i{
+	background-image: url('../img/glyphicons-halflings-white.png');
+}
+
+.gritter-item
+{
+	background-color: #D9EDF7;
+}

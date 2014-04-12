@@ -8,7 +8,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN LÝ</title>
+<title>Hệ thống nhận dạng biển báo - Trang quản lý</title>
+<link rel="shortcut icon" type="image/png" href="Admin/Content/images/favicon.png"/>
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,7 +20,7 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
-<script type="text/javascript" src="Admin/Content/js/paging.js"></script>
+<link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
 <style>
 #paging-table_filter {
 	margin-left: 20px;
@@ -42,20 +43,21 @@ width: 800px;
 }
 #table-show tbody .btn
 {
-	width: 60px;
+	width: 80px;
 }
 </style>
 </head>
 <%
 	String type = (String)request.getAttribute("type");
 	ArrayList<ReportShortJSON> listReport = (ArrayList<ReportShortJSON>) request.getAttribute("listReport");
+	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
 %>
 <body>
 	<!--Header-part-->
 	<div id="header" >
 		<div id="header-inner">
 			<h4>				
-				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+				<span>Hệ thống nhận dạng biển báo - Trang quản lý</span>
 			</h4>
 		</div>
 	</div>
@@ -73,28 +75,42 @@ width: 800px;
 	</div>
 
 	<!--close-top-Header-menu-->
-
 	<div id="sidebar">
-		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
+	<a href="<%=Constants.CONTROLLER_ADMIN%>" class="visible-phone"><i class="icon icon-home"></i>
 			Trang chủ</a>
-		<ul>
-			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
+		<ul>			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
+			<%
+			if("staff".equals(role))
+			{
+			%>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
-			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
-						lý người dùng</span></a></li>
-			<li><a
-				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
-					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i class="icon icon-exclamation-sign"></i> <span>Quản lý phản
 						hồi</span></a></li>
-			<li><a href="#"><i class="icon icon-signal"></i> <span>Thống
+			<%
+			}
+			%>
+			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
+						lý người dùng</span></a></li>			
+			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_STATISTIC%>"><i class="icon icon-signal"></i> <span>Thống
 						kê</span></a></li>
+			<%
+			if("admin".equals(role))
+			{
+			%>
 			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
-
+			<%
+			}
+			%>
 		</ul>
 	</div>
+	<!-- End slide bar -->
+	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
@@ -146,7 +162,7 @@ width: 800px;
 								<th width="55%">Nội dung</th>
 								<th width="15%">Người gửi</th>
 								<th width="15%">Thời gian gửi</th>
-								<th colspan="1"></th>
+								<th ></th>
 								<th ></th>
 							</tr>
 						</thead>
@@ -175,10 +191,9 @@ width: 800px;
 								<td style="text-align: center; font-size: 12px;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
 									data-toggle="modal"
-									onclick="showDetails('<%=listReport.get(i).getReportID()%>'); return false;">Chi
-										tiết</button></td>
+									onclick="showDetails('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-list-alt"></i> Chi tiết</button></td>
 								<td style="text-align: center;"><button class="btn btn btn-danger btn-mini"  href="#"
-									onclick="deleteReport('<%=listReport.get(i).getReportID()%>'); return false;">Xóa</button></td>
+									onclick="deleteReport('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-trash"></i> Xóa</button></td>
 							</tr>
 							<%
 								}
@@ -197,7 +212,7 @@ width: 800px;
 	<div class="row-fluid">
 		<div id="footer" class="span12">
 			<p>
-				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
+				<b>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</b>
 			</p>
 			<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo giao
 				thông."</p>

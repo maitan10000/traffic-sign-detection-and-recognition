@@ -11,7 +11,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>HỆ THỐNG NHẬN DIỆN BIỂN BÁO - TRANG QUẢN LÝ</title>
+<title>Hệ thống nhận dạng biển báo - Trang quản lý</title>
+<link rel="shortcut icon" type="image/png" href="Admin/Content/images/favicon.png"/>
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -23,6 +24,7 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />	
 <link rel="stylesheet" href="Admin/Content/css/jquery.gritter.css" />
+<link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
 <style type="text/css">
 
 #paging-table_filter {
@@ -88,6 +90,8 @@
 	margin: 5px 20px 5px 0px;
 	text-align: right;
 }
+
+
 </style>
 
 </head>
@@ -95,6 +99,7 @@
 	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("category");
 	ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
 	int currentCate = request.getAttribute("cateID")!=null ? Integer.parseInt((String)request.getAttribute("cateID")):0;	
+	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
 %>
 
 <body>
@@ -102,7 +107,7 @@
 	<div id="header" >
 		<div id="header-inner">
 			<h4>				
-				<span>Hệ thống nhận diện biển báo - Trang quản lý</span>
+				<span>Hệ thống nhận dạng biển báo - Trang quản lý</span>
 			</h4>
 		</div>
 	</div>
@@ -134,28 +139,41 @@
 	<!--close-top-Header-menu-->
 
 	<div id="sidebar">
-		<a href="#" class="visible-phone"><i class="icon icon-home"></i>
-			Dashboard2</a>
-		<ul>
-			<li class="active"><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
+	<a href="<%=Constants.CONTROLLER_ADMIN%>" class="visible-phone"><i class="icon icon-home"></i>
+			Trang chủ</a>
+		<ul>			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>"><i
 					class="icon icon-home"></i> <span>Trang chủ</span></a></li>
-			<li><a href="
-				<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i
-					class="icon icon-th"></i> <span>Quản lý biển báo</span></a></li>
-			<li><a
-				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i
-					class="icon icon-user"></i> <span>Quản lý người dùng</span></a></li>
-			<li><a
-				href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i
-					class="icon icon-exclamation-sign"></i> <span>Quản lý phản
+			<%
+			if("staff".equals(role))
+			{
+			%>
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
+						lý biển báo</span></a></li>
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i class="icon icon-exclamation-sign"></i> <span>Quản lý phản
 						hồi</span></a></li>
-			<li><a href="#"><i class="icon icon-signal"></i> <span>Thống
+			<%
+			}
+			%>
+			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_ACCOUNT_LIST%>"><i class="icon icon-user"></i> <span>Quản
+						lý người dùng</span></a></li>			
+			
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_STATISTIC%>"><i class="icon icon-signal"></i> <span>Thống
 						kê</span></a></li>
+			<%
+			if("admin".equals(role))
+			{
+			%>
 			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
-
+			<%
+			}
+			%>
 		</ul>
 	</div>
+	<!-- End slide bar -->
+	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
@@ -164,10 +182,10 @@
 			</div>
 		</div>
 		<div id="action-panel">
-					<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;">Thêm mới biển báo</button>
-					<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;">Nhập từ tập tin</button>
-					<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>">Xuất ra tập tin</a>
-					<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;">Tạo mẫu</button>
+					<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;"><i class="icon-plus"></i> Thêm mới</button>
+					<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;"><i class="icon-upload"></i> Nhập từ tập tin</button>
+					<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>"><i class="icon-download"></i> Xuất ra tập tin</a>
+					<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;"><i class="icon-refresh"></i> Tạo mẫu</button>
 		</div>	
 		<div class="container-fluid">
 			<div class="widget-title">
@@ -177,7 +195,7 @@
 					<div class="controls">
 						<span>Loại biển báo:</span><select id="select-type" name="cateID"
 							onchange="listTrafficByCate(this.value); return false;">							
-							<option class="font-Style" value="0">Tất Cả</option>
+							<option class="font-Style" value="0">Tất cả</option>
 							<%
 								for(int i = listCat.size() - 1; i>=0 ;i--) {
 							%>							
@@ -225,8 +243,8 @@
 								<td><%=listTraffic.get(i).getName()%></td>
 								<td style="text-align: center;"><%=listTraffic.get(i).getCategoryName()%></td>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#" data-toggle="modal"
-									onclick="showEditTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;">Sửa</button></td>
-								<td style="text-align: center;"><button class="btn btn-danger btn-mini" href="#" onclick="showDeleteTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;">Xóa</button></td>
+									onclick="showEditTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;"><i class="icon-edit"></i> Sửa</button></td>
+								<td style="text-align: center;"><button class="btn btn-danger btn-mini" href="#" onclick="showDeleteTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;"><i class="icon-trash"></i> Xóa</button></td>
 
 							</tr>
 							<%
@@ -245,7 +263,7 @@
 	<div class="row-fluid">
 		<div id="footer" class="span12">
 			<p>
-				<b>HỆ THỐNG NHẬN DIỆN BIỂN BÁO</b>
+				<b>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</b>
 			</p>
 			<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo giao
 				thông."</p>
