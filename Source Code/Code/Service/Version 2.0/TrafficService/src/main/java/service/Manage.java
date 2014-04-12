@@ -294,6 +294,7 @@ public class Manage {
 			reportShortJSON.setReportID(reportDTO.getReportID());
 			reportShortJSON.setCreator(reportDTO.getCreator());
 			reportShortJSON.setContent(reportDTO.getContent());
+			reportShortJSON.setType(reportDTO.getType());
 			reportShortJSON.setCreateDate(reportDTO.getCreateDate());
 			listReportShortJSON.add(reportShortJSON);
 		}

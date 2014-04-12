@@ -7,6 +7,8 @@ public class ReportShortJSON {
 	private String content;
 	private String creator;
 	private Date createDate;
+	private int type;
+	
 	public int getReportID() {
 		return reportID;
 	}
@@ -31,4 +33,12 @@ public class ReportShortJSON {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
+	
+	
 }
