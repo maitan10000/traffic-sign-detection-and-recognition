@@ -53,6 +53,11 @@
 {
 	border-bottom: 0px;
 }
+
+#type
+{
+	margin-left: 5px;
+}
 </style>
 
 </head>

@@ -143,8 +143,8 @@ input
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
-				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_STATISTIC%>" title="Thống kê" class="tip-bottom"><i
-					class="icon-signal"></i>Thống kê</a>
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_CONFIG %>" title="Thiếp lập hệ thống" class="tip-bottom"><i
+					class="icon-cog"></i>Thiếp lập hệ thống</a>
 			</div>
 		</div>		
 		<div class="container-fluid">
@@ -161,7 +161,7 @@ input
 	              </div>
 	              
 	              <div class="control-group">
-	                <label class="control-label">Tạo mẫu mới khi số lượng ảnh nhận diện đạt</label>
+	                <label class="control-label">Tạo mẫu mới khi số lượng ảnh nhận dạng đạt</label>
 	                <div class="controls">
 	                    <div id="retrain-count-div">
 	                    <input type="text" name="reTrainCount" id="reTrainCount" value="<%=reTrainCount%>" > ảnh                   
