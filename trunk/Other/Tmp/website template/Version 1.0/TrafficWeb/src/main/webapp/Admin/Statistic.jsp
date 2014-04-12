@@ -326,17 +326,17 @@ function drawChart()
 		    title: "",
 		    curveType: 'function',
 		    "vAxis": {
-                "minValue": "0",
-                "maxValue": maxValue                
-            },
-            "hAxis":{
-            	format: 'yyyy-MM-dd'
-            },
+				viewWindowMode:'explicit',
+	            viewWindow: {
+	                min:0
+	            },
+            },		           
 		    "pointSize": "5",
 		    "hAxis": {
                 "slantedTextAngle": "45",
-                "slantedText": "true"
-            },
+                "slantedText": "true",
+            },		       
+		    "pointSize": "5",		    
 		    animation: { duration: 250 },
 		    'height':350
 		  };
