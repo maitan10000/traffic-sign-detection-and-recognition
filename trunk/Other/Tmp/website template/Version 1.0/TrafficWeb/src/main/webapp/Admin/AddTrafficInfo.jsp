@@ -134,15 +134,15 @@
 					<div class="control-group" align="left">
 						<label class="control-label">Thông tin:</label>
 						<div class="controls">
-							<textarea style="width: 500px; height: 150px;" class="span4"
+							<textarea style="width: 500px; height: 100px;" class="span4"
 								name="information"></textarea>
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Mức phạt tham khảo:</label>
 						<div class="controls">
-							<input style="width: 300px;" name="penaltyfee" type="text"
-								class="span2" />
+						<textarea style="width: 500px; height: 50px;" class="span4"
+								name="penaltyfee"></textarea>						
 						</div>
 					</div>
 					<div class="control-group" align="left">

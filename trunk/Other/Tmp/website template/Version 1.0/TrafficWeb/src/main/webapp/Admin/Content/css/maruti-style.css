@@ -57,7 +57,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 }
 
 #header {
-	 background: #2E363F url('../images/m3.png') top left no-repeat;
+	 background: #2E363F url('../images/logo.png') top left no-repeat;
 	 background-size: 100px 100px; 
 	 padding-left: 100px;
 }
@@ -2125,6 +2125,4 @@ form {
 	}
 }
 
-.dataTable thead th {
-    background: #49CCED;
-}
+

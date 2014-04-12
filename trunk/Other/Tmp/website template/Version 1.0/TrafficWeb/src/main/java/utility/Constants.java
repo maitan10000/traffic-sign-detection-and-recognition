@@ -35,6 +35,10 @@ public final class Constants {
 	// Export, import
 	public final static String SERVER_IMPORT = "rest/Server/ImportFile";
 	public final static String SERVER_EXPORT = "rest/Server/ExportFile";
+	public final static String SERVER_STATISTIC_USER = "rest/Server/StatisticUser";
+	public final static String SERVER_STATISTIC_SEARCH = "rest/Server/StatisticSearch";
+	public final static String SERVER_SERVER_INFO = "rest/Server/ServerInfo";
+
 
 	// for view history
 	public final static String TRAFFIC_LIST_HISTORY = "rest/Traffic/ListHistory";
@@ -81,10 +85,8 @@ public final class Constants {
 	public final static String ACTION_TRAFFIC_EDIT = "editTraffic";
 	public final static String ACTION_TRAFFIC_LIST = "listTraffic";
 	public final static String ACTION_TRAFFIC_DELETE = "deleteTraffic";
-	
-	
-	public final static String ACTION_TRAFFIC_VIEWTRAINIMAGE = "viewTrainImage";
-	
+
+	public final static String ACTION_STATISTIC = "statistic";
 
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";

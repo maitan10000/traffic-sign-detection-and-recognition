@@ -236,7 +236,7 @@ public class AdminController extends HttpServlet {
 				// request to searchManual.jsp
 				request.setAttribute("reportDetail", reportDetail);
 				RequestDispatcher rd = request
-						.getRequestDispatcher("Admin/DetailReport.jsp");
+						.getRequestDispatcher("Admin/ReportDetail.jsp");
 				rd.forward(request, response);
 			} else if (Constants.ACTION_REPORT_DELETE.equals(action)) {
 				// Delete Report
@@ -545,7 +545,15 @@ public class AdminController extends HttpServlet {
 				}
 				request.getRequestDispatcher("Admin/Login.jsp").forward(
 						request, response);
-			} else {
+			}else if(Constants.ACTION_STATISTIC.equals(action))
+			{
+				//View statistic
+				
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Statistic.jsp");
+				rd.forward(request, response);
+			}
+			else {
 				// redirect to home
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/Index.jsp");
