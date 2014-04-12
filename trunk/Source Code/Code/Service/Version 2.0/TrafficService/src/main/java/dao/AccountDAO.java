@@ -1,8 +1,11 @@
 package dao;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
+import json.StatisticJSON;
 import dto.AccountDTO;
+import dto.StatisticDTO;
 
 public interface AccountDAO {
 	public boolean addAccount(AccountDTO accountDAO);
@@ -17,6 +20,9 @@ public interface AccountDAO {
 	
 	public boolean editAccount(AccountDTO account);
 	
+	public ArrayList<StatisticDTO> statisticUser(Date from, Date to);
+	
+	public int countTotalAccount();
 	
 	
 	

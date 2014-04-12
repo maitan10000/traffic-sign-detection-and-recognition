@@ -7,7 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystemException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +32,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import json.LastXDayJSON;
+import json.ServerInfoJSON;
+import json.StatisticJSON;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.ZipParameters;
@@ -47,9 +55,13 @@ import utility.GlobalValue;
 import utility.GsonUtils;
 import utility.Helper;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.jersey.core.header.FormDataContentDisposition;
 import com.sun.jersey.multipart.FormDataParam;
 
+import dao.AccountDAO;
+import dao.AccountDAOImpl;
 import dao.CategoryDAO;
 import dao.CategoryDAOImpl;
 import dao.ResultDAO;
@@ -60,6 +72,7 @@ import dao.TrainImageDAO;
 import dao.TrainImageDAOImpl;
 import dto.CategoryDTO;
 import dto.ResultDTO;
+import dto.StatisticDTO;
 import dto.TrafficInfoDTO;
 import dto.TrainImageDTO;
 
@@ -542,40 +555,116 @@ public class Server {
 		return Response.status(200).entity(output).build();
 	}
 
-	@GET
-	@Path("/StatisticLastXDay")
+	/**
+	 * StatisticUser
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	@POST
+	@Path("/StatisticUser")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String addFavorite(@QueryParam("day") Integer days) {
-		ArrayList<LastXDayJSON> listLastXDay = new ArrayList<LastXDayJSON>();
-		if (days != null) {
-			ResultDAO resultDAO = new ResultDAOImpl();
-			ArrayList<ResultDTO> listResultDTO = resultDAO
-					.getResultInLastXDay(days);
+	public String statisticUser(@FormParam("from") Date from,
+			@FormParam("to") Date to) {
+		ArrayList<StatisticJSON> listStatisticUserJSON = new ArrayList<StatisticJSON>();
+		if (from != null && to != null) {
+			AccountDAO accountDAO = new AccountDAOImpl();
+			ArrayList<StatisticDTO> listStatisticUserDTO = accountDAO
+					.statisticUser(from, to);
 
-			// get return info			
-			if (listResultDTO.size() > 0) {
-				Date tempDate = listResultDTO.get(0).getCreateDate();
-				int count = 1;
-				for (int i = 1; i < listResultDTO.size(); i++) {					
-					if(!tempDate.equals(listResultDTO.get(i).getCreateDate()) || i == listResultDTO.size()-1)					
-					{
-						LastXDayJSON lastXDayJSON = new LastXDayJSON();
-						lastXDayJSON.setDate(tempDate);
-						lastXDayJSON.setNum(count+1);
-						listLastXDay.add(lastXDayJSON);
-						tempDate = listResultDTO.get(i).getCreateDate();
-						count=1;
-					}else
-					{
-						count++;
-					}
-				}
-				
-			}// end if size> 0
-			
+			// check from day exist
+			if (listStatisticUserDTO.size() == 0
+					|| !listStatisticUserDTO.get(0).getDate().equals(from)) {
+				StatisticDTO statisticDTO = new StatisticDTO();
+				statisticDTO.setDate(from);
+				statisticDTO.setNum(0);
+				listStatisticUserDTO.add(0, statisticDTO);
+			}
+
+			// check to day exist
+			if (listStatisticUserDTO.size() <= 1
+					|| !listStatisticUserDTO
+							.get(listStatisticUserDTO.size() - 1).getDate()
+							.equals(to)) {
+				StatisticDTO statisticDTO = new StatisticDTO();
+				statisticDTO.setDate(to);
+				statisticDTO.setNum(0);
+				listStatisticUserDTO.add(statisticDTO);
+			}
+
+			// get return info
+			for (StatisticDTO statisticUserDTO : listStatisticUserDTO) {
+				StatisticJSON statisticUserJSON = new StatisticJSON();
+				statisticUserJSON.setNum(statisticUserDTO.getNum());
+				statisticUserJSON.setDate(statisticUserDTO.getDate());
+				listStatisticUserJSON.add(statisticUserJSON);
+			}
 		}
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		return gson.toJson(listStatisticUserJSON);
+	}
 
-		return GsonUtils.toJson(listLastXDay);
+	@POST
+	@Path("/StatisticSearch")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String statisticSearch(@FormParam("from") Date from,
+			@FormParam("to") Date to) {
+		ArrayList<StatisticJSON> listStatisticJSON = new ArrayList<StatisticJSON>();
+		if (from != null && to != null) {
+			ResultDAO resultDAO = new ResultDAOImpl();
+			ArrayList<StatisticDTO> listStatisticDTO = resultDAO
+					.statisticResult(from, to);
+
+			// check from day exist
+			if (listStatisticDTO.size() == 0
+					|| !listStatisticDTO.get(0).getDate().equals(from)) {
+				StatisticDTO statisticDTO = new StatisticDTO();
+				statisticDTO.setDate(from);
+				statisticDTO.setNum(0);
+				listStatisticDTO.add(0, statisticDTO);
+			}
+
+			// check to day exist
+			if (listStatisticDTO.size() <= 1
+					|| !listStatisticDTO
+							.get(listStatisticDTO.size() - 1).getDate()
+							.equals(to)) {
+				StatisticDTO statisticDTO = new StatisticDTO();
+				statisticDTO.setDate(to);
+				statisticDTO.setNum(0);
+				listStatisticDTO.add(statisticDTO);
+			}
+
+			// get return info
+			for (StatisticDTO statisticDTO : listStatisticDTO) {
+				StatisticJSON statisticJSON = new StatisticJSON();
+				statisticJSON.setNum(statisticDTO.getNum());
+				statisticJSON.setDate(statisticDTO.getDate());
+				listStatisticJSON.add(statisticJSON);
+			}
+		}
+		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+		return gson.toJson(listStatisticJSON);
+	}
+	
+	@GET
+	@Path("/ServerInfo")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String serverInfo() {
+		ServerInfoJSON serverInforJSON = new ServerInfoJSON();
+		AccountDAO accountDAO = new AccountDAOImpl();
+		serverInforJSON.setTotalUser(accountDAO.countTotalAccount());
+		
+		ResultDAO resultDAO = new ResultDAOImpl();
+		serverInforJSON.setTotalSearch(resultDAO.countTotalSearch());
+		
+		//get disk space and free space
+		serverInforJSON.setFreeSpace(FileUtils.getUserDirectory().getFreeSpace());
+		serverInforJSON.setSpace(FileUtils.getUserDirectory().getTotalSpace());		
+		return GsonUtils.toJson(serverInforJSON);
 	}
 
 }
