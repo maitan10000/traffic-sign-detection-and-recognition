@@ -86,7 +86,7 @@
 			if("admin".equals(role))
 			{
 			%>
-			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_CONFIG%>"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
 			<%
 			}
@@ -115,13 +115,13 @@
                   <div class="left peity_bar_neutral"><span><span style="display: none;">2,4,9,7,12,10,12</span>
                     <img src="Admin/Content/images/chart1.png"/>
                     </span></div>
-                  <div class="right"> <strong><span id="totalSearch" ></span></strong> Lượt tìm kiếm </div>
+                  <div class="right"> <strong><span id="totalSearch" ></span></strong>  Lượt tìm kiếm </div>
                 </li>
                 <li>
                   <div class="left peity_line_neutral"><span><span style="display: none;">10,15,8,14,13,10,10,15</span>
                     <img src="Admin/Content/images/chart2.png"/>
                     </span></div>
-                  <div class="right"> <strong><span id="totalAccount" ></span></strong>Người dùng</div>
+                  <div class="right"> <strong><span id="totalAccount" ></span></strong>  Người dùng</div>
                 </li>
                 <li>
                   <div class="left peity_bar_bad">
