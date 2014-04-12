@@ -97,6 +97,14 @@ legend {
 </style>
 <title>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</title>
 </head>
+<%
+	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
+	if("admin".equals(role) || "staff".equals(role))
+	{
+		String redirectURL = Constants.CONTROLLER_ADMIN;
+		response.sendRedirect(redirectURL);
+	}
+%>
 <body>
 	<div class="wrapper">
 		<div class="page">
@@ -472,8 +480,7 @@ legend {
 							};
 
 							// ajax send report
-							function sendReport(trafficID){
-								console.log("sendreport" +trafficID);
+							function sendReport(trafficID){								
 								var type = '1';
 								var content = document.getElementById("txtContent").value;
 								var action = "reportTraffic";

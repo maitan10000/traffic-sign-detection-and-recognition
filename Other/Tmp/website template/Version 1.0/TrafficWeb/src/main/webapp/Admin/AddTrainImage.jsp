@@ -86,6 +86,14 @@
 .auto-complete ul {
 	float: none;
 }
+
+#action-panel
+{
+	
+	width:150px;
+	margin: auto;
+	padding-top: 5px;
+}
 </style>
 
 </head>
@@ -171,6 +179,10 @@
 				<a href="#" title="Thêm ảnh nhận diện" class="tip-bottom"></i> Thêm ảnh nhận diện</a>
 			</div>
 		</div>
+		
+		<div id="action-panel">
+					<button class="btn btn-danger" href="#" onclick="deteleReport(); return false;"><i class="icon-trash"></i> Xóa phản hồi</button>
+		</div>	
 		<div class="container-fluid">
 		<div id="train-new-area">
 			<div class="image-result">
@@ -232,6 +244,7 @@
 <script type="text/javascript">
 var server = '<%=GlobalValue.getServiceAddress()%>';
 var resultID = '<%=request.getAttribute("resultID")%>';
+var reportID = '<%=request.getAttribute("reportID")%>';
 var dataJSON;
 
 function showResult(resultID)
@@ -399,6 +412,25 @@ function showResult(resultID)
 			}
 		});
 	};
+	
+	
+	function deteleReport() {
+		var action = '<%=Constants.ACTION_REPORT_DELETE%>';
+		$.ajax({
+				url : '<%=Constants.CONTROLLER_ADMIN%>',
+				type : "GET",
+				data : {
+					action : action,
+					reportID : reportID
+				},
+				success : function(result) {					
+					if ("Success" == result.trim()) {									
+						window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>";
+					}
+				}
+		});
+	}
+	
 	showResult(resultID);
 </script>
 </html>

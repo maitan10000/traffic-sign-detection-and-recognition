@@ -533,9 +533,12 @@ public class AdminController extends HttpServlet {
 			} else if (Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT
 					.equals(action)) {
 				// Add train image
-
-				String reportID = request.getParameter("resultID");
-				request.setAttribute("resultID", reportID);
+				
+				String reportID = request.getParameter("reportID");
+				request.setAttribute("reportID", reportID);
+				
+				String resultID = request.getParameter("resultID");
+				request.setAttribute("resultID", resultID);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrainImage.jsp");
 				rd.forward(request, response);
