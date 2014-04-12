@@ -31,6 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import json.ConfigureJSON;
 import json.LastXDayJSON;
 import json.ServerInfoJSON;
 import json.StatisticJSON;
@@ -629,9 +630,8 @@ public class Server {
 
 			// check to day exist
 			if (listStatisticDTO.size() <= 1
-					|| !listStatisticDTO
-							.get(listStatisticDTO.size() - 1).getDate()
-							.equals(to)) {
+					|| !listStatisticDTO.get(listStatisticDTO.size() - 1)
+							.getDate().equals(to)) {
 				StatisticDTO statisticDTO = new StatisticDTO();
 				statisticDTO.setDate(to);
 				statisticDTO.setNum(0);
@@ -649,7 +649,7 @@ public class Server {
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		return gson.toJson(listStatisticJSON);
 	}
-	
+
 	@GET
 	@Path("/ServerInfo")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
@@ -657,14 +657,44 @@ public class Server {
 		ServerInfoJSON serverInforJSON = new ServerInfoJSON();
 		AccountDAO accountDAO = new AccountDAOImpl();
 		serverInforJSON.setTotalUser(accountDAO.countTotalAccount());
-		
+
 		ResultDAO resultDAO = new ResultDAOImpl();
 		serverInforJSON.setTotalSearch(resultDAO.countTotalSearch());
-		
-		//get disk space and free space
-		serverInforJSON.setFreeSpace(FileUtils.getUserDirectory().getFreeSpace());
-		serverInforJSON.setSpace(FileUtils.getUserDirectory().getTotalSpace());		
+
+		// get disk space and free space
+		serverInforJSON.setFreeSpace(FileUtils.getUserDirectory()
+				.getFreeSpace());
+		serverInforJSON.setSpace(FileUtils.getUserDirectory().getTotalSpace());
 		return GsonUtils.toJson(serverInforJSON);
+	}
+
+	@GET
+	@Path("/ReadConfig")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String readConfig() {
+		ConfigureJSON configureJSON = new ConfigureJSON();
+		configureJSON.setActiveDay(GlobalValue.getActiveDay());
+		configureJSON.setReTrainCount(GlobalValue.getReTrainNum());
+
+		return GsonUtils.toJson(configureJSON);
+	}
+
+	@POST
+	@Path("/WriteConfig")
+	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String writeConfig(@FormParam("activeDay") Integer activeDay,
+			@FormParam("reTrainCount") Integer reTrainCount) {
+		if(activeDay != null && reTrainCount != null && activeDay> 0 && reTrainCount > 0)
+		{
+			GlobalValue.setActiveDay(activeDay);
+			GlobalValue.setReTrainNum(reTrainCount);
+			if(GlobalValue.saveSetting() == true)
+			{
+				return "Success";
+			}
+		}		
+		return "Fail";
 	}
 
 }

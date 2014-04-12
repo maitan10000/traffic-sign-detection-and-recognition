@@ -87,6 +87,22 @@ public class GlobalValue {
 	 */
 	public static boolean saveSetting() {
 		Properties prop = new Properties();
+		FileInputStream in;
+		try {
+			in = new FileInputStream(configPath);
+			prop.load(in);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+				
+		prop.setProperty("connectionURL", connectionURL);
+		prop.setProperty("dbUser", dbUser);
+		prop.setProperty("dbPassword", dbPassword);
+		
 		prop.setProperty("workPath", workPath);
 		prop.setProperty("gmailUsername", gmailUsername);
 		prop.setProperty("gmailPassword", gmailPassword);
@@ -135,6 +151,10 @@ public class GlobalValue {
 
 	public static int getReTrainNum() {
 		return reTrainNum;
+	}
+	
+	public static void setReTrainNum(int reTrainCount) {
+		GlobalValue.reTrainNum = reTrainCount;
 	}
 
 	public static int getActiveDay() {
