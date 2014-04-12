@@ -349,9 +349,6 @@ public class Manage {
 		return "Fail";
 	}
 
-	// Check user ton tai hay chua
-
-	// Check email da ton tai chua
 
 	/**
 	 * Register

@@ -10,6 +10,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import dto.ResultDTO;
+import dto.StatisticDTO;
 
 public class ResultDAOImpl implements ResultDAO {
 
@@ -263,5 +264,85 @@ public class ResultDAOImpl implements ResultDAO {
 			}
 		}
 		return resultData;
+	}
+
+	@Override
+	public ArrayList<StatisticDTO> statisticResult(Date from, Date to) {
+		ArrayList<StatisticDTO> listResult = new ArrayList<StatisticDTO>();
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT COUNT(resultID) as \"Num\", Date(createDate) as \"Date\" FROM result WHERE ? <= Date(createDate) AND Date(createDate) <= ? GROUP BY Date(createDate)");
+			stm.setDate(1, from);
+			stm.setDate(2, to);
+			rs = stm.executeQuery();
+			while (rs.next()) {
+				StatisticDTO statisticDTO = new StatisticDTO();
+				statisticDTO.setNum(rs.getInt("Num"));
+				Timestamp tempTimeStamp = rs.getTimestamp("Date");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				statisticDTO.setDate(tempDate);
+				listResult.add(statisticDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return listResult;
+	}
+
+	@Override
+	public int countTotalSearch() {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT COUNT(resultID) as \"Total\" FROM result");			
+			rs = stm.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("Total");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return 0;
 	}
 }

@@ -5,9 +5,12 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import json.StatisticJSON;
 import dto.AccountDTO;
+import dto.StatisticDTO;
 
 public class AccountDAOImpl implements AccountDAO {
 
@@ -125,7 +128,9 @@ public class AccountDAOImpl implements AccountDAO {
 				accountData.setEmail(rs.getString("email"));
 				accountData.setName(rs.getString("name"));
 				accountData.setRole(rs.getString("role"));
-				accountData.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				accountData.setCreateDate(tempDate);
 				accountData.setIsActive(rs.getBoolean("isActive"));
 				return accountData;
 			}
@@ -169,7 +174,9 @@ public class AccountDAOImpl implements AccountDAO {
 				accountData.setEmail(rs.getString("email"));
 				accountData.setName(rs.getString("name"));
 				accountData.setRole(rs.getString("role"));
-				accountData.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				accountData.setCreateDate(tempDate);
 				accountData.setIsActive(rs.getBoolean("isActive"));
 				return accountData;
 			}
@@ -212,7 +219,9 @@ public class AccountDAOImpl implements AccountDAO {
 				accountDTO.setEmail(rs.getString("email"));
 				accountDTO.setName(rs.getString("name"));
 				accountDTO.setRole(rs.getString("role"));
-				accountDTO.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				accountDTO.setCreateDate(tempDate);
 				accountDTO.setIsActive(rs.getBoolean("isActive"));
 				accountData.add(accountDTO);
 			}
@@ -514,7 +523,9 @@ public class AccountDAOImpl implements AccountDAO {
 				accountDTO.setEmail(rs.getString("email"));
 				accountDTO.setName(rs.getString("name"));
 				accountDTO.setRole(rs.getString("role"));
-				accountDTO.setCreateDate(rs.getDate("createDate"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				accountDTO.setCreateDate(tempDate);
 				accountDTO.setIsActive(rs.getBoolean("isActive"));
 				accountData.add(accountDTO);
 			}
@@ -547,6 +558,86 @@ public class AccountDAOImpl implements AccountDAO {
 	 */
 	public ArrayList<AccountDTO> getAccountByRole(String role) {
 		return getAccountByRole(role, false);
+	}
+
+	@Override
+	public ArrayList<StatisticDTO> statisticUser(Date from, Date to) {
+		ArrayList<StatisticDTO> listResult = new ArrayList<StatisticDTO>();
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT COUNT(userID) as \"Num\", Date(createDate) as \"Date\" FROM account WHERE ? <= Date(createDate) AND Date(createDate) <= ? GROUP BY Date(createDate)");
+			stm.setDate(1, from);
+			stm.setDate(2, to);
+			rs = stm.executeQuery();
+			while (rs.next()) {
+				StatisticDTO statisticUserDTO = new StatisticDTO();
+				statisticUserDTO.setNum(rs.getInt("Num"));
+				Timestamp tempTimeStamp = rs.getTimestamp("Date");
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				statisticUserDTO.setDate(tempDate);
+				listResult.add(statisticUserDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return listResult;
+	}
+
+	@Override
+	public int countTotalAccount() {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ResultSet rs = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT COUNT(userID) as \"Total\" FROM account ");			
+			rs = stm.executeQuery();
+			if (rs.next()) {
+				return rs.getInt("Total");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return 0;
 	}
 
 }
