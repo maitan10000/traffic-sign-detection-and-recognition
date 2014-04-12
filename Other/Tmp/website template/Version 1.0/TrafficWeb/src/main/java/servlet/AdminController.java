@@ -18,6 +18,7 @@ import javax.ws.rs.core.MultivaluedMap;
 
 import json.AccountJSON;
 import json.CategoryJSON;
+import json.ConfigureJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
 import json.ResultJSON;
@@ -551,6 +552,28 @@ public class AdminController extends HttpServlet {
 				
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/Statistic.jsp");
+				rd.forward(request, response);
+			}else if(Constants.ACTION_CONFIG.equals(action))
+			{
+				//Configure
+				
+				//Read configure
+				String url = GlobalValue.getServiceAddress()
+						+ Constants.SERVER_CONFIGURE_READ;
+				Client client = Client.create();
+				WebResource webResource = client.resource(url);
+				ClientResponse clientResponse = webResource.accept("application/json").get(
+						ClientResponse.class);
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);			
+				ConfigureJSON configureJSON = GsonUtils.fromJson(output, ConfigureJSON.class);
+				request.setAttribute("activeDay", configureJSON.getActiveDay());
+				request.setAttribute("reTrainCount", configureJSON.getReTrainCount());
+				
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/Configuration.jsp");
 				rd.forward(request, response);
 			}
 			else {

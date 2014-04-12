@@ -156,7 +156,7 @@
 			if("admin".equals(role))
 			{
 			%>
-			<li><a href="#"><i class="icon icon-cog"></i> <span>Thiếp
+			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_CONFIG%>"><i class="icon icon-cog"></i> <span>Thiếp
 						lập hệ thống</span></a></li>
 			<%
 			}

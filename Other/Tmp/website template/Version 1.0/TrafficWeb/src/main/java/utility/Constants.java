@@ -38,6 +38,8 @@ public final class Constants {
 	public final static String SERVER_STATISTIC_USER = "rest/Server/StatisticUser";
 	public final static String SERVER_STATISTIC_SEARCH = "rest/Server/StatisticSearch";
 	public final static String SERVER_SERVER_INFO = "rest/Server/ServerInfo";
+	public final static String SERVER_CONFIGURE_READ = "rest/Server/ReadConfig";
+	public final static String SERVER_CONFIGURE_WRITE = "rest/Server/WriteConfig";
 
 
 	// for view history
@@ -87,6 +89,7 @@ public final class Constants {
 	public final static String ACTION_TRAFFIC_DELETE = "deleteTraffic";
 
 	public final static String ACTION_STATISTIC = "statistic";
+	public final static String ACTION_CONFIG = "config";
 
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";

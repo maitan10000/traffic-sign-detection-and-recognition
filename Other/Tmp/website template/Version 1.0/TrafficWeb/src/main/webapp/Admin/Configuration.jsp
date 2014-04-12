@@ -1,11 +1,6 @@
 <%@page import="java.io.PrintWriter"%>
-<%@page import="json.CategoryJSON"%>
-<%@page import="json.TrafficInfoShortJSON"%>
-<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="utility.Constants"%>
 <%@page import="utility.GlobalValue"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="model.Category"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -29,17 +24,17 @@
 <style type="text/css">
 #form-area
 {
-	width: 400px;
+	width: 600px;
 	margin: auto;
 }
 .form-horizontal .control-label
 {
-	width: 95px;
+	width: 295px;
 }
 
 .form-horizontal .controls
 {
-	margin-left: 100px;
+	margin-left: 300px;
 }
 
 .form-actions
@@ -49,15 +44,28 @@
 	border-bottom: 0px;
 }
 
+.form-actions .btn
+{
+	margin-left: 100px;
+}
+
 .widget-content
 {
 	border-bottom: 0px;
+}
+
+
+input
+{
+	width: 30px;
 }
 </style>
 
 </head>
 <%
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
+	Integer activeDay = (Integer) request.getAttribute("activeDay");
+	Integer reTrainCount = (Integer) request.getAttribute("reTrainCount");
 %>
 
 <body>
@@ -141,36 +149,27 @@
 		</div>		
 		<div class="container-fluid">
 		 	<div id="form-area" class="widget-content nopadding">
-            	<form class="form-horizontal">
-            	 <div class="control-group">
-	                <label class="control-label">Loại thống kê</label>
-	                <div class="controls">
-	                  <select id="type" name="type" class="span3" >
-	                    <option value="user" >Người dùng</option>
-	                    <option value="search" >Lượt tìm kiếm</option>	                   
-	                  </select>
-	                </div>
-	              </div>
-	              
+            	<form id="configure-form" class="form-horizontal">            	 
+            		              
             	   <div class="control-group">
-	                <label class="control-label">Từ ngày</label>
+	                <label class="control-label">Số ngày giới hạn kích hoạt tài khoản</label>
 	                <div class="controls">
-	                  <div id="from-div" data-date="" class="input-append date datepicker">
-	                    <input type="text" id="from" name="from" data-date-format="dd-mm-yyyy" disabled="disabled" class="span3" >
-	                    <span class="add-on"><i class="icon-th"></i></span> </div>
-	                </div>	                      
+	                  <div id="active-day-div">
+	                    <input type="text" name="activeDay" id="activeDay" value="<%=activeDay%>" > ngày	                    
+	                   </div>
+	                </div>	 	                                     
 	              </div>
 	              
 	              <div class="control-group">
-	                <label class="control-label">Đến ngày</label>
+	                <label class="control-label">Tạo mẫu mới khi số lượng ảnh nhận diện đạt</label>
 	                <div class="controls">
-	                  <div id="to-div"  data-date="" class="input-append date datepicker">
-	                    <input type="text" id="to" name="to"  data-date-format="dd-mm-yyyy" disabled="disabled" class="span3" >
-	                    <span class="add-on"><i class="icon-th"></i></span> </div>
+	                    <div id="retrain-count-div">
+	                    <input type="text" name="reTrainCount" id="reTrainCount" value="<%=reTrainCount%>" > ảnh                   
 	                </div>
 	              </div>
+	              </div>
 	            	 <div class="form-actions">
-		                <button type="button" class="btn btn-success" onclick="statistic(); return false;" >Thống kê</button>		               
+		                <button type="button" class="btn btn-success" onclick="saveConfigure(); return false;" >Lưu thiết lập</button>		               
 	             	 </div>
             	</form>
             </div>
@@ -192,7 +191,7 @@
 	</div>
 	
 
-</body>
+
 <script src="Admin/Content/js/excanvas.min.js"></script>
 <script src="Admin/Content/js/jquery.min.js"></script>
 <script src="Admin/Content/js/jquery.ui.custom.js"></script>
@@ -202,158 +201,82 @@
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
 <script src="Admin/Content/js/fullcalendar.min.js"></script>
 <script src="Admin/Content/js/jquery.gritter.min.js"></script> 
-<script src="Admin/Content/js/maruti.js"></script>
-<script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
-<script src="Admin/Content/js/maruti.calendar.js"></script>
-<script src="Admin/Content/js/bootstrap-datepicker.js"></script> 
-<!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
+<script src="Admin/Content/js/jquery.validate.js"></script>
+<!-- <script src="Admin/Content/js/maruti.dashboard.js_bk"></script> -->
+<!-- <script src="Admin/Content/js/maruti.calendar.js"></script> -->
+<!-- <script src="Admin/Content/js/bootstrap-datepicker.js"></script>  -->
+<script src="Admin/Content/js/jquery.uniform.js"></script>
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 <!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/maruti.js"></script>
 <script src="Admin/Content/js/tsrt.main.js"></script>
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
 
 <script type="text/javascript">
-google.load("visualization", "1", {packages:["corechart"],'language': 'vi'});
-var dataJson;
-
-
 
 $(document).ready(function(){
-    $('.datepicker').datepicker({
-    	"setDate": new Date(),
-        format: 'yyyy-mm-dd',
-        "autoclose": true,
-        "language": 'vi'
-    });
+	$("#configure-form").validate({
+		rules : {
+			activeDay : {
+				required : true,
+				number: true,
+				 min: 1
+			},
+			reTrainCount : {
+				required : true,
+				number: true,
+				 min: 1
+			}			
+		},
+		errorClass : "help-inline",
+		errorElement : "span",
+		highlight : function(element, errorClass, validClass) {
+			$(element).parents('.control-group').addClass('error');
+		},
+		unhighlight : function(element, errorClass, validClass) {
+			$(element).parents('.control-group').removeClass('error');
+			$(element).parents('.control-group').addClass('success');
+		}
+	});
 
 });
 
-function statistic()
-{
-	var valid = false;
-	var type=$('#type').val();
-	var from = $('#from').val();
-	var to = $('#to').val();
-	
-	if(from == "")
-	{		
-		$.gritter.add({
-			title : 'Thông báo',
-			text : 'Vui lòng nhập thêm thông tin',
-			sticky : false
-		});
-		$('#from-div i').trigger('click');
-	}else if(to == "")
-	{		
-		$.gritter.add({
-			title : 'Thông báo',
-			text : 'Vui lòng nhập thêm thông tin',
-			sticky : false
-		});
-		$('#to-div i').trigger('click');
-	}else
-	{
-		var fromDate  = Date.parse(from);
-		var toDate = Date.parse(to);
-		if(toDate < fromDate)
-		{			
-			$.gritter.add({
-				title : 'Thông báo',
-				text : 'Vui lòng chọn lại "Đến ngày" sau "Từ ngày"',
-				sticky : false
-			});
-			$('#to-div i').trigger('click');
-		}else
-		{
-			valid = true;
-		}
-	
-	}
-	
-	if(valid == true)
-	{
-		var url="<%=GlobalValue.getServiceAddress()%>"
-			+"<%=Constants.SERVER_STATISTIC_USER%>";
-		if(type=="search")
-		{
-			url = "<%=GlobalValue.getServiceAddress()%>"
-				+"<%=Constants.SERVER_STATISTIC_SEARCH%>";
-		}
-		
+
+function saveConfigure() {
+	var result = $("#configure-form").valid();
+	console.log('ok');
+	if (result == true) {
+		var url = "<%=GlobalValue.getServiceAddress()%>"
+			+"<%=Constants.SERVER_CONFIGURE_WRITE%>";
+		var tmpForm = document.getElementById("configure-form");
 		$.ajax({
 			url : url,
 			type : "POST",
 			data : {
-				from : from,
-				to: to
+				activeDay : tmpForm.activeDay.value,
+				reTrainCount : tmpForm.reTrainCount.value,			
 			},
-			success : function(result) {
-				dataJson = result;
-				drawChart();
+			error : function(result) {
+				result = result.responseText;
+				if ("Success" == result.trim()) {
+					$.gritter.add({
+						title : 'Thông báo',
+						text : 'Thiết lập đã được lưu',
+						sticky : false
+					});
+				} else
+				{
+					$.gritter.add({
+						title : 'Thông báo',
+						text : 'Thiếp lập không thành công, vui lòng thử lại sau',
+						sticky : false
+					});
+				}
 			}
-		});			
-	}	
-}
-
-
-function drawChart()
-{
-	var type=$('#type').val();
-	var axisTitle = "Số lượt đăng ký";
-	if(type == "search")
-	{
-		axisTitle = "Số lượt tìm kiếm";
+		});
 	}
-	var dataChart = new google.visualization.DataTable();	
-	dataChart.addColumn('date', 'Ngày');
-	dataChart.addColumn('number', axisTitle);
-		
-	var maxValue = 0;
-	var index = 0;
-	while(index < dataJson.length)
- 	{	
-		if(dataJson[index].num > maxValue)
-		{
-			maxValue = dataJson[index].num;
-		}
-		dataChart.addRows(1);
- 		dataChart.setValue(index, 0, new Date(Date.parse(dataJson[index++].date)));
- 	}
-	
-	var options = {
-		    title: "",
-		    curveType: 'function',
-		    "vAxis": {
-				viewWindowMode:'explicit',
-	            viewWindow: {
-	                min:0
-	            },
-            },		           
-		    "pointSize": "5",
-		    "hAxis": {
-                "slantedTextAngle": "45",
-                "slantedText": "true",
-            },		       
-		    "pointSize": "5",		    
-		    animation: { duration: 250 },
-		    'height':350
-		  };
-	
-	var chart = new google.visualization.LineChart(document.getElementById('chart'));
-	
-	var index = 0;
-	var drawChartAnimate = function() {
-		if(index < dataJson.length){
-	    	dataChart.setValue(index, 1, dataJson[index++].num);
-	        chart.draw(dataChart, options);
-	    }
-	};
-	google.visualization.events.addListener(chart, 'animationfinish', drawChartAnimate);
-	chart.draw(dataChart, options);    
-    drawChartAnimate();
 }
-
 </script>
+</body>
 </html>
