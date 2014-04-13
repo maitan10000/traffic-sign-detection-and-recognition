@@ -165,20 +165,6 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher(urlRewrite);
 				rd.forward(request, response);
 
-			} else if ("forgetPassword".equals(action)) {
-				String email = request.getParameter("email");
-				String url = GlobalValue.getServiceAddress()
-						+ Constants.MANAGE_ACCOUNT_SENDMAIL;
-				Client client = Client.create();
-				WebResource webResource = client.resource(url);
-				ClientResponse clientResponse = webResource.type(
-						MediaType.APPLICATION_FORM_URLENCODED).post(
-						ClientResponse.class, email);
-				if (response.getStatus() != 200) {
-					response.sendRedirect(Constants.ERROR_PAGE);
-				}
-				String output = clientResponse.getEntity(String.class);
-				out.print(output);
 			} else if (Constants.ACTION_REPORT_LIST.equals(action)) {
 				// List Report
 				String type = request.getParameter("type");
