@@ -74,7 +74,7 @@
 						<li class="level0 nav-4 level-top"><a
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
 								"
-							class="level-top"> <span>Nhận Diện Tự Động</span>
+							class="level-top"> <span>Nhận Dạng Tự Động</span>
 						</a></li>
 						<li class="level0 nav-3 level-top"><a
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
