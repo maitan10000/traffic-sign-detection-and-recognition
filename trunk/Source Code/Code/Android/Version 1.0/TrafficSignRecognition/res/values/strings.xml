@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Traffic Sign Recognition</string>
+    <string name="app_name">Nhận dạng biển báo</string>
     <string name="action_settings">Cài đặt</string>
     <string name="hello_world">Hello world!</string>
     <string name="category">Danh mục biển báo</string>
