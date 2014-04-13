@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<title>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
 <link href="User/Content/bootstrap/css/bootstrap.css" rel="stylesheet"
@@ -95,7 +96,7 @@ legend {
 	display: none;
 }
 </style>
-<title>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</title>
+<title>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</title>
 </head>
 <%
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
@@ -114,8 +115,8 @@ legend {
 						<div class="card-top"></div>
 					</div>
 					<div class="logo-Container">
-						<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA
-							CỨU BIỂN BÁO</h2>
+						<img id="logoImage"  alt="" src="User/Content/Image/eye_logo.png" style="height: 80px; width: 90px;">
+					<h2  id="titleHeader" class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DẠNG BIỂN BÁO</h2>
 						<!--   _____________ -->
 						<%
 							String userID = (String) session
@@ -158,7 +159,7 @@ legend {
 							<li class="level0 nav-4 level-top"><a
 								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
 								"
-								class="level-top"> <span>Nhận Diện Tự Động</span>
+								class="level-top"> <span>Nhận Dạng Tự Động</span>
 							</a></li>
 							<li class="level0 nav-3 level-top"><a
 								href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
@@ -186,7 +187,7 @@ legend {
 			</div>
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
-					<div class="content-title">NHẬN DIỆN TỰ ĐỘNG</div>
+					<div class="content-title">NHẬN DẠNG TỰ ĐỘNG</div>
 					<div class="list-result">
 						<fieldset>
 							<legend>
@@ -615,7 +616,7 @@ legend {
 				</div>
 				<div class="footer-left">
 					<p>
-						<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
+						<b>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</b>
 					</p>
 					<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo giao
 						thông."</p>

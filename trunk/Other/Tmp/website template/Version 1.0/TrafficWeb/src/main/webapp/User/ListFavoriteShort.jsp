@@ -150,7 +150,9 @@ $(document).ready(function() {
         		"sNext":     "Sau",
         		"sLast":     "Cuối"
         	},
-        "sSearch":"Tìm kiếm"
+         	"sZeroRecords": "Không có dữ liệu",
+       		"sEmptyTable": "Không có dữ liệu",
+            "sSearch":"Tìm kiếm"
         }
     });
     //$("#select-type").select2('destroy'); 
