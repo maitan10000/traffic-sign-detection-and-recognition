@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
 		// TODO Auto-generated method stub
 		final EditText txtUsername = (EditText) findViewById(R.id.txtUsername);
 		final EditText txtPassword = (EditText) findViewById(R.id.txtPassword);
-		Button btnLogin = (Button) findViewById(R.id.btnRegister);
+		Button btnLogin = (Button) findViewById(R.id.btnLogin);
 		btnLogin.setOnClickListener(new OnClickListener() {
 
 			@Override

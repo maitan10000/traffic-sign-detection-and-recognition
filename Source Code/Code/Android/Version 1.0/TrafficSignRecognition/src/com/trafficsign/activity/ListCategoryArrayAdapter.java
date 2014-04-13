@@ -42,19 +42,17 @@ public class ListCategoryArrayAdapter extends ArrayAdapter<CategoryJSON> {
 
 		name.setText(cat.getCategoryName());
 		id.setText(cat.getCategoryID());
-		// image resource
-//		String uri_icon = "drawable/" + cat.getCatImage();
-//		int ImageResource = convertView
-//				.getContext()
-//				.getResources()
-//				.getIdentifier(
-//						uri_icon,
-//						null,
-//						convertView.getContext().getApplicationContext()
-//								.getPackageName());
-//		Drawable image = convertView.getContext().getResources()
-//				.getDrawable(ImageResource);
-//		icon.setImageDrawable(image);
+		if("1".equals(cat.getCategoryID())){
+			icon.setImageResource(R.drawable.cam_cat);
+		} else if("2".equals(cat.getCategoryID())){
+			icon.setImageResource(R.drawable.nguyhiem_cat);
+		}else if("3".equals(cat.getCategoryID())){
+			icon.setImageResource(R.drawable.hieulenh_cat);
+		}else if("4".equals(cat.getCategoryID())){
+			icon.setImageResource(R.drawable.huongdan_cat);
+		}else if("5".equals(cat.getCategoryID())){
+			icon.setImageResource(R.drawable.bienphu_cat);
+		}
 		return convertView;
 
 	}

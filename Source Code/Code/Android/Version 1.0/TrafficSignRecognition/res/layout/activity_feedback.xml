@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp" >
+
+    <EditText
+        android:id="@+id/txtFeedbackContent"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="35dp"
+        android:background="@drawable/edit_text"
+        android:ems="10"
+        android:hint="Nội dung"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/btnFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/txtFeedbackContent"
+        android:layout_below="@+id/txtFeedbackContent"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/login"
+        android:text="Gửi ý kiến"
+        android:textColor="@color/gray" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp"
+        android:text="Ý Kiến Phản Hồi"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/blue" />
+
+</RelativeLayout>
