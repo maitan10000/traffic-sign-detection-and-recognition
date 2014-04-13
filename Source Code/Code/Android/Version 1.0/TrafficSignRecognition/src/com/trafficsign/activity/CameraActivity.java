@@ -177,6 +177,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		btnTakeImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				isTaken = true;
 				captureAndUploadImage(listLocate);
 
 			}
