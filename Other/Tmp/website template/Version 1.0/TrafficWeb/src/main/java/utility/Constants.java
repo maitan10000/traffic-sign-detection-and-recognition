@@ -63,7 +63,6 @@ public final class Constants {
 	public final static String ACTION_HISTORY_LIST_SHORT = "listHistoryShort";
 	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
 	public final static String ACTION_DELETE_TRAINIMAGE = "deleteTrainImage";
-	
 
 	// Admin controler action
 	public final static String ACTION_LOGIN = "login";
@@ -116,7 +115,6 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_ACTIVE = "rest/Manage/Active";
 	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
 	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
-	public final static String MANAGE_ACCOUNT_SENDMAIL = "rest/Manage/SendMail";
 	
 
 	// Session Constant
