@@ -64,6 +64,7 @@ public class TracfficSignDetailActivity extends Activity {
 		// Set traffic sign detail to view
 		if (trafficInfo != null) {
 			final ImageButton btnFavorite = (ImageButton) findViewById(R.id.btnFavourite);
+			final ImageButton btnFeedback = (ImageButton) findViewById(R.id.btnSendFeedback);
 			// get user
 			SharedPreferences pref = getSharedPreferences(
 					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
@@ -154,6 +155,18 @@ public class TracfficSignDetailActivity extends Activity {
 						httpAsyncUtil.setUrl(url);
 						httpAsyncUtil.execute();
 					}
+				}
+			});
+			btnFeedback.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					Intent nextScreen = new Intent(getApplicationContext(), FeedbackActivity.class);
+					nextScreen.putExtra("feedbackType", "2");
+					nextScreen.putExtra("referenceID", trafficInfo.getTrafficID());
+					startActivity(nextScreen);
+					
 				}
 			});
 

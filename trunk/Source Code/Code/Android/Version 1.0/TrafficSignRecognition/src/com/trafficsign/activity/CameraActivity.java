@@ -26,6 +26,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.highgui.Highgui;
@@ -65,6 +66,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -90,7 +92,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		OnTouchListener {
 	ProgressDialog dialog;
 	private int networkFlag;
-	private int count = 0;
 	private boolean isAuto = false;
 	private boolean flag = false;
 	private String jsonString = "";
@@ -243,6 +244,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	@Override
 	public void onResume() {
 		super.onResume();
+		isTaken = false;
 		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
 		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
 		// mLoaderCallback);
@@ -278,7 +280,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	}
 
 	Mat frame;
+	Mat saveFrame;
 	ArrayList<Rect> listLocate;
+	long starTime = 0;
+	long autoCaptureCount = 0;
+	boolean runBenchMark = true;
+	int detectedCount = 0;
 
 	@Override
 	public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
@@ -286,10 +293,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			frame = inputFrame.rgba();
 		} else {
 			frame = Highgui.imread(fileName, Highgui.CV_LOAD_IMAGE_COLOR);
+			Imgproc.cvtColor(frame, frame, Imgproc.COLOR_RGB2BGRA);
 		}
 		if (frame.empty()) {
 			Log.e(TAG, "Failed to load image");
 		}
+		saveFrame = frame.clone();
 
 		// Detect traffic sign
 		if (type1Detector == null || type1Detector.empty()) {
@@ -375,11 +384,32 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						.br(), new Scalar(204, 51, 204), 3);
 			}
 
+			// draw benchmark frame
+			long runTime = 0;
+			if (starTime != 0) {
+				runTime = SystemClock.uptimeMillis() - starTime;
+			}
+			autoCaptureCount += runTime;
+			if (runBenchMark == true) {
+				float framePerSencond = ((float) 1000) / runTime;
+				Point point = new Point();
+				point.x = 30;
+				point.y = 30;
+				Core.putText(frame, framePerSencond + "fps", point, 1, 2,
+						new Scalar(204, 51, 204), 2);
+			}
+			starTime = SystemClock.uptimeMillis();
+
 			// Auto take picture and submit
-			count++;
-			if (listLocate.size() > 0 && count > 20 && isTaken == false
-					&& isAuto == true) {
-				count = 0;
+			if (detectedCount != listLocate.size()) {
+				detectedCount = listLocate.size();
+				autoCaptureCount = 0;
+			}
+
+			if (detectedCount > 0 && autoCaptureCount > 2000
+					&& isTaken == false && isAuto == true) {
+				isTaken = true;
+				autoCaptureCount = 0;
 				runOnUiThread(new Runnable() {
 					public void run() {
 						Toast.makeText(getApplicationContext(),
@@ -391,7 +421,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		}
 
 		return frame;
-
 	}
 
 	// detect traffic sign
@@ -424,13 +453,17 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		fileName = GlobalValue.getAppFolder() + Properties.SAVE_IMAGE_FOLDER
 				+ currentDateandTime + ".jpg";
 
-		mOpenCvCameraView.takePicture(fileName);
+		// mOpenCvCameraView.takePicture(fileName);
+		if (!saveFrame.empty()) {
+			Imgproc.cvtColor(saveFrame, saveFrame, Imgproc.COLOR_RGB2BGRA);
+			Highgui.imwrite(fileName, saveFrame);
+		}
+
 		if (isAuto == false) {
 			Toast.makeText(getApplicationContext(), fileName + " saved",
 					Toast.LENGTH_SHORT).show();
 		}
-		isTaken = true;
-
+		
 		runOnUiThread(new Runnable() {
 			public void run() {
 				// Create dialog
@@ -456,16 +489,19 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					});
 
 					Thread.sleep(2000);
-					// Resize
-					Size cameraSize = mOpenCvCameraView.getResolution();
-					org.opencv.core.Size size = new org.opencv.core.Size();
-					size.height = cameraSize.height;
-					size.width = cameraSize.width;
 
-					Mat tmpImage = Highgui.imread(fileName);
-					Mat tmpResize = new Mat(size, tmpImage.type());
-					Imgproc.resize(tmpImage, tmpResize, tmpResize.size());
-					Highgui.imwrite(fileName, tmpResize);
+					// Resize
+					/*
+					 * Size cameraSize = mOpenCvCameraView.getResolution();
+					 * org.opencv.core.Size size = new org.opencv.core.Size();
+					 * size.height = cameraSize.height; size.width =
+					 * cameraSize.width;
+					 * 
+					 * Mat tmpImage = Highgui.imread(fileName); Mat tmpResize =
+					 * new Mat(size, tmpImage.type()); Imgproc.resize(tmpImage,
+					 * tmpResize, tmpResize.size()); Highgui.imwrite(fileName,
+					 * tmpResize);
+					 */
 					// end resize
 
 					// create post data
@@ -507,7 +543,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							});
 
 						} else {
-							isTaken = false;
+							
 							Log.i(TAG, "JsonString: " + jsonString);
 							ResultJSON resultJson = new ResultJSON();
 							resultJson = gson.fromJson(jsonString,
@@ -555,6 +591,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									}
 								});
 
+								//isTaken = false;								
 								startActivity(nextScreen);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -565,7 +602,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							}
 						}
 					} else { // in case can not access to server
-						isTaken = false;
+
 						// save searchInfo to DB
 						DBUtil.saveSearchInfo(fileName, listLocateJSON, user);
 						Intent nextScreen = new Intent(getApplicationContext(),
@@ -581,8 +618,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										Toast.LENGTH_SHORT).show();
 							}
 						});
-
-						finish();
 						startActivity(nextScreen);
 					}
 

@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		this.setTitle("Hệ thống nhận diện biển báo");
 		// init resource
 		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
 		InputStream settingIS = getResources().openRawResource(R.raw.setting);
@@ -130,6 +131,10 @@ public class MainActivity extends Activity {
 					Intent nextScreen = new Intent(getApplicationContext(),
 							FavouriteActivity.class);
 					startActivity(nextScreen);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"Vui lòng đăng nhập để sử dụng chức năng này",
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -145,6 +150,10 @@ public class MainActivity extends Activity {
 					Intent nextScreen = new Intent(getApplicationContext(),
 							HistoryActivity.class);
 					startActivity(nextScreen);
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"Vui lòng đăng nhập để sử dụng chức năng này",
+							Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -168,6 +177,8 @@ public class MainActivity extends Activity {
 
 		if ("".equals(user) == false) {
 			getMenuInflater().inflate(R.menu.main_login, menu);
+			MenuItem item = menu.getItem(0);
+			item.setTitle(user);
 		} else {
 			getMenuInflater().inflate(R.menu.main_not_login, menu);
 		}

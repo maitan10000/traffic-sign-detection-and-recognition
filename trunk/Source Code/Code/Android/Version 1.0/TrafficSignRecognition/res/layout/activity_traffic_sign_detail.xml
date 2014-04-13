@@ -13,11 +13,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <ImageButton
-                android:id="@+id/btnFavourite"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-               />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <ImageButton
+                    android:id="@+id/btnFavourite"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="0dp" />
+
+                <ImageButton
+                    android:id="@+id/btnSendFeedback"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="0dp" 
+                    android:background="@drawable/feedback"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"

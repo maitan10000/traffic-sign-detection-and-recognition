@@ -43,6 +43,7 @@ public class HistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_history);
+		this.setTitle("Lịch sử");
 		listResultShortJSONs = DBUtil.listResult();
 		Collections.sort(listResultShortJSONs);
 		// TODO Auto-generated method stub
@@ -100,8 +101,8 @@ public class HistoryActivity extends Activity {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		if (v.getId() == R.id.listHistory) {
 			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			menu.setHeaderTitle("Title");
-			menu.add(Menu.NONE, 0, 0, "X�a");
+			menu.setHeaderTitle("Xóa lịch sử");
+			menu.add(Menu.NONE, 0, 0, "Xóa");
 
 		}
 	}

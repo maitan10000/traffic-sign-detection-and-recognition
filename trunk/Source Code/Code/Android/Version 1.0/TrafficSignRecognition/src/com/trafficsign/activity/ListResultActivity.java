@@ -34,6 +34,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,6 +87,7 @@ public class ListResultActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		// TODO Auto-generated method stub
 		setContentView(R.layout.activity_result);
+		this.setTitle("Kết quả nhận dạng");
 		Intent intent = getIntent();
 		String imagePath = intent.getStringExtra("imagePath");
 
@@ -153,6 +156,23 @@ public class ListResultActivity extends Activity {
 		mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
 		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
 		// mLoaderCallback);
+	}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getMenuInflater().inflate(R.menu.feedback_menu, menu);
+		return true;
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		if(item.getItemId() == R.id.action_feedback){
+			Intent nextScreen = new Intent(getApplicationContext(),FeedbackActivity.class);
+			nextScreen.putExtra("feedbackType", "1");
+			nextScreen.putExtra("referenceID", resultJson.getResultID());
+			startActivity(nextScreen);
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	// @Override

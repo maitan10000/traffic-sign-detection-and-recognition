@@ -52,7 +52,7 @@
             android:id="@+id/txtEmail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_alignLeft="@+id/btnRegister"
+            android:layout_alignLeft="@+id/btnLogin"
             android:layout_below="@+id/txtReTypePassword"
             android:layout_marginTop="16dp"
             android:background="@drawable/edit_text"
