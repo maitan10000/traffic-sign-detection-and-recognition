@@ -23,7 +23,7 @@ div {
 .header-container {
 	background-color: #111;
 	color: #6e6e6e;
-	height: 174px;
+	height: 164px;
 }
 
 header {
@@ -32,7 +32,7 @@ header {
 }
 
 .clearfix {
-	height: 26px;
+	height: 16px;
 }
 
 .card-top {
@@ -675,7 +675,7 @@ nav {
 }
 
 .footer-container {
-	height: 400px;
+	height: 200px;
 	background-color: #000;
 }
 
@@ -1128,4 +1128,13 @@ nav {
 .imgAuto {
 	height: 30px;
 	width: 30px;
+}
+#logoImage{
+	float: left;
+	margin-top: -30px;
+}
+
+#titleHeader
+{
+	margin-left: 100px;
 }

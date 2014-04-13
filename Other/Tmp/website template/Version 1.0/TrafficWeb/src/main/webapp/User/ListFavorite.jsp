@@ -8,6 +8,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<title>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link href="User/Content/Css/Main.css" rel="stylesheet" type="text/css" />
 
@@ -35,13 +36,14 @@
 		<div class="page">
 			<div class="header-container">
 				<header>
+				
 				<div class="clearfix">
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
 					
-						<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
-						BÁO</h2>
+						<img id="logoImage"  alt="" src="User/Content/Image/eye_logo.png" style="height: 80px; width: 90px;">
+					<h2  id="titleHeader" class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DẠNG BIỂN BÁO</h2>
 					
 					<!--   _____________ -->
 					<%
@@ -106,10 +108,10 @@
 						<table id="resultTable"
 							class="table table-bordered dataTable">
 							<thead>
-								<th>Hình Ảnh</th>
-								<th>Số Hiệu</th>
-								<th>Tên Biển Báo</th>
-								<th></th>
+								<th style="text-align: center;">Hình Ảnh</th>
+								<th style="text-align: center;">Số Hiệu</th>
+								<th style="text-align: center;">Tên Biển Báo</th>
+								<th style="text-align: center;"></th>
 							</thead>
 							<tbody>
 								<%
@@ -118,14 +120,14 @@
 								%>
 
 								<tr id="<%=i%>">
-									<td><a href="#myModal" data-toggle="modal"
+									<td style="text-align: center;"><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><img class="trafficImage"
 										src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></a></td>
-									<td><%=listTraffic.get(i).getTrafficID()%></td>
+									<td style="text-align: center;"><%=listTraffic.get(i).getTrafficID()%></td>
 									<td><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
-									<td><button class="btn btn-inverse"
+									<td style="text-align: center;"><button class="btn btn-inverse"
 											onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
 
 								</tr>
@@ -149,7 +151,7 @@
 						</div>
 						<div class="footer-left">
 							<p>
-								<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
+								<b>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</b>
 							</p>
 							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
 								giao thông."</p>
@@ -317,7 +319,9 @@ $(document).ready(function() {
         		"sNext":     "Sau",
         		"sLast":     "Cuối"
         	},
-        "sSearch":"Tìm kiếm"
+         	"sZeroRecords": "Không có dữ liệu",
+       		"sEmptyTable": "Không có dữ liệu",
+            "sSearch":"Tìm kiếm"
         }
     });
     //$("#select-type").select2('destroy'); 
