@@ -98,7 +98,7 @@ legend {
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN , TRA CỨU BIỂN
 						BÁO</h2>
 					<!--   _____________ -->
 					<%
@@ -134,7 +134,7 @@ legend {
 						<li class="level0 nav-4 level-top"><a
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_AUTO%>
 								"
-							class="level-top"> <span>Nhận Diện Tự Động</span>
+							class="level-top"> <span>Nhận Dạng Tự Động</span>
 						</a></li>
 						<li class="level0 nav-3 level-top"><a
 							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_SEARCH_MANUAL%>"
@@ -452,7 +452,7 @@ legend {
 						</div>
 						<div class="footer-left">
 							<p>
-								<b>HỆ THỐNG NHẬN DIỆN, TRA CỨU BIỂN BÁO</b>
+								<b>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</b>
 							</p>
 							<p>"Hệ thống giúp đỡ người dùng tra cứu, học tập biển báo
 								giao thông."</p>
