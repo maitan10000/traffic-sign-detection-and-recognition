@@ -98,7 +98,7 @@ legend {
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
-					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN , TRA CỨU BIỂN
+					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DẠNG BIỂN
 						BÁO</h2>
 					<!--   _____________ -->
 					<%
@@ -158,7 +158,7 @@ legend {
 			</div>
 			<div class="main-container">
 				<div class="main-content content-cat notHomepage">
-					<div class="content-title">TRA CỨU BIỂN BÁO</div>
+					<div class="content-title">LỊCH SỬ</div>
 					<div class="list-result">
 						<fieldset>
 							<legend>Kết quả:</legend>
