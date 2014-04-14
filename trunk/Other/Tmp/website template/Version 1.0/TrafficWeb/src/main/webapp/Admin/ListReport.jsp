@@ -115,12 +115,12 @@ width: 800px;
 		<div id="content-header">
 			<div id="breadcrumb">
 				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>" title="Quản lý phản hồi" class="tip-bottom"><i
-					class="icon-home"></i>Quản lý phản hồi</a>
+					class="icon-exclamation-sign"></i>Quản lý phản hồi</a>
 			</div>
 		</div>
 		<div class="container-fluid">
 			<div class="widget-title">
-				<span class="icon"><i class="icon-th"></i></span>
+				<span class="icon"><i class="icon-bookmark"></i></span>
 				<h5>Quản lý phản hồi</h5>
 				<div id="show-type" align="right" class="control-group">
 					<div class="controls">

@@ -144,7 +144,12 @@
 					class="icon-signal"></i>Thống kê</a>
 			</div>
 		</div>		
+		
 		<div class="container-fluid">
+			<div class="widget-title">
+				<span class="icon"><i class="icon-bookmark"></i></span>
+				<h5>Thống kê người dùng, số lượt tìm kiếm</h5>
+			</div>
 		 	<div id="form-area" class="widget-content nopadding">
             	<form class="form-horizontal">
             	 <div class="control-group">
@@ -307,10 +312,13 @@ function drawChart()
 {
 	var type=$('#type').val();
 	var axisTitle = "Số lượt đăng ký";
+	var title = "Biểu đồ số lượt đăng ký";
 	if(type == "search")
 	{
 		axisTitle = "Số lượt tìm kiếm";
+		title = "Biểu đồ số lượt tìm kiếm";
 	}
+	title += " từ ngày "+ dataJson[0].date +" đến ngày " + dataJson[dataJson.length -1].date;
 	var dataChart = new google.visualization.DataTable();	
 	dataChart.addColumn('date', 'Ngày');
 	dataChart.addColumn('number', axisTitle);
@@ -328,7 +336,7 @@ function drawChart()
  	}
 	
 	var options = {
-		    title: "",
+		    title: title,
 		    curveType: 'function',
 		    "vAxis": {
 				viewWindowMode:'explicit',
