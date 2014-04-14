@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
-
+<link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
 <style type="text/css">
 #train-new-area
 {
@@ -176,6 +176,8 @@
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>" title="Quản lý phản hồi" class="tip-bottom"><i
+					class="icon-exclamation-sign"></i>Quản lý phản hồi</a>			
 				<a href="#" title="Thêm ảnh nhận diện" class="tip-bottom"></i> Thêm ảnh nhận diện</a>
 			</div>
 		</div>

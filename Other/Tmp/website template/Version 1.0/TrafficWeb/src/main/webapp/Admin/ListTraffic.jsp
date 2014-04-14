@@ -189,7 +189,7 @@
 		</div>	
 		<div class="container-fluid">
 			<div class="widget-title">
-				<span class="icon"><i class="icon-th"></i></span>
+				<span class="icon"><i class="icon-bookmark"></i></span>
 				<h5>Quản lý biển báo</h5>
 				<div id="show-type" align="right" class="control-group">
 					<div class="controls">

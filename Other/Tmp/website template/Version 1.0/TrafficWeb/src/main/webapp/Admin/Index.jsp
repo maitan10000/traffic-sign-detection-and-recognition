@@ -19,6 +19,16 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
 <link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
+<style>
+.widget-content
+{
+	border-bottom: 0px;
+}
+.stat-boxes2 li
+{
+/* 	height: 100px; */
+}
+</style>
 </head>
 <%
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
@@ -123,11 +133,11 @@
                     </span></div>
                   <div class="right"> <strong><span id="totalAccount" ></span></strong>  Người dùng</div>
                 </li>
-                <li>
-                  <div class="left peity_bar_bad">
-                  	<div id="pieChart"></div>
-                  </div>
-                </li>                
+<!--                 <li> -->
+<!--                   <div class="left peity_bar_bad"> -->
+<!--                   	<div id="pieChart"></div> -->
+<!--                   </div> -->
+<!--                 </li>                 -->
               </ul>
             </div>
           	</div>
@@ -246,7 +256,7 @@
 		                "slantedText": "true",
 		            },		          
 				    animation: { duration: 250 },
-				    'height':375,
+				    'height':350,
 				  };
 			
 			var chart = new google.visualization.LineChart(document.getElementById('chart'));
@@ -275,6 +285,7 @@
 					$('#totalSearch').text(result.totalSearch);
 					$('#totalAccount').text(result.totalUser);
 					
+					/*
 					var freePercent = Math.round(result.freeSpace/(1024*1024*1024)*100)/100;
 					var used = Math.round((result.space- result.freeSpace)/(1024*1024*1024)*100)/100;
 					
@@ -298,6 +309,7 @@
 
 			        var piechart = new google.visualization.PieChart(document.getElementById('pieChart'));
 			        piechart.draw(data, options);
+			        */
 
 				}
 			});		

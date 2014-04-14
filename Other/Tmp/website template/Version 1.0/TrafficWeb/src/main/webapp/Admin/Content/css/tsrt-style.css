@@ -9,3 +9,8 @@
 {
 	background-color: #D9EDF7;
 }
+
+#breadcrumb a
+{
+	font-size: 15px;
+}

@@ -106,7 +106,7 @@
 		</div>
 		<div class="container-fluid">
 			<div class="widget-title">
-				<span class="icon"><i class="icon-th"></i></span>
+				<span class="icon"><i class="icon-bookmark"></i></span>
 				<h5>Quản lý người dùng</h5>
 			</div>
 			<%

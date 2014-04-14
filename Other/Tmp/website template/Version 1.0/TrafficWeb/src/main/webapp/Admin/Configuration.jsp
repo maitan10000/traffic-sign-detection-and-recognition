@@ -148,6 +148,10 @@ input
 			</div>
 		</div>		
 		<div class="container-fluid">
+			<div class="widget-title">
+				<span class="icon"><i class="icon-bookmark"></i></span>
+				<h5>Thiết lập các thông số của hệ thống</h5>
+			</div>
 		 	<div id="form-area" class="widget-content nopadding">
             	<form id="configure-form" class="form-horizontal">            	 
             		              
