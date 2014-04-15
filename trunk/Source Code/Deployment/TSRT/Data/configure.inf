@@ -1,0 +1,6 @@
+{
+   "CASCADE TYPE1" : "Data/type1.xml",
+   "CASCADE TYPE2" : "Data/type2.xml",
+   "SVM FOLDER" : "Data/SVM_Multiclass/",
+   "TRAIN FOLDER" : "Data/Train Image/"
+}
