@@ -1,4 +1,7 @@
+-- DROP DATABASE `trafficdb`;
 CREATE DATABASE `trafficdb` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `trafficdb`;
 
 CREATE TABLE `account` (
     `userID` varchar(30) NOT NULL,
@@ -57,6 +60,7 @@ CREATE TABLE `report` (
     `creator` varchar(30) NOT NULL,
     `type` int(11) NOT NULL, 	
     `createDate` datetime DEFAULT NULL,
+    `isRead` bit(1) DEFAULT NULL,
     `isActive` bit(1) DEFAULT NULL,
     PRIMARY KEY (`reportID`),
     KEY `creatorfk_idx` (`creator`),
