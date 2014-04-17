@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		this.setTitle("Hệ thống nhận diện biển báo");
+		this.setTitle("Hệ thống nhận dạng biển báo");
 		// init resource
 		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
 		InputStream settingIS = getResources().openRawResource(R.raw.setting);

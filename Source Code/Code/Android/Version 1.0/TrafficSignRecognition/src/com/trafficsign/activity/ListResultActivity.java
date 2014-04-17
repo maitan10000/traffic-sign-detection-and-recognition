@@ -167,7 +167,7 @@ public class ListResultActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		if(item.getItemId() == R.id.action_feedback){
-			Intent nextScreen = new Intent(getApplicationContext(),FeedbackActivity.class);
+			Intent nextScreen = new Intent(getApplicationContext(),ReportActivity.class);
 			nextScreen.putExtra("feedbackType", "1");
 			nextScreen.putExtra("referenceID", resultJson.getResultID());
 			startActivity(nextScreen);

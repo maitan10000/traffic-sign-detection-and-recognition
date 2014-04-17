@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class FeedbackActivity extends Activity {
+public class ReportActivity extends Activity {
 
 	/** Called when the activity is first created. */
 	@Override
@@ -52,7 +52,7 @@ public class FeedbackActivity extends Activity {
 						.toString();
 				if ("".equals(feedbackContent) == false) {
 					HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil(
-							FeedbackActivity.this);
+							ReportActivity.this);
 					// set parameter
 					ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();
 					parameters.add(new BasicNameValuePair("content",
