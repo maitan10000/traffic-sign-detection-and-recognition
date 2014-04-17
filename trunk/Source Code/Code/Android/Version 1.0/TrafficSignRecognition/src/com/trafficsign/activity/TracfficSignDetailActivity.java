@@ -162,7 +162,7 @@ public class TracfficSignDetailActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
-					Intent nextScreen = new Intent(getApplicationContext(), FeedbackActivity.class);
+					Intent nextScreen = new Intent(getApplicationContext(), ReportActivity.class);
 					nextScreen.putExtra("feedbackType", "2");
 					nextScreen.putExtra("referenceID", trafficInfo.getTrafficID());
 					startActivity(nextScreen);
