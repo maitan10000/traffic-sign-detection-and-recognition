@@ -11,6 +11,12 @@
 	ArrayList<CategoryJSON> listCat = (ArrayList<CategoryJSON>) request.getAttribute("cateList");
 %>
 <script type="text/javascript">
+	$(document).ready(function() {
+		
+		
+	});
+
+
 	function addTraffic() {
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
@@ -23,7 +29,17 @@
 		var formData = new FormData();
 		formData.append("trafficID", tmpForm.trafficID.value);
 		formData.append("name", tmpForm.name.value);
-		formData.append('mainImage', tmpForm.mainImage.files[0]);
+		var dataAddNewMainImage = document.getElementById("add-main-image").src;		
+		if( dataAddNewMainImage !== undefined && dataAddNewMainImage.length > 0)
+		{
+			console.log(dataAddNewMainImage)
+			var dataBlob = dataURItoBlob(dataAddNewMainImage);
+			formData.append('mainImage', dataBlob, 'mainImage.jpg');
+		}else
+		{
+			formData.append('mainImage', tmpForm.mainImage.files[0]);
+		}
+		
 		formData.append("categoryID", tmpForm.categoryID.value);
 		formData.append("information", tmpForm.information.value);
 		formData.append("penaltyfee", tmpForm.penaltyfee.value);
@@ -68,19 +84,39 @@
 	}
 	
 	function showAddTrainImageResult(result) {
-		console.log(result);
+		//console.log(result);		
 		if (result.trim() != "Success") {
 			
 		} else {
-			location.reload();
+			var isNorMalAddNew = $('#isNormalAddNew').val();
+			if(isNorMalAddNew == true)
+			{
+				location.reload();
+			}else
+			{			
+				$.gritter.add({
+					title : 'Thông báo',
+					text : 'Thêm mới thành công',
+					sticky : false
+				});		
+				$("#AddTrafficModal").modal('hide');
+			}
 		}
 	}
 	$(document).ready(function(){		
 		//$('input[type=checkbox],input[type=radio],input[type=file]').uniform();		
 	});
-
 	
+	function dataURItoBlob(dataURI) {
+	    var binary = atob(dataURI.split(',')[1]);
+	    var array = [];
+	    for(var i = 0; i < binary.length; i++) {
+	        array.push(binary.charCodeAt(i));
+	    }
+	    return new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+	}
 </script>
+
 <div class="modal-dialog">
 	<div class="modal-content">
 		<div class="modal-header">
@@ -95,6 +131,7 @@
 					onsubmit="return validateForm()">
 					<input type="hidden" name="creator"
 								value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
+					<input type="hidden" name="isNormalAddNew" id="isNormalAddNew" value="true"/>
 					<div class="control-group" align="left">
 						<label class="control-label">Số hiệu biển báo:</label>
 						<div class="controls">
@@ -112,6 +149,7 @@
 					<div class="control-group" align="left">
 						<label class="control-label">Hình ảnh:</label>
 						<div class="controls">
+						<img id = "add-main-image" class="imageDetails" style="margin: auto; width: 50px; height:50px;" />
 							<input style="width: 300px;" name="mainImage" type="file"
 								class="span2" />
 						</div>

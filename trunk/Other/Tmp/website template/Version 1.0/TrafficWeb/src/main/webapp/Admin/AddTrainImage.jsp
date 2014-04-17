@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
+<link rel="stylesheet" href="Admin/Content/css/jquery.gritter.css" />
 <link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
 <style type="text/css">
 #train-new-area
@@ -93,6 +94,29 @@
 	width:150px;
 	margin: auto;
 	padding-top: 5px;
+}
+
+/* Add new traffic sign */
+
+#AddTrafficModal{
+	width: 800px;
+	margin-left: -400px;
+}
+
+ #AddTrafficModal .modal-body
+{
+	padding: 0;
+	max-height: 500px;
+}
+
+#AddTrafficModal
+{
+	top:2% !important;
+}
+
+#gritter-notice-wrapper
+{
+	z-index: 99999;
 }
 </style>
 
@@ -206,6 +230,9 @@
 				</p>
 		</div>
 	</div>
+		
+	
+	
 	<script src="Admin/Content/js/excanvas.min.js"></script>
 	<script src="Admin/Content/js/jquery.min.js"></script>
 	<script src="Admin/Content/js/jquery.ui.custom.js"></script>
@@ -214,6 +241,7 @@
 	<script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
 	<script src="Admin/Content/js/jquery.peity.min.js"></script>
 	<script src="Admin/Content/js/fullcalendar.min.js"></script>
+	<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 	<script src="Admin/Content/js/maruti.js"></script>
 	<script src="Admin/Content/js/maruti.dashboard.js"></script>
 	<script src="Admin/Content/js/maruti.calendar.js"></script>
@@ -241,16 +269,24 @@
 			document.gomenu.selector.selectedIndex = 2;
 		}
 	</script>
-</body>
+
+<!-- Add Traffic modal -->
+	<div class="modal fade" id="AddTrafficModal" tabindex="-1"
+		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
+		aria-hidden="true"></div>
+<!-- End Add Traffic modal-->
+	
+
 
 <script type="text/javascript">
 var server = '<%=GlobalValue.getServiceAddress()%>';
 var resultID = '<%=request.getAttribute("resultID")%>';
 var reportID = '<%=request.getAttribute("reportID")%>';
 var dataJSON;
+var dataAddNewImage = null;
 
-function showResult(resultID)
-{
+	function showResult(resultID)
+	{
 	$.ajax({
 		url : server + '<%=Constants.TRAFFIC_HISTORY_VIEW%>',
 			type : "GET",
@@ -378,6 +414,7 @@ function showResult(resultID)
 		{
 			content += '<li style="text-align: center;" >Không tìm thấy</li>';
 		}
+		content += '<li style="text-align: center;" ><a tabindex="-1" href="#" onclick="addNewTS('+(id - 1) +'); return false;"><i class="icon-plus"></i>  Thêm mới</a></li>';
 	    content += '</ul>';	    
 	    //console.log(content);
 	    $('#auto-complete-'+id).html(content);
@@ -431,8 +468,70 @@ function showResult(resultID)
 					}
 				}
 		});
-	}
+	}	
 	
 	showResult(resultID);
+	
+	
+	//Add new traffic sign ============================================
+	function addNewTS(order)
+	{
+		console.log(order);
+		var imageLink = server + dataJSON.uploadedImage;
+		console.log(imageLink);
+		var x = dataJSON.listTraffic[order].locate.x;
+		var y = dataJSON.listTraffic[order].locate.y;
+		var height = dataJSON.listTraffic[order].locate.height;
+		var width = dataJSON.listTraffic[order].locate.width;			
+		
+		//crop image
+		 var canvas = document.createElement('canvas');
+	     var context = canvas.getContext('2d');
+	     var imageObj = new Image();
+
+	     imageObj.onload = function() {
+	        // draw cropped image
+	        var sourceX = x;
+	        var sourceY = y;	       
+	        var destWidth = width;
+	        var destHeight = height;
+	        console.log(width);
+	        console.log(x);
+	        var destX = 0;
+	        var destY = 0;
+	        canvas.width  = width;
+	        canvas.height = height;
+
+	        context.drawImage(imageObj, sourceX, sourceY, destWidth, destHeight, destX, destY, destWidth, destHeight);
+	        dataAddNewImage = canvas.toDataURL("image/jpeg"); 
+	        showAddTrafficModal();
+	        
+	      };
+	      imageObj.src = imageLink;		
+	}
+	
+	
+	
+	function showAddTrafficModal(){
+		var action = '<%=Constants.ACTION_TRAFFIC_ADD%>';
+		$.ajax({
+			url: '<%=Constants.CONTROLLER_ADMIN%>',
+			type: "GET",
+			data: {action : action},
+			success: function (result) {
+				$("#AddTrafficModal").html(result);
+				$("#AddTrafficModal").modal('show');
+			}
+			
+		});
+	}
+	
+    $('#AddTrafficModal').on('show', function () {    	
+    	var addMainImage = document.getElementById("add-main-image");
+    	addMainImage.src = dataAddNewImage;
+    	$('#isNormalAddNew').val("false");
+    	console.log('show');
+    });
 </script>
+</body>
 </html>
