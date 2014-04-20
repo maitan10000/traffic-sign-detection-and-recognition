@@ -9,6 +9,7 @@ public class ReportJSON {
 	private String creator;
 	private int type;
 	private Date createDate;
+	private Boolean isRead;
 	private Boolean isActive;
 	public int getReportID() {
 		return reportID;
@@ -45,6 +46,13 @@ public class ReportJSON {
 	}
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+	
+	public Boolean getIsRead() {
+		return isRead;
+	}
+	public void setIsRead(Boolean isRead) {
+		this.isRead = isRead;
 	}
 	public Boolean getIsActive() {
 		return isActive;

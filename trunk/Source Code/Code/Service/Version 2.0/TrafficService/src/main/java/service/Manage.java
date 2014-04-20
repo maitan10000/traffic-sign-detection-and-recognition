@@ -2,6 +2,8 @@ package service;
 
 import java.io.Console;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -26,14 +28,19 @@ import utility.Constants;
 import utility.GlobalValue;
 import utility.GsonUtils;
 import utility.MailUtil;
+import utility.ResultExtraUtil;
 import json.AccountJSON;
 import json.FavoriteJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
+import json.ResultExtraShortJSON;
+import json.ResultInput;
+import json.ResultShortJSON;
 import json.TrafficInfoShortJSON;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.core.util.Base64;
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -269,23 +276,97 @@ public class Manage {
 		return "Fail";
 	}
 
+	
+	@GET
+	@Path("/ListReportExtra")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listReportExtra(@QueryParam("info") String info,
+			@QueryParam("showRead") Boolean showRead) {
+		if (showRead == null) {
+			showRead = false;
+		}
+		ResultDAO resultDAO = new ResultDAOImpl();
+		ArrayList<ResultDTO> listresultDTO = resultDAO.getAllResult(false);
+		ArrayList<ResultDTO> listReturn = new ArrayList<ResultDTO>();
+
+		if (!"all".equals(info)) {
+			// wrong recognition in result
+			for (ResultDTO resultDTO : listresultDTO) {
+				if (resultDTO.getListTraffic() != null) {
+					Type type = new TypeToken<ArrayList<ResultInput>>() {
+					}.getType();
+					ArrayList<ResultInput> resultInputList = GsonUtils
+							.fromJson(resultDTO.getListTraffic(), type);
+					for (ResultInput resultInput : resultInputList) {
+						if (resultInput.getTrafficID() == null
+								|| resultInput.getTrafficID().isEmpty()) {
+							listReturn.add(resultDTO);
+							break;
+						}
+					}
+				}
+			}
+		} else {
+			listReturn = listresultDTO;
+		}
+
+		// get return info
+		ArrayList<ResultExtraShortJSON> listResultExtraShortJSON = new ArrayList<ResultExtraShortJSON>();
+		for (ResultDTO resultDTO : listReturn) {
+			ResultExtraShortJSON resultExtraShortJSON = new ResultExtraShortJSON();
+			// resultShortJSON.setCreator(resultDTO.getCreator());
+			resultExtraShortJSON.setResultID(resultDTO.getResultID());
+			resultExtraShortJSON.setCreateDate(resultDTO.getCreateDate());
+			Boolean isRead = ResultExtraUtil.isRead(resultDTO.getResultID());
+			resultExtraShortJSON.setIsRead(isRead);			
+			if (isRead == false) {
+				// add unread
+				listResultExtraShortJSON.add(resultExtraShortJSON);
+			} else if (showRead == true) {
+				// add read
+				listResultExtraShortJSON.add(resultExtraShortJSON);
+			}
+		}
+		return GsonUtils.toJson(listResultExtraShortJSON);
+	}
+	
+	@GET
+	@Path("/MarkReportExtraRead")
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public String listReportExtra(@QueryParam("id") Integer id)
+	{
+		if(id != null && ResultExtraUtil.addRead(id))
+		{
+			return "Success";
+		}
+		return "False";
+	}
+	
+
 	/**
-	 * List report by type
+	 * List report
 	 * 
 	 * @param type
 	 *            (0 or null for all type, 1: for type 1, 2 for type2)
+	 * @param showRead
+	 *            (true if show read and false if not show read)
 	 * @return
 	 */
 	@GET
-	@Path("/ListReportByType")
+	@Path("/ListReport")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public String listReportByType(@QueryParam("type") Integer type) {
+	public String listReport(@QueryParam("type") Integer type,
+			@QueryParam("showRead") Boolean showRead) {
 		ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
 		ReportDAO reportDAO = new ReportDAOImpl();
 		if (type == null) {
 			type = 0;
 		}
-		reportData = reportDAO.searchReportByType(type);
+		if (showRead == null) {
+			showRead = false;
+		}
+
+		reportData = reportDAO.searchReportByType(type, showRead);
 
 		// get return info
 		ArrayList<ReportShortJSON> listReportShortJSON = new ArrayList<ReportShortJSON>();
@@ -296,6 +377,7 @@ public class Manage {
 			reportShortJSON.setContent(reportDTO.getContent());
 			reportShortJSON.setType(reportDTO.getType());
 			reportShortJSON.setCreateDate(reportDTO.getCreateDate());
+			reportShortJSON.setIsRead(reportDTO.getIsRead());
 			listReportShortJSON.add(reportShortJSON);
 		}
 		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
@@ -325,10 +407,13 @@ public class Manage {
 			reportJSON.setReferenceID(reportData.getReferenceID());
 			reportJSON.setType(reportData.getType());
 			reportJSON.setContent(reportData.getContent());
+			reportJSON.setIsRead(reportData.getIsRead());
 			reportJSON.setCreateDate(reportData.getCreateDate());
-			Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-					DateFormat.FULL).create();
-			return gson.toJson(reportJSON);
+
+			// update as read
+			reportData.setIsRead(true);
+			reportDAO.editReport(reportData);
+			return GsonUtils.toJson(reportJSON);
 		}
 		return null;
 	}
@@ -349,7 +434,6 @@ public class Manage {
 		}
 		return "Fail";
 	}
-
 
 	/**
 	 * Register
@@ -406,8 +490,10 @@ public class Manage {
 					currentUrl = currentUrl.replace(
 							"TrafficService/rest/Manage/Register",
 							"TrafficWeb/AdminController?action=verify");
-					String urlActive = currentUrl + "&key="
-							+ URLEncoder.encode(new String(Base64.encode(userID)));
+					String urlActive = currentUrl
+							+ "&key="
+							+ URLEncoder.encode(new String(Base64
+									.encode(userID)));
 					String message = "<div><p><span>Vui lòng nhấp vào link để kích hoạt: </span><a href="
 							+ urlActive
 							+ "><span style=\"color:#ff0000\">Kích hoạt</span></a>.</p><p>Hoặc truy cập link sau:<br>"
@@ -573,8 +659,10 @@ public class Manage {
 				currentUrl = currentUrl.replace(
 						"TrafficService/rest/Manage/ChangePassword",
 						"TrafficWeb/AdminController?action=changepassword");
-				String urlActive = currentUrl + "&key="
-						+  URLEncoder.encode(new String(Base64.encode(accountDTO.getUserID())));
+				String urlActive = currentUrl
+						+ "&key="
+						+ URLEncoder.encode(new String(Base64.encode(accountDTO
+								.getUserID())));
 				String message = "<div><p><span>Vui lòng nhấp vào link để thay đổi mật khẩu: </span><a href="
 						+ urlActive
 						+ "><span style=\"color:#ff0000\">Thay đổi mật khẩu</span></a>.</p><p>Hoặc truy cập link sau:<br>"

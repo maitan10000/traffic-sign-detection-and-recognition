@@ -9,6 +9,7 @@ public class ReportDTO {
 	private String creator;
 	private int type;
 	private Date createDate;
+	private Boolean isRead;
 	private Boolean isActive;
 
 	public ReportDTO() {
@@ -53,6 +54,14 @@ public class ReportDTO {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}	
+	
+	public Boolean getIsRead() {
+		return isRead;
+	}
+
+	public void setIsRead(Boolean isRead) {
+		this.isRead = isRead;
 	}
 
 	public Boolean getIsActive() {

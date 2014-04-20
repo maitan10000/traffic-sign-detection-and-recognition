@@ -164,4 +164,10 @@ public class GlobalValue {
 	public static void setActiveDay(int activeDay) {
 		GlobalValue.activeDay = activeDay;
 	}
+
+	public static String getConfigPath() {
+		return configPath;
+	}
+	
+	
 }

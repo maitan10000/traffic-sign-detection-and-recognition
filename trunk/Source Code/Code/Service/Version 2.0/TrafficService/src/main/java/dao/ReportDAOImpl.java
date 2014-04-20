@@ -20,12 +20,13 @@ public class ReportDAOImpl implements ReportDAO {
 			connection = BaseDAO.getConnect();
 			stm = connection.prepareStatement("INSERT INTO trafficdb.report"
 					+ " (content,referenceID, creator, createDate, type,"
-					+ " isActive)" + " VALUES (?, ?,?, NOW(),?, ?)");
+					+ "isRead, isActive)" + " VALUES (?, ?,?, NOW(),?, ?, ?)");
 			stm.setString(1, reportDTO.getContent());
 			stm.setString(2, reportDTO.getReferenceID());
 			stm.setString(3, reportDTO.getCreator());
 			stm.setInt(4, reportDTO.getType());
-			stm.setBoolean(5, true);
+			stm.setBoolean(5, false);
+			stm.setBoolean(6, true);
 			return stm.executeUpdate() > 0;
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -56,27 +57,27 @@ public class ReportDAOImpl implements ReportDAO {
 		return this.searchReportByType(type, false);
 	}
 	
-	public ArrayList<ReportDTO> searchReportByType(int type, Boolean getInActive) {
+	public ArrayList<ReportDTO> searchReportByType(int type, Boolean getRead) {
 		ArrayList<ReportDTO> reportData = new ArrayList<ReportDTO>();
 		Connection connection = null;
 		PreparedStatement stm = null;
 		try {
 			connection = BaseDAO.getConnect();
-			if (type == 0 && getInActive == false) {
+			if (type == 0 && getRead == false) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE isActive = ? ORDER BY reportID DESC");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE isRead != ? AND isActive = true ORDER BY reportID DESC");
 				stm.setBoolean(1, true);
-			} else if (type == 0 && getInActive == true) {
+			} else if (type == 0 && getRead == true) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report ORDER BY reportID DESC");
-			} else if (getInActive == false) {
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE isActive = true ORDER BY reportID DESC");
+			} else if (getRead == false) {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isActive = ? ORDER BY reportID DESC");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isRead != ? AND isActive = true ORDER BY reportID DESC");
 				stm.setInt(1, type);
 				stm.setBoolean(2, true);
 			} else {
 				stm = connection
-						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? ORDER BY reportID DESC");
+						.prepareStatement("SELECT * FROM trafficdb.report WHERE type=? AND isActive = true ORDER BY reportID DESC");
 				stm.setInt(1, type);
 			}
 			ResultSet rs = stm.executeQuery();
@@ -90,6 +91,7 @@ public class ReportDAOImpl implements ReportDAO {
 				Date tempDate = new Date(tempTimeStamp.getTime());
 				reportObj.setCreateDate(tempDate);
 				reportObj.setType(rs.getInt("type"));
+				reportObj.setIsRead(rs.getBoolean("isRead"));
 				reportObj.setIsActive(rs.getBoolean("isActive"));
 				reportData.add(reportObj);
 			}
@@ -123,7 +125,7 @@ public class ReportDAOImpl implements ReportDAO {
 		try {
 			connection = BaseDAO.getConnect();
 			stm = connection
-					.prepareStatement("SELECT content,referenceID, creator, createDate, type, isActive FROM trafficdb.report WHERE reportID = ?");
+					.prepareStatement("SELECT content,referenceID, creator, createDate, type, isRead, isActive FROM trafficdb.report WHERE reportID = ?");
 			stm.setInt(1, reportID);
 			ResultSet rs = stm.executeQuery();
 			if (rs.next()) {
@@ -135,7 +137,8 @@ public class ReportDAOImpl implements ReportDAO {
 				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
 				Date tempDate = new Date(tempTimeStamp.getTime());
 				reportDTO.setCreateDate(tempDate);				
-				reportDTO.setType(rs.getInt("type"));
+				reportDTO.setType(rs.getInt("type"));								
+				reportDTO.setIsRead(rs.getBoolean("isRead"));
 				reportDTO.setIsActive(rs.getBoolean("isActive"));
 				return reportDTO;
 			}
@@ -184,6 +187,45 @@ public class ReportDAOImpl implements ReportDAO {
 					e.printStackTrace();
 				}
 			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean editReport(ReportDTO reportDTO) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection.prepareStatement("UPDATE report SET referenceID = ?, content = ?, creator = ?, type = ?, isRead = ?, isActive = ?  WHERE reportID = ?");
+			stm.setString(1, reportDTO.getReferenceID());
+			stm.setString(2, reportDTO.getContent());			
+			stm.setString(3, reportDTO.getCreator());
+			stm.setInt(4, reportDTO.getType());
+			stm.setBoolean(5, reportDTO.getIsRead());
+			stm.setBoolean(6, reportDTO.getIsActive());
+			stm.setInt(7, reportDTO.getReportID());
+			return stm.executeUpdate() > 0;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
 			if (connection != null) {
 				try {
 					connection.close();
