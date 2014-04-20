@@ -33,7 +33,7 @@ ReportJSON reportDetails = (ReportJSON) request.getAttribute("reportDetail");
 				<%
 					if(reportDetails.getType() == 1){
 				%>
-					<br><strong>Loại phản hồi: </strong> <font>Nhận diện sai</font>
+					<br><strong>Loại phản hồi: </strong> <font>Nhận dạng sai</font>
 				<%
 					}else{
 				%>

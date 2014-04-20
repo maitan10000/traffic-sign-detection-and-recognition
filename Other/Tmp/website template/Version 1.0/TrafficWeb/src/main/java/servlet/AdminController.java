@@ -21,7 +21,9 @@ import json.CategoryJSON;
 import json.ConfigureJSON;
 import json.ReportJSON;
 import json.ReportShortJSON;
+import json.ResultExtraShortJSON;
 import json.ResultJSON;
+import json.ResultShortJSON;
 import json.TrafficInfoJSON;
 import json.TrafficInfoShortJSON;
 import json.TrainImageJSON;
@@ -165,15 +167,52 @@ public class AdminController extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher(urlRewrite);
 				rd.forward(request, response);
 
-			} else if (Constants.ACTION_REPORT_LIST.equals(action)) {
+			}else if(Constants.ACTION_REPORT_EXTRA.equals(action)) {
+				//list report extra
+				
+				String info = request.getParameter("info");
+				String showRead = request.getParameter("showRead");
+				if(!"true".equals(showRead))
+				{
+					showRead = "false";
+				}
+				
+				String urlViewFavorite = GlobalValue.getServiceAddress()
+						+ Constants.MANAGE_REPORT_LIST_EXTRA+"?info="+info+"&showRead="+showRead;
+				Client client = Client.create();
+				WebResource webRsource = client.resource(urlViewFavorite);
+				ClientResponse clientResponse = webRsource.accept(
+						"application/json").get(ClientResponse.class);
+				if (response.getStatus() != 200) {
+					response.sendRedirect(Constants.ERROR_PAGE);
+				}
+				String output = clientResponse.getEntity(String.class);
+				ArrayList<ResultExtraShortJSON> listResultExtra = new ArrayList<ResultExtraShortJSON>();
+				Type type = new TypeToken<ArrayList<ResultExtraShortJSON>>() {
+				}.getType();
+				listResultExtra = GsonUtils.fromJson(output, type);
+				request.setAttribute("listResultExtra", listResultExtra);				
+				request.setAttribute("info", info);
+				request.setAttribute("showRead", showRead);
+				
+				RequestDispatcher rd = request
+						.getRequestDispatcher("Admin/ListReportExtra.jsp");
+				rd.forward(request, response);
+				
+			}else if (Constants.ACTION_REPORT_LIST.equals(action)) {
 				// List Report
 				String type = request.getParameter("type");
 				if (type == null) {
 					type = "0";
 				}
+				String showRead = request.getParameter("showRead");
+				if(!"true".equals(showRead))
+				{
+					showRead = "false";
+				}
 				String url = GlobalValue.getServiceAddress()
 						+ Constants.MANAGE_REPORT_LIST + "?type=";
-				url += type;
+				url += type+"&showRead="+showRead;
 				Client client = Client.create();
 				WebResource webResource = client.resource(url);
 				ClientResponse clientResponse = webResource.accept(
@@ -181,17 +220,14 @@ public class AdminController extends HttpServlet {
 				if (response.getStatus() != 200) {
 					response.sendRedirect(Constants.ERROR_PAGE);
 				}
-
 				String output = clientResponse.getEntity(String.class);
-				ArrayList<ReportShortJSON> listreport = new ArrayList<ReportShortJSON>();
-				// Parse out put to gson
-				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-						DateFormat.FULL).create();
+				// Parse out put to gson				
 				Type type1 = new TypeToken<ArrayList<ReportShortJSON>>() {
 				}.getType();
-				listreport = gson.fromJson(output, type1);
+				ArrayList<ReportShortJSON> listreport = GsonUtils.fromJson(output, type1);
 				request.setAttribute("listReport", listreport);
 				request.setAttribute("type", type);
+				request.setAttribute("showRead", showRead);
 				// request to ReportPage.jsp
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/ListReport.jsp");
@@ -204,7 +240,7 @@ public class AdminController extends HttpServlet {
 				// url get traffic by reportID
 				String url = GlobalValue.getServiceAddress()
 						+ Constants.MANAGE_REPORT_VIEW + "?reportID=";
-				url += reportID;
+				url += reportID;				
 				// connect and receive json string from web service
 				Client client = Client.create();
 				WebResource webRsource = client.resource(url);

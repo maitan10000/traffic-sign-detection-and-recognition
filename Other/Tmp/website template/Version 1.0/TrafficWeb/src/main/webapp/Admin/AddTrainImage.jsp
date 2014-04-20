@@ -174,7 +174,11 @@
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i class="icon icon-exclamation-sign"></i> <span>Quản lý phản
-						hồi</span></a></li>
+						hồi</span></a>
+				<ul>
+        			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_EXTRA%>">Lịch sử tìm kiếm</a></li>      
+      			</ul>
+      		</li>
 			<%
 			}
 			%>
@@ -202,12 +206,12 @@
 			<div id="breadcrumb">
 				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>" title="Quản lý phản hồi" class="tip-bottom"><i
 					class="icon-exclamation-sign"></i>Quản lý phản hồi</a>			
-				<a href="#" title="Thêm ảnh nhận diện" class="tip-bottom"></i> Thêm ảnh nhận diện</a>
+				<a href="#" title="Thêm ảnh nhận dạng" class="tip-bottom"></i> Thêm ảnh nhận dạng</a>
 			</div>
 		</div>
 		
 		<div id="action-panel">
-					<button class="btn btn-danger" href="#" onclick="deteleReport(); return false;"><i class="icon-trash"></i> Xóa phản hồi</button>
+					<button id="delete-report" class="btn btn-danger" href="#" onclick="deteleReport(); return false;"><i class="icon-trash"></i> Xóa phản hồi</button>
 		</div>	
 		<div class="container-fluid">
 		<div id="train-new-area">
@@ -237,14 +241,14 @@
 	<script src="Admin/Content/js/jquery.min.js"></script>
 	<script src="Admin/Content/js/jquery.ui.custom.js"></script>
 	<script src="Admin/Content/js/bootstrap.min.js"></script>
-	<script src="Admin/Content/js/jquery.flot.min.js"></script>
-	<script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
+<!-- 	<script src="Admin/Content/js/jquery.flot.min.js"></script> -->
+<!-- 	<script src="Admin/Content/js/jquery.flot.resize.min.js"></script> -->
 	<script src="Admin/Content/js/jquery.peity.min.js"></script>
 	<script src="Admin/Content/js/fullcalendar.min.js"></script>
 	<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 	<script src="Admin/Content/js/maruti.js"></script>
-	<script src="Admin/Content/js/maruti.dashboard.js"></script>
-	<script src="Admin/Content/js/maruti.calendar.js"></script>
+<!-- 	<script src="Admin/Content/js/maruti.dashboard.js"></script> -->
+<!-- 	<script src="Admin/Content/js/maruti.calendar.js"></script> -->
 	<script type="text/javascript">
 		// This function is called from the pop-up menus to transfer to
 		// a different page. Ignore if the value returned is a null string:
@@ -284,6 +288,24 @@ var resultID = '<%=request.getAttribute("resultID")%>';
 var reportID = '<%=request.getAttribute("reportID")%>';
 var dataJSON;
 var dataAddNewImage = null;
+
+$(document).ready(function() {
+// 	if(reportID == 'null')
+// 	{
+// 		$('#action-panel').hide();
+// 	}
+	$('#action-panel').hide();
+	$.ajax({
+		url : server + '<%=Constants.MANAGE_REPORT_MARK_EXTRA%>',
+			type : "GET",
+			data : {
+				id : resultID
+			},
+			success : function(result) {
+				console.log(result);
+			}
+		});
+});
 
 	function showResult(resultID)
 	{
@@ -433,9 +455,9 @@ var dataAddNewImage = null;
 		var assginTrafficID = trafficID;
 		var resultID = dataJSON.resultID;
 		var order = id -1;		
-		console.log(assginTrafficID);
-		console.log(resultID);
-		console.log(order);
+		//console.log(assginTrafficID);
+		//console.log(resultID);
+		//console.log(order);
 		$('#auto-complete-'+id).html('');
 		
 		$.ajax({
@@ -530,7 +552,7 @@ var dataAddNewImage = null;
     	var addMainImage = document.getElementById("add-main-image");
     	addMainImage.src = dataAddNewImage;
     	$('#isNormalAddNew').val("false");
-    	console.log('show');
+    	//console.log('show');
     });
 </script>
 </body>

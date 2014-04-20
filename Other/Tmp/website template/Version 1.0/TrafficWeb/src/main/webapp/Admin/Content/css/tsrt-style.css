@@ -5,6 +5,10 @@
 	background-image: url('../img/glyphicons-halflings-white.png');
 }
 
+#sidebar i{
+/* 	background-image: url('../img/glyphicons-halflings.png')!important; */
+}
+
 .gritter-item
 {
 	background-color: #D9EDF7;
@@ -13,4 +17,14 @@
 #breadcrumb a
 {
 	font-size: 15px;
+}
+
+#sidebar span, #sidebar a
+{
+/* 	color: #666666 !important;	 */
+}
+
+.required-item
+{
+	color: red;
 }

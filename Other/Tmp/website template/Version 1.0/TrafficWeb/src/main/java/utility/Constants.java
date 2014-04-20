@@ -73,6 +73,7 @@ public final class Constants {
 	public final static String ACTION_REPORT_LIST = "listReport";
 	public final static String ACTION_REPORT_VIEW = "viewReport";
 	public final static String ACTION_REPORT_DELETE = "deleteReport";
+	public final static String ACTION_REPORT_EXTRA = "extraReport";
 
 	public final static String ACTION_ACCOUNT_LIST = "listAccount";
 	public final static String ACTION_ACCOUNT_DEACTIVE = "deactiveAcccount";
@@ -95,7 +96,9 @@ public final class Constants {
 	public final static String CONTROLLER_ADMIN = "/TrafficWeb/AdminController";
 
 	// Report Service
-	public final static String MANAGE_REPORT_LIST = "rest/Manage/ListReportByType";
+	public final static String MANAGE_REPORT_LIST_EXTRA = "rest/Manage/ListReportExtra";
+	public final static String MANAGE_REPORT_MARK_EXTRA = "rest/Manage/MarkReportExtraRead";
+	public final static String MANAGE_REPORT_LIST = "rest/Manage/ListReport";
 	public final static String MANAGE_REPORT_VIEW = "rest/Manage/GetReportDetail";
 	public final static String MANAGE_REPORT_DELETE = "rest/Manage/DeleteReport";
 	public final static String MANAGE_REPORT_SEND = "rest/Manage/SendReport";
