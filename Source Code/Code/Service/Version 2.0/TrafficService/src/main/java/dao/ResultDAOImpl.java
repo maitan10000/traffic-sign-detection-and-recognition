@@ -152,19 +152,22 @@ public class ResultDAOImpl implements ResultDAO {
 		PreparedStatement stm = null;
 		ArrayList<ResultDTO> resultData = new ArrayList<ResultDTO>();
 		try {
-			connection = BaseDAO.getConnect();
+			connection = BaseDAO.getConnect();			
 			stm = connection
-					.prepareStatement("SELECT resultID,uploadedImage,createDate FROM trafficdb.result WHERE creator=? AND isActive = ?");
+					.prepareStatement("SELECT resultID, uploadedImage, listTraffic, creator, createDate, isActive FROM trafficdb.result WHERE creator=? AND isActive = ?");
 			stm.setString(1, creator);
-			stm.setBoolean(2, isActive);
+			stm.setBoolean(2, isActive);			
 			ResultSet rs = stm.executeQuery();
 			while (rs.next()) {
 				ResultDTO resultObject = new ResultDTO();
 				resultObject.setResultID(rs.getInt("resultID"));
-				resultObject.setUploadedImage(rs.getString("uploadedImage"));				
+				resultObject.setUploadedImage(rs.getString("uploadedImage"));
+				resultObject.setListTraffic(rs.getString("listTraffic"));
+				resultObject.setCreator(rs.getString("creator"));
 				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
 				Date tempDate = new Date(tempTimeStamp.getTime());
 				resultObject.setCreateDate(tempDate);
+				resultObject.setIsActive(rs.getBoolean("isActive"));
 				resultData.add(resultObject);
 			}
 			return resultData;
@@ -345,4 +348,61 @@ public class ResultDAOImpl implements ResultDAO {
 		}
 		return 0;
 	}
+
+	
+	@Override
+	public ArrayList<ResultDTO> getAllResult(Boolean getInActive) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		ArrayList<ResultDTO> resultData = new ArrayList<ResultDTO>();
+		try {
+			connection = BaseDAO.getConnect();		
+			if(getInActive == false)
+			{
+				stm = connection
+						.prepareStatement("SELECT resultID, uploadedImage, listTraffic, creator, createDate, isActive FROM result WHERE isActive = ? ORDER BY resultID DESC");
+				stm.setBoolean(1, true);
+			}else
+			{
+				stm = connection
+						.prepareStatement("SELECT resultID, uploadedImage, listTraffic, creator, createDate, isActive FROM result ORDER BY resultID DESC");
+			}
+			ResultSet rs = stm.executeQuery();
+			while (rs.next()) {
+				ResultDTO resultObject = new ResultDTO();
+				resultObject.setResultID(rs.getInt("resultID"));
+				resultObject.setUploadedImage(rs.getString("uploadedImage"));
+				resultObject.setListTraffic(rs.getString("listTraffic"));
+				resultObject.setCreator(rs.getString("creator"));
+				Timestamp tempTimeStamp = rs.getTimestamp("createDate");		
+				Date tempDate = new Date(tempTimeStamp.getTime());
+				resultObject.setCreateDate(tempDate);
+				resultObject.setIsActive(rs.getBoolean("isActive"));
+				resultData.add(resultObject);
+			}
+			return resultData;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return resultData;
+	}
+	
+	
 }
