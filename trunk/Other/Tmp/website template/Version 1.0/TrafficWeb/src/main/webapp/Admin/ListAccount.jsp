@@ -75,7 +75,11 @@
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i class="icon icon-exclamation-sign"></i> <span>Quản lý phản
-						hồi</span></a></li>
+						hồi</span></a>
+				<ul>
+        			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_EXTRA%>">Lịch sử tìm kiếm</a></li>      
+      			</ul>
+      		</li>
 			<%
 			}
 			%>
@@ -97,6 +101,7 @@
 		</ul>
 	</div>
 	<!-- End slide bar -->
+	
 	<div id="content">
 		<div id="content-header">
 			<div id="breadcrumb">

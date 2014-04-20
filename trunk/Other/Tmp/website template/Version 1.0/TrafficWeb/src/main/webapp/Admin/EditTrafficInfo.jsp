@@ -117,14 +117,14 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Tên biển báo:</label>
+						<label class="control-label">Tên biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<input style="width: 300px;" name="name" type="text"
 								class="span2" value="<%=trafficDetails.getName()%>" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Hình ảnh:</label>
+						<label class="control-label">Hình ảnh<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<img style="margin: auto;"
 								class="imageDetails"
@@ -135,7 +135,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Loại biển báo: </label>
+						<label class="control-label">Loại biển báo<span class="required-item">*</span>: </label>
 						<div class="controls">
 							<select style="width: 300px;" name="categoryID">
 								<%
@@ -150,7 +150,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Thông tin:</label>
+						<label class="control-label">Thông tin<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<textarea style="width: 500px; height: 100px;" class="span4"
 								name="information"><%=trafficDetails.getInformation()%></textarea>
@@ -164,7 +164,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Ảnh nhận diện:</label>						
+						<label class="control-label">Ảnh nhận dạng:</label>						
 						<div class="controls">						
 							<input type="file" name="trainImage" multiple/>
 						</div>
@@ -191,6 +191,7 @@
 			</div>
 		</div>
 		<div id="footerViewDetail" class="modal-footer">
+			<label style="float: left; font-size: 12px;"><span class="required-item">*</span> Trường bắt buộc</label>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 			<button type="submit" class="btn btn-success"
 				onclick="editTraffic(); return false;" value="submit">Lưu</button>

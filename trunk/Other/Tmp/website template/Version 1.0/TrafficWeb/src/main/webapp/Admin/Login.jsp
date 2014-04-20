@@ -33,12 +33,25 @@
 }
 
 #loginform {
-	margin-top: 150px;
+	margin-top: 100px;
+}
+#system-name
+{
+	text-align:center;
+	width: 450px;
+	margin: auto;
+}
+#system-name h3
+{
+	padding-top: 50px;
 }
 </style>
 </head>
 <body>
 	<div id="content">
+		<div id="system-name">
+			<h3><a href="./">HỆ THỐNG NHẬN DẠNG BIỂN BÁO</a></h3>
+		</div>
 		<div id="loginbox">
 			<form id="loginform" class="form-vertical" action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
 				<div class="control-group normal_text">

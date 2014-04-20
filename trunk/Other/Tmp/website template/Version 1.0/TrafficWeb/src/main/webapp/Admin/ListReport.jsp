@@ -49,6 +49,7 @@ width: 800px;
 </head>
 <%
 	String type = (String)request.getAttribute("type");
+	String showRead = (String)request.getAttribute("showRead");
 	ArrayList<ReportShortJSON> listReport = (ArrayList<ReportShortJSON>) request.getAttribute("listReport");
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
 %>
@@ -88,7 +89,11 @@ width: 800px;
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>"><i class="icon icon-th"></i> <span>Quản
 						lý biển báo</span></a></li>
 			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>"><i class="icon icon-exclamation-sign"></i> <span>Quản lý phản
-						hồi</span></a></li>
+						hồi</span></a>
+				<ul>
+        			<li><a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_EXTRA%>">Lịch sử tìm kiếm</a></li>      
+      			</ul>
+      		</li>
 			<%
 			}
 			%>
@@ -130,23 +135,31 @@ width: 800px;
 							<%
 								if("1".equals(type)){
 							%>
-							<option value="1" selected>Nhận diện sai</option>
+							<option value="1" selected>Nhận dạng sai</option>
 							<option value="2">Thông tin sai</option>
 							<%
 								}else if("2".equals(type)){
 							%>
-							<option value="1">Nhận diện sai</option>
+							<option value="1">Nhận dạng sai</option>
 							<option value="2" selected>Thông tin sai</option>
 							<%
 								}else{
 							%>
-							<option value="1">Nhận diện sai</option>
+							<option value="1">Nhận dạng sai</option>
 							<option value="2">Thông tin sai</option>
 							<%
 								}
 							%>
 
-						</select>
+						</select>	
+						 <input type="checkbox" name="showRead" id="showRead"
+						 <%
+						 if("true".equals(showRead))
+						 {
+							 out.print(" checked=\"\" ");
+						 }
+						 %>
+						  onclick="changeShowRead();">Đã xem
 					</div>
 				</div>
 			</div>
@@ -192,7 +205,7 @@ width: 800px;
 								<%
 								if(listReport.get(i).getType() == 1)
 								{
-									out.print("<span class='label label-warning'>Nhận diện sai</span>");
+									out.print("<span class='label label-warning'>Nhận dạng sai</span>");
 								}else
 								{
 									out.print("<span class='label label-important'>Thông tin sai</span>");
@@ -200,9 +213,25 @@ width: 800px;
 								%>
 								</td>								
 								<td style="text-align: center; font-size: 12px;"><%=dateFormat.format(listReport.get(i).getCreateDate())%></td>
+								
+								<%
+								if(listReport.get(i).getIsRead() == true)
+								{
+								%>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
 									data-toggle="modal"
 									onclick="showDetails('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-list-alt"></i> Chi tiết</button></td>
+								<%
+								}else
+								{
+								%>
+								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#myModal"
+									data-toggle="modal"
+									onclick="showDetails('<%=listReport.get(i).getReportID()%>'); return false;"><i style="background-color: red;" class="icon-asterisk"></i><i class="icon-list-alt"></i> Chi tiết</button></td>
+								<%
+								}//end if isRead
+								%>	
+								
 								<td style="text-align: center;"><button class="btn btn btn-danger btn-mini"  href="#"
 									onclick="deleteReport('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-trash"></i> Xóa</button></td>
 							</tr>
@@ -335,7 +364,6 @@ function deleteReport(reportID) {
 				success : function(result) {					
 					if ("Success" == result.trim()) {									
 						 location.reload(); 
-												
 					}
 				}
 
@@ -344,9 +372,15 @@ function deleteReport(reportID) {
 
 //List report by type
 function listReport(type){
-	window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>&type="+type;	
+	var showRead = $('#showRead').is(':checked');
+	window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>&type="+type+"&showRead="+showRead;	
 }
 
+function changeShowRead(){
+	var showRead = $('#showRead').is(':checked'); 
+	var type = $('#select-type').val();
+	window.location.href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_REPORT_LIST%>&type="+type+"&showRead="+showRead;
+}
 
 </script>
 

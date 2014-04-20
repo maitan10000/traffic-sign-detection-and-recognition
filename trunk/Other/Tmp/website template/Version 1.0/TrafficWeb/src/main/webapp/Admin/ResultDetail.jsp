@@ -19,7 +19,7 @@
 				<br /> <br /> <strong>Danh sách biển báo:</strong> <font> <%= resultDetails.getListTraffic()%></font>
 				<br /> <br /> <strong>Người tạo:</strong> <font><%=resultDetails.getCreator()%>
 				</font> <br /> <br /> <strong>Ngày tạo:</strong> <font><%=resultDetails.getCreateDate()%></font><br />
-				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT%>&resultID=<%=resultDetails.getResultID()%> ">Sửa chữa nhận diện</a>
+				<a href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAIN_IMAGE_ADD_FROM_REPORT%>&resultID=<%=resultDetails.getResultID()%> ">Sửa chữa nhận dạng</a>
 				
 			</div>
 		</div>

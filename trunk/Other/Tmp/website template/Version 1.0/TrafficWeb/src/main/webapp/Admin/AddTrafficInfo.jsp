@@ -133,21 +133,21 @@
 								value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 					<input type="hidden" name="isNormalAddNew" id="isNormalAddNew" value="true"/>
 					<div class="control-group" align="left">
-						<label class="control-label">Số hiệu biển báo:</label>
+						<label class="control-label">Số hiệu biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<input style="width: 300px;" id="required" name="trafficID"
 								type="text" class="span2" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Tên biển báo:</label>
+						<label class="control-label">Tên biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<input style="width: 300px;" name="name" type="text"
 								class="span2" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Hình ảnh:</label>
+						<label class="control-label">Hình ảnh<span class="required-item">*</span>:</label>
 						<div class="controls">
 						<img id = "add-main-image" class="imageDetails" style="margin: auto; width: 50px; height:50px;" />
 							<input style="width: 300px;" name="mainImage" type="file"
@@ -155,7 +155,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Loại biển báo: </label>
+						<label class="control-label">Loại biển báo<span class="required-item">*</span>: </label>
 						<div class="controls">
 							<select style="width: 300px;" name="categoryID">
 								<%
@@ -170,7 +170,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Thông tin:</label>
+						<label class="control-label">Thông tin<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<textarea style="width: 500px; height: 100px;" class="span4"
 								name="information"></textarea>
@@ -184,7 +184,7 @@
 						</div>
 					</div>
 					<div class="control-group" align="left">
-						<label class="control-label">Ảnh nhận diện:</label>
+						<label class="control-label">Ảnh nhận dạng:</label>
 						<div class="controls">
 							<input type="file" name="trainImage" multiple/>
 						</div>
@@ -194,6 +194,7 @@
 			</div>
 		</div>
 		<div id="footerViewDetail" class="modal-footer">
+		<label style="float: left; font-size: 12px;"><span class="required-item">*</span> Trường bắt buộc</label>
 			<button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
 			<button type="submit" class="btn btn-success"
 				onclick="addTraffic(); return false;" value="submit">Lưu</button>
