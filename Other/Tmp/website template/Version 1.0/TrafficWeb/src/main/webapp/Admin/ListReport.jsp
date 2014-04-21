@@ -69,8 +69,8 @@ width: 800px;
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
-					class="icon icon-share-alt" onclick="logout()"></i> <span
+			<li class=""><a onclick="logout(); return false;" title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" ></i> <span
 					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
@@ -233,7 +233,7 @@ width: 800px;
 								%>	
 								
 								<td style="text-align: center;"><button class="btn btn btn-danger btn-mini"  href="#"
-									onclick="deleteReport('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-trash"></i> Xóa</button></td>
+									onclick="confirmDeleteReport('<%=listReport.get(i).getReportID()%>'); return false;"><i class="icon-trash"></i> Xóa</button></td>
 							</tr>
 							<%
 								}
@@ -300,11 +300,33 @@ width: 800px;
 <script src="Admin/Content/js/maruti.js"></script>
 <script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
 <script src="Admin/Content/js/maruti.calendar.js"></script>
+<script src="Admin/Content/js/jquery.validate.js"></script>
 <script src="Admin/Content/js/jquery.uniform.js"></script>
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 <!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/bootbox.min.js"></script>
 <script src="Admin/Content/js/tsrt.main.js"></script>
+<script type="text/javascript">
+function logout(){
+	bootbox.dialog("Bạn có chắc chắn muốn đăng xuất?", [
+       		         {
+       				 "label" : "Hủy",
+       				 "class" : "btn-success",
+       				 "callback": function() {
+       				 		
+       				 	}
+       				 }, {
+       				 "label" : "Đăng xuất",
+       				 "class" : "btn-danger",
+       				 "callback": function() {
+       					 window.location.href = "<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>";
+       				 	}
+       				 }
+   ]);
+	
+}
+</script>
 
 <script type="text/javascript">
 
@@ -351,6 +373,24 @@ function showResultDetails(resultID){
 }
 
 //ajax to delete report
+function confirmDeleteReport(reportID)
+{
+	 bootbox.dialog("Bạn có chắc muốn xóa phản hồi này", [
+     		         {
+     				 "label" : "Hủy",
+     				 "class" : "btn-success",
+     				 "callback": function() {
+     				 		
+     				 	}
+     				 }, {
+     				 "label" : "Xóa",
+     				 "class" : "btn-danger",
+     				 "callback": function() {
+     					deleteReport(reportID);
+     				 	}
+     				 }
+     				 ]);
+}
 function deleteReport(reportID) {
 	var action = '<%=Constants.ACTION_REPORT_DELETE%>';
 	$

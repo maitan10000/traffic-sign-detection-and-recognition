@@ -61,8 +61,8 @@
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
-					class="icon icon-share-alt" onclick="logout()"></i> <span
+			<li class=""><a onclick="logout(); return false;" title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" ></i> <span
 					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
@@ -171,6 +171,28 @@
 <!-- 	<script src="Admin/Content/js/maruti.dashboard.js"></script> -->
 	<script src="Admin/Content/js/maruti.calendar.js"></script>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script src="Admin/Content/js/bootbox.min.js"></script>
+	
+	<script type="text/javascript">
+	function logout(){
+		bootbox.dialog("Bạn có chắc chắn muốn đăng xuất?", [
+	       		         {
+	       				 "label" : "Hủy",
+	       				 "class" : "btn-success",
+	       				 "callback": function() {
+	       				 		
+	       				 	}
+	       				 }, {
+	       				 "label" : "Đăng xuất",
+	       				 "class" : "btn-danger",
+	       				 "callback": function() {
+	       					 window.location.href = "<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>";
+	       				 	}
+	       				 }
+	   ]);
+		
+	}
+	</script>
 	<script type="text/javascript">
 		// This function is called from the pop-up menus to transfer to
 		// a different page. Ignore if the value returned is a null string:

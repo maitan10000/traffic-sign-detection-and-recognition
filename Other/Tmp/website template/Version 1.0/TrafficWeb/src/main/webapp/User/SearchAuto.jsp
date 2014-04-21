@@ -20,7 +20,7 @@
 <style>
 .list-result {
 	min-height: 350px;
-	width: 250px;
+	width: 300px;
 	/*border: red thin solid;*/
 	float: left;
 	padding-bottom: 20px;

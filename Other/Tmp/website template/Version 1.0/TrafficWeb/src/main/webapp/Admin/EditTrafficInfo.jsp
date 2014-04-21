@@ -14,14 +14,54 @@
 	ArrayList<TrainImageJSON> listTrainImage = (ArrayList<TrainImageJSON>) request.getAttribute("listTrainImage");
 %>
 <script type="text/javascript">
+	$(document).ready(function() {
+		$("#edit_traffic_form").validate({
+			rules : {
+				name : {
+					required : true					
+				},
+				categoryID:{
+					required : true
+				},
+				information: {
+					required : true
+				},
+				mainImage:{
+					required :{
+				        depends: function(element){
+				        	var dataAddNewMainImage = document.getElementById("edit-main-image").src;		
+				    		if( dataAddNewMainImage !== undefined && dataAddNewMainImage.length > 0)
+				    		{
+				    			return false;
+				    		}
+				    		return true;
+				        }
+					},
+					accept: "jpeg|jpg|png|bmp"
+				}
+			},
+			errorClass : "help-inline",
+			errorElement : "span",
+			highlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').addClass('error');
+			},
+			unhighlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').removeClass('error');
+				$(element).parents('.control-group').addClass('success');
+			}
+		});		
+	});
 	function editTraffic() {
+		var result = $("#edit_traffic_form").valid();
+		if(result == false)
+			return false;
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
 				showResult(xhr.responseText);
 			}
 		}
-		var tmpForm = document.getElementById("add_traffic_form");		
+		var tmpForm = document.getElementById("edit_traffic_form");		
 		
 		var formData = new FormData();
 		formData.append("trafficID", tmpForm.trafficID.value);
@@ -56,7 +96,7 @@
 				showAddTrainImageResult(xhr.responseText);
 			}
 		}
-		var tmpForm = document.getElementById("add_traffic_form");		
+		var tmpForm = document.getElementById("edit_traffic_form");		
 		
 		var formData = new FormData();
 		console.log( tmpForm.trainImage.files.length);		
@@ -105,8 +145,7 @@
 		<div class="modal-body">
 			<div class="trafficDetail">
 				<div class="contentImgDetails"></div>
-				<form id="add_traffic_form" method="post" class="form-horizontal"
-					onsubmit="return validateForm()">
+				<form id="edit_traffic_form" method="post" class="form-horizontal">
 					<input type="hidden" name="creator"
 								value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 					<div class="control-group" align="left">
@@ -119,25 +158,25 @@
 					<div class="control-group" align="left">
 						<label class="control-label">Tên biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
-							<input style="width: 300px;" name="name" type="text"
+							<input style="width: 300px;" name="name" id="name" type="text"
 								class="span2" value="<%=trafficDetails.getName()%>" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Hình ảnh<span class="required-item">*</span>:</label>
 						<div class="controls">
-							<img style="margin: auto;"
+							<img id="edit-main-image" style="margin: auto;"
 								class="imageDetails"
 								src="<%=GlobalValue.getServiceAddress()%><%=trafficDetails.getImage()%>?size=small"
 								alt="Responsive image" />
-							<input style="width: 300px;" name="mainImage" type="file"
+							<input style="width: 300px;" name="mainImage" type="file" id="mainImage"
 								class="span2" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Loại biển báo<span class="required-item">*</span>: </label>
 						<div class="controls">
-							<select style="width: 300px;" name="categoryID">
+							<select style="width: 300px;" name="categoryID" id="categoryID">
 								<%
 									for (int i = listCat.size() - 1; i >= 0; i--) {
 								%>
@@ -153,7 +192,7 @@
 						<label class="control-label">Thông tin<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<textarea style="width: 500px; height: 100px;" class="span4"
-								name="information"><%=trafficDetails.getInformation()%></textarea>
+								name="information" id="information"><%=trafficDetails.getInformation()%></textarea>
 						</div>
 					</div>
 					<div class="control-group" align="left">

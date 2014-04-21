@@ -25,8 +25,10 @@
 	class="skin-color" />	
 <link rel="stylesheet" href="Admin/Content/css/jquery.gritter.css" />
 <link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
-<style type="text/css">
 
+
+
+<style type="text/css">
 #paging-table_filter {
 	margin-left: 20px;
 }
@@ -130,8 +132,8 @@
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
-					class="icon icon-share-alt" onclick="logout(); return false;"></i> <span
+			<li class=""><a onclick="logout(); return false;" title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" ></i> <span
 					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
@@ -286,23 +288,6 @@
 		aria-hidden="true"></div>
 	<!-- End Edit Traffic modal-->
 		
-	<!-- Delete Traffic modal-->
-        <div id="DeleteTrafficModal" class="modal hide">
-        <input id="delete-trafficID" type="hidden"/>
-          <div class="modal-header">
-            <button data-dismiss="modal" class="close" type="button">×</button>
-            <h3>Xác nhận xóa</h3>
-          </div>
-          <div class="modal-body" style="text-align: center;">   
-          <p>Xác nhận xóa</p>         
-          </div>
-          <div class="modal-footer"> 
-	          <a data-dismiss="modal" class="btn btn-primary" href="#" onclick="deteleTrafficInfo(); return false;">Đồng ý</a> 
-	          <a data-dismiss="modal" class="btn" href="#">Hủy</a> 
-          </div>
-        </div>
-	<!-- End Delete Traffic modal-->
-	
 	<!-- Import File modal-->
 	<div class="modal fade" id="ImportFileModal" tabindex="-1" role="dialog"
 		style="display: none;" aria-labelledby="myModalLabel"
@@ -315,7 +300,7 @@
 	          <div style="text-align: center;">          
 		          <form id="import-form" method="post"
 					enctype="multipart/form-data">			
-					Chọn tập tin:<input type="file" name="file" />	
+					Chọn tập tin:<input type="file" name="file" id="file" />	
 					 
 		          <input type="hidden" name="userID" value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 					</form>
@@ -328,42 +313,6 @@
           </div>
 	</div>
 	<!-- End Import File modal-->
-	
-	
-	
-	
-	
-	
-	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-		style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
-	<!-- End modal 1 -->
-	
-	<!-- Traffic Detail modal -->
-	<div class="modal fade" id="EditTrafficModal" tabindex="-1"
-		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
-	<!-- End detail modal-->
-	
-	<!-- Add Train Image modal -->
-	<div class="modal fade" id="AddTrainImageModal" tabindex="-1"
-		role="dialog" style="display: none;" aria-labelledby="myModalLabel"
-		aria-hidden="true"></div>
-	<!-- End Add Train Image modal-->
-	
-	<div id="myAlert" class="modal hide">
-		<div class="modal-header">
-			<button data-dismiss="modal" class="close" type="button">×</button>
-		</div>
-		<div class="modal-body">
-			<p></p>
-		</div>
-		<div class="modal-footer">
-			<a data-dismiss="modal" class="btn btn-primary" href="#">Đóng</a>
-		</div>
-	</div>
-	<!-- End Alert modal -->
 </body>
 <script src="Admin/Content/js/excanvas.min.js"></script>
 <script src="Admin/Content/js/jquery.min.js"></script>
@@ -374,26 +323,63 @@
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
 <script src="Admin/Content/js/fullcalendar.min.js"></script>
 <script src="Admin/Content/js/jquery.gritter.min.js"></script> 
-<script src="Admin/Content/js/maruti.js"></script>
-<script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
-<script src="Admin/Content/js/maruti.calendar.js"></script>
+<script src="Admin/Content/js/maruti.js"></script> 
+<script src="Admin/Content/js/maruti.dashboard.js_bk"></script> 
+<script src="Admin/Content/js/maruti.calendar.js"></script> 
+<script src="Admin/Content/js/jquery.validate.js"></script>
 <!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
 <!-- <script src="Admin/Content/js/maruti.tables.js"></script> -->
+<script src="Admin/Content/js/bootbox.min.js"></script>
 <script src="Admin/Content/js/tsrt.main.js"></script>
+
 <script type="text/javascript">
 function logout(){
-	var action = 'logout';
-	$.ajax({
-		url: '<%=Constants.CONTROLLER_ADMIN%>',
-		type: "GET",		
-	});
+	bootbox.dialog("Bạn có chắc chắn muốn đăng xuất?", [
+       		         {
+       				 "label" : "Hủy",
+       				 "class" : "btn-success",
+       				 "callback": function() {
+       				 		
+       				 	}
+       				 }, {
+       				 "label" : "Đăng xuất",
+       				 "class" : "btn-danger",
+       				 "callback": function() {
+       					 window.location.href = "<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>";
+       				 	}
+       				 }
+   ]);
+	
 }
 </script>
 
 
-<script type="text/javascript">		
+<script type="text/javascript">	
+var importValidate;
+
+
+	$(document).ready(function() {
+		importValidate = $("#import-form").validate({
+			rules : {
+				file : {
+					required : true,
+					accept: "zip"
+				}				
+			},
+			errorClass : "help-inline",
+			errorElement : "span",
+			highlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').addClass('error');
+			},
+			unhighlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').removeClass('error');
+				$(element).parents('.control-group').addClass('success');
+			}
+		});		
+	});
+
 	function showAddTrafficModal(){
 		var action = '<%=Constants.ACTION_TRAFFIC_ADD%>';
 		$.ajax({
@@ -425,14 +411,26 @@ function logout(){
 	
 	function showDeleteTrafficModal(trafficID)
 	{
-		$("#DeleteTrafficModal").modal("show");
-		//$("#DeleteTrafficModal .modal-body").html('Xác nhận xóa');
-		$("#DeleteTrafficModal #delete-trafficID").val(trafficID);
+		 bootbox.dialog("Bạn có chắc muốn xóa biển báo mang số hiệu "+trafficID, [
+		         {
+				 "label" : "Hủy",
+				 "class" : "btn-success",
+				 "callback": function() {
+				 		
+				 	}
+				 }, {
+				 "label" : "Xóa",
+				 "class" : "btn-danger",
+				 "callback": function() {
+					 deteleTrafficInfo(trafficID);
+				 	}
+				 }
+				 ]);
+		 return false;		
 	}
 	
-	function deteleTrafficInfo()
-	{
-		var trafficID = $('#delete-trafficID').val();
+	function deteleTrafficInfo(trafficID)
+	{		
 		$.ajax({
 			url: '<%=GlobalValue.getServiceAddress()%><%=Constants.TRAFFIC_TRAFFIC_DELETE%>',
 			type: "GET",
@@ -452,6 +450,8 @@ function logout(){
 		window.location.href='<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_TRAFFIC_LIST%>&cateID='+cateID;	
 	}
 	
+	
+	// Import file 
 	function showImportFileModal()
 	{
 		$("#ImportFileModal").modal("show");
@@ -459,7 +459,10 @@ function logout(){
 	}
 	
 	function importFile()
-	{		
+	{	
+		var result = $("#import-form").valid();
+		if(result == false)
+			return false;
 		$('#loading-image').show();
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
@@ -475,7 +478,7 @@ function logout(){
 		xhr.open("POST",'<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_IMPORT%>');
 		xhr.overrideMimeType('text/plain; charset=utf-8');
 		xhr.send(formData);
-	}
+	}	
 
 	function showResult(result) {
 		if (result.trim() != "Success") {
@@ -494,6 +497,13 @@ function logout(){
 		}
 	}
 	
+	$('#ImportFileModal').on('hidden', function () {
+		$("#import-form #file").val('');	
+		importValidate.resetForm();
+	});
+	
+	// End Import file ======================================
+		
 	function showForceTrainModal()
 	{
 		$.gritter.add({

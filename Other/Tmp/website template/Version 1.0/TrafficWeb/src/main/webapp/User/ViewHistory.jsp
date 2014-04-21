@@ -19,7 +19,7 @@
 <style>
 .list-result {
 	min-height: 350px;
-	width: 250px;
+	width: 300px;
 	/*border: red thin solid;*/
 	float: left;
 	padding-bottom: 20px;
@@ -87,7 +87,7 @@ legend {
 	margin-left: 0px;
 }
 </style>
-<title>Traffic Sign Recognition</title>
+<title>HỆ THỐNG NHẬN DẠNG BIỂN BÁO</title>
 </head>
 <body>
 	<div class="wrapper">
@@ -98,6 +98,7 @@ legend {
 					<div class="card-top"></div>
 				</div>
 				<div class="logo-Container">
+				<img id="logoImage"  alt="" src="User/Content/Image/eye_logo.png" style="height: 80px; width: 90px;">				
 					<h2 class="logo" style="color: #FFF;">HỆ THỐNG NHẬN DẠNG BIỂN
 						BÁO</h2>
 					<!--   _____________ -->
@@ -500,7 +501,7 @@ legend {
 			<input type="hidden" id="reference_id" />
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Đóng</button>
 			<button class="btn btn-primary" id="btnSubmitReport" onclick="">Gửi
 				Ý Kiến</button>
 		</div>

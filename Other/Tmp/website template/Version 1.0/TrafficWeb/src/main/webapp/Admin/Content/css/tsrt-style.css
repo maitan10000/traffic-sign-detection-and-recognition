@@ -28,3 +28,14 @@
 {
 	color: red;
 }
+
+/* For bootbox */
+.bootbox
+{
+	top:30% !important;	
+} 
+
+.bootbox .modal-body
+{
+	padding: 15px;
+}
