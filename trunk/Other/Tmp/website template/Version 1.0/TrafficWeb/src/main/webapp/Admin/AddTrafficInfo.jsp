@@ -12,12 +12,52 @@
 %>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
-		
+		$("#add_traffic_form").validate({
+			rules : {
+				trafficID : {
+					required : true,					
+				},				
+				name : {
+					required : true					
+				},
+				categoryID:{
+					required : true
+				},
+				information: {
+					required : true
+				},
+				mainImage:{
+					required :{
+				        depends: function(element){
+				        	var dataAddNewMainImage = document.getElementById("add-main-image").src;		
+				    		if( dataAddNewMainImage !== undefined && dataAddNewMainImage.length > 0)
+				    		{
+				    			return false;
+				    		}
+				    		return true;
+				        }
+					},
+					accept: "jpeg|jpg|png|bmp"
+				}
+			},
+			errorClass : "help-inline",
+			errorElement : "span",
+			highlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').addClass('error');
+			},
+			unhighlight : function(element, errorClass, validClass) {
+				$(element).parents('.control-group').removeClass('error');
+				$(element).parents('.control-group').addClass('success');
+			}
+		});		
 	});
 
 
 	function addTraffic() {
+		var result = $("#add_traffic_form").valid();
+		if(result == false)
+			return false;
+		
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
@@ -127,22 +167,21 @@
 		<div class="modal-body">
 			<div class="trafficDetail">
 				<div class="contentImgDetails"></div>
-				<form id="add_traffic_form" method="post" class="form-horizontal"
-					onsubmit="return validateForm()">
+				<form id="add_traffic_form" method="post" class="form-horizontal">
 					<input type="hidden" name="creator"
 								value="<%=(String) session.getAttribute(Constants.SESSION_USERID)%>" />
 					<input type="hidden" name="isNormalAddNew" id="isNormalAddNew" value="true"/>
 					<div class="control-group" align="left">
 						<label class="control-label">Số hiệu biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
-							<input style="width: 300px;" id="required" name="trafficID"
+							<input style="width: 300px;" id="required" name="trafficID"  id="trafficID"
 								type="text" class="span2" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Tên biển báo<span class="required-item">*</span>:</label>
 						<div class="controls">
-							<input style="width: 300px;" name="name" type="text"
+							<input style="width: 300px;" name="name" type="text" id="name"
 								class="span2" />
 						</div>
 					</div>
@@ -150,14 +189,14 @@
 						<label class="control-label">Hình ảnh<span class="required-item">*</span>:</label>
 						<div class="controls">
 						<img id = "add-main-image" class="imageDetails" style="margin: auto; width: 50px; height:50px;" />
-							<input style="width: 300px;" name="mainImage" type="file"
+							<input style="width: 300px;" name="mainImage" id="mainImage" type="file" 
 								class="span2" />
 						</div>
 					</div>
 					<div class="control-group" align="left">
 						<label class="control-label">Loại biển báo<span class="required-item">*</span>: </label>
 						<div class="controls">
-							<select style="width: 300px;" name="categoryID">
+							<select style="width: 300px;" name="categoryID" id="categoryID">
 								<%
 									for (int i = listCat.size() - 1; i >= 0; i--) {
 								%>
@@ -173,7 +212,7 @@
 						<label class="control-label">Thông tin<span class="required-item">*</span>:</label>
 						<div class="controls">
 							<textarea style="width: 500px; height: 100px;" class="span4"
-								name="information"></textarea>
+								name="information" id="information"></textarea>
 						</div>
 					</div>
 					<div class="control-group" align="left">

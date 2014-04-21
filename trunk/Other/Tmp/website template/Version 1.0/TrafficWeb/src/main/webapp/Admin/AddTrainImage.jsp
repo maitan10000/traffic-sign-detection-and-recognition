@@ -153,8 +153,8 @@
 		<ul class="nav">
 			<li class=""><a title="" href="#"><i class="icon icon-user"></i>
 					<span class="text"><%=(String) session.getAttribute(Constants.SESSION_USERID)%></span></a></li>
-			<li class=""><a title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
-					class="icon icon-share-alt" onclick="logout()"></i> <span
+			<li class=""><a onclick="logout(); return false;" title="Đăng xuất" href="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>"><i
+					class="icon icon-share-alt" ></i> <span
 					class="text">Đăng xuất</span></a></li>
 		</ul>
 	</div>
@@ -246,9 +246,32 @@
 	<script src="Admin/Content/js/jquery.peity.min.js"></script>
 	<script src="Admin/Content/js/fullcalendar.min.js"></script>
 	<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
+	<script src="Admin/Content/js/bootbox.min.js"></script>
 	<script src="Admin/Content/js/maruti.js"></script>
+	<script src="Admin/Content/js/jquery.validate.js"></script>
 <!-- 	<script src="Admin/Content/js/maruti.dashboard.js"></script> -->
 <!-- 	<script src="Admin/Content/js/maruti.calendar.js"></script> -->
+<script type="text/javascript">
+function logout(){
+	bootbox.dialog("Bạn có chắc chắn muốn đăng xuất?", [
+       		         {
+       				 "label" : "Hủy",
+       				 "class" : "btn-success",
+       				 "callback": function() {
+       				 		
+       				 	}
+       				 }, {
+       				 "label" : "Đăng xuất",
+       				 "class" : "btn-danger",
+       				 "callback": function() {
+       					 window.location.href = "<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGOUT%>";
+       				 	}
+       				 }
+   ]);
+	
+}
+</script>
+
 	<script type="text/javascript">
 		// This function is called from the pop-up menus to transfer to
 		// a different page. Ignore if the value returned is a null string:
@@ -498,9 +521,9 @@ $(document).ready(function() {
 	//Add new traffic sign ============================================
 	function addNewTS(order)
 	{
-		console.log(order);
+		//console.log(order);
 		var imageLink = server + dataJSON.uploadedImage;
-		console.log(imageLink);
+		//console.log(imageLink);
 		var x = dataJSON.listTraffic[order].locate.x;
 		var y = dataJSON.listTraffic[order].locate.y;
 		var height = dataJSON.listTraffic[order].locate.height;
@@ -517,8 +540,8 @@ $(document).ready(function() {
 	        var sourceY = y;	       
 	        var destWidth = width;
 	        var destHeight = height;
-	        console.log(width);
-	        console.log(x);
+	        //console.log(width);
+	        //console.log(x);
 	        var destX = 0;
 	        var destY = 0;
 	        canvas.width  = width;
@@ -551,9 +574,9 @@ $(document).ready(function() {
     $('#AddTrafficModal').on('show', function () {    	
     	var addMainImage = document.getElementById("add-main-image");
     	addMainImage.src = dataAddNewImage;
-    	$('#isNormalAddNew').val("false");
-    	//console.log('show');
+    	$('#isNormalAddNew').val("false");    	
     });
+    
 </script>
 </body>
 </html>
