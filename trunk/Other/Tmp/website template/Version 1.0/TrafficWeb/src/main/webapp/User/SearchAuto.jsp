@@ -397,7 +397,7 @@ legend {
 										addInfo = 'title="Kích để xem chi tiết" onclick="viewDetail(\'' + listTraffic[i].trafficID + '\');return false;" ';
 										imageLink = server + listTraffic[i].trafficImage;
 									}
-									var liContent = '<li><a href="#" '+ addInfo + '><img class="list-image-result list-group-item" src="'+imageLink+'?size=small"> <span >' + trafficName + '</span></a></li>';
+									var liContent = '<li><a href="#" '+ addInfo + '><img class="list-image-result list-group-item" src="'+imageLink+'"> <span >' + trafficName + '</span></a></li>';
 									$('.list-result ol').append(liContent);
 								}
 
