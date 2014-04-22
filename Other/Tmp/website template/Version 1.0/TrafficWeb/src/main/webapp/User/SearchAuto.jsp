@@ -14,8 +14,8 @@
 	src="User/Content/Scripts/jquery-1.9.1.min.js"></script>
 <script type="text/javascript"
 	src="User/Content/bootstrap/js/bootstrap.js"></script>
-<link href="User/Content/Css/searchauto.css" rel="stylesheet"
-	type="text/css" />
+<!-- <link href="User/Content/Css/searchauto.css" rel="stylesheet" -->
+<!-- 	type="text/css" /> -->
 
 <style>
 .list-result {
@@ -397,7 +397,7 @@ legend {
 										addInfo = 'title="Kích để xem chi tiết" onclick="viewDetail(\'' + listTraffic[i].trafficID + '\');return false;" ';
 										imageLink = server + listTraffic[i].trafficImage;
 									}
-									var liContent = '<li><a href="#" '+ addInfo + '><img class="list-image-result list-group-item" src="'+imageLink+'"> <span >' + trafficName + '</span></a></li>';
+									var liContent = '<li><a href="#" '+ addInfo + '><img class="list-image-result list-group-item" src="'+imageLink+'?size=small"> <span >' + trafficName + '</span></a></li>';
 									$('.list-result ol').append(liContent);
 								}
 
