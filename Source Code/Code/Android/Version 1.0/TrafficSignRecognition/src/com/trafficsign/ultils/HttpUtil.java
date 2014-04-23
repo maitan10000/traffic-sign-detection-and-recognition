@@ -106,8 +106,11 @@ public class HttpUtil {
 
 		try {
 			stream = getHttpConnection(url);
-			bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-			stream.close();
+			if (stream != null) {
+				bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
+				stream.close();
+			}
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -126,9 +129,10 @@ public class HttpUtil {
 			httpConnection.setRequestMethod("GET");
 			httpConnection.connect();
 
-			//if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-				
-			//}			
+			// if (httpConnection.getResponseCode() ==
+			// HttpURLConnection.HTTP_OK) {
+
+			// }
 			stream = httpConnection.getInputStream();
 		} catch (Exception ex) {
 			ex.printStackTrace();

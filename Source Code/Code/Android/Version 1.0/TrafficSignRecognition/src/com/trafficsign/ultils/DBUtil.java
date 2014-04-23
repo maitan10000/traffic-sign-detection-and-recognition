@@ -35,6 +35,7 @@ import com.trafficsign.json.TrafficInfoShortJSON;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
@@ -49,6 +50,9 @@ public class DBUtil {
 	// create folder for contain DB and inamge if not exist
 	public static void initResource(InputStream dbIS, InputStream settingIS,
 			Context ctx) {
+		SharedPreferences sharedPreferences = ctx.getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, 0);
+		//
 		String externalPath = Environment.getExternalStorageDirectory()
 				.getPath() + "/";
 		try {
@@ -78,9 +82,10 @@ public class DBUtil {
 		File dbFile = new File(GlobalValue.getAppFolder()
 				+ Properties.DB_FILE_PATH);
 		if (!dbFile.exists()) {
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "");
+			editor.commit();
 			DBUtil.copyDB(dbIS, dbFile);
-			HttpDatabaseUtil httpDB = new HttpDatabaseUtil(ctx);
-			httpDB.execute();
 		}
 
 		File settingFile = new File(GlobalValue.getAppFolder()
@@ -88,6 +93,12 @@ public class DBUtil {
 		if (!settingFile.exists()) {
 			DBUtil.copyDB(settingIS, settingFile);
 		}
+		
+		if("".equals(sharedPreferences.getString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, ""))){
+			HttpDatabaseUtil httpDB = new HttpDatabaseUtil(ctx);
+			httpDB.execute();
+		}
+
 
 	}
 
@@ -113,7 +124,24 @@ public class DBUtil {
 		}
 
 	}
-
+	//check if category is exist
+		public static boolean checkCategory(String catID){
+			SQLiteDatabase db = SQLiteDatabase.openDatabase(
+					GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+					SQLiteDatabase.OPEN_READWRITE);
+			try {
+				Cursor cursor = db
+						.query("category", null, " `categoryID` LIKE '"
+								+ catID  + "'", null, null, null, null);
+				if(cursor.moveToFirst()){
+					return true;
+				}
+				return false;
+			} finally {
+				db.close();
+			}
+			
+		}
 	// insert Category
 	public static long insertCategory(CategoryJSON categoryJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -127,6 +155,24 @@ public class DBUtil {
 		return dbReturn;
 	}
 
+	//check if traffic sign is exist
+	public static boolean checkTraffic(String trafficID){
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		try {
+			Cursor cursor = db
+					.query("trafficinformation", null, " `trafficID` LIKE '"
+							+ trafficID  + "'", null, null, null, null);
+			if(cursor.moveToFirst()){
+				return true;
+			}
+			return false;
+		} finally {
+			db.close();
+		}
+		
+	}
 	// insert traffic sign
 	public static long insertTraffic(TrafficInfoJSON trafficInfoJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -369,7 +415,8 @@ public class DBUtil {
 			// get result from cursor to Object
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 					Locale.getDefault());
-
+			int ID = cursor.getInt(cursor.getColumnIndexOrThrow("resultID"));
+			output.setResultID(cursor.getInt(cursor.getColumnIndexOrThrow("resultID")));
 			output.setUploadedImage(cursor.getString(cursor
 					.getColumnIndexOrThrow("uploadedImage")));
 			String jsonLocate = cursor.getString(cursor
