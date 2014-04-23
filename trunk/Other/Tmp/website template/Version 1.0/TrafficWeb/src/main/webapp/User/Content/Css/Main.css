@@ -126,7 +126,7 @@ nav {
 }
 
 #nav {
-	width: 708px;
+	width: 950px;
 	margin: 0;
 	padding: 0;
 	position: relative;
@@ -156,6 +156,9 @@ nav {
 	border-radius: 10px 0 0;
 }
 
+#nav .nav-6 a{
+	border-radius: 0 10px 0 0;
+}
 #nav li a:hover {
 	text-decoration: none;
 }

@@ -94,7 +94,8 @@ public class AdminController extends HttpServlet {
 					&& !Constants.ACTION_LOGIN.equals(action)
 					&& !Constants.ACTION_FORGOT_PASSWORD.equals(action)
 					&& !Constants.ACTION_CHANGE_PASSWORD.equals(action)
-					&& !Constants.ACTION_VERIFY.equals(action)) {
+					&& !Constants.ACTION_VERIFY.equals(action)
+					&& !Constants.ACTION_LOGOUT.equals(action)) {
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/Login.jsp");
 				rd.forward(request, response);

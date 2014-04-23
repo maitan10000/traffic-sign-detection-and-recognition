@@ -32,6 +32,7 @@ public final class Constants {
 	public final static String MANAGE_FAVORITE_ADD = "rest/Manage/AddFavorite";
 	public final static String MANAGE_FAVORITE_DELETE = "rest/Manage/DeleteFavorite";
 	public final static String MANAGE_FAVORITE_LIST = "rest/Manage/ListFavorite";
+	
 	// Export, import
 	public final static String SERVER_IMPORT = "rest/Server/ImportFile";
 	public final static String SERVER_EXPORT = "rest/Server/ExportFile";
@@ -63,6 +64,7 @@ public final class Constants {
 	public final static String ACTION_HISTORY_LIST_SHORT = "listHistoryShort";
 	public final static String ACTION_ADD_TRAINIMAGE = "trainImage";
 	public final static String ACTION_DELETE_TRAINIMAGE = "deleteTrainImage";
+	public final static String ACTION_MOBILE_VIEW = "viewMobile";
 
 	// Admin controler action
 	public final static String ACTION_LOGIN = "login";
@@ -90,6 +92,7 @@ public final class Constants {
 
 	public final static String ACTION_STATISTIC = "statistic";
 	public final static String ACTION_CONFIG = "config";
+	
 
 	// controller
 	public final static String CONTROLLER_USER = "/TrafficWeb/UserController";
@@ -119,6 +122,7 @@ public final class Constants {
 	public final static String MANAGE_ACCOUNT_SETSTAFF = "rest/Manage/SetStaff";
 	public final static String MANAGE_ACCOUNT_UNSETSTAFF = "rest/Manage/UnsetStaff";
 	
+	public final static String DOWNLOAD_ANDROID_APP = "rest/Download/Mobile/Android";
 
 	// Session Constant
 	public final static String SESSION_USERID = "userid";

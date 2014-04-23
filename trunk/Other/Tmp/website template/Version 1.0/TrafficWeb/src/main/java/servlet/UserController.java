@@ -390,6 +390,11 @@ public class UserController extends HttpServlet {
 				}
 				String output = clientResponse.getEntity(String.class);
 				out.print(output);
+			}else if(Constants.ACTION_MOBILE_VIEW.equals(action))
+			{
+				RequestDispatcher rd = request
+						.getRequestDispatcher("User/MobileApp.jsp");
+				rd.forward(request, response);
 			}
 
 		} catch (Exception e) {
