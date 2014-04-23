@@ -12,8 +12,9 @@
 %>
 <table id="resultTable" class="table table-striped .table-condensed">
 	<thead>
-		<th>STT</th>
-		<th>Ngày tạo</th>
+		<th style="text-align: center;width: 70px;">STT</th>
+		<th style="text-align: center;">Ngày tạo</th>
+		<th></th>
 	</thead>
 	<tbody>
 		<%
@@ -24,12 +25,12 @@
 		%>
 
 		<tr>
-			<td><%=listHistory.size() - i%></td>
-			<td><a
+			<td style="text-align: center;"><%=listHistory.size() - i%></td>
+			<td style="text-align: center;"><a
 				href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_HISTORY_VIEW%>&resultID=<%=listHistory.get(i).getResultID()%>"
 				data-toggle="modal"><%=dateFormat.format(listHistory.get(i)
 							.getCreateDate())%></a></td>
-			<td><button class="btn btn-inverse"
+			<td style="text-align: center;"><button class="btn btn-inverse"
 					onclick="deleteHistory('<%=listHistory.get(i).getResultID()%>')">Xóa</button></td>
 		</tr>
 		<%
