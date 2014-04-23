@@ -371,7 +371,7 @@ legend {
 
 							function showResult(resultData, fileName) {
 								//add list result
-								console.log(resultData);
+								//console.log(resultData);
 								var resultJSON = JSON.parse(resultData);								
 								if(userID != "" && resultJSON.resultID != -1)
 								{
@@ -505,7 +505,7 @@ legend {
 							$(document).ready(function() {								
 								// event on shown to set onclick
 								$('#reportModal').on('show', function() {
-									console.log(trafficID);
+									//console.log(trafficID);
 									document.getElementById("txtContent").value = '';
 									var trafficID = document.getElementById("reference_id").value;
 									var functionName = 'sendReport("' + trafficID +'")';

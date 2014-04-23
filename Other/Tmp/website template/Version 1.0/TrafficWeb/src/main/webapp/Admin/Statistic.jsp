@@ -214,12 +214,13 @@
 <script src="Admin/Content/js/jquery.flot.min.js"></script>
 <script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
-<script src="Admin/Content/js/fullcalendar.min.js"></script>
+<!-- <script src="Admin/Content/js/fullcalendar.min.js"></script> -->
 <script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 <script src="Admin/Content/js/maruti.js"></script>
-<script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
-<script src="Admin/Content/js/maruti.calendar.js"></script>
+<!-- <script src="Admin/Content/js/maruti.dashboard.js_bk"></script> -->
+<!-- <script src="Admin/Content/js/maruti.calendar.js"></script> -->
 <script src="Admin/Content/js/bootstrap-datepicker.js"></script> 
+<script src="Admin/Content/js/locales/bootstrap-datepicker.vi.js" charset="UTF-8"></script>
 <!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
 <script src="Admin/Content/js/select2.min.js"></script>
 <script src="Admin/Content/js/jquery.dataTables.min.js"></script>
@@ -257,10 +258,13 @@ var dataJson;
 
 $(document).ready(function(){
     $('.datepicker').datepicker({
-    	"setDate": new Date(),
-        format: 'yyyy-mm-dd',
-        "autoclose": true,
-        "language": 'vi'
+    	 format: "yyyy-mm-dd",
+    	 endDate: "+1d",
+    	 todayBtn: "linked",
+    	 language: "vi",
+    	 autoclose: true,
+    	 todayHighlight: true,
+    	 calendarWeeks: true
     });
 
 });

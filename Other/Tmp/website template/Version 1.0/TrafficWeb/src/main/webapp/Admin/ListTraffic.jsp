@@ -82,9 +82,14 @@
 	width: 16px;
 }
 
-#ImportFileModal .modal.fade.in
+#ImportFileModal .modal-body
 {
-	top:10%;
+	padding: 15px; 
+}
+
+#ImportFileModal.modal.fade.in
+{
+	top: 20%;
 }
 
 #action-panel
@@ -105,6 +110,9 @@
 %>
 
 <body>
+<div id="loading">
+  <img id="loading-image" src="Admin/Content/images/loading.gif" alt="Loading..." />
+</div>
 	<!--Header-part-->
 	<div id="header" >
 		<div id="header-inner">
@@ -191,7 +199,7 @@
 					<button class="btn btn-success" href="#AddTrainImageModal" onclick="showAddTrafficModal(); return false;"><i class="icon-plus"></i> Thêm mới</button>
 					<button class="btn btn-success" href="#" onclick="showImportFileModal(); return false;"><i class="icon-upload"></i> Nhập từ tập tin</button>
 					<a class="btn btn-success" href="<%=GlobalValue.getServiceAddress()%><%=Constants.SERVER_EXPORT%>"><i class="icon-download"></i> Xuất ra tập tin</a>
-					<button class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;"><i class="icon-refresh"></i> Tạo mẫu</button>
+					<button id="btn-Train-Data" class="btn btn-primary" href="#" onclick="showForceTrainModal(); return false;"><i class="icon-refresh"></i> Tạo mẫu</button>
 		</div>	
 		<div class="container-fluid">
 			<div class="widget-title">
@@ -307,8 +315,8 @@
 				</div>						
           </div>          
           <div class="modal-footer">
-          	<img id="loading-image" src="Admin/Content/images/loading2.gif"/>  
-	          <a class="btn btn-primary" href="#" onclick="importFile(); return false;">Gửi</a> 
+          	<img id="loading-image-2" src="Admin/Content/images/loading2.gif"/>  
+	          <a id="btn-Import-File" class="btn btn-primary" href="#" onclick="importFile(); return false;">Gửi</a> 
 	          <a data-dismiss="modal" class="btn" href="#">Hủy</a> 
           </div>
 	</div>
@@ -324,7 +332,7 @@
 <script src="Admin/Content/js/fullcalendar.min.js"></script>
 <script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 <script src="Admin/Content/js/maruti.js"></script> 
-<script src="Admin/Content/js/maruti.dashboard.js_bk"></script> 
+<!-- <script src="Admin/Content/js/maruti.dashboard.js_bk"></script>  -->
 <script src="Admin/Content/js/maruti.calendar.js"></script> 
 <script src="Admin/Content/js/jquery.validate.js"></script>
 <!-- <script src="Admin/Content/js/jquery.uniform.js"></script> -->
@@ -455,7 +463,9 @@ var importValidate;
 	function showImportFileModal()
 	{
 		$("#ImportFileModal").modal("show");
-		$('#loading-image').hide();
+		$('#loading-image-2').hide();
+		$('#btn-Import-File').removeAttr("disabled");
+		$('#btn-Import-File').bind('click');
 	}
 	
 	function importFile()
@@ -463,7 +473,9 @@ var importValidate;
 		var result = $("#import-form").valid();
 		if(result == false)
 			return false;
-		$('#loading-image').show();
+		$('#loading-image-2').show();
+		$('#btn-Import-File').attr("disabled", "disabled");
+		$('#btn-Import-File').unbind('click');
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if (xhr.readyState == 4) {
@@ -495,6 +507,8 @@ var importValidate;
 				sticky : false
 			});
 		}
+		$('#btn-Import-File').removeAttr("disabled");
+		$('#btn-Import-File').bind('click');
 	}
 	
 	$('#ImportFileModal').on('hidden', function () {
@@ -503,9 +517,11 @@ var importValidate;
 	});
 	
 	// End Import file ======================================
-		
+	
+	// Train Data =======================================
 	function showForceTrainModal()
 	{
+		$('#btn-Train-Data').attr("disabled", "disabled");
 		$.gritter.add({
 			title : 'Thông báo',
 			text : 'Đang tạo lại mẫu',
@@ -520,10 +536,13 @@ var importValidate;
 					text : 'Tạo mẫu hoàn thành',
 					sticky : false
 				});
-			}
-			
+			},
+			complete: function () {
+				$('#btn-Train-Data').removeAttr("disabled");
+			},			
 		});		
 	}
+	// End Train Data =======================================
 </script>
 
 </html>

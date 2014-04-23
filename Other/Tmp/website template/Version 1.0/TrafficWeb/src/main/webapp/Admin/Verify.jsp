@@ -84,7 +84,7 @@
 						error : function(result) {
 							result = result.responseText;
 							if ('Success' == result.trim()) {
-									$('#messageModal .modal-body').html('<p id="message">Tài khoản đã được kích hoạt.</p>');
+									$('#messageModal .modal-body').html('<p id="message">Chúc mừng! Tài khoản của bạn đã được kích hoạt thành công.</p>');
 							} else
 							{
 								$('#messageModal .modal-body').html('<p id="message">Kích hoạt không thành công.</p>');								
