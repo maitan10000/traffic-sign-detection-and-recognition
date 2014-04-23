@@ -30,6 +30,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import json.ConfigureJSON;
 import json.LastXDayJSON;
@@ -79,6 +80,35 @@ import dto.TrainImageDTO;
 
 @Path("/Server")
 public class Server {
+	
+	/**
+	 * Wide data
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("/WideData")
+	public String wideData()
+	{
+		String mainFolderPath = GlobalValue.getWorkPath()
+				+ Constants.MAIN_IMAGE_FOLDER;
+		String trainFolderPath = GlobalValue.getWorkPath()
+				+ Constants.TRAIN_IMAGE_FOLDER;		
+		try {
+			// delete old data
+			FileUtils.deleteDirectory(new File(mainFolderPath));
+			FileUtils.deleteDirectory(new File(trainFolderPath));	
+			// delete train image db
+			TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
+			trainImageDAO.deleteAll();
+			return "Success";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		
+		return "False";
+	}
+	
 	/**
 	 * Import db from zip file
 	 * 
@@ -95,6 +125,11 @@ public class Server {
 			@FormDataParam("file") FormDataContentDisposition fileDetail,
 			@FormDataParam("userID") String userID) {
 
+		if(userID == null || userID.isEmpty())
+		{
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
 		// userID = "user1";
 		// String workingFolderPath = GlobalValue.getWorkPath() + "Data/";
 		String tempFolderPath = GlobalValue.getWorkPath()
@@ -113,18 +148,25 @@ public class Server {
 
 		try {
 			// delete old data
-			FileUtils.deleteDirectory(new File(mainFolderPath));
-			FileUtils.deleteDirectory(new File(trainFolderPath));
+			// FileUtils.deleteDirectory(new File(mainFolderPath));
+			// FileUtils.deleteDirectory(new File(trainFolderPath));
 			// recreate folder
-			new File(mainFolderPath).mkdir();
-			new File(trainFolderPath).mkdir();
+			File mainFolder = new File(mainFolderPath);
+			if (!mainFolder.exists()) {
+				mainFolder.mkdir();
+			}
+
+			File trainFolder = new File(trainFolderPath);
+			if (!trainFolder.exists()) {
+				trainFolder.mkdir();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		// delete train image db
 		TrainImageDAO trainImageDAO = new TrainImageDAOImpl();
-		trainImageDAO.deleteAll();
+		// trainImageDAO.deleteAll();
 
 		// upload
 		String output = "";
@@ -161,7 +203,7 @@ public class Server {
 			while (rowIterator.hasNext()) {
 				Row row = rowIterator.next();
 				int colNum = 0;
-				// get data from row num > 1
+				// get data from row num > 0, ignore the header - row 0
 				if (row.getRowNum() > 0) {
 					// Get iterator to all cells of current row
 					TrafficInfoDTO trafficInfo = new TrafficInfoDTO();
@@ -250,7 +292,6 @@ public class Server {
 			}
 
 			// copy and insert train image
-
 			for (TrafficInfoDTO trafficInfoDTO : listTrafficInfo) {
 				// add each train image of traffic
 				String tempTrainChildFolderPath = tempTrainFolderPath
@@ -685,15 +726,14 @@ public class Server {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String writeConfig(@FormParam("activeDay") Integer activeDay,
 			@FormParam("reTrainCount") Integer reTrainCount) {
-		if(activeDay != null && reTrainCount != null && activeDay> 0 && reTrainCount > 0)
-		{
+		if (activeDay != null && reTrainCount != null && activeDay > 0
+				&& reTrainCount > 0) {
 			GlobalValue.setActiveDay(activeDay);
 			GlobalValue.setReTrainNum(reTrainCount);
-			if(GlobalValue.saveSetting() == true)
-			{
+			if (GlobalValue.saveSetting() == true) {
 				return "Success";
 			}
-		}		
+		}
 		return "Fail";
 	}
 
