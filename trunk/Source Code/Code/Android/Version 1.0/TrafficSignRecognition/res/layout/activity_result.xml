@@ -8,7 +8,9 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_weight="0.38"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+         android:divider="#99DAF2"
+        android:dividerHeight="2dp" >
 
         <ListView
             android:id="@+id/listResult"

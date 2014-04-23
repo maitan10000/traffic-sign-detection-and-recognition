@@ -80,6 +80,7 @@
             android:name="ReportActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
         </activity>
+        <receiver android:name="AlarmReceiver"></receiver>
     </application>
 
 </manifest>
