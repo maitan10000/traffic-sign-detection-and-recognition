@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-public class GlobalValue {
+public class GlobalValue {	
 	private static String serviceAddress = "";
+	private static Boolean showMobile = false;
+	
 	private static boolean isCreated = false;
 
 	public static void createInstance(String configPath) throws Exception {
@@ -21,6 +23,13 @@ public class GlobalValue {
 				
 				//map value
 				serviceAddress = prop.getProperty("ServiceAddress").trim();
+				try{
+					showMobile = Boolean.parseBoolean(prop.getProperty("ShowMobile").trim());
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				
 				
 				System.out.println("Service address: "+ serviceAddress);
 			} catch (FileNotFoundException e) {
@@ -38,4 +47,8 @@ public class GlobalValue {
 	public static String getServiceAddress() {
 		return serviceAddress;
 	}
+
+	public static Boolean getShowMobile() {
+		return showMobile;
+	}	
 }

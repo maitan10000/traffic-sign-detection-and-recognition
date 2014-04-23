@@ -90,6 +90,17 @@
 							class="level-top"> <span>Lịch Sử</span>
 						</a></li>
 						<%} %>
+						<%
+						if(GlobalValue.getShowMobile()== true)
+						{
+						%>
+						<li class="level0 <%= userID == null ? "":"nav-6"%> level-top"><a
+							href="<%=Constants.CONTROLLER_USER%>?action=<%=Constants.ACTION_MOBILE_VIEW%>"
+							class="level-top"> <span>Ứng dụng điện thoại</span>
+						</a></li>
+						<%
+						} //end if showMobile
+						%>
 					</ul>
 					</nav>
 					<div style="clear: both"></div>
