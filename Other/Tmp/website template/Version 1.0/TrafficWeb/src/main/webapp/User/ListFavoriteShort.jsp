@@ -12,10 +12,10 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 
 <table id="resultTable" class="table table-bordered dataTable">
 							<thead>
-								<th>Hình Ảnh</th>
-								<th>Số Hiệu</th>
-								<th>Tên Biển Báo</th>
-								<th></th>
+								<th style="text-align: center;">Hình Ảnh</th>
+								<th style="text-align: center;">Số Hiệu</th>
+								<th style="text-align: center;">Tên Biển Báo</th>
+								<th style="text-align: center;"></th>
 							</thead>
 							<tbody>
 								<%
@@ -24,13 +24,13 @@ ArrayList<FavoriteJSON> listTraffic = (ArrayList<FavoriteJSON>) request.getAttri
 								%>
 
 								<tr>
-									<td><img class="trafficImage"
+									<td style="text-align: center;"><img class="trafficImage"
 										src="<%=GlobalValue.getServiceAddress() %><%=listTraffic.get(i).getImage()%>"
 										alt="Responsive image" /></td>
-									<td><%=listTraffic.get(i).getTrafficID()%></td>
-									<td><a href="#myModal" data-toggle="modal"
+									<td style="text-align: center;"><%=listTraffic.get(i).getTrafficID()%></td>
+									<td ><a href="#myModal" data-toggle="modal"
 										onclick="showDetails('<%=listTraffic.get(i).getTrafficID()%>')"><%=listTraffic.get(i).getName()%></a></td>
-									<td><button class="btn btn-inverse" onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
+									<td style="text-align: center;"><button class="btn btn-inverse" onclick="deleteFavorite('<%=listTraffic.get(i).getTrafficID()%>')">Xóa</button></td>
 								</tr>
 								<%
 									} 

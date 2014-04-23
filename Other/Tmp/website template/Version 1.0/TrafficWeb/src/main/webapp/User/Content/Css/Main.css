@@ -157,7 +157,7 @@ nav {
 }
 
 #nav .nav-6 a{
-	border-radius: 0 10px 0 0;
+/* 	border-radius: 0 10px 0 0; */
 }
 #nav li a:hover {
 	text-decoration: none;

@@ -124,7 +124,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 						 <ul class="thumbnails">
 			              <li class="span4">
 			                <div class="thumbnail">
-			                  <img src="http://cellphones.com.vn/media/catalog/product/cache/1/image/500x500/9df78eab33525d08d6e5fb8d27136e95/z/e/zenfone-5-red.png" style="height: 200px;">
+			                  <img src="User/Content/Image/android.png" style="height: 200px;">
 			                  <div class="caption">
 			                    <h3>Android</h3>
 			                    <p>Tải ngay để trải nghiệm</p>
@@ -134,7 +134,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			              </li>
 			              <li class="span4">
 			                <div class="thumbnail">
-			                  <img src="http://cellphones.com.vn/media/catalog/product/cache/1/image/500x500/9df78eab33525d08d6e5fb8d27136e95/l/u/lumia-720-white_1.png" style="height: 200px;">
+			                  <img src="User/Content/Image/windowphone.png" style="height: 200px;">
 			                  <div class="caption">
 			                    <h3>Window phone</h3>
 			                    <p>Đang phát triển...</p>
@@ -144,7 +144,7 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 			              </li>
 			              <li class="span4">
 			                <div class="thumbnail">
-			                  <img src="http://www.myphoneinparis.com/wp-content/uploads/iphone52.png" style="height: 200px;">
+			                  <img src="User/Content/Image/iOS.png" style="height: 200px;">
 			                  <div class="caption">
 			                    <h3>iOS</h3>
 			                    <p>Đang phát triển...</p>
