@@ -170,14 +170,14 @@ public class NetworkReceiver extends BroadcastReceiver {
 						}
 						/* end auto search */
 						/* Sync process */
+						Gson gson = new GsonBuilder().setDateFormat(
+								DateFormat.FULL, DateFormat.FULL).create();
 						if ("".equals(userID) == false) {
 							// Sync favorite
 							ArrayList<FavoriteJSON> listFavorite = new ArrayList<FavoriteJSON>();
 							listFavorite = DBUtil.listAllFavorite();
 							if (listFavorite.size() > 0) {
-								Gson gson = new GsonBuilder().setDateFormat(
-										DateFormat.FULL, DateFormat.FULL)
-										.create();
+
 								for (int i = 0; i < listFavorite.size(); i++) {
 									// if favorite is active, excute addClone to
 									// service
@@ -230,32 +230,33 @@ public class NetworkReceiver extends BroadcastReceiver {
 										Log.e("sync", respones);
 									}
 								}
-								// receive new favorite list from service
-								// URL for service
-								String urlListFavorite = GlobalValue
-										.getServiceAddress()
-										+ Properties.MANAGE_FAVORITE_LIST
-										+ "?creator=" + userID;
-								// get all favorite from service and parse json
-								// to
-								// list Trafficinfoshort
-								String favoriteResponse = HttpUtil
-										.get(urlListFavorite);
-								ArrayList<TrafficInfoShortJSON> newListFavorite = new ArrayList<TrafficInfoShortJSON>();
-								Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
-								}.getType();
-								newListFavorite = gson.fromJson(
-										favoriteResponse, typeListFavorite);
-								// remove favorite list
+							}
+							// receive new favorite list from service
+							// URL for service
+							String urlListFavorite = GlobalValue
+									.getServiceAddress()
+									+ Properties.MANAGE_FAVORITE_LIST
+									+ "?creator=" + userID;
+							// get all favorite from service and parse json
+							// to
+							// list Trafficinfoshort
+							String favoriteResponse = HttpUtil
+									.get(urlListFavorite);
+							ArrayList<TrafficInfoShortJSON> newListFavorite = new ArrayList<TrafficInfoShortJSON>();
+							Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
+							}.getType();
+							newListFavorite = gson.fromJson(favoriteResponse,
+									typeListFavorite);
+							// remove favorite list
 
-								if (newListFavorite.size() > 0) {
-									DBUtil.removeAllFavorite();
-									for (int i = 0; i < newListFavorite.size(); i++) {
-										DBUtil.addFavorite(
-												newListFavorite.get(i), userID);
-									}
+							if (newListFavorite.size() > 0) {
+								DBUtil.removeAllFavorite();
+								for (int i = 0; i < newListFavorite.size(); i++) {
+									DBUtil.addFavorite(newListFavorite.get(i),
+											userID);
 								}
 							}
+
 							// End sync favorite
 
 							// Sync history
@@ -287,8 +288,8 @@ public class NetworkReceiver extends BroadcastReceiver {
 							String listResponse = HttpUtil.get(urlListHistory);
 							Type typeListHistory = new TypeToken<ArrayList<ResultShortJSON>>() {
 							}.getType();
-							Gson gson = new GsonBuilder().setDateFormat(
-									DateFormat.FULL, DateFormat.FULL).create();
+//							Gson gson = new GsonBuilder().setDateFormat(
+//									DateFormat.FULL, DateFormat.FULL).create();
 							ArrayList<ResultShortJSON> listResultShortJSON = gson
 									.fromJson(listResponse, typeListHistory);
 

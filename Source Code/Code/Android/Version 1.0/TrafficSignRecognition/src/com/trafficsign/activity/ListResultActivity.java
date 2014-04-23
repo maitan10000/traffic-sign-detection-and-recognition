@@ -1,5 +1,6 @@
 package com.trafficsign.activity;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -22,8 +23,10 @@ import com.trafficsign.json.ResultJSON;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
+import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.HttpImageUtils;
 import com.trafficsign.ultils.HttpAsyncUtil;
+import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.ImageUtils;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpImageListener;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
@@ -31,6 +34,7 @@ import com.trafficsign.ultils.Properties;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -105,17 +109,54 @@ public class ListResultActivity extends Activity {
 				String order = (i + 1) + "";
 				listResult.get(i).setTrafficName(order);
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+		for (int i = 0; i < listResult.size(); i++) {
+			final String urlGetTrafficDetail = Properties.serviceIp
+					+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
+			final Gson gson = new Gson();
+			if (listResult.get(i).getTrafficID() != null
+					&& DBUtil.checkTraffic(listResult.get(i).getTrafficID()) == false) {
+				final int tempPosition  =i;
+				new Thread(new Runnable() {
 
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						String urlGetTrafficDetailFull = urlGetTrafficDetail
+								+ listResult.get(tempPosition).getTrafficID();
+						// get traffic detail from service and parse json
+						// TrafficInfoJson
+						String trafficJSON = HttpUtil
+								.get(urlGetTrafficDetailFull);
+						TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+						trafficInfoJSON = gson.fromJson(trafficJSON,
+								TrafficInfoJSON.class);
+						// add traffic to DB
+						if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
+							DBUtil.insertTraffic(trafficInfoJSON);
+
+						}
+						String savePath = GlobalValue.getAppFolder()
+								+ Properties.MAIN_IMAGE_FOLDER
+								+ trafficInfoJSON.getTrafficID() + ".jpg";
+						File image = new File(savePath);
+						if (!image.exists()) {
+							String imageLink = Properties.serviceIp
+									+ trafficInfoJSON.getImage();
+							if (HttpUtil.downloadImage(imageLink, savePath)) {
+								Log.e("DB Image", savePath);
+							}
+
+						}
+					}
+				}).start();
+
+			}
+		}
 		//
 		lv = (ListView) findViewById(R.id.listResult);
 		listResultAdapter = new ListResultArrayAdapter(this, R.layout.list_row,
@@ -157,19 +198,29 @@ public class ListResultActivity extends Activity {
 		// OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_8, this,
 		// mLoaderCallback);
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		getMenuInflater().inflate(R.menu.feedback_menu, menu);
+		SharedPreferences pref = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+		String user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+		if ("".equals(user) == false) {
+			getMenuInflater().inflate(R.menu.feedback_menu, menu);
+		}
+
 		return true;
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if(item.getItemId() == R.id.action_feedback){
-			Intent nextScreen = new Intent(getApplicationContext(),ReportActivity.class);
+		if (item.getItemId() == R.id.action_feedback) {
+			Intent nextScreen = new Intent(getApplicationContext(),
+					ReportActivity.class);
 			nextScreen.putExtra("feedbackType", "1");
-			nextScreen.putExtra("referenceID", resultJson.getResultID());
+			nextScreen.putExtra("referenceID",
+					String.valueOf(resultJson.getResultID()));
 			startActivity(nextScreen);
 		}
 		return super.onOptionsItemSelected(item);
