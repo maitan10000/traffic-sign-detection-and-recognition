@@ -82,7 +82,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 
 		// remove previous user's favorite list
 		DBUtil.removeAllFavorite();
-		if (listFavorite.size() > 0) {
+		if (listFavorite != null && listFavorite.size() > 0) {
 			for (int i = 0; i < listFavorite.size(); i++) {
 				DBUtil.addFavorite(listFavorite.get(i), this.user);
 			}
@@ -98,7 +98,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		}.getType();
 		listHistory = gson.fromJson(listHistoryResponse, typeListHistory);
 		// if listHistory is not empty
-		if (listHistory.size() > 0) {
+		if (listHistory != null && listHistory.size() > 0) {
 			DBUtil.deleteAllResult(); // delete previous user's result
 			for (int i = 0; i < listHistory.size(); i++) {
 				String urlViewHistory = GlobalValue.getServiceAddress()
@@ -120,7 +120,6 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 					HttpUtil.downloadImage(imageUrl, imagePath);
 				}
 				// save result to db
-
 				ResultDB resultDB = new ResultDB();
 				resultDB.setCreateDate(resultJSON.getCreateDate());
 				resultDB.setCreator(resultJSON.getCreator());

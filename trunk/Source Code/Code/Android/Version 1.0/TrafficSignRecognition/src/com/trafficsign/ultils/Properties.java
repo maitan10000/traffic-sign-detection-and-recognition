@@ -3,8 +3,8 @@ package com.trafficsign.ultils;
 public final class Properties {
 //	public static final String serviceIp = "http://bienbaogiaothong.tk/rest/Service/";
 //	public static final String serverAddress = "http://bienbaogiaothong.tk/";
-	public static final String serviceIp1 = "http://192.168.0.102:8080/TrafficService/";
-	public static final String serviceIp = "http://bienbaogiaothong.tk/TrafficService/";
+	public static final String serviceIp = "http://192.168.0.102:8080/TrafficService/";
+	public static final String serviceIp1 = "http://bienbaogiaothong.tk/TrafficService/";
 
 	public static boolean isTaken = false;
 	
@@ -19,7 +19,8 @@ public final class Properties {
 	public static final String SHARE_PREFERENCE_KEY_WIFI = "wifiSetting";
 	public static final String SHARE_PREFERENCE__KEY_NOTI = "notiSetting";
 	public static final String SHARE_PREFERENCE__KEY_USER = "userID";
-	public static final String SHARE_PREFERENCE__KEY_SYNC = "isSync";
+	public static final String SHARE_PREFERENCE__KEY_USER_SYNC = "isSync";
+	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_SYNC = "isSyncTraffic";
 	
 	//folder constant
 	public static final String APP_FOLDER = "TSRT/";
