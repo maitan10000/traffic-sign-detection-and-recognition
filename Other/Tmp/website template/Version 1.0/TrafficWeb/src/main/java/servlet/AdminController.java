@@ -159,10 +159,10 @@ public class AdminController extends HttpServlet {
 				String urlRewrite = "Admin/Login.jsp";
 				if ("user".equals(result)) {
 					urlRewrite = "/UserController?action=viewFavorite";
-				} else if ("staff".equals(result))
+				}else if("staff".equals(result))
 				{
 					urlRewrite = "/AdminController?action=listReport";
-				}else if("admin".equals(result)) {
+				}else if ("admin".equals(result)) {
 					urlRewrite = "Admin/Index.jsp";
 				} else {
 					session.invalidate();
