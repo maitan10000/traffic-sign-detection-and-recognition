@@ -50,7 +50,7 @@ public class ReportActivity extends Activity {
 				EditText txtFeedbackContent = (EditText) findViewById(R.id.txtFeedbackContent);
 				final String feedbackContent = txtFeedbackContent.getText()
 						.toString();
-				if ("".equals(feedbackContent) == false) {
+				if (feedbackContent.length() > 50 && feedbackContent.length() < 4000) {
 					HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil(
 							ReportActivity.this);
 					// set parameter
@@ -89,7 +89,7 @@ public class ReportActivity extends Activity {
 					httpAsyncUtil.execute();
 				} else {
 					Toast.makeText(getApplicationContext(),
-							"Vui lòng nhập nội dung ý kiến", Toast.LENGTH_LONG)
+							"Nội dung ý kiến phải có tối thiểu 50 kí tự, tối đa 4000 kí tự", Toast.LENGTH_LONG)
 							.show();
 				}
 

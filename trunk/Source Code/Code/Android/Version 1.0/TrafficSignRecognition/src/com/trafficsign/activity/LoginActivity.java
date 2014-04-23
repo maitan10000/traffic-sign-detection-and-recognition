@@ -80,7 +80,7 @@ public class LoginActivity extends Activity {
 								SharedPreferences sharedPreferences = getSharedPreferences(Properties.SHARE_PREFERENCE_LOGIN,MODE_PRIVATE );
 								SharedPreferences.Editor editor = sharedPreferences.edit();
 								editor.putString(Properties.SHARE_PREFERENCE__KEY_USER, username);
-								editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, false);
+								editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_USER_SYNC, false);
 								editor.commit();
 								// Move to main activity
 								Intent nexscreen = new Intent(getApplicationContext(),MainActivity.class);

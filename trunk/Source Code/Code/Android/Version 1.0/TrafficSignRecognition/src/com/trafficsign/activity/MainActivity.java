@@ -32,7 +32,9 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -56,13 +58,20 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		this.setTitle("Hệ thống nhận dạng biển báo");
-		// init resource
-		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
-		InputStream settingIS = getResources().openRawResource(R.raw.setting);
-		DBUtil.initResource(dbIS, settingIS, MainActivity.this);
-		// get user
 		final SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
+		String flagSync = pref.getString(
+				Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "");
+		// init resource
+			InputStream dbIS = getResources().openRawResource(
+					R.raw.traffic_sign);
+			InputStream settingIS = getResources().openRawResource(
+					R.raw.setting);
+			DBUtil.initResource(dbIS, settingIS, MainActivity.this);
+		
+
+		// get user
+
 		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		if ("".equals(user) == false) {
 			// sync favorite and history
@@ -214,13 +223,14 @@ public class MainActivity extends Activity {
 						Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
 				Editor editor = pref.edit();
 				editor.remove(Properties.SHARE_PREFERENCE__KEY_USER);
-				editor.remove(Properties.SHARE_PREFERENCE__KEY_SYNC);
-				editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_SYNC, true);
+				editor.remove(Properties.SHARE_PREFERENCE__KEY_USER_SYNC);
+				editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_USER_SYNC,
+						true);
 				editor.commit();
 				this.user = "";
 				item.setTitle("Đăng nhập");
 			}
-			
+
 		} else if (item.getItemId() == R.id.action_settings) {
 			Intent nextScreen = new Intent(getApplicationContext(),
 					SettingActivity.class);
@@ -232,6 +242,12 @@ public class MainActivity extends Activity {
 		}
 		return true;
 
+	}
+	public void scheduleAlarm(Long range){
+		Long time = System.currentTimeMillis() + 5*1000;
+		Intent intentAlarm = new Intent(this, AlarmReceiver.class);
+		AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		alarmManager.setRepeating(AlarmManager.RTC, time,range, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
 }
