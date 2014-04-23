@@ -54,6 +54,10 @@ width: 800px;
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
 %>
 <body>
+	<div id="loading">
+	  <img id="loading-image" src="Admin/Content/images/loading.gif" alt="Loading..." />
+	</div>
+	
 	<!--Header-part-->
 	<div id="header" >
 		<div id="header-inner">
@@ -296,10 +300,10 @@ width: 800px;
 <script src="Admin/Content/js/jquery.flot.min.js"></script>
 <script src="Admin/Content/js/jquery.flot.resize.min.js"></script>
 <script src="Admin/Content/js/jquery.peity.min.js"></script>
-<script src="Admin/Content/js/fullcalendar.min.js"></script>
+<!-- <script src="Admin/Content/js/fullcalendar.min.js"></script> -->
 <script src="Admin/Content/js/maruti.js"></script>
-<script src="Admin/Content/js/maruti.dashboard.js_bk"></script>
-<script src="Admin/Content/js/maruti.calendar.js"></script>
+<!-- <script src="Admin/Content/js/maruti.dashboard.js_bk"></script> -->
+<!-- <script src="Admin/Content/js/maruti.calendar.js"></script> -->
 <script src="Admin/Content/js/jquery.validate.js"></script>
 <script src="Admin/Content/js/jquery.uniform.js"></script>
 <script src="Admin/Content/js/select2.min.js"></script>

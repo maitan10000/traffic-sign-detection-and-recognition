@@ -1,5 +1,6 @@
 $(document).ready(function() {
-    oTable = $('.dataTable').dataTable({
+	$('#loading').hide();
+	oTable = $('.dataTable').dataTable({
         "bJQueryUI": true,
         "sPaginationType": "full_numbers",
         "sDom": '<"F"f>t<""p>',

@@ -53,7 +53,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 @font-face
 {
 	font-family: myFirstFont;
-	src: url('font/UVNBaiHoc.ttf');
+	src: url('font/UVNConThuy1.ttf');
 }
 
 #header {
@@ -72,7 +72,7 @@ select,textarea,input[type="text"],input[type="password"],input[type="datetime"]
 #header h4 span {
 	
 	font-style: italic;
-	font-family: myFirstFont;
+ 	font-family: myFirstFont; 
 		
 	/*
 	font-size: 40px;
