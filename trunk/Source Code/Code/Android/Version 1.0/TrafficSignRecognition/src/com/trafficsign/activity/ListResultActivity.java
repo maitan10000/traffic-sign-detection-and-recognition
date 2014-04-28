@@ -51,7 +51,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-import static com.trafficsign.ultils.Properties.serviceIp;
+import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 public class ListResultActivity extends Activity {
 
@@ -59,7 +59,6 @@ public class ListResultActivity extends Activity {
 	static ResultJSON resultJson;
 	static ArrayList<ResultInput> listResult;
 	static ListView lv;
-
 	static {
 		if (!OpenCVLoader.initDebug())
 			Log.d("debug", "Unable to load OpenCV List result");
@@ -114,49 +113,49 @@ public class ListResultActivity extends Activity {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		for (int i = 0; i < listResult.size(); i++) {
-			final String urlGetTrafficDetail = Properties.serviceIp
-					+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
-			final Gson gson = new Gson();
-			if (listResult.get(i).getTrafficID() != null
-					&& DBUtil.checkTraffic(listResult.get(i).getTrafficID()) == false) {
-				final int tempPosition  =i;
-				new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						// TODO Auto-generated method stub
-						String urlGetTrafficDetailFull = urlGetTrafficDetail
-								+ listResult.get(tempPosition).getTrafficID();
-						// get traffic detail from service and parse json
-						// TrafficInfoJson
-						String trafficJSON = HttpUtil
-								.get(urlGetTrafficDetailFull);
-						TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-						trafficInfoJSON = gson.fromJson(trafficJSON,
-								TrafficInfoJSON.class);
-						// add traffic to DB
-						if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
-							DBUtil.insertTraffic(trafficInfoJSON);
-
-						}
-						String savePath = GlobalValue.getAppFolder()
-								+ Properties.MAIN_IMAGE_FOLDER
-								+ trafficInfoJSON.getTrafficID() + ".jpg";
-						File image = new File(savePath);
-						if (!image.exists()) {
-							String imageLink = Properties.serviceIp
-									+ trafficInfoJSON.getImage();
-							if (HttpUtil.downloadImage(imageLink, savePath)) {
-								Log.e("DB Image", savePath);
-							}
-
-						}
-					}
-				}).start();
-
-			}
-		}
+//		for (int i = 0; i < listResult.size(); i++) {
+//			final String urlGetTrafficDetail = Properties.serviceIp
+//					+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
+//			final Gson gson = new Gson();
+//			if (listResult.get(i).getTrafficID() != null
+//					&& DBUtil.checkTraffic(listResult.get(i).getTrafficID()) == false) {
+//				final int tempPosition  =i;
+//				new Thread(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						// TODO Auto-generated method stub
+//						String urlGetTrafficDetailFull = urlGetTrafficDetail
+//								+ listResult.get(tempPosition).getTrafficID();
+//						// get traffic detail from service and parse json
+//						// TrafficInfoJson
+//						String trafficJSON = HttpUtil
+//								.get(urlGetTrafficDetailFull);
+//						TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+//						trafficInfoJSON = gson.fromJson(trafficJSON,
+//								TrafficInfoJSON.class);
+//						// add traffic to DB
+//						if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
+//							DBUtil.insertTraffic(trafficInfoJSON);
+//
+//						}
+//						String savePath = GlobalValue.getAppFolder()
+//								+ Properties.MAIN_IMAGE_FOLDER
+//								+ trafficInfoJSON.getTrafficID() + ".jpg";
+//						File image = new File(savePath);
+//						if (!image.exists()) {
+//							String imageLink = Properties.serviceIp
+//									+ trafficInfoJSON.getImage();
+//							if (HttpUtil.downloadImage(imageLink, savePath)) {
+//								Log.e("DB Image", savePath);
+//							}
+//
+//						}
+//					}
+//				}).start();
+//
+//			}
+//		}
 		//
 		lv = (ListView) findViewById(R.id.listResult);
 		listResultAdapter = new ListResultArrayAdapter(this, R.layout.list_row,
@@ -206,7 +205,8 @@ public class ListResultActivity extends Activity {
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
 		String user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		if ("".equals(user) == false) {
-			getMenuInflater().inflate(R.menu.feedback_menu, menu);
+				getMenuInflater().inflate(R.menu.feedback_menu, menu);
+			
 		}
 
 		return true;
@@ -222,8 +222,9 @@ public class ListResultActivity extends Activity {
 			nextScreen.putExtra("referenceID",
 					String.valueOf(resultJson.getResultID()));
 			startActivity(nextScreen);
+			item.setVisible(false);
 		}
-		return super.onOptionsItemSelected(item);
+		return true;
 	}
 
 	// @Override

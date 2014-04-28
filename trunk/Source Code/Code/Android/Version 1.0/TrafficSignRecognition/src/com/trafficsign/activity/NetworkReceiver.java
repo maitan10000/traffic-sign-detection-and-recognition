@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.json.FavoriteJSON;
 import com.trafficsign.json.ResultDB;
+import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
 import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoJSON;
@@ -48,7 +49,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 		final SharedPreferences pref1 = context.getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
 		final SharedPreferences pref2 = context.getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+				Properties.SHARE_PREFERENCE_SETTING, Context.MODE_PRIVATE);
 		final String userID = pref1.getString(
 				Properties.SHARE_PREFERENCE__KEY_USER, "");
 		final boolean notiStatus = pref2.getBoolean(
@@ -113,6 +114,56 @@ public class NetworkReceiver extends BroadcastReceiver {
 										|| jsonString.length() > 5) {
 									DBUtil.deleteSavedResult(listResult.get(i)
 											.getUploadedImage());
+								}
+								/* check if there are traffic sign in result do not
+								 have in DB */
+								ArrayList<ResultInput> listTraffic = resultJson
+										.getListTraffic();
+								if (listTraffic != null && listTraffic.size() > 0) {
+									for (int j = 0; j < listTraffic.size(); j++) {
+										final String urlGetTrafficDetail = Properties.serviceIpOnline
+												+ Properties.TRAFFIC_TRAFFIC_VIEW
+												+ "?id=";
+										if (listTraffic.get(j).getTrafficID() != null
+												&& DBUtil.checkTraffic(listTraffic
+														.get(j).getTrafficID()) == false) {
+											String urlGetTrafficDetailFull = urlGetTrafficDetail
+													+ listTraffic.get(j)
+															.getTrafficID();
+											// get traffic detail from service and
+											// parse json
+											// TrafficInfoJson
+											String trafficJSON = HttpUtil
+													.get(urlGetTrafficDetailFull);
+											TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+											trafficInfoJSON = gson.fromJson(
+													trafficJSON,
+													TrafficInfoJSON.class);
+											// add traffic to DB
+											if (DBUtil.checkTraffic(trafficInfoJSON
+													.getTrafficID()) == false) {
+												DBUtil.insertTraffic(trafficInfoJSON);
+
+											}
+											String savePath = GlobalValue
+													.getAppFolder()
+													+ Properties.MAIN_IMAGE_FOLDER
+													+ trafficInfoJSON
+															.getTrafficID()
+													+ ".jpg";
+											File image = new File(savePath);
+											if (!image.exists()) {
+												String imageLink = Properties.serviceIpOnline
+														+ trafficInfoJSON
+																.getImage();
+												if (HttpUtil.downloadImage(
+														imageLink, savePath)) {
+													Log.e("DB Image", savePath);
+												}
+
+											}
+										}
+									}
 								}
 
 								/* NOTIFICATION */
@@ -383,9 +434,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 	public static void updateTraffic() {
 		Gson gson = new Gson();
 		// URL for service
-		String urlGetListTraffic = Properties.serviceIp
+		String urlGetListTraffic = Properties.serviceIpOnline
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-		String urlGetTrafficDetail = Properties.serviceIp
+		String urlGetTrafficDetail = Properties.serviceIpOnline
 				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 		/*
 		 * get all traffic (short) from service and parse json to list
@@ -419,7 +470,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 						+ trafficInfoJSON.getTrafficID() + ".jpg";
 				File image = new File(savePath);
 				if (!image.exists()) {
-					String imageLink = Properties.serviceIp
+					String imageLink = Properties.serviceIpOnline
 							+ trafficInfoJSON.getImage();
 					HttpUtil.downloadImage(imageLink, savePath);
 				}

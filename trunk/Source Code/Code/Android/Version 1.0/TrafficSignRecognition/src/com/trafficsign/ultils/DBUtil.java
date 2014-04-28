@@ -51,7 +51,7 @@ public class DBUtil {
 	public static void initResource(InputStream dbIS, InputStream settingIS,
 			Context ctx) {
 		SharedPreferences sharedPreferences = ctx.getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, 0);
+				Properties.SHARE_PREFERENCE_SETTING, 0);
 		//
 		String externalPath = Environment.getExternalStorageDirectory()
 				.getPath() + "/";
@@ -93,12 +93,12 @@ public class DBUtil {
 		if (!settingFile.exists()) {
 			DBUtil.copyDB(settingIS, settingFile);
 		}
-		
-		if("".equals(sharedPreferences.getString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, ""))){
+
+		if ("".equals(sharedPreferences.getString(
+				Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, ""))) {
 			HttpDatabaseUtil httpDB = new HttpDatabaseUtil(ctx);
 			httpDB.execute();
 		}
-
 
 	}
 
@@ -124,24 +124,25 @@ public class DBUtil {
 		}
 
 	}
-	//check if category is exist
-		public static boolean checkCategory(String catID){
-			SQLiteDatabase db = SQLiteDatabase.openDatabase(
-					GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
-					SQLiteDatabase.OPEN_READWRITE);
-			try {
-				Cursor cursor = db
-						.query("category", null, " `categoryID` LIKE '"
-								+ catID  + "'", null, null, null, null);
-				if(cursor.moveToFirst()){
-					return true;
-				}
-				return false;
-			} finally {
-				db.close();
+
+	// check if category is exist
+	public static boolean checkCategory(String catID) {
+		SQLiteDatabase db = SQLiteDatabase.openDatabase(
+				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+				SQLiteDatabase.OPEN_READWRITE);
+		try {
+			Cursor cursor = db.query("category", null, " `categoryID` LIKE '"
+					+ catID + "'", null, null, null, null);
+			if (cursor.moveToFirst()) {
+				return true;
 			}
-			
+			return false;
+		} finally {
+			db.close();
 		}
+
+	}
+
 	// insert Category
 	public static long insertCategory(CategoryJSON categoryJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -155,24 +156,27 @@ public class DBUtil {
 		return dbReturn;
 	}
 
-	//check if traffic sign is exist
-	public static boolean checkTraffic(String trafficID){
+	// check if traffic sign is exist
+	public static boolean checkTraffic(String trafficID) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
 		try {
-			Cursor cursor = db
-					.query("trafficinformation", null, " `trafficID` LIKE '"
-							+ trafficID  + "'", null, null, null, null);
-			if(cursor.moveToFirst()){
+			Cursor cursor = db.query("trafficinformation", null,
+					" `trafficID` LIKE '" + trafficID + "'", null, null, null,
+					null);
+			if (cursor.moveToFirst()) {
+				db.close();
 				return true;
 			}
+			db.close();
 			return false;
 		} finally {
 			db.close();
 		}
-		
+
 	}
+
 	// insert traffic sign
 	public static long insertTraffic(TrafficInfoJSON trafficInfoJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
@@ -190,22 +194,28 @@ public class DBUtil {
 		db.close();
 		return dbReturn;
 	}
+
 	// update traffic sign
 	public static int updateTraffic(TrafficInfoJSON trafficInfoJSON) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
-		ContentValues values = new ContentValues();
-		values.put("name", trafficInfoJSON.getName());
-		values.put("image", trafficInfoJSON.getImage());
-		values.put("categoryID", trafficInfoJSON.getCategoryID());
-		values.put("information", trafficInfoJSON.getInformation());
-		values.put("penaltyfee", trafficInfoJSON.getPenaltyfee());
-		// insert to DB
-		int dbReturn = db.update("trafficinformation", values, " `trafficID` LIKE '"
-				+ trafficInfoJSON.getTrafficID() + "'", null);
-		db.close();
-		return dbReturn;
+		try {
+			ContentValues values = new ContentValues();
+			values.put("name", trafficInfoJSON.getName());
+			values.put("image", trafficInfoJSON.getImage());
+			values.put("categoryID", trafficInfoJSON.getCategoryID());
+			values.put("information", trafficInfoJSON.getInformation());
+			values.put("penaltyfee", trafficInfoJSON.getPenaltyfee());
+			// insert to DB
+			int dbReturn = db.update("trafficinformation", values,
+					" `trafficID` LIKE '" + trafficInfoJSON.getTrafficID()
+							+ "'", null);
+			return dbReturn;
+		} finally {
+			db.close();
+		}
+
 	}
 
 	// get all category
@@ -374,7 +384,8 @@ public class DBUtil {
 	}
 
 	// insert to result table for autosearch later
-	public static boolean saveSearchInfo(String picturePath, String locateJSON, String user) {
+	public static boolean saveSearchInfo(String picturePath, String locateJSON,
+			String user) {
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
@@ -416,7 +427,8 @@ public class DBUtil {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
 					Locale.getDefault());
 			int ID = cursor.getInt(cursor.getColumnIndexOrThrow("resultID"));
-			output.setResultID(cursor.getInt(cursor.getColumnIndexOrThrow("resultID")));
+			output.setResultID(cursor.getInt(cursor
+					.getColumnIndexOrThrow("resultID")));
 			output.setUploadedImage(cursor.getString(cursor
 					.getColumnIndexOrThrow("uploadedImage")));
 			String jsonLocate = cursor.getString(cursor
@@ -607,7 +619,8 @@ public class DBUtil {
 				SQLiteDatabase.OPEN_READWRITE);
 		ContentValues value = new ContentValues();
 		value.put("isActive", false);
-		int output = db.update("result", value,"`resultID` ="+ resultID , null);
+		int output = db
+				.update("result", value, "`resultID` =" + resultID, null);
 		db.close();
 		return output;
 	}
@@ -812,6 +825,60 @@ public class DBUtil {
 		}
 		db.close();
 		return status;
+	}
+
+	// run update traffic sign (must run in another thread)
+	public static void updateTrafficsign() {
+		Gson gson = new Gson();
+		String urlGetListTraffic = Properties.serviceIpOnline
+				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
+		String urlGetTrafficDetail = Properties.serviceIpOnline
+				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
+		String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
+		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
+		Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
+		}.getType();
+		listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+				typeListTrafficShort);
+		// get each traffic details and add to DB
+		if (listInfoShortJSONs != null && listInfoShortJSONs.size() > 0) {
+			Log.e("number traffic", listInfoShortJSONs.size() + "");
+			String urlGetTrafficDetailFull = "";
+			long dbReturn; // variable to know db return
+			for (int i = 0; i < listInfoShortJSONs.size(); i++) {
+				urlGetTrafficDetailFull = urlGetTrafficDetail
+						+ listInfoShortJSONs.get(i).getTrafficID();
+				// get traffic detail from service and parse json
+				// TrafficInfoJson
+				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
+				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+				trafficInfoJSON = gson.fromJson(trafficJSON,
+						TrafficInfoJSON.class);
+				// add traffic to DB
+				if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
+					dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
+					Log.e("DB", dbReturn + " add");
+				} else { // if traffic is already had, update traffic
+					dbReturn = DBUtil.updateTraffic(trafficInfoJSON);
+					Log.e("DB", dbReturn + " update");
+				}
+				String savePath = GlobalValue.getAppFolder()
+						+ Properties.MAIN_IMAGE_FOLDER
+						+ trafficInfoJSON.getTrafficID() + ".jpg";
+				File image = new File(savePath);
+				if (!image.exists()) {
+					String imageLink = Properties.serviceIpOnline
+							+ trafficInfoJSON.getImage();
+					if (HttpUtil.downloadImage(imageLink, savePath)) {
+						Log.e("DB Image", savePath);
+					}
+
+				}
+
+				Log.e("Number", String.valueOf(i + 1));
+
+			}
+		}
 	}
 
 }

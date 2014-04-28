@@ -12,4 +12,13 @@
 	<string name="textAutoOn">Auto On</string>
 	<string name="textAutoOff">Auto Off</string>
 	<string name="feedback">Báo nhận diện sai</string>
+	<string name="update">Cập nhật biển báo</string>
+	
+	<string name="update_promt">Chọn khoảng thời gian</string>
+ 
+    <string-array name="update_time">
+        <item>7 ngày</item>
+        <item>15 ngày</item>
+        <item>30 ngày</item>
+    </string-array>
 </resources>

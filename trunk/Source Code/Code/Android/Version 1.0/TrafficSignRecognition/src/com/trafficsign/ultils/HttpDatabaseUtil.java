@@ -51,11 +51,11 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 				// TODO Auto-generated method stub
 				Gson gson = new Gson();
 				// URL for service
-				String urlCategory = Properties.serviceIp
+				String urlCategory = Properties.serviceIpOnline
 						+ Properties.TRAFFIC_LIST_CATEGORY;
-				String urlGetListTraffic = Properties.serviceIp
+				String urlGetListTraffic = Properties.serviceIpOnline
 						+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-				String urlGetTrafficDetail = Properties.serviceIp
+				String urlGetTrafficDetail = Properties.serviceIpOnline
 						+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 
 				// get all category from service and parse json to list
@@ -97,6 +97,13 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 					String urlGetTrafficDetailFull = "";
 					Long dbReturn; // variable to know db return
 					for (int i = 0; i < listInfoShortJSONs.size(); i++) {
+						if ("106".equals(listInfoShortJSONs.get(i)
+								.getTrafficID())
+								|| "110b".equals(listInfoShortJSONs.get(i)
+										.getTrafficID())) {
+							Log.e("traffic", "chua lai bien bao"
+									+ listInfoShortJSONs.get(i).getTrafficID());
+						} else {
 							urlGetTrafficDetailFull = urlGetTrafficDetail
 									+ listInfoShortJSONs.get(i).getTrafficID();
 							// get traffic detail from service and parse json
@@ -107,7 +114,8 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 							trafficInfoJSON = gson.fromJson(trafficJSON,
 									TrafficInfoJSON.class);
 							// add traffic to DB
-							if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
+							if (DBUtil.checkTraffic(trafficInfoJSON
+									.getTrafficID()) == false) {
 								dbReturn = DBUtil
 										.insertTraffic(trafficInfoJSON);
 								Log.e("DB", dbReturn + "");
@@ -117,7 +125,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 									+ trafficInfoJSON.getTrafficID() + ".jpg";
 							File image = new File(savePath);
 							if (!image.exists()) {
-								String imageLink = Properties.serviceIp
+								String imageLink = Properties.serviceIpOnline
 										+ trafficInfoJSON.getImage();
 								if (HttpUtil.downloadImage(imageLink, savePath)) {
 									Log.e("DB Image", savePath);
@@ -126,8 +134,8 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 							}
 
 							Log.e("Number", String.valueOf(i + 1));
-						
 
+						}
 					}
 				}
 
@@ -136,7 +144,9 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 				if (dialog != null) {
 					dialog.dismiss();
 				}
-				Toast.makeText(context, "Quá trinh đồng bộ chưa được hoàn tất, vui lòng kiểm tra kết nối và khởi động lại ứng dụng",
+				Toast.makeText(
+						context,
+						"Quá trinh đồng bộ chưa được hoàn tất, vui lòng kiểm tra kết nối và khởi động lại ứng dụng",
 						Toast.LENGTH_LONG).show();
 			}
 
@@ -155,7 +165,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 			networkFlag = 0;
 		}
 		if (dialog != null) {
-			dialog.setMessage("Loading");
+			dialog.setMessage("Đang tải dữ liệu");
 			dialog.setCancelable(false);
 			dialog.show();
 		}
@@ -172,7 +182,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 		}
 		// set flag into share preference
 		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, 0);
+				Properties.SHARE_PREFERENCE_SETTING, 0);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "sync");
 		editor.commit();

@@ -1,7 +1,7 @@
 package com.trafficsign.activity;
 
 import static com.trafficsign.ultils.Properties.isTaken;
-import static com.trafficsign.ultils.Properties.serviceIp;
+import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -92,17 +92,24 @@ public class ImageReviewActivity extends Activity {
 		if (wifiStatus == false) {
 			networkFlag = 0;
 		}
-		// get user
-		final SharedPreferences pref = getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
-		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
-		// TODO Auto-generated method stub
-		Intent intent = getIntent();
-		imagePath = intent.getStringExtra("imagePath");
-		Bitmap image = BitmapFactory.decodeFile(imagePath);
-		// set image to imageview
-		ImageView imageView = (ImageView) findViewById(R.id.imageUpload);
-		imageView.setImageBitmap(image);
+		try{
+			// get user
+			final SharedPreferences pref = getSharedPreferences(
+					Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+			user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+			// TODO Auto-generated method stub
+			Intent intent = getIntent();
+			imagePath = intent.getStringExtra("imagePath");
+			Bitmap image = BitmapFactory.decodeFile(imagePath);
+			// set image to imageview
+			ImageView imageView = (ImageView) findViewById(R.id.imageUpload);
+			imageView.setImageBitmap(image);
+		} catch (Exception e){
+			Toast.makeText(getApplicationContext(),
+					"Có lỗi xảy ra, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+			finish();
+		}
+		
 
 	}
 
@@ -141,19 +148,23 @@ public class ImageReviewActivity extends Activity {
 						+ ".jpg";
 				// coppy image to saveimage folder
 				Helper.copyFileUsingStream(imagePath, fileName);
-				// get screen size
-				Display display = getWindowManager().getDefaultDisplay();
-				Point screenSize = new Point();
-				display.getSize(screenSize);
-				// Resize
-				org.opencv.core.Size size = new org.opencv.core.Size();
-				size.height = screenSize.y;
-				size.width = screenSize.x;
-
+				// get image size
 				Mat tmpImage = Highgui.imread(fileName);
-				Mat tmpResize = new Mat(size, tmpImage.type());
-				Imgproc.resize(tmpImage, tmpResize, tmpResize.size());
-				Highgui.imwrite(fileName, tmpResize);
+
+				org.opencv.core.Size size = tmpImage.size();
+				if(size.width > 1000){
+					// caculate size
+					Double reduceSizeRate = size.width / 1000;
+					size.width = size.width / reduceSizeRate;
+					size.height = size.height / reduceSizeRate;
+					// Resize	
+					Mat tmpResize = new Mat(size, tmpImage.type());
+					Imgproc.resize(tmpImage, tmpResize, tmpResize.size());	
+					Highgui.imwrite(fileName, tmpResize);
+				} else {
+					Highgui.imwrite(fileName, tmpImage);
+				}
+			
 				// end resize
 
 				// create post data
@@ -171,7 +182,6 @@ public class ImageReviewActivity extends Activity {
 								Toast.LENGTH_LONG).show();
 
 					} else {
-						Log.e("JsonString: ", jsonString);
 						Gson gson = new GsonBuilder().setDateFormat(
 								DateFormat.FULL, DateFormat.FULL).create();
 						ResultJSON resultJson = new ResultJSON();

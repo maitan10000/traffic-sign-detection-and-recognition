@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import static com.trafficsign.ultils.Properties.serviceIp;
+import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -58,21 +58,19 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		this.setTitle("Hệ thống nhận dạng biển báo");
-		final SharedPreferences pref = getSharedPreferences(
+		final SharedPreferences prefLogin = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
-		String flagSync = pref.getString(
-				Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "");
+		final SharedPreferences prefSetting = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_SETTING, MODE_PRIVATE);
 		// init resource
-			InputStream dbIS = getResources().openRawResource(
-					R.raw.traffic_sign);
-			InputStream settingIS = getResources().openRawResource(
-					R.raw.setting);
-			DBUtil.initResource(dbIS, settingIS, MainActivity.this);
+		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
+		InputStream settingIS = getResources().openRawResource(R.raw.setting);
+		DBUtil.initResource(dbIS, settingIS, MainActivity.this);
 		
 
 		// get user
 
-		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+		user = prefLogin.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		if ("".equals(user) == false) {
 			// sync favorite and history
 			SharedPreferences sharedPreferences = getSharedPreferences(
@@ -86,7 +84,7 @@ public class MainActivity extends Activity {
 					@Override
 					public void onComplete(String respond) {
 						// TODO Auto-generated method stub
-						Editor editor = pref.edit();
+						Editor editor = prefLogin.edit();
 						editor.remove("isSync");
 						editor.putBoolean("isSync", true);
 						editor.commit();
@@ -176,6 +174,20 @@ public class MainActivity extends Activity {
 		SharedPreferences pref = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
 		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+		// set alarm receiver for update service
+		SharedPreferences prefSetting = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_SETTING, MODE_PRIVATE);
+				if ("".equals(prefSetting.getString(
+						Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_ALARM, ""))) {
+					Long time = prefSetting.getLong(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_TIME, 30);
+					// convert to days
+					time = time * 24 * 60 * 60 * 1000;
+					scheduleAlarm(time);
+					Editor editor = prefSetting.edit();
+					editor.putString(
+							Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_ALARM, "ok");
+					editor.commit();
+				}
 	}
 
 	@Override
@@ -191,7 +203,6 @@ public class MainActivity extends Activity {
 		} else {
 			getMenuInflater().inflate(R.menu.main_not_login, menu);
 		}
-
 		return true;
 	}
 
@@ -201,6 +212,7 @@ public class MainActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -228,7 +240,7 @@ public class MainActivity extends Activity {
 						true);
 				editor.commit();
 				this.user = "";
-				item.setTitle("Đăng nhập");
+				this.invalidateOptionsMenu();
 			}
 
 		} else if (item.getItemId() == R.id.action_settings) {
@@ -239,15 +251,76 @@ public class MainActivity extends Activity {
 			Intent nextScreen = new Intent(getApplicationContext(),
 					RegisterActivity.class);
 			startActivity(nextScreen);
+		} else if (item.getItemId() == R.id.action_update) {
+			final SharedPreferences sharedPreferences = getSharedPreferences(
+					Properties.SHARE_PREFERENCE_SETTING, 0);
+			// if update process is not running
+			if (sharedPreferences.getBoolean(
+					Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
+					false) == false) {
+				final Editor editor = sharedPreferences.edit();
+				editor.putBoolean(
+						Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
+						true);
+				editor.commit();
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						try {
+							if (NetUtil.isAccessService() == true) {
+
+								runOnUiThread(new Runnable() {
+									public void run() {
+										Toast.makeText(
+												getApplicationContext(),
+												"Bắt đầu quá trình cập nhật",
+												Toast.LENGTH_SHORT).show();
+									}
+								});
+
+								DBUtil.updateTrafficsign();
+							} else {
+								runOnUiThread(new Runnable() {
+									public void run() {
+										Toast.makeText(
+												getApplicationContext(),
+												"Không thể kết nối tới máy chủ, vui lòng kiểm tra lại",
+												Toast.LENGTH_SHORT).show();
+									}
+								});
+							}
+						} finally {
+							final Editor editor = sharedPreferences.edit();
+							editor.putBoolean(
+									Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
+									false);
+							editor.commit();
+						}
+
+					}
+
+				}).start();
+			} else {
+				Toast.makeText(
+						getApplicationContext(),
+						"Quá trình cập nhật đang chạy, vui lòng đợi trong giây lát",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 		return true;
 
 	}
-	public void scheduleAlarm(Long range){
-		Long time = System.currentTimeMillis() + 5*1000;
+
+	public void scheduleAlarm(Long range) {
+		Log.e("alarm changed", range / 24 / 60/ 60/1000 + "");
+		Long time = System.currentTimeMillis() + range;
 		Intent intentAlarm = new Intent(this, AlarmReceiver.class);
-		AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-		alarmManager.setRepeating(AlarmManager.RTC, time,range, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		alarmManager.setRepeating(AlarmManager.RTC, time, range, PendingIntent
+				.getBroadcast(this, 1, intentAlarm,
+						PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
 }

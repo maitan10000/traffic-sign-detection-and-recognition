@@ -43,9 +43,11 @@ import com.trafficsign.json.LocateJSON;
 import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
+import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
+import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.ultils.UploadUtils;
@@ -190,20 +192,25 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == RESULT_OK) {
-			if (requestCode == 1) {
-				Uri selectedImageUri = data.getData();
+		try{
+			if (resultCode == RESULT_OK) {
+				if (requestCode == 1) {
+					Uri selectedImageUri = data.getData();
 
-				String selectedImagePath = getPath(selectedImageUri);
-				Log.e("image", selectedImagePath);
-				Intent nextScreen = new Intent(getApplicationContext(),
-						ImageReviewActivity.class);
-				nextScreen.putExtra("imagePath", selectedImagePath);
-				finish();
-				startActivity(nextScreen);
+					String selectedImagePath = getPath(selectedImageUri);
+					Intent nextScreen = new Intent(getApplicationContext(),
+							ImageReviewActivity.class);
+					nextScreen.putExtra("imagePath", selectedImagePath);
+					finish();
+					startActivity(nextScreen);
 
+				}
 			}
+		} catch (Exception e){
+			Toast.makeText(getApplicationContext(),
+					"Có lỗi xảy ra, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
 		}
+		
 	}
 
 	@Override
@@ -407,7 +414,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				autoCaptureCount = 0;
 			}
 
-			if (detectedCount > 0 && autoCaptureCount > 2000
+			if (detectedCount > 0 && autoCaptureCount > 2500
 					&& isTaken == false && isAuto == true) {
 				isTaken = true;
 				autoCaptureCount = 0;
@@ -464,7 +471,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			Toast.makeText(getApplicationContext(), fileName + " saved",
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		runOnUiThread(new Runnable() {
 			public void run() {
 				// Create dialog
@@ -544,7 +551,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							});
 
 						} else {
-							
+
 							Log.i(TAG, "JsonString: " + jsonString);
 							ResultJSON resultJson = new ResultJSON();
 							resultJson = gson.fromJson(jsonString,
@@ -573,6 +580,56 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							resultDB.setResultID(resultJson.getResultID());
 							resultDB.setUploadedImage(fileName);
 							DBUtil.addResult(resultDB, user);
+							// check if there are traffic sign in result do not
+							// have in DB
+							ArrayList<ResultInput> listResult = resultJson
+									.getListTraffic();
+							if (listResult != null && listResult.size() > 0) {
+								for (int i = 0; i < listResult.size(); i++) {
+									final String urlGetTrafficDetail = Properties.serviceIpOnline
+											+ Properties.TRAFFIC_TRAFFIC_VIEW
+											+ "?id=";
+									if (listResult.get(i).getTrafficID() != null
+											&& DBUtil.checkTraffic(listResult
+													.get(i).getTrafficID()) == false) {
+										String urlGetTrafficDetailFull = urlGetTrafficDetail
+												+ listResult.get(i)
+														.getTrafficID();
+										// get traffic detail from service and
+										// parse json
+										// TrafficInfoJson
+										String trafficJSON = HttpUtil
+												.get(urlGetTrafficDetailFull);
+										TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+										trafficInfoJSON = gson.fromJson(
+												trafficJSON,
+												TrafficInfoJSON.class);
+										// add traffic to DB
+										if (DBUtil.checkTraffic(trafficInfoJSON
+												.getTrafficID()) == false) {
+											DBUtil.insertTraffic(trafficInfoJSON);
+
+										}
+										String savePath = GlobalValue
+												.getAppFolder()
+												+ Properties.MAIN_IMAGE_FOLDER
+												+ trafficInfoJSON
+														.getTrafficID()
+												+ ".jpg";
+										File image = new File(savePath);
+										if (!image.exists()) {
+											String imageLink = Properties.serviceIpOnline
+													+ trafficInfoJSON
+															.getImage();
+											if (HttpUtil.downloadImage(
+													imageLink, savePath)) {
+												Log.e("DB Image", savePath);
+											}
+
+										}
+									}
+								}
+							}
 							// create intent
 							Intent nextScreen = new Intent(
 									getApplicationContext(),
@@ -592,7 +649,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									}
 								});
 
-								//isTaken = false;								
+								// isTaken = false;
 								startActivity(nextScreen);
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
@@ -616,7 +673,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 								Toast.makeText(
 										getApplicationContext(),
 										"Không thể kết nổi tới máy chủ hoặc bị giới hạn gói dữ liệu. Kết quả sẽ được trả về sau",
-										Toast.LENGTH_SHORT).show();
+										Toast.LENGTH_LONG).show();
 							}
 						});
 						startActivity(nextScreen);
