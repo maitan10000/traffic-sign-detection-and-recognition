@@ -3,8 +3,8 @@ package com.trafficsign.ultils;
 public final class Properties {
 //	public static final String serviceIp = "http://bienbaogiaothong.tk/rest/Service/";
 //	public static final String serverAddress = "http://bienbaogiaothong.tk/";
-	public static final String serviceIp = "http://192.168.0.102:8080/TrafficService/";
-	public static final String serviceIp1 = "http://bienbaogiaothong.tk/TrafficService/";
+	public static final String serviceIpLocal = "http://192.168.0.102:8080/TrafficService/";
+	public static final String serviceIpOnline = "http://bienbaogiaothong.tk/TrafficService/";
 
 	public static boolean isTaken = false;
 	
@@ -18,10 +18,17 @@ public final class Properties {
 	public static final String SHARE_PREFERENCE_SETTING = "pref_setting";
 	public static final String SHARE_PREFERENCE_KEY_WIFI = "wifiSetting";
 	public static final String SHARE_PREFERENCE__KEY_NOTI = "notiSetting";
+	public static final String SHARE_PREFERENCE__KEY_SERVER = "serverSetting";
 	public static final String SHARE_PREFERENCE__KEY_USER = "userID";
 	public static final String SHARE_PREFERENCE__KEY_USER_SYNC = "isSync";
 	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_SYNC = "isSyncTraffic";
-	
+	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_ALARM = "isUpdate";
+	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_TIME = "timeUpdate";
+	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING = "trafficUpdateRunning";
+	// properties file constant
+	public static final String PROPERTIES_KEY_SERVER = "server";
+	public static final String PROPERTIES_VALUE_ONLINE = "online";
+	public static final String PROPERTIES_VALUE_OFFLINE = "offline";
 	//folder constant
 	public static final String APP_FOLDER = "TSRT/";
 	public static final String SAVE_IMAGE_FOLDER = "save image/";

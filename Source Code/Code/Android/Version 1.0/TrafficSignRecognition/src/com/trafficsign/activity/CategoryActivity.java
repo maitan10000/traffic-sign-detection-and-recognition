@@ -30,7 +30,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.view.View;
-import static com.trafficsign.ultils.Properties.serviceIp;
+import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 public class CategoryActivity extends Activity {
 

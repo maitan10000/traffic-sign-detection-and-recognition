@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Properties;
 
 import android.database.Cursor;
 import android.net.Uri;
@@ -58,6 +59,58 @@ public class Helper {
 				e.printStackTrace();
 			}
 			
+		}
+	}
+	// get properties file
+	public static String getProperty(String path, String key){
+		Properties prop = new Properties();
+		InputStream input = null;
+		String output = "";
+		try {
+			input = new FileInputStream(path);
+			prop.load(input);
+			output = prop.getProperty(key,"");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			if(input != null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return output;
+	}
+	// write properties
+	public static void writeProperty(String path, String key, String value){
+		Properties prop = new Properties();
+		OutputStream output = null;
+	 
+		try {	 
+			output = new FileOutputStream(path);
+			// set the properties value
+			prop.setProperty(key, value);	 
+			// save properties 
+			prop.store(output, null);
+	 
+		} catch (IOException io) {
+			io.printStackTrace();
+		} finally {
+			if (output != null) {
+				try {
+					output.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+	 
 		}
 	}
 

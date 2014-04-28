@@ -70,106 +70,114 @@ public class TracfficSignDetailActivity extends Activity {
 					Properties.SHARE_PREFERENCE_LOGIN, MODE_PRIVATE);
 			final String user = pref.getString(
 					Properties.SHARE_PREFERENCE__KEY_USER, "");
-			// check favorite status to display button image
-			if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.DEACTIVE || DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
+			if("".equals(user)){
+				btnFavorite.setVisibility(View.GONE);
+				btnFeedback.setVisibility(View.GONE);
+			}else {
+				// check favorite status to display button image
+				if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.DEACTIVE || DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
 
-				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
-			} else if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
-				btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
-			}
-			btnFavorite.setOnClickListener(new OnClickListener() {
+					btnFavorite.setBackgroundResource(R.drawable.btn_star_big_off);
+				} else if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
+					btnFavorite.setBackgroundResource(R.drawable.btn_star_big_on);
+				}
+				btnFavorite.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					// if traffic is not add or delete before excute add
-					// favorite
-					if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
-						TrafficInfoShortJSON infoShortJSON = new TrafficInfoShortJSON();
-						infoShortJSON.setImage(trafficInfo.getImage());
-						infoShortJSON.setName(trafficInfo.getName());
-						infoShortJSON.setTrafficID(trafficInfo.getTrafficID());
-						// set current dat
-						DateFormat dateFormat = new SimpleDateFormat(
-								"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-						Calendar cal = Calendar.getInstance();
-						infoShortJSON.setModifyDate(new Date(cal.getTime()
-								.getTime()));
-						// add favorite to db
-						DBUtil.addFavorite(infoShortJSON, user);
-						// add favorite to service if can access to server
-						ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
-						parameter.add(new BasicNameValuePair("creator", user));
-						parameter.add(new BasicNameValuePair("trafficID",
-								trafficInfo.getTrafficID()));
-						// change button image
-						btnFavorite
-								.setBackgroundResource(R.drawable.btn_star_big_on);
-						// url for add favorite
-						String url = GlobalValue.getServiceAddress()
-								+ Properties.MANAGE_FAVORITE_ADD;
-						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
-						httpAsyncUtil.setMethod("POST");
-						httpAsyncUtil.setParameters(parameter);
-						httpAsyncUtil.setUrl(url);
-						httpAsyncUtil.execute();
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						// if traffic is not add or delete before excute add
+						// favorite
+						if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.NOT_EXIST) {
+							TrafficInfoShortJSON infoShortJSON = new TrafficInfoShortJSON();
+							infoShortJSON.setImage(trafficInfo.getImage());
+							infoShortJSON.setName(trafficInfo.getName());
+							infoShortJSON.setTrafficID(trafficInfo.getTrafficID());
+							// set current dat
+							DateFormat dateFormat = new SimpleDateFormat(
+									"yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+							Calendar cal = Calendar.getInstance();
+							infoShortJSON.setModifyDate(new Date(cal.getTime()
+									.getTime()));
+							// add favorite to db
+							DBUtil.addFavorite(infoShortJSON, user);
+							// add favorite to service if can access to server
+							ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
+							parameter.add(new BasicNameValuePair("creator", user));
+							parameter.add(new BasicNameValuePair("trafficID",
+									trafficInfo.getTrafficID()));
+							// change button image
+							btnFavorite
+									.setBackgroundResource(R.drawable.btn_star_big_on);
+							// url for add favorite
+							String url = GlobalValue.getServiceAddress()
+									+ Properties.MANAGE_FAVORITE_ADD;
+							HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+							httpAsyncUtil.setMethod("POST");
+							httpAsyncUtil.setParameters(parameter);
+							httpAsyncUtil.setUrl(url);
+							httpAsyncUtil.execute();
 
-					} else
-					// if favorite is active, excute deactive
-					if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
-						// deactive in db
-						DBUtil.deActivateFavorite(trafficInfo.getTrafficID());
-						// change button image
-						btnFavorite
-								.setBackgroundResource(R.drawable.btn_star_big_off);
-						// url for delete favorite
-						String url = GlobalValue.getServiceAddress()
-								+ Properties.MANAGE_FAVORITE_DELETE
-								+ "?creator=" + user + "&trafficID=";
-						url += trafficInfo.getTrafficID();
-						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
-						httpAsyncUtil.setUrl(url);
-						httpAsyncUtil.execute();
-					} else
-					// favorite is deActive, excute active
-					{
-						// active in db
-						DBUtil.activateFavorite(trafficInfo.getTrafficID());
-						// change button image
-						btnFavorite
-								.setBackgroundResource(R.drawable.btn_star_big_on);
-						// add favorite to service if can access to server
-						ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
-						parameter.add(new BasicNameValuePair("creator", user));
-						parameter.add(new BasicNameValuePair("trafficID",
-								trafficInfo.getTrafficID()));
-						// change button image
-						btnFavorite
-								.setBackgroundResource(R.drawable.btn_star_big_on);
-						// url for add favorite
-						String url = GlobalValue.getServiceAddress()
-								+ Properties.MANAGE_FAVORITE_ADD;
-						HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
-						httpAsyncUtil.setMethod("POST");
-						httpAsyncUtil.setParameters(parameter);
-						httpAsyncUtil.setUrl(url);
-						httpAsyncUtil.execute();
+						} else
+						// if favorite is active, excute deactive
+						if (DBUtil.checkFavoriteStatus(trafficInfo.getTrafficID()) == DBUtil.ACTIVE) {
+							// deactive in db
+							DBUtil.deActivateFavorite(trafficInfo.getTrafficID());
+							// change button image
+							btnFavorite
+									.setBackgroundResource(R.drawable.btn_star_big_off);
+							// url for delete favorite
+							String url = GlobalValue.getServiceAddress()
+									+ Properties.MANAGE_FAVORITE_DELETE
+									+ "?creator=" + user + "&trafficID=";
+							url += trafficInfo.getTrafficID();
+							HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+							httpAsyncUtil.setUrl(url);
+							httpAsyncUtil.execute();
+						} else
+						// favorite is deActive, excute active
+						{
+							// active in db
+							DBUtil.activateFavorite(trafficInfo.getTrafficID());
+							// change button image
+							btnFavorite
+									.setBackgroundResource(R.drawable.btn_star_big_on);
+							// add favorite to service if can access to server
+							ArrayList<NameValuePair> parameter = new ArrayList<NameValuePair>();
+							parameter.add(new BasicNameValuePair("creator", user));
+							parameter.add(new BasicNameValuePair("trafficID",
+									trafficInfo.getTrafficID()));
+							// change button image
+							btnFavorite
+									.setBackgroundResource(R.drawable.btn_star_big_on);
+							// url for add favorite
+							String url = GlobalValue.getServiceAddress()
+									+ Properties.MANAGE_FAVORITE_ADD;
+							HttpAsyncUtil httpAsyncUtil = new HttpAsyncUtil();
+							httpAsyncUtil.setMethod("POST");
+							httpAsyncUtil.setParameters(parameter);
+							httpAsyncUtil.setUrl(url);
+							httpAsyncUtil.execute();
+						}
 					}
-				}
-			});
-			btnFeedback.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					Intent nextScreen = new Intent(getApplicationContext(), ReportActivity.class);
-					nextScreen.putExtra("feedbackType", "2");
-					nextScreen.putExtra("referenceID", trafficInfo.getTrafficID());
-					startActivity(nextScreen);
+				});
+				btnFeedback.setOnClickListener(new OnClickListener() {
 					
-				}
-			});
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Intent nextScreen = new Intent(getApplicationContext(), ReportActivity.class);
+						nextScreen.putExtra("feedbackType", "2");
+						nextScreen.putExtra("referenceID", trafficInfo.getTrafficID());
+						btnFeedback.setVisibility(View.INVISIBLE);
+						startActivity(nextScreen);
+						
+					}
+				});
 
+				
+			}
+			
 			// ImageView image = (ImageView) findViewById(R.id.trafficImage);
 			TextView name = (TextView) findViewById(R.id.trafficName);
 			TextView info = (TextView) findViewById(R.id.trafficContent);
