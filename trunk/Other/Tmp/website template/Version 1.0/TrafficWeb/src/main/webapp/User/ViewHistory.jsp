@@ -329,21 +329,30 @@ legend {
 							function sendReport(trafficID){
 								var type = '1';
 								var content = document.getElementById("txtContent").value;
-								var action = "reportTraffic";
-								$.ajax({
-									url : '<%=Constants.CONTROLLER_USER%>',
-									type : "GET",
-									data : {
-										action : action,
-										trafficID : trafficID,
-										type : type,
-										content : content
-									},
-									success : function(result) {
-										$('#reportModal').modal('hide');
-									}
+								var contentLength = content.length;
+								if(contentLength < 50){
+									alert("Nội dung phẩn hồi phải có ít nhất 50 kí tự");
+								} else if(contentLength > 4000){
+									alert("Nội dung phản hồi chỉ được phép tối đa 4000 kí tự");
+								}else {
+									var action = "reportTraffic";
+									$.ajax({
+										url : '<%=Constants.CONTROLLER_USER%>',
+										type : "GET",
+										data : {
+											action : action,
+											trafficID : trafficID,
+											type : type,
+											content : content
+										},
+										success : function(result) {
+											$('#reportModal').modal('hide');
+											$("#btn-wrong-recognize").remove();
+										}
 
-								});
+									});
+								}
+							
 							};
 
 							$(document).ready(function() {								

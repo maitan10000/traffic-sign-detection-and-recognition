@@ -33,6 +33,8 @@
 <%
 	ArrayList<Category> listCat = (ArrayList<Category>) request.getAttribute("category");
 ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) request.getAttribute("listTraffic");
+String catID = (String) request.getAttribute("selectedCat");
+String searchKey = (String) request.getAttribute("searchKey");
 %>
 <body on>
 	<div class="wrapper">
@@ -121,14 +123,18 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 				<div class="main-content content-cat notHomepage">
 					<div class="content-title">TRA CỨU BIỂN BÁO</div>
 					<form action="UserController"
-						enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
+						enctype="application/x-www-form-urlencoded" accept-charset="UTF-8" id="formSearchManual">
 						<div class="options">
 
 							<div class="fillOption" style="margin-left: 80px">
 								<div class="searchName" style="margin-right: 30px;">
 
-									Tên biển báo: <input id="searchKey" class="searchKey" name="searchKey" type="text" />
-									<div class="autoSearch">
+									Tên biển báo: <%if(searchKey != null){ %>
+									<input id="searchKey" class="searchKey" name="searchKey" type="text" value="<%=searchKey%>" />
+									<%} else { %>
+									<input id="searchKey" class="searchKey" name="searchKey" type="text" />
+									<%} %>
+									<div class="autoSearch" id="autoSearch">
 									<!--	<div class="autoResult">
 											<img class="imgAuto"
 												src="http://bienbaogiaothong.tk/TrafficService/rest/Image/Main/102.jpg">
@@ -143,17 +149,22 @@ ArrayList<TrafficInfoShortJSON> listTraffic = (ArrayList<TrafficInfoShortJSON>) 
 										<option class="font-Style" value="0">Tất Cả</option>
 										<%
 											for(int i = 0; i< listCat.size();i ++) {
+												if(catID != null && listCat.get(i).getCategoryID().equals(catID)){
 										%>
+										
 										<option class="font-Style"
+											value="<%=listCat.get(i).getCategoryID()%>" selected="selected"><%=listCat.get(i).getCategoryName()%></option>
+											<%} else { %>
+											<option class="font-Style"
 											value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
 										<%
-											}
+											}}
 										%>
 									</select>
 								</div>
 								<div class="searchName" style="padding-bottom: 5px">
 									<button type="submit" class="btn btn-default btn-sm"
-										value="searchManual" name="action">Tìm kiếm</button>
+										value="searchManual" name="action" id="btnAction">Tìm kiếm</button>
 								</div>
 								<div style="clear: both"></div>
 							</div>
@@ -395,6 +406,7 @@ $( ".searchKey" ).keyup(function() {
 	  var keyWord = document.getElementById("searchKey").value;
 	  autoComplete(keyWord, catID);
 	});
+
 	// function auto searchManual
 		function autoComplete(keyword, catID){		
 		$.ajax({
@@ -428,6 +440,7 @@ $( ".searchKey" ).keyup(function() {
 		var input = document.getElementById("searchKey");
 		input.value = key;
 		$(".autoSearch").empty();
+		document.getElementById("btnAction").click();
 	}
 	//ajax to get traffic detail when click link
 	function showDetails(trafficID) {
@@ -534,6 +547,12 @@ $( ".searchKey" ).keyup(function() {
 	function sendReport(trafficID) {
 		var type = '2';
 		var content = document.getElementById("txtContent").value;
+		var contentLength = content.length;
+		if(contentLength < 50){
+			alert("Nội dung phẩn hồi phải có ít nhất 50 kí tự");
+		} else if(contentLength > 4000){
+			alert("Nội dung phản hồi chỉ được phép tối đa 4000 kí tự");
+		}else {
 		var action = "reportTraffic";
 		$.ajax({
 			url : "/TrafficWeb/UserController",
@@ -549,7 +568,7 @@ $( ".searchKey" ).keyup(function() {
 			}
 
 		});
-
+		}
 	}
 	// function show popup for send report
 	function showFromReport(trafficID) {
