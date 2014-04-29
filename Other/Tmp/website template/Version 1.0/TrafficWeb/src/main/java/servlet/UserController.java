@@ -134,6 +134,8 @@ public class UserController extends HttpServlet {
 					}.getType();
 					listTraffic = gson.fromJson(searchString, typeSearch);
 					request.setAttribute("listTraffic", listTraffic);
+					request.setAttribute("selectedCat", catID);
+					request.setAttribute("searchKey", searchKey);
 				}
 				// request to searchManual.jsp
 
