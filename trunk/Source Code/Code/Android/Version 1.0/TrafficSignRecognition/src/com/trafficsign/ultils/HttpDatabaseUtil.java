@@ -20,7 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
+
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.json.CategoryJSON;
 import com.trafficsign.json.TrafficInfoJSON;
@@ -38,6 +38,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 	private Context context;
 	private ProgressDialog dialog;
 	private int networkFlag;
+	private boolean isSyncComplete = true;
 
 	public HttpDatabaseUtil(Context context) {
 		this.context = context;
@@ -49,7 +50,6 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 		if (NetUtil.networkState(context) > networkFlag) {
 			try {
 				// TODO Auto-generated method stub
-				Gson gson = new Gson();
 				// URL for service
 				String urlCategory = Properties.serviceIpOnline
 						+ Properties.TRAFFIC_LIST_CATEGORY;
@@ -64,7 +64,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 				ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
 				Type typeListCategory = new TypeToken<ArrayList<CategoryJSON>>() {
 				}.getType();
-				listCategory = gson.fromJson(catResponse, typeListCategory);
+				listCategory = Helper.fromJson(catResponse, typeListCategory);
 				// add category to DB
 				if (listCategory != null && listCategory.size() > 0) {
 					Long dbReturn;
@@ -89,7 +89,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 				ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
 				Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 				}.getType();
-				listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+				listInfoShortJSONs = Helper.fromJson(listTrafficJSON,
 						typeListTrafficShort);
 				// get each traffic details and add to DB
 				if (listInfoShortJSONs != null && listInfoShortJSONs.size() > 0) {
@@ -111,7 +111,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 							String trafficJSON = HttpUtil
 									.get(urlGetTrafficDetailFull);
 							TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-							trafficInfoJSON = gson.fromJson(trafficJSON,
+							trafficInfoJSON = Helper.fromJson(trafficJSON,
 									TrafficInfoJSON.class);
 							// add traffic to DB
 							if (DBUtil.checkTraffic(trafficInfoJSON
@@ -150,6 +150,8 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 						Toast.LENGTH_LONG).show();
 			}
 
+		} else {
+			isSyncComplete = false;
 		}
 		return null;
 	}
@@ -180,12 +182,15 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 		if (dialog != null) {
 			dialog.dismiss();
 		}
-		// set flag into share preference
-		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				Properties.SHARE_PREFERENCE_SETTING, 0);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "sync");
-		editor.commit();
+		if(isSyncComplete == true){
+			// set flag into share preference
+			SharedPreferences sharedPreferences = context.getSharedPreferences(
+					Properties.SHARE_PREFERENCE_SETTING, 0);
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putString(Properties.SHARE_PREFERENCE__KEY_TRAFFIC_SYNC, "sync");
+			editor.commit();
+		}
+		
 	}
 
 }

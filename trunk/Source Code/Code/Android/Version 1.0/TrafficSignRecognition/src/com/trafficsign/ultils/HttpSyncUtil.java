@@ -23,8 +23,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.json.CategoryJSON;
 import com.trafficsign.json.ResultDB;
@@ -63,8 +63,6 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		// TODO Auto-generated method stub
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
 		/* Sync favorite */
 		// URL for service
 		String urlListFavorite = GlobalValue.getServiceAddress()
@@ -75,7 +73,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 		}.getType();
 		try {
-			listFavorite = gson.fromJson(favoriteResponse, typeListFavorite);
+			listFavorite = Helper.fromJson(favoriteResponse, typeListFavorite);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -96,7 +94,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
 		Type typeListHistory = new TypeToken<ArrayList<ResultShortJSON>>() {
 		}.getType();
-		listHistory = gson.fromJson(listHistoryResponse, typeListHistory);
+		listHistory = Helper.fromJson(listHistoryResponse, typeListHistory);
 		// if listHistory is not empty
 		if (listHistory != null && listHistory.size() > 0) {
 			DBUtil.deleteAllResult(); // delete previous user's result
@@ -108,7 +106,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 				String historyDetail = HttpUtil.get(urlViewHistory);
 				Type typeResultJson = new TypeToken<ResultJSON>() {
 				}.getType();
-				resultJSON = gson.fromJson(historyDetail, typeResultJson);
+				resultJSON = Helper.fromJson(historyDetail, typeResultJson);
 				// download uploaded image if image is not exist
 				String imagePath = GlobalValue.getAppFolder()
 						+ Properties.SAVE_IMAGE_FOLDER
@@ -123,7 +121,7 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 				ResultDB resultDB = new ResultDB();
 				resultDB.setCreateDate(resultJSON.getCreateDate());
 				resultDB.setCreator(resultJSON.getCreator());
-				resultDB.setLocate(gson.toJson(resultJSON.getListTraffic()));
+				resultDB.setLocate(Helper.toJson(resultJSON.getListTraffic()));
 				resultDB.setResultID(resultJSON.getResultID());
 				resultDB.setUploadedImage(imagePath);
 				DBUtil.addResult(resultDB, user);

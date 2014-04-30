@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
+
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;

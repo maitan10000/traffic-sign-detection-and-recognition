@@ -15,7 +15,7 @@ import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.core.Mat;
 
-import com.google.gson.Gson;
+
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.ResultInput;
