@@ -3,6 +3,7 @@ package com.trafficsign.activity;
 import static com.trafficsign.ultils.Properties.isTaken;
 import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,16 +20,17 @@ import org.opencv.core.Rect;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.trafficsign.json.LocateJSON;
 import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultInput;
 import com.trafficsign.json.ResultJSON;
+import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.Helper;
+import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.ultils.UploadUtils;
@@ -182,21 +184,69 @@ public class ImageReviewActivity extends Activity {
 								Toast.LENGTH_LONG).show();
 
 					} else {
-						Gson gson = new GsonBuilder().setDateFormat(
-								DateFormat.FULL, DateFormat.FULL).create();
 						ResultJSON resultJson = new ResultJSON();
-						resultJson = gson
+						resultJson = Helper
 								.fromJson(jsonString, ResultJSON.class);
 						// ResultInput resultTmp = resultInput.get(0);
 						// save result to db in mobile
 						ResultDB resultDB = new ResultDB();
 						resultDB.setCreateDate(resultJson.getCreateDate());
 						resultDB.setCreator(resultJson.getCreator());
-						resultDB.setLocate(gson.toJson(resultJson
+						resultDB.setLocate(Helper.toJson(resultJson
 								.getListTraffic()));
 						resultDB.setResultID(resultJson.getResultID());
 						resultDB.setUploadedImage(fileName);
 						 DBUtil.addResult(resultDB, user);
+						// check if there are traffic sign in result do not
+							// have in DB
+							ArrayList<ResultInput> listResult = resultJson
+									.getListTraffic();
+							if (listResult != null && listResult.size() > 0) {
+								for (int i = 0; i < listResult.size(); i++) {
+									final String urlGetTrafficDetail = Properties.serviceIpOnline
+											+ Properties.TRAFFIC_TRAFFIC_VIEW
+											+ "?id=";
+									if (listResult.get(i).getTrafficID() != null
+											&& DBUtil.checkTraffic(listResult
+													.get(i).getTrafficID()) == false) {
+										String urlGetTrafficDetailFull = urlGetTrafficDetail
+												+ listResult.get(i)
+														.getTrafficID();
+										// get traffic detail from service and
+										// parse json
+										// TrafficInfoJson
+										String trafficJSON = HttpUtil
+												.get(urlGetTrafficDetailFull);
+										TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
+										trafficInfoJSON = Helper.fromJson(
+												trafficJSON,
+												TrafficInfoJSON.class);
+										// add traffic to DB
+										if (DBUtil.checkTraffic(trafficInfoJSON
+												.getTrafficID()) == false) {
+											DBUtil.insertTraffic(trafficInfoJSON);
+
+										}
+										String savePath = GlobalValue
+												.getAppFolder()
+												+ Properties.MAIN_IMAGE_FOLDER
+												+ trafficInfoJSON
+														.getTrafficID()
+												+ ".jpg";
+										File image = new File(savePath);
+										if (!image.exists()) {
+											String imageLink = Properties.serviceIpOnline
+													+ trafficInfoJSON
+															.getImage();
+											if (HttpUtil.downloadImage(
+													imageLink, savePath)) {
+												Log.e("DB Image", savePath);
+											}
+
+										}
+									}
+								}
+							}
 						// create intent
 						Intent nextScreen = new Intent(getApplicationContext(),
 								ListResultActivity.class);

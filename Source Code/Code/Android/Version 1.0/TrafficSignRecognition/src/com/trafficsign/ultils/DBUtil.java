@@ -19,7 +19,6 @@ import java.util.Locale;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.MainActivity;
 import com.trafficsign.activity.R;
@@ -420,7 +419,6 @@ public class DBUtil {
 		ResultJSON output = new ResultJSON();
 		// move cursor to first and check if cursor is null
 		if (cursor.moveToFirst()) {
-			Gson gson = new Gson();
 			Type type = new TypeToken<ArrayList<ResultInput>>() {
 			}.getType();
 			// get result from cursor to Object
@@ -437,7 +435,7 @@ public class DBUtil {
 					.getColumnIndexOrThrow("creator")));
 			String tempDateString = cursor.getString(cursor
 					.getColumnIndexOrThrow("createDate"));
-			ArrayList<ResultInput> listResultInput = gson.fromJson(jsonLocate,
+			ArrayList<ResultInput> listResultInput = Helper.fromJson(jsonLocate,
 					type);
 			output.setListTraffic(listResultInput);
 			Date tempDate = null;
@@ -829,7 +827,6 @@ public class DBUtil {
 
 	// run update traffic sign (must run in another thread)
 	public static void updateTrafficsign() {
-		Gson gson = new Gson();
 		String urlGetListTraffic = Properties.serviceIpOnline
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
 		String urlGetTrafficDetail = Properties.serviceIpOnline
@@ -838,7 +835,7 @@ public class DBUtil {
 		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
 		Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 		}.getType();
-		listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+		listInfoShortJSONs = Helper.fromJson(listTrafficJSON,
 				typeListTrafficShort);
 		// get each traffic details and add to DB
 		if (listInfoShortJSONs != null && listInfoShortJSONs.size() > 0) {
@@ -852,7 +849,7 @@ public class DBUtil {
 				// TrafficInfoJson
 				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
 				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-				trafficInfoJSON = gson.fromJson(trafficJSON,
+				trafficInfoJSON = Helper.fromJson(trafficJSON,
 						TrafficInfoJSON.class);
 				// add traffic to DB
 				if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {

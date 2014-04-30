@@ -5,7 +5,7 @@ import static com.trafficsign.ultils.Properties.serviceIpOnline;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
+
 import com.trafficsign.activity.R;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;

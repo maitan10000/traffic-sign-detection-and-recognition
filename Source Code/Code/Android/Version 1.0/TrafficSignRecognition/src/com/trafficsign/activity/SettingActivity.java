@@ -32,21 +32,15 @@ public class SettingActivity extends Activity {
 		//
 		Switch switchWifi = (Switch) findViewById(R.id.switchWifi);
 		Switch switchNotification = (Switch) findViewById(R.id.switchNotification);
-		Switch switchServer = (Switch) findViewById(R.id.switchServer);
 		final SharedPreferences prefSetting = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_SETTING, MODE_PRIVATE);
 		boolean wifiSetting = prefSetting.getBoolean(
 				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
 		boolean notiSetting = prefSetting.getBoolean(
 				Properties.SHARE_PREFERENCE__KEY_NOTI, true);
-		boolean onlineServer = true;
-		if (Properties.PROPERTIES_VALUE_OFFLINE.equals(typeServer)) {
-			onlineServer = false;
-		}
 		// set state for switch when start screen setting
 		switchWifi.setChecked(wifiSetting);
 		switchNotification.setChecked(notiSetting);
-		switchServer.setChecked(onlineServer);
 		// set event onchecked change for wifi switch
 		switchWifi.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -75,26 +69,48 @@ public class SettingActivity extends Activity {
 						edittor.commit();
 					}
 				});
-		// set event onchecked change for server switch
-		switchServer.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		/*-------------------------*/
+		// get search auto time
+		final Long autoTime = prefSetting.getLong(
+				Properties.SHARE_PREFERENCE__KEY_SEARCH_AUTO_TIME, 3);
+		// get spinner
+		final Spinner spinnerSearchAuto = (Spinner) findViewById(R.id.spinnerSearchAuto);
+		// set selected value for spinner
+		String selectedValue1 = autoTime + " giây";
+		ArrayAdapter<String> spinnerSearchAutoAdapter = (ArrayAdapter<String>) spinnerSearchAuto
+				.getAdapter();
+		int itemPosition1 = spinnerSearchAutoAdapter
+				.getPosition(selectedValue1);
+		spinnerSearchAuto.setSelection(itemPosition1);
+		// set event for spinnersearchauto
+		spinnerSearchAuto
+				.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				// TODO Auto-generated method stub
-				if (isChecked == false) {
-					Helper.writeProperty(GlobalValue.getAppFolder()
-							+ Properties.SETTING_FILE_PATH,
-							Properties.PROPERTIES_KEY_SERVER,
-							Properties.PROPERTIES_VALUE_OFFLINE);
-				} else {
-					Helper.writeProperty(GlobalValue.getAppFolder()
-							+ Properties.SETTING_FILE_PATH,
-							Properties.PROPERTIES_KEY_SERVER,
-							Properties.PROPERTIES_VALUE_ONLINE);
-				}
-			}
-		});
+					@Override
+					public void onItemSelected(AdapterView<?> parent,
+							View view, int position, long id) {
+						// TODO Auto-generated method stub
+						String selectedValue = String.valueOf(spinnerSearchAuto
+								.getSelectedItem());
+						String[] split = selectedValue.split(" ");
+						Long time = Long.parseLong(split[0]);
+						if (time != autoTime) {
+
+							Editor edittor = prefSetting.edit();
+							edittor.putLong(
+									Properties.SHARE_PREFERENCE__KEY_SEARCH_AUTO_TIME,
+									time);
+							edittor.commit();
+						}
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> parent) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+		/*-------------------------*/
 		// get update time
 		final Long saveTime = prefSetting.getLong(
 				Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_TIME, 30);
@@ -116,7 +132,7 @@ public class SettingActivity extends Activity {
 				String selectedValue = String.valueOf(spinner.getSelectedItem());
 				String[] split = selectedValue.split(" ");
 				Long time = Long.parseLong(split[0]);
-				if(time != saveTime){
+				if (time != saveTime) {
 
 					Editor edittor = prefSetting.edit();
 					edittor.putLong(
@@ -128,7 +144,6 @@ public class SettingActivity extends Activity {
 							"");
 					edittor.commit();
 				}
-
 
 			}
 

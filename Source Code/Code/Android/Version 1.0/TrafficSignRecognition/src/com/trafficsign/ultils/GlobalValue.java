@@ -35,13 +35,14 @@ public class GlobalValue {
 	}
 
 	public static String getServiceAddress() {
-		String type = "";
-		type = Helper.getProperty(getAppFolder() + Properties.SETTING_FILE_PATH, Properties.PROPERTIES_KEY_SERVER);
-		if(Properties.PROPERTIES_VALUE_ONLINE.equals(type)){
-			return serviceAddressOnline;
-		} else {
-			return serviceAddressLocal;
-		}
+		String address = Helper.getProperty(getAppFolder() + Properties.SETTING_FILE_PATH, Properties.PROPERTIES_KEY_SERVER);;
+		return address;
+//		type = Helper.getProperty(getAppFolder() + Properties.SETTING_FILE_PATH, Properties.PROPERTIES_KEY_SERVER);
+//		if(Properties.PROPERTIES_VALUE_ONLINE.equals(type)){
+//			return serviceAddressOnline;
+//		} else {
+//			return serviceAddressLocal;
+//		}
 		
 		
 	}

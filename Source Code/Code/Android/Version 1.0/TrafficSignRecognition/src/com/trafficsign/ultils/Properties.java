@@ -22,6 +22,7 @@ public final class Properties {
 	public static final String SHARE_PREFERENCE__KEY_USER = "userID";
 	public static final String SHARE_PREFERENCE__KEY_USER_SYNC = "isSync";
 	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_SYNC = "isSyncTraffic";
+	public static final String SHARE_PREFERENCE__KEY_SEARCH_AUTO_TIME = "searchAutoTime";
 	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_ALARM = "isUpdate";
 	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_TIME = "timeUpdate";
 	public static final String SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING = "trafficUpdateRunning";

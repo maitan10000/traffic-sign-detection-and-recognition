@@ -154,7 +154,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="Máy chủ"
+                    android:text="Chụp tự động"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/white" />
 
@@ -163,18 +163,20 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:gravity="left"
-                    android:text="Chạy máy chủ online"
+                    android:text="Thời gian chờ"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/white" />
             </LinearLayout>
 
-            <Switch
-                android:id="@+id/switchServer"
+            <Spinner
+                android:id="@+id/spinnerSearchAuto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="0dp"
                 android:layout_marginTop="5dp"
-                android:gravity="right" />
+                android:entries="@array/autoSearch_time"
+                android:gravity="right"
+                android:prompt="@string/autoSearch_promt" />
         </LinearLayout>
 
         <ImageView

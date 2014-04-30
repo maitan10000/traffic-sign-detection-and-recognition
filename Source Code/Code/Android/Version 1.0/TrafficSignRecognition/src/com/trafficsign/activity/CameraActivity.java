@@ -35,8 +35,6 @@ import org.opencv.objdetect.CascadeClassifier;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.core.*;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.LocateJSON;
@@ -47,6 +45,7 @@ import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
+import com.trafficsign.ultils.Helper;
 import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
@@ -108,6 +107,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private ImageButton btnTakeImage;
 	private ImageButton btnUpload;
 	private String user = "";
+	private Long timeAuto = (long) 3;
 
 	static {
 		if (!OpenCVLoader.initDebug())
@@ -140,21 +140,23 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		// get network setting
-		final SharedPreferences pref2 = getSharedPreferences(
-				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
-		boolean wifiStatus = pref2.getBoolean(
+		final SharedPreferences prefSetting = getSharedPreferences(
+				Properties.SHARE_PREFERENCE_SETTING, Context.MODE_PRIVATE);
+		boolean wifiStatus = prefSetting.getBoolean(
 				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
 		networkFlag = 1;
 		if (wifiStatus == false) {
 			networkFlag = 0;
 		}
 		// get user
-		final SharedPreferences pref = getSharedPreferences(
+		final SharedPreferences prefLogin = getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
-		user = pref.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
+		user = prefLogin.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_camera);
-
+		// get time auto
+		timeAuto = prefSetting.getLong(
+				Properties.SHARE_PREFERENCE__KEY_SEARCH_AUTO_TIME, 3);
 		//
 		mOpenCvCameraView = (CameraView) findViewById(R.id.cameraVIew);
 		mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -192,7 +194,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		try{
+		try {
 			if (resultCode == RESULT_OK) {
 				if (requestCode == 1) {
 					Uri selectedImageUri = data.getData();
@@ -206,11 +208,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 				}
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(),
-					"Có lỗi xảy ra, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+					"Có lỗi xảy ra, vui lòng thử lại sau", Toast.LENGTH_SHORT)
+					.show();
 		}
-		
+
 	}
 
 	@Override
@@ -397,7 +400,10 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			if (starTime != 0) {
 				runTime = SystemClock.uptimeMillis() - starTime;
 			}
-			autoCaptureCount += runTime;
+			if (isAuto == true) {
+				autoCaptureCount += runTime;
+			}
+
 			if (runBenchMark == true) {
 				float framePerSencond = ((float) 1000) / runTime;
 				Point point = new Point();
@@ -414,7 +420,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				autoCaptureCount = 0;
 			}
 
-			if (detectedCount > 0 && autoCaptureCount > 2500
+			if (detectedCount > 0 && autoCaptureCount > timeAuto * 1000
 					&& isTaken == false && isAuto == true) {
 				isTaken = true;
 				autoCaptureCount = 0;
@@ -527,9 +533,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						tempListResultInput.add(tempResultInput);
 					}
 					// JSON string listlocate
-					Gson gson = new GsonBuilder().setDateFormat(
-							DateFormat.FULL, DateFormat.FULL).create();
-					String listLocateJSON = gson.toJson(tempListResultInput);
+					String listLocateJSON = Helper.toJson(tempListResultInput);
 					// if access to server ok
 					if (NetUtil.networkState(CameraActivity.this) > networkFlag) {
 						parameters.add(new BasicNameValuePair("listLocate",
@@ -554,7 +558,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 							Log.i(TAG, "JsonString: " + jsonString);
 							ResultJSON resultJson = new ResultJSON();
-							resultJson = gson.fromJson(jsonString,
+							resultJson = Helper.fromJson(jsonString,
 									ResultJSON.class);
 							if (resultJson != null
 									&& resultJson.getListTraffic().size() == 0) {
@@ -575,7 +579,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 							ResultDB resultDB = new ResultDB();
 							resultDB.setCreateDate(resultJson.getCreateDate());
 							resultDB.setCreator(resultJson.getCreator());
-							resultDB.setLocate(gson.toJson(resultJson
+							resultDB.setLocate(Helper.toJson(resultJson
 									.getListTraffic()));
 							resultDB.setResultID(resultJson.getResultID());
 							resultDB.setUploadedImage(fileName);
@@ -601,7 +605,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										String trafficJSON = HttpUtil
 												.get(urlGetTrafficDetailFull);
 										TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-										trafficInfoJSON = gson.fromJson(
+										trafficInfoJSON = Helper.fromJson(
 												trafficJSON,
 												TrafficInfoJSON.class);
 										// add traffic to DB
@@ -676,6 +680,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										Toast.LENGTH_LONG).show();
 							}
 						});
+						finish();
 						startActivity(nextScreen);
 					}
 

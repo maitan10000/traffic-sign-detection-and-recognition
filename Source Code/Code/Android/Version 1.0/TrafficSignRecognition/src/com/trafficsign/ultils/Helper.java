@@ -7,12 +7,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.text.DateFormat;
 import java.util.Properties;
 
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.trafficsign.json.ResultShortJSON;
 
 public class Helper {
@@ -112,6 +116,17 @@ public class Helper {
 			}
 	 
 		}
+	}
+	public static <T>T fromJson(String jsonString, Type typeOfT) {
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
+		return gson.fromJson(jsonString, typeOfT);
+	}
+
+	public static String toJson(Object object) {
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
+				DateFormat.FULL).create();
+		return gson.toJson(object);
 	}
 
 }

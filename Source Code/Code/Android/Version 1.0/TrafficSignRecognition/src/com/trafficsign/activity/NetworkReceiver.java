@@ -12,7 +12,6 @@ import java.util.Locale;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.json.FavoriteJSON;
@@ -25,6 +24,7 @@ import com.trafficsign.json.TrafficInfoShortJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
+import com.trafficsign.ultils.Helper;
 import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
@@ -96,10 +96,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 										.get(i).getUploadedImage(),
 										upLoadServerUri, parameters);
 								ResultJSON resultJson = new ResultJSON();
-								Gson gson = new GsonBuilder().setDateFormat(
-										DateFormat.FULL, DateFormat.FULL)
-										.create();
-								resultJson = gson.fromJson(jsonString,
+								resultJson = Helper.fromJson(jsonString,
 										ResultJSON.class);
 								byte[] dataBytes = null;
 								try {
@@ -136,7 +133,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 											String trafficJSON = HttpUtil
 													.get(urlGetTrafficDetailFull);
 											TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-											trafficInfoJSON = gson.fromJson(
+											trafficInfoJSON = Helper.fromJson(
 													trafficJSON,
 													TrafficInfoJSON.class);
 											// add traffic to DB
@@ -221,8 +218,6 @@ public class NetworkReceiver extends BroadcastReceiver {
 						}
 						/* end auto search */
 						/* Sync process */
-						Gson gson = new GsonBuilder().setDateFormat(
-								DateFormat.FULL, DateFormat.FULL).create();
 						if ("".equals(userID) == false) {
 							// Sync favorite
 							ArrayList<FavoriteJSON> listFavorite = new ArrayList<FavoriteJSON>();
@@ -246,7 +241,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 														"trafficID",
 														listFavorite.get(i)
 																.getTrafficID()));
-										String dateTimeString = gson
+										String dateTimeString = Helper
 												.toJson(listFavorite.get(i)
 														.getModifyDate());
 
@@ -269,7 +264,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 												.get(i).getTrafficID();
 										urlDeleteFavorite += "&modifyDate=";
 										// parse datetime to json
-										String dateTimeString = gson
+										String dateTimeString = Helper
 												.toJson(listFavorite.get(i)
 														.getModifyDate());
 
@@ -296,7 +291,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 							ArrayList<TrafficInfoShortJSON> newListFavorite = new ArrayList<TrafficInfoShortJSON>();
 							Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 							}.getType();
-							newListFavorite = gson.fromJson(favoriteResponse,
+							newListFavorite = Helper.fromJson(favoriteResponse,
 									typeListFavorite);
 							// remove favorite list
 
@@ -341,7 +336,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 							}.getType();
 //							Gson gson = new GsonBuilder().setDateFormat(
 //									DateFormat.FULL, DateFormat.FULL).create();
-							ArrayList<ResultShortJSON> listResultShortJSON = gson
+							ArrayList<ResultShortJSON> listResultShortJSON = Helper
 									.fromJson(listResponse, typeListHistory);
 
 							for (int i = 0; i < listResultShortJSON.size(); i++) {
@@ -362,7 +357,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 											.get(i).getResultID();
 									String viewHistoryResponse = HttpUtil
 											.get(urlViewHistory);
-									ResultJSON historyDetail = gson.fromJson(
+									ResultJSON historyDetail = Helper.fromJson(
 											viewHistoryResponse,
 											ResultJSON.class);
 									if (historyDetail != null) {
@@ -392,7 +387,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 												.getCreateDate());
 										resultDB.setCreator(historyDetail
 												.getCreator());
-										resultDB.setLocate(gson
+										resultDB.setLocate(Helper
 												.toJson(historyDetail
 														.getListTraffic()));
 										resultDB.setResultID(historyDetail
@@ -432,7 +427,6 @@ public class NetworkReceiver extends BroadcastReceiver {
 
 	// update traffic sign from server
 	public static void updateTraffic() {
-		Gson gson = new Gson();
 		// URL for service
 		String urlGetListTraffic = Properties.serviceIpOnline
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
@@ -447,7 +441,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
 		Type typeListTrafficShort = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 		}.getType();
-		listInfoShortJSONs = gson.fromJson(listTrafficJSON,
+		listInfoShortJSONs = Helper.fromJson(listTrafficJSON,
 				typeListTrafficShort);
 		// get each traffic details and add to DB
 		if (listInfoShortJSONs.size() > 0) {
@@ -460,7 +454,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				// TrafficInfoJson
 				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
 				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-				trafficInfoJSON = gson.fromJson(trafficJSON,
+				trafficInfoJSON = Helper.fromJson(trafficJSON,
 						TrafficInfoJSON.class);
 				// add traffic to DB
 				dbReturn = DBUtil.updateTraffic(trafficInfoJSON);

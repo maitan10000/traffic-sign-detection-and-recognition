@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
@@ -34,7 +33,8 @@ import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 public class CategoryActivity extends Activity {
 
-	ArrayList<CategoryJSON> listCategory = null;
+	ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
+	ArrayList<CategoryJSON> tempListCategory = null;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -43,7 +43,7 @@ public class CategoryActivity extends Activity {
 		setContentView(R.layout.activity_category);
 		Intent intent = getIntent();
 		try {
-			listCategory = (ArrayList<CategoryJSON>) ConvertUtil
+			tempListCategory = (ArrayList<CategoryJSON>) ConvertUtil
 					.bytes2Object(intent.getByteArrayExtra("catList"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -51,6 +51,10 @@ public class CategoryActivity extends Activity {
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		for(int i = tempListCategory.size() - 1; i >= 0; i--){
+			listCategory.add(tempListCategory.get(i));
+			
 		}
 
 		final ListView lv = (ListView) findViewById(R.id.listFavorite);

@@ -11,8 +11,8 @@ import org.json.JSONException;
 
 import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
+
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
