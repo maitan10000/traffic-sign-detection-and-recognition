@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Nhận dạng biển báo</string>
+    <string name="action_settings">Cài đặt</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="category">Danh mục biển báo</string>
+    <string name="listtraffic">Danh sách biển báo</string>
+	<string name="login">Đăng nhập</string>
+	<string name="logout">Đăng xuất</string>
+	<string name="register">Đăng ký</string>
+	<string name="textAutoOn">Auto On</string>
+	<string name="textAutoOff">Auto Off</string>
+	<string name="feedback">Báo nhận diện sai</string>
+	<string name="update">Cập nhật biển báo</string>
+	
+	<string name="update_promt">Chọn khoảng thời gian</string>
+ 
+    <string-array name="update_time">
+        <item>15 ngày</item>
+        <item>30 ngày</item>
+        <item>60 ngày</item>
+        <item>90 ngày</item>
+    </string-array>
+    <string name="autoSearch_promt">Chọn khoảng thời gian</string>
+ 
+    <string-array name="autoSearch_time">
+        <item>1 giây</item>
+        <item>2 giây</item>
+        <item>3 giây</item>
+        <item>4 giây</item>
+        <item>5 giây</item>
+    </string-array>
+</resources>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="320dp"
+    android:layout_height="30dp"
+    android:background="@drawable/list_selector" >
+
+    <TextView
+        android:id="@+id/resultID"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_below="@id/trafficName"
+        android:layout_marginTop="1dip"
+        android:text="noi dung"
+        android:textColor="#343434"
+        android:textSize="12sp" 
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:text="STT"
+        android:textColor="#040404"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:typeface="sans" />
+
+    <TextView
+        android:id="@+id/resultDate"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="44dp"
+        android:layout_marginTop="20dp"
+        android:layout_toRightOf="@+id/txtPosition"
+        android:text="bien bao 1"
+        android:textColor="#040404"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:typeface="sans" />
+
+</RelativeLayout>
