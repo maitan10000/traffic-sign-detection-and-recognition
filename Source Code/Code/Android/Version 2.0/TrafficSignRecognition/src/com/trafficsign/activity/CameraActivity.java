@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,7 +87,6 @@ import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import static com.trafficsign.ultils.Properties.*;
 
 public class CameraActivity extends Activity implements CvCameraViewListener2,
@@ -96,7 +96,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private boolean isAuto = false;
 	private boolean flag = false;
 	private String jsonString = "";
-	private static final String TAG = "OpenCVDemo::Activity";
+	private static final String TAG = "TSRT::Activity";
 	private CameraView mOpenCvCameraView;
 	private List<Size> mResolutionList;
 	private MenuItem[] mResolutionMenuItems;
@@ -295,7 +295,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	ArrayList<Rect> listLocate;
 	long starTime = 0;
 	long autoCaptureCount = 0;
-	boolean runBenchMark = true;
 	int detectedCount = 0;
 
 	@Override
@@ -404,12 +403,13 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				autoCaptureCount += runTime;
 			}
 
-			if (runBenchMark == true) {
+			if (GlobalValue.isShowFPS() == true) {
 				float framePerSencond = ((float) 1000) / runTime;
+				DecimalFormat df = new DecimalFormat("#.00");
 				Point point = new Point();
 				point.x = 30;
 				point.y = 30;
-				Core.putText(frame, framePerSencond + "fps", point, 1, 2,
+				Core.putText(frame, df.format(framePerSencond) + "fps", point, 1, 2,
 						new Scalar(204, 51, 204), 2);
 			}
 			starTime = SystemClock.uptimeMillis();

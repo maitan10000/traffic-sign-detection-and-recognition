@@ -279,7 +279,7 @@ public class MainActivity extends Activity {
 									}
 								});
 
-								DBUtil.updateTrafficsign();
+								DBUtil.updateTrafficsign(getApplicationContext());
 							} else {
 								runOnUiThread(new Runnable() {
 									public void run() {
