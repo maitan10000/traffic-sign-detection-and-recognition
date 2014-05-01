@@ -118,15 +118,15 @@ public class Helper {
 		}
 	}
 	public static <T>T fromJson(String jsonString, Type typeOfT) {
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
+		jsonString = jsonString.replace("ICT", "GMT+07:00");
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
 		return gson.fromJson(jsonString, typeOfT);
 	}
 
 	public static String toJson(Object object) {
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
-		return gson.toJson(object);
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
+		String jsonString = gson.toJson(object);		
+		return jsonString.replace("GMT+07:00","ICT");
 	}
 
 }

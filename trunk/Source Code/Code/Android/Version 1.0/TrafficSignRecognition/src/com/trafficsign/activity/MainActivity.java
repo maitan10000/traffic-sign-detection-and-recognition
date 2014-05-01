@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 
 

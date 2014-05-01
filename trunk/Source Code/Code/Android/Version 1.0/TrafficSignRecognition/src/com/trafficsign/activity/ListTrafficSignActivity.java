@@ -29,7 +29,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.util.Log;
 import android.view.View;
-import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 public class ListTrafficSignActivity extends Activity {
 

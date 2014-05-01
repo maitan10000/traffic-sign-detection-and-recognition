@@ -590,7 +590,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									.getListTraffic();
 							if (listResult != null && listResult.size() > 0) {
 								for (int i = 0; i < listResult.size(); i++) {
-									final String urlGetTrafficDetail = Properties.serviceIpOnline
+									final String urlGetTrafficDetail = GlobalValue.getServiceAddress()
 											+ Properties.TRAFFIC_TRAFFIC_VIEW
 											+ "?id=";
 									if (listResult.get(i).getTrafficID() != null
@@ -622,7 +622,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 												+ ".jpg";
 										File image = new File(savePath);
 										if (!image.exists()) {
-											String imageLink = Properties.serviceIpOnline
+											String imageLink = GlobalValue.getServiceAddress()
 													+ trafficInfoJSON
 															.getImage();
 											if (HttpUtil.downloadImage(

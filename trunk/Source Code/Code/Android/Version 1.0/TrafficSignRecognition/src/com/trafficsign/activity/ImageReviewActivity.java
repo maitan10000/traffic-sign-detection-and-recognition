@@ -1,7 +1,6 @@
 package com.trafficsign.activity;
 
 import static com.trafficsign.ultils.Properties.isTaken;
-import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 import java.io.File;
 import java.io.IOException;
@@ -203,7 +202,7 @@ public class ImageReviewActivity extends Activity {
 									.getListTraffic();
 							if (listResult != null && listResult.size() > 0) {
 								for (int i = 0; i < listResult.size(); i++) {
-									final String urlGetTrafficDetail = Properties.serviceIpOnline
+									final String urlGetTrafficDetail = GlobalValue.getServiceAddress()
 											+ Properties.TRAFFIC_TRAFFIC_VIEW
 											+ "?id=";
 									if (listResult.get(i).getTrafficID() != null
@@ -235,7 +234,7 @@ public class ImageReviewActivity extends Activity {
 												+ ".jpg";
 										File image = new File(savePath);
 										if (!image.exists()) {
-											String imageLink = Properties.serviceIpOnline
+											String imageLink = GlobalValue.getServiceAddress()
 													+ trafficInfoJSON
 															.getImage();
 											if (HttpUtil.downloadImage(

@@ -51,7 +51,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 public class ListResultActivity extends Activity {
 

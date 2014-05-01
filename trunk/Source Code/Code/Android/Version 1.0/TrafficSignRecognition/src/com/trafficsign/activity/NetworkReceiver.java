@@ -118,7 +118,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 										.getListTraffic();
 								if (listTraffic != null && listTraffic.size() > 0) {
 									for (int j = 0; j < listTraffic.size(); j++) {
-										final String urlGetTrafficDetail = Properties.serviceIpOnline
+										final String urlGetTrafficDetail = GlobalValue.getServiceAddress()
 												+ Properties.TRAFFIC_TRAFFIC_VIEW
 												+ "?id=";
 										if (listTraffic.get(j).getTrafficID() != null
@@ -150,7 +150,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 													+ ".jpg";
 											File image = new File(savePath);
 											if (!image.exists()) {
-												String imageLink = Properties.serviceIpOnline
+												String imageLink = GlobalValue.getServiceAddress()
 														+ trafficInfoJSON
 																.getImage();
 												if (HttpUtil.downloadImage(
@@ -428,9 +428,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 	// update traffic sign from server
 	public static void updateTraffic() {
 		// URL for service
-		String urlGetListTraffic = Properties.serviceIpOnline
+		String urlGetListTraffic = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-		String urlGetTrafficDetail = Properties.serviceIpOnline
+		String urlGetTrafficDetail = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 		/*
 		 * get all traffic (short) from service and parse json to list
@@ -464,7 +464,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 						+ trafficInfoJSON.getTrafficID() + ".jpg";
 				File image = new File(savePath);
 				if (!image.exists()) {
-					String imageLink = Properties.serviceIpOnline
+					String imageLink = GlobalValue.getServiceAddress()
 							+ trafficInfoJSON.getImage();
 					HttpUtil.downloadImage(imageLink, savePath);
 				}
