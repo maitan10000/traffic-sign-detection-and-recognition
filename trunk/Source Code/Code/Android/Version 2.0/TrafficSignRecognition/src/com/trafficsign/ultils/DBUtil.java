@@ -840,7 +840,7 @@ public class DBUtil {
 		if (context != null) {
 			 mBuilder = new NotificationCompat.Builder(
 					context).setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle("Cập nhập biển báo")
+					.setContentTitle("Cập nhật biển báo")
 					.setContentText("Đang tải...");
 			mBuilder.setAutoCancel(true);
 			 mNotifyMgr = (NotificationManager) context
@@ -905,7 +905,7 @@ public class DBUtil {
 				Log.e("Number", String.valueOf(i + 1));
 			}//end for
 			if(mBuilder != null){	
-				mBuilder.setProgress(100, 100, false);
+				mBuilder.setProgress(0, 0, false);
 				mBuilder.setContentText("Hoàn thành");
 				mNotifyMgr.notify(mNotificationId, mBuilder.build());
 			}

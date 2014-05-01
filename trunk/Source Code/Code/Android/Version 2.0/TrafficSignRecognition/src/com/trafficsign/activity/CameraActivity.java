@@ -48,6 +48,7 @@ import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.Helper;
 import com.trafficsign.ultils.HttpUtil;
+import com.trafficsign.ultils.MyInterface.IUploadProgressListener;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.ultils.UploadUtils;
@@ -84,6 +85,7 @@ import android.view.View.OnTouchListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -91,7 +93,7 @@ import static com.trafficsign.ultils.Properties.*;
 
 public class CameraActivity extends Activity implements CvCameraViewListener2,
 		OnTouchListener {
-	ProgressDialog dialog;
+	ProgressDialog progressDialog;
 	private int networkFlag;
 	private boolean isAuto = false;
 	private boolean flag = false;
@@ -106,6 +108,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 	private int blinkCount = 0;
 	private ImageButton btnTakeImage;
 	private ImageButton btnUpload;
+	private ProgressBar progressBar;
 	private String user = "";
 	private Long timeAuto = (long) 3;
 
@@ -182,11 +185,14 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			@Override
 			public void onClick(View view) {
 				isTaken = true;
+				Toast.makeText(getApplicationContext(), "Chụp bằng tay!",
+						Toast.LENGTH_SHORT).show();
 				captureAndUploadImage(listLocate);
 
 			}
 		});
 
+		progressBar = (ProgressBar) findViewById(R.id.progressBarCamera);
 	}
 
 	// on event get selected image ok
@@ -399,25 +405,44 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			if (starTime != 0) {
 				runTime = SystemClock.uptimeMillis() - starTime;
 			}
-			if (isAuto == true) {
-				autoCaptureCount += runTime;
-			}
 
-			if (GlobalValue.isShowFPS() == true) {
+			if (GlobalValue.isShowFPS() == true && isTaken == false) {
 				float framePerSencond = ((float) 1000) / runTime;
 				DecimalFormat df = new DecimalFormat("#.00");
 				Point point = new Point();
 				point.x = 30;
 				point.y = 30;
-				Core.putText(frame, df.format(framePerSencond) + "fps", point, 1, 2,
-						new Scalar(204, 51, 204), 2);
+				Core.putText(frame, df.format(framePerSencond) + "fps", point,
+						1, 2, new Scalar(204, 51, 204), 2);
 			}
 			starTime = SystemClock.uptimeMillis();
 
 			// Auto take picture and submit
+			if (isAuto == true && detectedCount > 0) {
+				autoCaptureCount += runTime;
+				runOnUiThread(new Runnable() {
+					public void run() {
+						progressBar.setVisibility(View.VISIBLE);
+					}
+				});
+			} else {
+				autoCaptureCount = 0;
+				runOnUiThread(new Runnable() {
+					public void run() {
+						progressBar.setVisibility(View.GONE);
+					}
+				});
+			}
+
 			if (detectedCount != listLocate.size()) {
 				detectedCount = listLocate.size();
 				autoCaptureCount = 0;
+			}
+
+			// show progress bar when auto capture ON
+			if (isTaken == false) {
+				int percent = (int) (autoCaptureCount * 100 / (timeAuto * 1000));
+				progressBar.setProgress(percent);
 			}
 
 			if (detectedCount > 0 && autoCaptureCount > timeAuto * 1000
@@ -427,7 +452,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				runOnUiThread(new Runnable() {
 					public void run() {
 						Toast.makeText(getApplicationContext(),
-								"Auto capture!", Toast.LENGTH_SHORT).show();
+								"Chụp tự động!", Toast.LENGTH_SHORT).show();
 					}
 				});
 				captureAndUploadImage(listLocate);
@@ -447,10 +472,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 
 		org.opencv.core.Size maxSize = new org.opencv.core.Size();
 		maxSize.height = frameInput.width() / 4;
-		maxSize.width = maxSize.height;
-		// Mat frame_gray = frame.clone();
-		// Imgproc.cvtColor(frame, frame_gray, 6);
-		// Imgproc.equalizeHist(frame_gray, frame_gray);
+		maxSize.width = maxSize.height;	
 		try {
 			detector.detectMultiScale(frameInput, results, 1.1, 1, 0 | 2,
 					minSize, maxSize);
@@ -473,17 +495,12 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 			Highgui.imwrite(fileName, saveFrame);
 		}
 
-		if (isAuto == false) {
-			Toast.makeText(getApplicationContext(), fileName + " saved",
-					Toast.LENGTH_SHORT).show();
-		}
-
 		runOnUiThread(new Runnable() {
 			public void run() {
 				// Create dialog
-				dialog = new ProgressDialog(CameraActivity.this);
-				dialog.setMessage("Vui lòng đợi trong giây lát");
-				dialog.setCancelable(false);
+				progressDialog = new ProgressDialog(CameraActivity.this);
+				progressDialog.setMessage("Vui lòng đợi trong giây lát");
+				progressDialog.setCancelable(false);
 			}
 		});
 		// upload file ****************************
@@ -496,27 +513,13 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 				try {
 					runOnUiThread(new Runnable() {
 						public void run() {
-							if (dialog != null) {
-								dialog.show();
+							if (progressDialog != null) {
+								progressDialog.show();
 							}
 						}
 					});
 
-					Thread.sleep(2000);
-
-					// Resize
-					/*
-					 * Size cameraSize = mOpenCvCameraView.getResolution();
-					 * org.opencv.core.Size size = new org.opencv.core.Size();
-					 * size.height = cameraSize.height; size.width =
-					 * cameraSize.width;
-					 * 
-					 * Mat tmpImage = Highgui.imread(fileName); Mat tmpResize =
-					 * new Mat(size, tmpImage.type()); Imgproc.resize(tmpImage,
-					 * tmpResize, tmpResize.size()); Highgui.imwrite(fileName,
-					 * tmpResize);
-					 */
-					// end resize
+					//Thread.sleep(2000);
 
 					// create post data
 					ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -538,9 +541,24 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 					if (NetUtil.networkState(CameraActivity.this) > networkFlag) {
 						parameters.add(new BasicNameValuePair("listLocate",
 								listLocateJSON));
+						UploadUtils uploader = new UploadUtils();
+						progressBar.setProgress(0);
+						uploader.setUploadListener(new IUploadProgressListener() {
+							@Override
+							public void onProgress(int percent) {
+								progressBar.setProgress(percent);
+								// Log.e(TAG, "Upload percent: "+percent);
+							}
 
-						jsonString = UploadUtils.uploadFile(fileName,
+							@Override
+							public void onComplete() {
+								progressBar.setProgress(100);
+							}
+						});
+
+						jsonString = uploader.uploadFileWithProgress(fileName,
 								upLoadServerUri, parameters);
+
 						Log.e("jsonUpload", jsonString);
 						if (jsonString.contains("null")
 								|| jsonString.trim().isEmpty()) {
@@ -590,7 +608,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 									.getListTraffic();
 							if (listResult != null && listResult.size() > 0) {
 								for (int i = 0; i < listResult.size(); i++) {
-									final String urlGetTrafficDetail = GlobalValue.getServiceAddress()
+									final String urlGetTrafficDetail = GlobalValue
+											.getServiceAddress()
 											+ Properties.TRAFFIC_TRAFFIC_VIEW
 											+ "?id=";
 									if (listResult.get(i).getTrafficID() != null
@@ -622,7 +641,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 												+ ".jpg";
 										File image = new File(savePath);
 										if (!image.exists()) {
-											String imageLink = GlobalValue.getServiceAddress()
+											String imageLink = GlobalValue
+													.getServiceAddress()
 													+ trafficInfoJSON
 															.getImage();
 											if (HttpUtil.downloadImage(
@@ -647,8 +667,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 								nextScreen.putExtra("resultJson", dataBytes);
 								runOnUiThread(new Runnable() {
 									public void run() {
-										if (dialog != null) {
-											dialog.dismiss();
+										if (progressDialog != null) {
+											progressDialog.dismiss();
 										}
 									}
 								});
@@ -671,8 +691,8 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 								MainActivity.class);
 						runOnUiThread(new Runnable() {
 							public void run() {
-								if (dialog != null) {
-									dialog.dismiss();
+								if (progressDialog != null) {
+									progressDialog.dismiss();
 								}
 								Toast.makeText(
 										getApplicationContext(),
@@ -684,7 +704,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						startActivity(nextScreen);
 					}
 
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
