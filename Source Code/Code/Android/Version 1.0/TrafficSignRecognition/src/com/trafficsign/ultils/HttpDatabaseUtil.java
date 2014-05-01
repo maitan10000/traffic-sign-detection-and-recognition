@@ -51,11 +51,11 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 			try {
 				// TODO Auto-generated method stub
 				// URL for service
-				String urlCategory = Properties.serviceIpOnline
+				String urlCategory = GlobalValue.getServiceAddress()
 						+ Properties.TRAFFIC_LIST_CATEGORY;
-				String urlGetListTraffic = Properties.serviceIpOnline
+				String urlGetListTraffic =  GlobalValue.getServiceAddress()
 						+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-				String urlGetTrafficDetail = Properties.serviceIpOnline
+				String urlGetTrafficDetail =  GlobalValue.getServiceAddress()
 						+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 
 				// get all category from service and parse json to list
@@ -97,13 +97,6 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 					String urlGetTrafficDetailFull = "";
 					Long dbReturn; // variable to know db return
 					for (int i = 0; i < listInfoShortJSONs.size(); i++) {
-						if ("106".equals(listInfoShortJSONs.get(i)
-								.getTrafficID())
-								|| "110b".equals(listInfoShortJSONs.get(i)
-										.getTrafficID())) {
-							Log.e("traffic", "chua lai bien bao"
-									+ listInfoShortJSONs.get(i).getTrafficID());
-						} else {
 							urlGetTrafficDetailFull = urlGetTrafficDetail
 									+ listInfoShortJSONs.get(i).getTrafficID();
 							// get traffic detail from service and parse json
@@ -125,7 +118,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 									+ trafficInfoJSON.getTrafficID() + ".jpg";
 							File image = new File(savePath);
 							if (!image.exists()) {
-								String imageLink = Properties.serviceIpOnline
+								String imageLink =  GlobalValue.getServiceAddress()
 										+ trafficInfoJSON.getImage();
 								if (HttpUtil.downloadImage(imageLink, savePath)) {
 									Log.e("DB Image", savePath);
@@ -135,7 +128,7 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 
 							Log.e("Number", String.valueOf(i + 1));
 
-						}
+						
 					}
 				}
 

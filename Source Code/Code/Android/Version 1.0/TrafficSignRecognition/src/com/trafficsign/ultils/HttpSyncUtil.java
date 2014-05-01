@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +74,14 @@ public class HttpSyncUtil extends AsyncTask<Void, Void, Void> {
 		Type typeListFavorite = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 		}.getType();
 		try {
+			Date now = new Date(new java.util.Date().getTime());
+			DateFormat fullDf = DateFormat.getDateTimeInstance(DateFormat.LONG, 
+	                DateFormat.MEDIUM);
+	     
+		    String date =  fullDf.format(now);
+		    
+
+		    //favoriteResponse = favoriteResponse.replace("ICT", "GMT+07:00");
 			listFavorite = Helper.fromJson(favoriteResponse, typeListFavorite);
 		} catch (Exception e) {
 			e.printStackTrace();

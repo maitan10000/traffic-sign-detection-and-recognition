@@ -827,9 +827,9 @@ public class DBUtil {
 
 	// run update traffic sign (must run in another thread)
 	public static void updateTrafficsign() {
-		String urlGetListTraffic = Properties.serviceIpOnline
+		String urlGetListTraffic =  GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-		String urlGetTrafficDetail = Properties.serviceIpOnline
+		String urlGetTrafficDetail =  GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 		String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
 		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
@@ -864,7 +864,7 @@ public class DBUtil {
 						+ trafficInfoJSON.getTrafficID() + ".jpg";
 				File image = new File(savePath);
 				if (!image.exists()) {
-					String imageLink = Properties.serviceIpOnline
+					String imageLink =  GlobalValue.getServiceAddress()
 							+ trafficInfoJSON.getImage();
 					if (HttpUtil.downloadImage(imageLink, savePath)) {
 						Log.e("DB Image", savePath);

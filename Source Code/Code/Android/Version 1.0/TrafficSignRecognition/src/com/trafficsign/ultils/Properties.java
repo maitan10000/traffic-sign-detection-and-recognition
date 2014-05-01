@@ -3,13 +3,11 @@ package com.trafficsign.ultils;
 public final class Properties {
 //	public static final String serviceIp = "http://bienbaogiaothong.tk/rest/Service/";
 //	public static final String serverAddress = "http://bienbaogiaothong.tk/";
-	public static final String serviceIpLocal = "http://192.168.0.102:8080/TrafficService/";
-	public static final String serviceIpOnline = "http://bienbaogiaothong.tk/TrafficService/";
+//	public static final String serviceIpLocal = "http://192.168.0.102:8080/TrafficService/";
+//	public static final String serviceIpOnline = "http://bienbaogiaothong.tk/TrafficService/";
 
 	public static boolean isTaken = false;
-	
-	//Username 
-	public static String USER_NAME = "user1";
+	 
 	// Internet setting
 	public static int INTERNET_SETTING = 0;
 	
@@ -60,9 +58,6 @@ public final class Properties {
 	public final static String TRAFFIC_HISTORY_LIST = "rest/Traffic/ListHistory";
 	public final static String TRAFFIC_HISTORY_VIEW = "rest/Traffic/ViewHistory";
 	public final static String TRAFFIC_HISTORY_DELETE = "rest/Traffic/DeleteHistory";
-
-	// Train Image
-	public final static String TRAFFIC_TRAIN_IMAGE_ADD_FROM_REPORT = "rest/Traffic/AddTrainImageFromReport";
 
 	// Report Service
 	public final static String MANAGE_REPORT_LIST = "rest/Manage/ListReportByType";

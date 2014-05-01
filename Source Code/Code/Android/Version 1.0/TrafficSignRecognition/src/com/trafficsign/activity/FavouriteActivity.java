@@ -1,6 +1,5 @@
 package com.trafficsign.activity;
 
-import static com.trafficsign.ultils.Properties.serviceIpOnline;
 
 import java.io.IOException;
 import java.util.ArrayList;
