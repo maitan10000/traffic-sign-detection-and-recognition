@@ -15,7 +15,7 @@ import utility.GlobalValue;
 @Path("/Download")
 public class Download {
 	@GET
-	@Path("/mobile/android")
+	@Path("/Mobile/Android")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public Response getAndroidApp() {
 		String androidLastVersionPath = GlobalValue.getWorkPath()+"Mobile/TrafficSignRecognition.apk";

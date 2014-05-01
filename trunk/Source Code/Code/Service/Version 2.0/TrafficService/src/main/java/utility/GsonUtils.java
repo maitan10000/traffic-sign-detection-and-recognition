@@ -10,14 +10,12 @@ import com.google.gson.GsonBuilder;
 public class GsonUtils {
 
 	public static <T>T fromJson(String jsonString, Type typeOfT) {
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
 		return gson.fromJson(jsonString, typeOfT);
 	}
 
 	public static String toJson(Object object) {
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
 		return gson.toJson(object);
 	}
 

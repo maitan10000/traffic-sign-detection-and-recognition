@@ -87,10 +87,8 @@ public class Manage {
 			favoriteDTO.setCreator(creator);
 			favoriteDTO.setTrafficID(trafficID);
 
-			if (modifyDate != null) {
-				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-						DateFormat.FULL).create();
-				Date tempDate = gson.fromJson(modifyDate, Date.class);
+			if (modifyDate != null) {				
+				Date tempDate = GsonUtils.fromJson(modifyDate, Date.class);
 				favoriteDTO.setModifyDate(tempDate);
 			}
 
@@ -169,10 +167,8 @@ public class Manage {
 
 				listFavoriteJSON.add(favoriteJSON);
 			}// end for listFavorData
-		}
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
-		String output = gson.toJson(listFavoriteJSON);
+		}	
+		String output = GsonUtils.toJson(listFavoriteJSON);
 		return output;
 	}
 
@@ -193,10 +189,8 @@ public class Manage {
 			FavoriteDTO favoriteObj = new FavoriteDTO();
 			favoriteObj.setCreator(creator);
 			favoriteObj.setTrafficID(trafficID);
-			if (modifyDate != null) {
-				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-						DateFormat.FULL).create();
-				Date tempDate = gson.fromJson(modifyDate, Date.class);
+			if (modifyDate != null) {			
+				Date tempDate = GsonUtils.fromJson(modifyDate, Date.class);
 				favoriteObj.setModifyDate(tempDate);
 			}
 
@@ -307,6 +301,7 @@ public class Manage {
 				}
 			}
 		} else {
+			//get all
 			listReturn = listresultDTO;
 		}
 
@@ -318,12 +313,12 @@ public class Manage {
 			resultExtraShortJSON.setResultID(resultDTO.getResultID());
 			resultExtraShortJSON.setCreateDate(resultDTO.getCreateDate());
 			Boolean isRead = ResultExtraUtil.isRead(resultDTO.getResultID());
-			resultExtraShortJSON.setIsRead(isRead);			
+			resultExtraShortJSON.setIsRead(isRead);
 			if (isRead == false) {
 				// add unread
 				listResultExtraShortJSON.add(resultExtraShortJSON);
 			} else if (showRead == true) {
-				// add read
+				// add read is showRead = true
 				listResultExtraShortJSON.add(resultExtraShortJSON);
 			}
 		}
@@ -379,10 +374,8 @@ public class Manage {
 			reportShortJSON.setCreateDate(reportDTO.getCreateDate());
 			reportShortJSON.setIsRead(reportDTO.getIsRead());
 			listReportShortJSON.add(reportShortJSON);
-		}
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-				DateFormat.FULL).create();
-		return gson.toJson(listReportShortJSON);
+		}		
+		return GsonUtils.toJson(listReportShortJSON);
 	}
 
 	/**
