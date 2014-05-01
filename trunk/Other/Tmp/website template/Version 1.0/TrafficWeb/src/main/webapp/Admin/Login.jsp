@@ -1,3 +1,4 @@
+<%@page import="utility.GlobalValue"%>
 <%@page import="utility.Constants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -18,12 +19,14 @@
 <link rel="stylesheet" href="Admin/Content/css/maruti-style.css" />
 <link rel="stylesheet" href="Admin/Content/css/maruti-media.css"
 	class="skin-color" />
+<link rel="stylesheet" href="Admin/Content/css/jquery.gritter.css" />
 <link rel="stylesheet" href="Admin/Content/css/tsrt-style.css" />
 <style>
 #content {
 	margin: 0px;
 	min-height: 96%;
 }
+
 #loginbox {
 	width: 400px;
 }
@@ -35,12 +38,14 @@
 #loginform {
 	margin-top: 100px;
 }
+
 #system-name
 {
 	text-align:center;
 	width: 450px;
 	margin: auto;
 }
+
 #system-name h3
 {
 	padding-top: 50px;
@@ -53,7 +58,7 @@
 			<h3><a href="./">HỆ THỐNG NHẬN DẠNG BIỂN BÁO</a></h3>
 		</div>
 		<div id="loginbox">
-			<form id="loginform" class="form-vertical" action="<%=Constants.CONTROLLER_ADMIN%>" method="post">
+			<form id="loginform" action="<%=Constants.CONTROLLER_ADMIN%>?action=<%=Constants.ACTION_LOGIN%>" class="form-vertical" method="post" >
 				<div class="control-group normal_text">
 					<h3>Đăng nhập</h3>
 				</div>
@@ -85,8 +90,7 @@
 						class="flip-link btn btn-primary btn-small">Quên mật khẩu</a>
 					</span>				
 					<span class="pull-right">
-						<button type="submit" class="btn btn-success" name="action"
-							value="<%=Constants.ACTION_LOGIN%>">Đăng nhập</button>
+						<button onclick="checkLogin()" type="button" class="btn btn-success" >Đăng nhập</button>
 					</span>
 				</div>
 			</form>
@@ -94,6 +98,7 @@
 	</div>
 	<script src="Admin/Content/js/jquery.min.js"></script>
 	<script src="Admin/Content/js/jquery.validate.js"></script>
+	<script src="Admin/Content/js/jquery.gritter.min.js"></script> 
 
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -117,6 +122,36 @@
 				}
 			});
 		});
+		
+		function checkLogin()
+		{
+			var valid = $("#loginform").valid();
+			if(valid == true)
+			{
+				var url = '<%=GlobalValue.getServiceAddress()%><%=Constants.MANAGE_LOGIN%>';
+				var tmpForm = document.getElementById("loginform");
+				$.ajax({
+					url : url,
+					type : "POST",
+					data : {
+						userID : tmpForm.txtUser.value,
+						password : tmpForm.txtPassword.value
+					},
+					success : function(result) {
+						if (result == "") {
+							$.gritter.add({
+								title : 'Đăng nhập thất bại',
+								text : 'Tên đăng nhập hoặc mật khẩu không đúng',
+								sticky : false
+							});
+						}else
+						{
+							tmpForm.submit();
+						}
+					}
+				});			
+			}
+		}
 	</script>
 </body>
 </html>
