@@ -1,0 +1,62 @@
+.dataTable thead th {
+    background: #49CCED !important;
+}
+.container-fluid table i{
+	background-image: url('../img/glyphicons-halflings-white.png');
+}
+
+#sidebar i{
+/* 	background-image: url('../img/glyphicons-halflings.png')!important; */
+}
+
+.gritter-item
+{
+	background-color: #D9EDF7;
+}
+
+#breadcrumb a
+{
+	font-size: 15px;
+}
+
+#sidebar span, #sidebar a
+{
+/* 	color: #666666 !important;	 */
+}
+
+.required-item
+{
+	color: red;
+}
+
+/* For bootbox */
+.bootbox
+{
+	top:30% !important;	
+} 
+
+.bootbox .modal-body
+{
+	padding: 15px;
+}
+
+#loading {
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+	margin:auto;
+	margin-top:20%;
+	width:100px;
+  	position: absolute;
+  	z-index: 100;
+}
