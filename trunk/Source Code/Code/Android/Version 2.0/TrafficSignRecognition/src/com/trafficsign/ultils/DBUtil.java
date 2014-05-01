@@ -31,6 +31,7 @@ import com.trafficsign.json.ResultShortJSON;
 import com.trafficsign.json.TrafficInfoJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
 
+import android.app.NotificationManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -38,6 +39,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class DBUtil {
@@ -435,8 +437,8 @@ public class DBUtil {
 					.getColumnIndexOrThrow("creator")));
 			String tempDateString = cursor.getString(cursor
 					.getColumnIndexOrThrow("createDate"));
-			ArrayList<ResultInput> listResultInput = Helper.fromJson(jsonLocate,
-					type);
+			ArrayList<ResultInput> listResultInput = Helper.fromJson(
+					jsonLocate, type);
 			output.setListTraffic(listResultInput);
 			Date tempDate = null;
 			try {
@@ -827,9 +829,28 @@ public class DBUtil {
 
 	// run update traffic sign (must run in another thread)
 	public static void updateTrafficsign() {
-		String urlGetListTraffic =  GlobalValue.getServiceAddress()
+		updateTrafficsign(null);
+	}
+
+	public static void updateTrafficsign(Context context) {
+		// progress notifycation
+		NotificationCompat.Builder mBuilder= null;
+		NotificationManager mNotifyMgr = null;
+		int mNotificationId = 100;
+		if (context != null) {
+			 mBuilder = new NotificationCompat.Builder(
+					context).setSmallIcon(R.drawable.ic_launcher)
+					.setContentTitle("Cập nhập biển báo")
+					.setContentText("Đang tải...");
+			mBuilder.setAutoCancel(true);
+			 mNotifyMgr = (NotificationManager) context
+					.getSystemService(context.NOTIFICATION_SERVICE);			
+			mNotifyMgr.notify(mNotificationId, mBuilder.build());
+		}
+
+		String urlGetListTraffic = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_MANUAL + "?name=";
-		String urlGetTrafficDetail =  GlobalValue.getServiceAddress()
+		String urlGetTrafficDetail = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_TRAFFIC_VIEW + "?id=";
 		String listTrafficJSON = HttpUtil.get(urlGetListTraffic);
 		ArrayList<TrafficInfoShortJSON> listInfoShortJSONs = new ArrayList<TrafficInfoShortJSON>();
@@ -843,6 +864,16 @@ public class DBUtil {
 			String urlGetTrafficDetailFull = "";
 			long dbReturn; // variable to know db return
 			for (int i = 0; i < listInfoShortJSONs.size(); i++) {
+				if(mBuilder != null){
+					int percent = i*100/listInfoShortJSONs.size();
+					if(percent>100)
+					{
+						percent = 100;
+					}
+					mBuilder.setProgress(100, percent, false);
+					mNotifyMgr.notify(mNotificationId, mBuilder.build());
+				}
+
 				urlGetTrafficDetailFull = urlGetTrafficDetail
 						+ listInfoShortJSONs.get(i).getTrafficID();
 				// get traffic detail from service and parse json
@@ -864,16 +895,19 @@ public class DBUtil {
 						+ trafficInfoJSON.getTrafficID() + ".jpg";
 				File image = new File(savePath);
 				if (!image.exists()) {
-					String imageLink =  GlobalValue.getServiceAddress()
+					String imageLink = GlobalValue.getServiceAddress()
 							+ trafficInfoJSON.getImage();
 					if (HttpUtil.downloadImage(imageLink, savePath)) {
 						Log.e("DB Image", savePath);
 					}
 
 				}
-
 				Log.e("Number", String.valueOf(i + 1));
-
+			}//end for
+			if(mBuilder != null){	
+				mBuilder.setProgress(100, 100, false);
+				mBuilder.setContentText("Hoàn thành");
+				mNotifyMgr.notify(mNotificationId, mBuilder.build());
 			}
 		}
 	}

@@ -14,19 +14,27 @@ public class GlobalValue {
 	private static boolean isCreated = false;
 	public static boolean isUploading = false;
 	private static String serviceAddress = "";
+	private static boolean showFPS = false;
 
-	public static void createInstance(String externalPath) throws Exception {		
+	public static void createInstance(String externalPath) throws Exception {
 		if (isCreated == false) {
 			isCreated = true;
 			appFolder = externalPath + Properties.APP_FOLDER;
 			try {
-				String propertyFile = getAppFolder() + Properties.SETTING_FILE_PATH;
+				String propertyFile = getAppFolder()
+						+ Properties.SETTING_FILE_PATH;
 				java.util.Properties prop = new java.util.Properties();
 				InputStream input = new FileInputStream(propertyFile);
 				prop.load(input);
-				
+
 				serviceAddress = prop.getProperty("ServiceAddress");
-				
+
+				try {
+					showFPS = Boolean.parseBoolean(prop.getProperty("ShowFPS"));
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
 				input.close();
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -42,5 +50,11 @@ public class GlobalValue {
 	public static String getServiceAddress() {
 		return serviceAddress;
 	}
+
+	public static boolean isShowFPS() {
+		return showFPS;
+	}
+	
+	
 
 }

@@ -170,7 +170,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 											.setSmallIcon(
 													R.drawable.ic_launcher)
 											.setContentTitle(
-													"Kết quả nhận diện")
+													"Kết quả nhận dạng")
 											.setContentText(
 													listResult.get(i)
 															.getCreateDate()
