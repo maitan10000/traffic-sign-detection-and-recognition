@@ -48,5 +48,20 @@
          android:text="ToggleButton" 
          android:textOn="@string/textAutoOn"
          android:textOff="@string/textAutoOff"/>
+		
+	<ProgressBar
+	    android:id="@+id/progressBarCamera"
+	    style="?android:attr/progressBarStyleHorizontal"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginBottom="0dp"
+	    android:indeterminate="false"
+	    android:max="100"
+	    android:maxHeight="5dp"
+	    android:minHeight="5dp"
+	    android:progress="50"
+	    android:visibility="gone"
+	    android:progressDrawable="@drawable/progress_bar" />
 
 </RelativeLayout>

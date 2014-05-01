@@ -68,7 +68,6 @@ public class MainActivity extends Activity {
 		
 
 		// get user
-
 		user = prefLogin.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		if ("".equals(user) == false) {
 			// sync favorite and history

@@ -20,6 +20,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 
 
+
 import com.trafficsign.json.LocateJSON;
 import com.trafficsign.json.ResultDB;
 import com.trafficsign.json.ResultInput;
@@ -33,6 +34,7 @@ import com.trafficsign.ultils.HttpUtil;
 import com.trafficsign.ultils.NetUtil;
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.ultils.UploadUtils;
+import com.trafficsign.ultils.MyInterface.IUploadProgressListener;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -51,7 +53,7 @@ import android.widget.Toast;
 
 public class ImageReviewActivity extends Activity {
 	String imagePath;
-	ProgressDialog dialog;
+	ProgressDialog progressDialog;
 	private String user = "";
 	private int networkFlag;
 	static {
@@ -119,9 +121,9 @@ public class ImageReviewActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		// Create dialog
-		dialog = new ProgressDialog(ImageReviewActivity.this);
-		dialog.setMessage("Vui lòng đợi trong giây lát");
-		dialog.setCancelable(false);
+		progressDialog = new ProgressDialog(ImageReviewActivity.this);
+		progressDialog.setMessage("Vui lòng đợi trong giây lát");
+		progressDialog.setCancelable(false);
 		// upload file ****************************
 		final String upLoadServerUri = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_AUTO;
@@ -130,24 +132,18 @@ public class ImageReviewActivity extends Activity {
 			public void run() {
 				runOnUiThread(new Runnable() {
 					public void run() {
-						if (dialog != null) {
-							dialog.show();
+						if (progressDialog != null) {
+							progressDialog.show();
 						}
 					}
 				});
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				SimpleDateFormat sdf = new SimpleDateFormat(
 						"yyyy-MM-dd_HH-mm-ss");
 				String currentDateandTime = sdf.format(new Date());
 				String fileName = GlobalValue.getAppFolder()
 						+ Properties.SAVE_IMAGE_FOLDER + currentDateandTime
 						+ ".jpg";
-				// coppy image to saveimage folder
+				// copy image to saveimage folder
 				Helper.copyFileUsingStream(imagePath, fileName);
 				// get image size
 				Mat tmpImage = Highgui.imread(fileName);
@@ -174,8 +170,8 @@ public class ImageReviewActivity extends Activity {
 				// if access to server ok
 				if (NetUtil.networkState(ImageReviewActivity.this) > networkFlag) {
 
-					String jsonString = UploadUtils.uploadFile(fileName,
-							upLoadServerUri, parameters);
+					UploadUtils uploader = new UploadUtils();					
+					String jsonString = uploader.uploadFileWithProgress(fileName, upLoadServerUri, parameters);					
 
 					if (jsonString.contains("null")
 							|| jsonString.trim().isEmpty()) {
@@ -257,8 +253,8 @@ public class ImageReviewActivity extends Activity {
 							nextScreen.putExtra("resultJson", dataBytes);
 							runOnUiThread(new Runnable() {
 								public void run() {
-									if (dialog != null) {
-										dialog.dismiss();
+									if (progressDialog != null) {
+										progressDialog.dismiss();
 									}
 								}
 							});
@@ -279,8 +275,8 @@ public class ImageReviewActivity extends Activity {
 							MainActivity.class);
 					runOnUiThread(new Runnable() {
 						public void run() {
-							if (dialog != null) {
-								dialog.dismiss();
+							if (progressDialog != null) {
+								progressDialog.dismiss();
 								Toast.makeText(
 										getApplicationContext(),
 										"Không thể kết nổi tới máy chủ hoặc bị giới hạn gói dữ liệu. Kết quả sẽ được trả về sau",

@@ -10,7 +10,13 @@ public class MyInterface {
 	public interface IAsyncHttpListener extends EventListener {
 	    void onComplete(String respond);
 	}
+	
 	public interface IAsyncHttpImageListener extends EventListener {
 	    void onComplete(Bitmap bitmap, int extra);
+	}
+	
+	public interface IUploadProgressListener extends EventListener{
+		void onProgress(int percent);
+		void onComplete();
 	}
 }
