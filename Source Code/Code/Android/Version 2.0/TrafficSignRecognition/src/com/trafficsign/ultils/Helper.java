@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
+import java.sql.Date;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Properties;
 
 import android.database.Cursor;
@@ -62,26 +65,27 @@ public class Helper {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
+
 	// get properties file
-	public static String getProperty(String path, String key){
+	public static String getProperty(String path, String key) {
 		Properties prop = new Properties();
 		InputStream input = null;
 		String output = "";
 		try {
 			input = new FileInputStream(path);
 			prop.load(input);
-			output = prop.getProperty(key,"");
+			output = prop.getProperty(key, "");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally{
-			if(input != null){
+		} finally {
+			if (input != null) {
 				try {
 					input.close();
 				} catch (IOException e) {
@@ -92,18 +96,19 @@ public class Helper {
 		}
 		return output;
 	}
+
 	// write properties
-	public static void writeProperty(String path, String key, String value){
+	public static void writeProperty(String path, String key, String value) {
 		Properties prop = new Properties();
 		OutputStream output = null;
-	 
-		try {	 
+
+		try {
 			output = new FileOutputStream(path);
 			// set the properties value
-			prop.setProperty(key, value);	 
-			// save properties 
+			prop.setProperty(key, value);
+			// save properties
 			prop.store(output, null);
-	 
+
 		} catch (IOException io) {
 			io.printStackTrace();
 		} finally {
@@ -114,19 +119,29 @@ public class Helper {
 					e.printStackTrace();
 				}
 			}
-	 
+
 		}
 	}
-	public static <T>T fromJson(String jsonString, Type typeOfT) {
+
+	public static <T> T fromJson(String jsonString, Type typeOfT) {
 		jsonString = jsonString.replace("ICT", "GMT+07:00");
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG,
+				DateFormat.LONG).create();
 		return gson.fromJson(jsonString, typeOfT);
 	}
 
 	public static String toJson(Object object) {
-		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG, DateFormat.LONG).create();
-		String jsonString = gson.toJson(object);		
-		return jsonString.replace("GMT+07:00","ICT");
+		Gson gson = new GsonBuilder().setDateFormat(DateFormat.LONG,
+				DateFormat.LONG).create();
+		String jsonString = gson.toJson(object);
+		return jsonString.replace("GMT+07:00", "ICT");
 	}
 
+	//Date to String	
+	public static String dateToString(Date date)
+	{
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+				Locale.getDefault());
+		return dateFormat.format(date);
+	}
 }
