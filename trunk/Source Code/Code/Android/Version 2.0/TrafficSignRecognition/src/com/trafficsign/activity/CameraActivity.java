@@ -585,7 +585,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 										if (isAuto == false) {
 											Toast.makeText(
 													getApplicationContext(),
-													"Khong co kq",
+													"Không có kết quả",
 													Toast.LENGTH_LONG).show();
 										}
 									}
