@@ -27,8 +27,7 @@
         android:background="@drawable/edit_text"
         android:ems="10"
         android:hint="Tài khoản"
-        android:padding="10dp"
-        android:text="user1" />
+        android:padding="10dp" />
 
     <Button
         android:id="@+id/btnLogin"
@@ -52,7 +51,6 @@
         android:ems="10"
         android:hint="Mật khẩu"
         android:inputType="textPassword"
-        android:padding="10dp"
-        android:text="12345" />
+        android:padding="10dp" />
 
 </RelativeLayout>
