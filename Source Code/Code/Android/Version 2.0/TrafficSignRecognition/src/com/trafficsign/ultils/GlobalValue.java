@@ -16,10 +16,14 @@ public class GlobalValue {
 	private static String serviceAddress = "";
 	private static boolean showFPS = false;
 
-	public static void createInstance(String externalPath) throws Exception {
+	public static void initAppFolder(String externalPath)
+	{
+		appFolder = externalPath + Properties.APP_FOLDER;
+	}
+	
+	public static void createInstance() throws Exception {
 		if (isCreated == false) {
-			isCreated = true;
-			appFolder = externalPath + Properties.APP_FOLDER;
+			isCreated = true;			
 			try {
 				String propertyFile = getAppFolder()
 						+ Properties.SETTING_FILE_PATH;
