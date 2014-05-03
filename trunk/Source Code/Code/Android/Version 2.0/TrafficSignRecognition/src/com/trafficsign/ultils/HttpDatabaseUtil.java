@@ -153,10 +153,10 @@ public class HttpDatabaseUtil extends AsyncTask<Void, Void, Void> {
 	protected void onPreExecute() {
 		final SharedPreferences pref = context.getSharedPreferences(
 				Properties.SHARE_PREFERENCE_SETTING, Context.MODE_PRIVATE);
-		boolean wifiStatus = pref.getBoolean(
+		boolean isWifiOnly = pref.getBoolean(
 				Properties.SHARE_PREFERENCE_KEY_WIFI, true);
 		networkFlag = 1;
-		if (wifiStatus == false) {
+		if (isWifiOnly == false) {
 			networkFlag = 0;
 		}
 		if (dialog != null) {

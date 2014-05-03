@@ -53,15 +53,9 @@ public class DBUtil {
 			Context ctx) {
 		SharedPreferences sharedPreferences = ctx.getSharedPreferences(
 				Properties.SHARE_PREFERENCE_SETTING, 0);
-		//
 		String externalPath = Environment.getExternalStorageDirectory()
-				.getPath() + "/";
-		try {
-			GlobalValue.createInstance(externalPath);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+				.getPath() + "/";		
+		GlobalValue.initAppFolder(externalPath);		
 
 		File appFolder = new File(GlobalValue.getAppFolder());
 		if (!appFolder.exists()) {
@@ -93,6 +87,13 @@ public class DBUtil {
 				+ Properties.SETTING_FILE_PATH);
 		if (!settingFile.exists()) {
 			DBUtil.copyDB(settingIS, settingFile);
+		}
+		
+		try {
+			GlobalValue.createInstance();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		if ("".equals(sharedPreferences.getString(

@@ -8,25 +8,31 @@ import java.net.UnknownHostException;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+import android.widget.Toast;
 
 public class NetUtil {
 	/**
 	 * Check connection state Return 2 if wifi Return 1 if not type wifi Return
 	 * 0 if can not access to server
 	 */
+
 	public static int networkState(Context context) {
 		ConnectivityManager cm = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo actiNetworkInfo = cm.getActiveNetworkInfo();
-		// if dose not have internet connection
-		if (actiNetworkInfo == null || !actiNetworkInfo.isConnected()
-				|| !isAccessService()) {
+		boolean isNotConnectServer = actiNetworkInfo == null
+				|| !actiNetworkInfo.isConnected() || !isAccessService();
+		if (isNotConnectServer == true) {
+			// not access to server
 			return 0;
-		} else if (actiNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) { // if
-																					// wifi
+		} else if (actiNetworkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+			// access to server using wifi
 			return 2;
+		} else {
+			// access to server not using wifi
+			return 1;
 		}
-		return 1;
 	}
 
 	public static Boolean isAccessService() {

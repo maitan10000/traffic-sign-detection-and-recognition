@@ -63,8 +63,8 @@ public class MainActivity extends Activity {
 				Properties.SHARE_PREFERENCE_SETTING, MODE_PRIVATE);
 		// init resource
 		InputStream dbIS = getResources().openRawResource(R.raw.traffic_sign);
-		InputStream settingIS = getResources().openRawResource(R.raw.setting);
-		DBUtil.initResource(dbIS, settingIS, MainActivity.this);
+		InputStream settingIS = getResources().openRawResource(R.raw.setting);		
+		DBUtil.initResource(dbIS, settingIS, MainActivity.this);		
 		
 
 		// get user
