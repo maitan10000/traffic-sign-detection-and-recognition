@@ -78,7 +78,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 										sync_image_loader[current_sync_image++])
 								.setContentTitle("Đồng bộ dữ liệu")
 								.setContentText("Đang đồng bộ...");
-						mBuilder.setAutoCancel(true);
+						mBuilder.setAutoCancel(false);
 						mNotifyMgr = (NotificationManager) context
 								.getSystemService(context.NOTIFICATION_SERVICE);
 						mNotifyMgr.notify(mNotificationId, mBuilder.build());
