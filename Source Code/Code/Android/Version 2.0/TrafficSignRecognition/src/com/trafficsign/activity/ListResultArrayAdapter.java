@@ -46,23 +46,17 @@ public class ListResultArrayAdapter extends ArrayAdapter<ResultInput> {
 		// set info
 		name.setText(resultInput.getTrafficName());
 		if (resultInput.getTrafficID() != null
-				&& "".equals(resultInput.getTrafficID()) == false) {
+				&& !"".equals(resultInput.getTrafficID())) {
 			id.setText(resultInput.getTrafficID());
-		} else {
-			id.setText("Không rõ");
-		}
-
-		if (resultInput.getTrafficID() != null
-				|| !"".equals(resultInput.getTrafficID())) {
-			// get image path
 			String imagePath = GlobalValue.getAppFolder()
 					+ Properties.MAIN_IMAGE_FOLDER + resultInput.getTrafficID()
 					+ ".jpg";
 			Bitmap bitmap = ImageUtils.convertToBimap(imagePath);
 			img.setImageBitmap(bitmap);
 		} else {
-			img.setImageResource(R.drawable.cameraicon);
-		}
+			id.setText("Không rõ");
+			img.setImageResource(R.drawable.no_image);
+		}	
 
 		return convertView;
 

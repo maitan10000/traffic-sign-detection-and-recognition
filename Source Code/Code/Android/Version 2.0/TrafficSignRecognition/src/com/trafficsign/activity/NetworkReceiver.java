@@ -46,9 +46,49 @@ import android.util.Log;
 
 public class NetworkReceiver extends BroadcastReceiver {
 	int networkFlag;
+	private NotificationCompat.Builder mBuilder = null;
+	private NotificationManager mNotifyMgr = null;
+	private int mNotificationId = 101;
+	public int[] sync_image_loader = { R.drawable.stat_notify_sync_anim1,
+			R.drawable.stat_notify_sync_anim2,
+			R.drawable.stat_notify_sync_anim3,
+			R.drawable.stat_notify_sync_anim4,
+			R.drawable.stat_notify_sync_anim5,
+			R.drawable.stat_notify_sync_anim6,
+			R.drawable.stat_notify_sync_anim7,
+			R.drawable.stat_notify_sync_anim8,
+			R.drawable.stat_notify_sync_anim9,
+			R.drawable.stat_notify_sync_anim10 };
+	private int current_sync_image = 0;
+	private Thread notifiThread = null;
 
 	@Override
 	public void onReceive(final Context context, final Intent intent) {
+		notifiThread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					while (true) {
+						Thread.sleep(300);
+						if (current_sync_image > 9) {
+							current_sync_image = 0;
+						}
+						mBuilder = new NotificationCompat.Builder(context)
+								.setSmallIcon(
+										sync_image_loader[current_sync_image++])
+								.setContentTitle("Đồng bộ dữ liệu")
+								.setContentText("Đang đồng bộ...");
+						mBuilder.setAutoCancel(true);
+						mNotifyMgr = (NotificationManager) context
+								.getSystemService(context.NOTIFICATION_SERVICE);
+						mNotifyMgr.notify(mNotificationId, mBuilder.build());
+					}
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+
 		// TODO Auto-generated method stub
 		final SharedPreferences pref1 = context.getSharedPreferences(
 				Properties.SHARE_PREFERENCE_LOGIN, Context.MODE_PRIVATE);
@@ -73,6 +113,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 				if (NetUtil.networkState(context) > networkFlag) {
 					if (GlobalValue.isUploading == false) {
 						GlobalValue.isUploading = true;
+						notifiThread.start();
 						/* Auto search */
 						final String upLoadServerUri = GlobalValue
 								.getServiceAddress()
@@ -187,7 +228,7 @@ public class NetworkReceiver extends BroadcastReceiver {
 											.setContentText(
 													Helper.dateToString(listResult
 															.get(i)
-															.getCreateDate()));									
+															.getCreateDate()));
 									mBuilder.setDefaults(-1);
 									Intent resultIntent = new Intent(context,
 											ListResultActivity.class);
@@ -430,7 +471,16 @@ public class NetworkReceiver extends BroadcastReceiver {
 							// End sync history
 							/* End Sync process */
 						}
-
+						try {
+							notifiThread.interrupt();
+							while(notifiThread.isAlive())
+							{
+								Thread.sleep(300);
+							}
+							mNotifyMgr.cancel(mNotificationId);
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
 						GlobalValue.isUploading = false;
 					}// end if isUploading
 				}// end if isAccessServer

@@ -833,7 +833,7 @@ public class DBUtil {
 	}
 
 	public static void updateTrafficsign(Context context) {
-		// progress notifycation
+		// progress notification
 		NotificationCompat.Builder mBuilder= null;
 		NotificationManager mNotifyMgr = null;
 		int mNotificationId = 100;
