@@ -11,7 +11,7 @@
 	<string name="register">Đăng ký</string>
 	<string name="textAutoOn">Auto On</string>
 	<string name="textAutoOff">Auto Off</string>
-	<string name="feedback">Báo nhận diện sai</string>
+	<string name="feedback">Báo nhận dạng sai</string>
 	<string name="update">Cập nhật biển báo</string>
 	
 	<string name="update_promt">Chọn khoảng thời gian</string>
