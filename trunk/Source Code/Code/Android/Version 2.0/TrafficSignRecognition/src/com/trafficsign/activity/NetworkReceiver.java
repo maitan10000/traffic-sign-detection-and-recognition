@@ -36,6 +36,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -112,22 +116,29 @@ public class NetworkReceiver extends BroadcastReceiver {
 									DBUtil.deleteSavedResult(listResult.get(i)
 											.getUploadedImage());
 								}
-								/* check if there are traffic sign in result do not
-								 have in DB */
+								/*
+								 * check if there are traffic sign in result do
+								 * not have in DB
+								 */
 								ArrayList<ResultInput> listTraffic = resultJson
 										.getListTraffic();
-								if (listTraffic != null && listTraffic.size() > 0) {
+								if (listTraffic != null
+										&& listTraffic.size() > 0) {
 									for (int j = 0; j < listTraffic.size(); j++) {
-										final String urlGetTrafficDetail = GlobalValue.getServiceAddress()
+										final String urlGetTrafficDetail = GlobalValue
+												.getServiceAddress()
 												+ Properties.TRAFFIC_TRAFFIC_VIEW
 												+ "?id=";
 										if (listTraffic.get(j).getTrafficID() != null
-												&& DBUtil.checkTraffic(listTraffic
-														.get(j).getTrafficID()) == false) {
+												&& DBUtil
+														.checkTraffic(listTraffic
+																.get(j)
+																.getTrafficID()) == false) {
 											String urlGetTrafficDetailFull = urlGetTrafficDetail
 													+ listTraffic.get(j)
 															.getTrafficID();
-											// get traffic detail from service and
+											// get traffic detail from service
+											// and
 											// parse json
 											// TrafficInfoJson
 											String trafficJSON = HttpUtil
@@ -137,8 +148,9 @@ public class NetworkReceiver extends BroadcastReceiver {
 													trafficJSON,
 													TrafficInfoJSON.class);
 											// add traffic to DB
-											if (DBUtil.checkTraffic(trafficInfoJSON
-													.getTrafficID()) == false) {
+											if (DBUtil
+													.checkTraffic(trafficInfoJSON
+															.getTrafficID()) == false) {
 												DBUtil.insertTraffic(trafficInfoJSON);
 
 											}
@@ -150,7 +162,8 @@ public class NetworkReceiver extends BroadcastReceiver {
 													+ ".jpg";
 											File image = new File(savePath);
 											if (!image.exists()) {
-												String imageLink = GlobalValue.getServiceAddress()
+												String imageLink = GlobalValue
+														.getServiceAddress()
 														+ trafficInfoJSON
 																.getImage();
 												if (HttpUtil.downloadImage(
@@ -172,9 +185,10 @@ public class NetworkReceiver extends BroadcastReceiver {
 											.setContentTitle(
 													"Kết quả nhận dạng")
 											.setContentText(
-													listResult.get(i)
-															.getCreateDate()
-															.toString());
+													Helper.dateToString(listResult
+															.get(i)
+															.getCreateDate()));									
+									mBuilder.setDefaults(-1);
 									Intent resultIntent = new Intent(context,
 											ListResultActivity.class);
 									resultIntent.putExtra("resultJson",
@@ -334,8 +348,8 @@ public class NetworkReceiver extends BroadcastReceiver {
 							String listResponse = HttpUtil.get(urlListHistory);
 							Type typeListHistory = new TypeToken<ArrayList<ResultShortJSON>>() {
 							}.getType();
-//							Gson gson = new GsonBuilder().setDateFormat(
-//									DateFormat.FULL, DateFormat.FULL).create();
+							// Gson gson = new GsonBuilder().setDateFormat(
+							// DateFormat.FULL, DateFormat.FULL).create();
 							ArrayList<ResultShortJSON> listResultShortJSON = Helper
 									.fromJson(listResponse, typeListHistory);
 

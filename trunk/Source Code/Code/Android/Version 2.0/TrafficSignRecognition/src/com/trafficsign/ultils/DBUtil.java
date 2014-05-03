@@ -844,7 +844,8 @@ public class DBUtil {
 					.setContentText("Đang tải...");
 			mBuilder.setAutoCancel(true);
 			 mNotifyMgr = (NotificationManager) context
-					.getSystemService(context.NOTIFICATION_SERVICE);			
+					.getSystemService(context.NOTIFICATION_SERVICE);
+
 			mNotifyMgr.notify(mNotificationId, mBuilder.build());
 		}
 
@@ -871,6 +872,7 @@ public class DBUtil {
 						percent = 100;
 					}
 					mBuilder.setProgress(100, percent, false);
+					mBuilder.setContentInfo(percent+"%");
 					mNotifyMgr.notify(mNotificationId, mBuilder.build());
 				}
 
@@ -907,6 +909,7 @@ public class DBUtil {
 			if(mBuilder != null){	
 				mBuilder.setProgress(0, 0, false);
 				mBuilder.setContentText("Hoàn thành");
+				mBuilder.setContentInfo("");
 				mNotifyMgr.notify(mNotificationId, mBuilder.build());
 			}
 		}
