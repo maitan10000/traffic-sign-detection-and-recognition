@@ -12,6 +12,7 @@ import org.json.JSONException;
 
 
 
+
 import com.trafficsign.ultils.Properties;
 import com.trafficsign.activity.R;
 import com.trafficsign.json.CategoryJSON;
@@ -19,6 +20,7 @@ import com.trafficsign.json.FavoriteJSON;
 import com.trafficsign.json.TrafficInfoShortJSON;
 import com.trafficsign.ultils.ConvertUtil;
 import com.trafficsign.ultils.DBUtil;
+import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.HttpDatabaseUtil;
 import com.trafficsign.ultils.HttpSyncUtil;
@@ -26,6 +28,7 @@ import com.trafficsign.ultils.MyInterface.IAsyncHttpImageListener;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
 import com.trafficsign.ultils.NetUtil;
 //import com.example.ultils.MyInterface.IAsyncFetchListener;
+
 
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -250,19 +253,10 @@ public class MainActivity extends Activity {
 					RegisterActivity.class);
 			startActivity(nextScreen);
 		} else if (item.getItemId() == R.id.action_update) {
-			final SharedPreferences sharedPreferences = getSharedPreferences(
-					Properties.SHARE_PREFERENCE_SETTING, 0);
 			// if update process is not running
-			if (sharedPreferences.getBoolean(
-					Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
-					false) == false) {
-				final Editor editor = sharedPreferences.edit();
-				editor.putBoolean(
-						Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
-						true);
-				editor.commit();
+			if (GlobalValue.isUpdating == false) {
+				GlobalValue.isUpdating = true;
 				new Thread(new Runnable() {
-
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
@@ -290,13 +284,8 @@ public class MainActivity extends Activity {
 								});
 							}
 						} finally {
-							final Editor editor = sharedPreferences.edit();
-							editor.putBoolean(
-									Properties.SHARE_PREFERENCE__KEY_TRAFFIC_UPDATE_RUNNING,
-									false);
-							editor.commit();
+							GlobalValue.isUpdating = false;
 						}
-
 					}
 
 				}).start();

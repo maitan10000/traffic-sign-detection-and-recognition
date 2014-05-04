@@ -121,18 +121,13 @@ public class HttpUtil {
 	private static InputStream getHttpConnection(String urlString)
 			throws IOException {
 		InputStream stream = null;
+		urlString = urlString.replace(" ", "%20");
 		URL url = new URL(urlString);
 		URLConnection connection = url.openConnection();
-
 		try {
 			HttpURLConnection httpConnection = (HttpURLConnection) connection;
 			httpConnection.setRequestMethod("GET");
-			httpConnection.connect();
-
-			// if (httpConnection.getResponseCode() ==
-			// HttpURLConnection.HTTP_OK) {
-
-			// }
+			httpConnection.connect();		
 			stream = httpConnection.getInputStream();
 		} catch (Exception ex) {
 			ex.printStackTrace();
