@@ -70,6 +70,7 @@ public class MainActivity extends Activity {
 		DBUtil.initResource(dbIS, settingIS, MainActivity.this);		
 		
 
+		/*
 		// get user
 		user = prefLogin.getString(Properties.SHARE_PREFERENCE__KEY_USER, "");
 		if ("".equals(user) == false) {
@@ -93,7 +94,7 @@ public class MainActivity extends Activity {
 				});
 				httpSyncUtil.execute();
 			}
-		}
+		}*/
 
 		// Get and set event onclick for manual search button
 		ImageButton imgBtnManualSearch = (ImageButton) findViewById(R.id.imageButtonManualSearch);

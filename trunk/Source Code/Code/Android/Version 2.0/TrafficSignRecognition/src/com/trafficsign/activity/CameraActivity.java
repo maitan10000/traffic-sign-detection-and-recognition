@@ -184,10 +184,13 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		btnTakeImage.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				isTaken = true;
-				Toast.makeText(getApplicationContext(), "Chụp bằng tay!",
+				if(isTaken == false && isAuto == false)
+				{
+					isTaken = true;
+					Toast.makeText(getApplicationContext(), "Chụp bằng tay!",
 						Toast.LENGTH_SHORT).show();
-				captureAndUploadImage(listLocate);
+					captureAndUploadImage(listLocate);
+				}
 
 			}
 		});
@@ -507,8 +510,6 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 		final String upLoadServerUri = GlobalValue.getServiceAddress()
 				+ Properties.TRAFFIC_SEARCH_AUTO;
 		new Thread(new Runnable() {
-			volatile boolean running = true;
-
 			public void run() {
 				try {
 					runOnUiThread(new Runnable() {
@@ -519,7 +520,7 @@ public class CameraActivity extends Activity implements CvCameraViewListener2,
 						}
 					});
 
-					//Thread.sleep(2000);
+					Thread.sleep(1000);
 
 					// create post data
 					ArrayList<NameValuePair> parameters = new ArrayList<NameValuePair>();

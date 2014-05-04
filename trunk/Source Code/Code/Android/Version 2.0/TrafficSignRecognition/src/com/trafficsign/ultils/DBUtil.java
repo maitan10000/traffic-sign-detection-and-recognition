@@ -535,13 +535,14 @@ public class DBUtil {
 
 	// get autoSerch from result table for upload and excute search
 	public static ArrayList<ResultDB> listAllHistory() {
+		ArrayList<ResultDB> listResult = new ArrayList<ResultDB>();
+		
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
 		// create cursor to access query result
 		Cursor cursor = db.query("result", null, "`resultID` > 0", null, null,
-				null, null);
-		ArrayList<ResultDB> listResult = new ArrayList<ResultDB>();
+				null, null);		
 		// move cursor to first and check if cursor is null
 		if (cursor.moveToFirst()) {
 			// get result from cursor to Object
@@ -605,12 +606,26 @@ public class DBUtil {
 
 	// delete result by resultID
 	public static int deleteResult(int resultID) {
-		SQLiteDatabase db = SQLiteDatabase.openDatabase(
-				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
-				SQLiteDatabase.OPEN_READWRITE);
-		int output = db.delete("result", "`resultID` =" + resultID, null);
-		db.close();
-		return output;
+		ResultJSON resultJSON = new ResultJSON();
+		resultJSON = DBUtil.viewHistory(resultID);
+		if (resultJSON != null) {
+			SQLiteDatabase db = SQLiteDatabase.openDatabase(
+					GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
+					SQLiteDatabase.OPEN_READWRITE);
+			int output = db.delete("result", "`resultID` =" + resultID, null);
+			db.close();
+			if (output > 0) {
+				String imageLocalPath = resultJSON.getUploadedImage();
+				File imageFile = new File(imageLocalPath);
+				try {
+					imageFile.delete();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+			return output;
+		}
+		return 0;
 	}
 
 	// deactive result by resultID
@@ -750,6 +765,8 @@ public class DBUtil {
 
 	// get all favorite
 	public static ArrayList<FavoriteJSON> listAllFavorite() {
+		ArrayList<FavoriteJSON> listResult = new ArrayList<FavoriteJSON>();
+		
 		SQLiteDatabase db = SQLiteDatabase.openDatabase(
 				GlobalValue.getAppFolder() + Properties.DB_FILE_PATH, null,
 				SQLiteDatabase.OPEN_READWRITE);
@@ -757,8 +774,7 @@ public class DBUtil {
 				Locale.getDefault());
 		// create cursor to access query result
 		Cursor cursor = db
-				.query("favorite", null, null, null, null, null, null);
-		ArrayList<FavoriteJSON> output = new ArrayList<FavoriteJSON>();
+				.query("favorite", null, null, null, null, null, null);		
 		// move cursor to first and check if cursor is null
 		if (cursor.moveToFirst()) {
 			do {
@@ -782,7 +798,7 @@ public class DBUtil {
 
 					temp.setModifyDate(modifyDate);
 					// add temp to list favorite
-					output.add(temp);
+					listResult.add(temp);
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -791,7 +807,7 @@ public class DBUtil {
 		}
 
 		db.close();
-		return output;
+		return listResult;
 	}
 
 	// // check favorite is exist or not
@@ -838,7 +854,7 @@ public class DBUtil {
 			mBuilder = new NotificationCompat.Builder(context)
 					.setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle("Cập nhật biển báo")
-					.setContentText("Đang tải...");		
+					.setContentText("Đang tải...");
 			mBuilder.setOngoing(true);
 			mNotifyMgr = (NotificationManager) context
 					.getSystemService(context.NOTIFICATION_SERVICE);
@@ -886,7 +902,7 @@ public class DBUtil {
 					if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
 						dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
 						Log.e("DB", dbReturn + " add");
-					} else { 
+					} else {
 						// if traffic is already had, update traffic
 						dbReturn = DBUtil.updateTraffic(trafficInfoJSON);
 						Log.e("DB", dbReturn + " update");

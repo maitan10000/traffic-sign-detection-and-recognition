@@ -40,7 +40,7 @@ public class NetUtil {
 			// Test connect with timeout 2s
 			URL myUrl = new URL(GlobalValue.getServiceAddress());
 			URLConnection connection = myUrl.openConnection();
-			connection.setConnectTimeout(2000);
+			connection.setConnectTimeout(5000);
 			connection.connect();
 			return true;
 		} catch (Exception e) {

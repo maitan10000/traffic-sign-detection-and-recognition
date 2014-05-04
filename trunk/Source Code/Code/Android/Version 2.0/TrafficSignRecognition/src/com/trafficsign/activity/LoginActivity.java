@@ -6,10 +6,12 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import com.trafficsign.ultils.DBUtil;
 import com.trafficsign.ultils.GlobalValue;
 import com.trafficsign.ultils.HttpAsyncUtil;
 import com.trafficsign.ultils.MyInterface.IAsyncHttpListener;
 import com.trafficsign.ultils.Properties;
+import com.trafficsign.ultils.SyncUtil;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -74,14 +76,22 @@ public class LoginActivity extends Activity {
 						public void onComplete(String respond) {
 							// TODO Auto-generated method stub
 							// if username and password is correct
-							if (respond.length() > 0
-									&& "serverFail".equals(respond) == false) {
-								// save userID into sahre preference
+							if ("user".equals(respond.toLowerCase())) {
+								
+								// save userID into share preference
 								SharedPreferences sharedPreferences = getSharedPreferences(Properties.SHARE_PREFERENCE_LOGIN,MODE_PRIVATE );
 								SharedPreferences.Editor editor = sharedPreferences.edit();
 								editor.putString(Properties.SHARE_PREFERENCE__KEY_USER, username);
-								editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_USER_SYNC, false);
-								editor.commit();
+								//editor.putBoolean(Properties.SHARE_PREFERENCE__KEY_USER_SYNC, false);
+								editor.commit();								
+								
+								//delete db
+								DBUtil.removeAllFavorite();
+								DBUtil.deleteAllResult();
+								
+								SyncUtil syncUtil = new SyncUtil();
+								syncUtil.syncUserData(getApplicationContext());
+								
 								// Move to main activity
 								Intent nexscreen = new Intent(getApplicationContext(),MainActivity.class);
 								finish();
