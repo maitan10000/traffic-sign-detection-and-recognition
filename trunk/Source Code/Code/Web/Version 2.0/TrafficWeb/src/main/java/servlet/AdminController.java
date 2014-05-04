@@ -36,8 +36,6 @@ import model.Report;
 import model.Result;
 import model.TrafficSign;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -257,9 +255,7 @@ public class AdminController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				ReportJSON reportDetail = new ReportJSON();
 				// parse output to list trafficSign using Gson
-				Gson gson = new GsonBuilder().setDateFormat(DateFormat.FULL,
-						DateFormat.FULL).create();
-				reportDetail = gson.fromJson(output, ReportJSON.class);
+				reportDetail = GsonUtils.fromJson(output, ReportJSON.class);
 				// request to searchManual.jsp
 				request.setAttribute("reportDetail", reportDetail);
 				RequestDispatcher rd = request
@@ -417,8 +413,7 @@ public class AdminController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				ResultJSON resultDetail = new ResultJSON();
 				// parse output to list trafficSign using Gson
-				Gson gson = new Gson();
-				resultDetail = gson.fromJson(output, ResultJSON.class);
+				resultDetail = GsonUtils.fromJson(output, ResultJSON.class);
 				// request to searchManual.jsp
 				request.setAttribute("resultDetail", resultDetail);
 				RequestDispatcher rd = request
@@ -436,10 +431,9 @@ public class AdminController extends HttpServlet {
 				// handle error (not implement yet)
 				String output = clientResponse.getEntity(String.class);
 				ArrayList<CategoryJSON> listCategory = new ArrayList<CategoryJSON>();
-				Gson gson = new Gson();
 				Type type = new TypeToken<ArrayList<CategoryJSON>>() {
 				}.getType();
-				listCategory = gson.fromJson(output, type);
+				listCategory = GsonUtils.fromJson(output, type);
 				request.setAttribute("cateList", listCategory);
 				RequestDispatcher rd = request
 						.getRequestDispatcher("Admin/AddTrafficInfo.jsp");

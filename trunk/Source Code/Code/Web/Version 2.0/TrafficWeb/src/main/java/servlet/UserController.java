@@ -24,6 +24,7 @@ import json.TrafficInfoJSON;
 import json.TrafficInfoShortJSON;
 import utility.Constants;
 import utility.GlobalValue;
+import utility.GsonUtils;
 import model.Category;
 import model.TrafficSign;
 
@@ -104,11 +105,10 @@ public class UserController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				// Arraylist Category to contain all category
 				ArrayList<Category> category = new ArrayList<Category>();
-				// parse output to List category using Gson
-				Gson gson = new Gson();
+				// parse output to List category using Gson				
 				Type type = new TypeToken<ArrayList<Category>>() {
 				}.getType();
-				category = gson.fromJson(output, type);
+				category = GsonUtils.fromJson(output, type);
 				request.setAttribute("category", category);
 				// excute search manual if search key or categoryID is not null
 				if (searchKey != null && catID != null) {
@@ -132,7 +132,7 @@ public class UserController extends HttpServlet {
 					// parse output to list trafficSign using Gson
 					Type typeSearch = new TypeToken<ArrayList<TrafficInfoShortJSON>>() {
 					}.getType();
-					listTraffic = gson.fromJson(searchString, typeSearch);
+					listTraffic = GsonUtils.fromJson(searchString, typeSearch);
 					request.setAttribute("listTraffic", listTraffic);
 					request.setAttribute("selectedCat", catID);
 					request.setAttribute("searchKey", searchKey);
@@ -163,10 +163,9 @@ public class UserController extends HttpServlet {
 				String output = clientResponse.getEntity(String.class);
 				TrafficInfoJSON trafficDetail = new TrafficInfoJSON();
 				// parse output to list trafficSign using Gson
-				Gson gson = new Gson();
 				Type type = new TypeToken<TrafficInfoJSON>() {
 				}.getType();
-				trafficDetail = gson.fromJson(output, type);
+				trafficDetail = GsonUtils.fromJson(output, type);
 				// request to searchManual.jsp
 				request.setAttribute("trafficDetail", trafficDetail);
 				RequestDispatcher rd = request
@@ -293,10 +292,9 @@ public class UserController extends HttpServlet {
 					String output = clientResponse.getEntity(String.class);
 					ArrayList<FavoriteJSON> listTraffic = new ArrayList<FavoriteJSON>();
 					// parse output to list trafficSign using Gson
-					Gson gson = new Gson();
 					Type type = new TypeToken<ArrayList<FavoriteJSON>>() {
 					}.getType();
-					listTraffic = gson.fromJson(output, type);
+					listTraffic = GsonUtils.fromJson(output, type);
 					request.setAttribute("listTraffic", listTraffic);
 					String address = "User/ListFavorite.jsp";
 					if ("viewFavoriteShort".equals(action)) {
@@ -328,12 +326,10 @@ public class UserController extends HttpServlet {
 					}
 					String output = clientResponse.getEntity(String.class);
 					ArrayList<ResultShortJSON> listHistory = new ArrayList<ResultShortJSON>();
-					// parse output to list trafficSign using Gson
-					Gson gson = new GsonBuilder()
-					   .setDateFormat(DateFormat.FULL, DateFormat.FULL).create();
+					// parse output to list trafficSign using Gson					
 					Type type = new TypeToken<ArrayList<ResultShortJSON>>() {
 					}.getType();
-					listHistory = gson.fromJson(output, type);
+					listHistory = GsonUtils.fromJson(output, type);
 					request.setAttribute("listHistory", listHistory);
 					String address = "User/ListHistory.jsp";
 					if(Constants.ACTION_HISTORY_LIST_SHORT.equals(action)){
