@@ -32,6 +32,7 @@ public class GlobalValue {
 				
 				
 				System.out.println("Service address: "+ serviceAddress);
+				in.close();
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
