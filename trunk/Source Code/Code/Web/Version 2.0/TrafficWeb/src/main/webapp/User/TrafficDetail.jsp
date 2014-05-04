@@ -22,12 +22,13 @@
 						src="<%=GlobalValue.getServiceAddress() %><%=trafficDetails.getImage()%>?size=big"
 						alt="Responsive image" />
 				</div>
-				<br /> <strong>Số hiệu biển báo:</strong> <font> <%=trafficDetails.getTrafficID()%></font>
-				<br /> <br /> <strong>Tên Biển Báo:</strong> <font> <%=trafficDetails.getName()%></font>
+				<br /> <strong>Số hiệu biển báo: </strong> <font> <%=trafficDetails.getTrafficID()%></font>
+				<br /> <br /> <strong>Tên Biển Báo: </strong> <font> <%=trafficDetails.getName()%></font>
+				<br> <br> <strong>
 				<%if(trafficDetails.getPenaltyfee() != null && trafficDetails.getPenaltyfee().length() > 1){ %>
-				- Khi vi phạm phạt : <%=trafficDetails.getPenaltyfee() %>
-				<%} %>
-				<br /> <br /> <strong>Nội dung:</strong> <font><%=trafficDetails.getInformation()%>
+				Khi vi phạm phạt: </strong> <%=trafficDetails.getPenaltyfee() %>
+				<%} %>				
+				<br /> <br /> <strong>Nội dung:<br> </strong> <font><%=trafficDetails.getInformation().replace("\n", "<br>") %>
 				</font> <br /> <br />
 			</div>
 		</div>

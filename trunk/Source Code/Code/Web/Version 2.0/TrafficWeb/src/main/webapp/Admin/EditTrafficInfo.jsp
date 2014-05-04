@@ -180,8 +180,14 @@
 								<%
 									for (int i = listCat.size() - 1; i >= 0; i--) {
 								%>
-								<option class="font-Style"
-									value="<%=listCat.get(i).getCategoryID()%>"><%=listCat.get(i).getCategoryName()%></option>
+								<option value="<%=listCat.get(i).getCategoryID()%>"
+									<%
+									if(listCat.get(i).getCategoryID().equals(trafficDetails.getCategoryID() +""))
+									{
+										out.print(" selected ");
+									}
+									%>
+									><%=listCat.get(i).getCategoryName()%></option>
 								<%
 									}
 								%>
