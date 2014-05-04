@@ -54,8 +54,8 @@ public class DBUtil {
 		SharedPreferences sharedPreferences = ctx.getSharedPreferences(
 				Properties.SHARE_PREFERENCE_SETTING, 0);
 		String externalPath = Environment.getExternalStorageDirectory()
-				.getPath() + "/";		
-		GlobalValue.initAppFolder(externalPath);		
+				.getPath() + "/";
+		GlobalValue.initAppFolder(externalPath);
 
 		File appFolder = new File(GlobalValue.getAppFolder());
 		if (!appFolder.exists()) {
@@ -88,7 +88,7 @@ public class DBUtil {
 		if (!settingFile.exists()) {
 			DBUtil.copyDB(settingIS, settingFile);
 		}
-		
+
 		try {
 			GlobalValue.createInstance();
 		} catch (Exception e) {
@@ -829,22 +829,18 @@ public class DBUtil {
 	}
 
 	// run update traffic sign (must run in another thread)
-	public static void updateTrafficsign() {
-		updateTrafficsign(null);
-	}
-
 	public static void updateTrafficsign(Context context) {
 		// progress notification
-		NotificationCompat.Builder mBuilder= null;
+		NotificationCompat.Builder mBuilder = null;
 		NotificationManager mNotifyMgr = null;
 		int mNotificationId = 100;
 		if (context != null) {
-			 mBuilder = new NotificationCompat.Builder(
-					context).setSmallIcon(R.drawable.ic_launcher)
+			mBuilder = new NotificationCompat.Builder(context)
+					.setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle("Cập nhật biển báo")
-					.setContentText("Đang tải...");
-			mBuilder.setAutoCancel(true);
-			 mNotifyMgr = (NotificationManager) context
+					.setContentText("Đang tải...");		
+			mBuilder.setOngoing(true);
+			mNotifyMgr = (NotificationManager) context
 					.getSystemService(context.NOTIFICATION_SERVICE);
 
 			mNotifyMgr.notify(mNotificationId, mBuilder.build());
@@ -861,19 +857,19 @@ public class DBUtil {
 		listInfoShortJSONs = Helper.fromJson(listTrafficJSON,
 				typeListTrafficShort);
 		// get each traffic details and add to DB
-		if (listInfoShortJSONs != null && listInfoShortJSONs.size() > 0) {
+		if (listInfoShortJSONs != null) {
 			Log.e("number traffic", listInfoShortJSONs.size() + "");
 			String urlGetTrafficDetailFull = "";
 			long dbReturn; // variable to know db return
 			for (int i = 0; i < listInfoShortJSONs.size(); i++) {
-				if(mBuilder != null){
-					int percent = i*100/listInfoShortJSONs.size();
-					if(percent>100)
-					{
+				if (mBuilder != null) {
+					int percent = i * 100 / listInfoShortJSONs.size();
+					if (percent > 100) {
 						percent = 100;
 					}
 					mBuilder.setProgress(100, percent, false);
-					mBuilder.setContentInfo(percent+"%");
+					mBuilder.setContentInfo(percent + "%");
+					mBuilder.setOngoing(true);
 					mNotifyMgr.notify(mNotificationId, mBuilder.build());
 				}
 
@@ -881,36 +877,40 @@ public class DBUtil {
 						+ listInfoShortJSONs.get(i).getTrafficID();
 				// get traffic detail from service and parse json
 				// TrafficInfoJson
-				String trafficJSON = HttpUtil.get(urlGetTrafficDetailFull);
-				TrafficInfoJSON trafficInfoJSON = new TrafficInfoJSON();
-				trafficInfoJSON = Helper.fromJson(trafficJSON,
-						TrafficInfoJSON.class);
+				String trafficJSONString = HttpUtil
+						.get(urlGetTrafficDetailFull);
+				TrafficInfoJSON trafficInfoJSON = Helper.fromJson(
+						trafficJSONString, TrafficInfoJSON.class);
 				// add traffic to DB
-				if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
-					dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
-					Log.e("DB", dbReturn + " add");
-				} else { // if traffic is already had, update traffic
-					dbReturn = DBUtil.updateTraffic(trafficInfoJSON);
-					Log.e("DB", dbReturn + " update");
-				}
-				String savePath = GlobalValue.getAppFolder()
-						+ Properties.MAIN_IMAGE_FOLDER
-						+ trafficInfoJSON.getTrafficID() + ".jpg";
-				File image = new File(savePath);
-				if (!image.exists()) {
-					String imageLink = GlobalValue.getServiceAddress()
-							+ trafficInfoJSON.getImage();
-					if (HttpUtil.downloadImage(imageLink, savePath)) {
-						Log.e("DB Image", savePath);
+				if (trafficInfoJSON != null) {
+					if (DBUtil.checkTraffic(trafficInfoJSON.getTrafficID()) == false) {
+						dbReturn = DBUtil.insertTraffic(trafficInfoJSON);
+						Log.e("DB", dbReturn + " add");
+					} else { 
+						// if traffic is already had, update traffic
+						dbReturn = DBUtil.updateTraffic(trafficInfoJSON);
+						Log.e("DB", dbReturn + " update");
 					}
+					String savePath = GlobalValue.getAppFolder()
+							+ Properties.MAIN_IMAGE_FOLDER
+							+ trafficInfoJSON.getTrafficID() + ".jpg";
+					File image = new File(savePath);
+					if (!image.exists()) {
+						String imageLink = GlobalValue.getServiceAddress()
+								+ trafficInfoJSON.getImage();
+						if (HttpUtil.downloadImage(imageLink, savePath)) {
+							Log.e("DB Image", savePath);
+						}
 
+					}
+					Log.e("Number", String.valueOf(i + 1));
 				}
-				Log.e("Number", String.valueOf(i + 1));
-			}//end for
-			if(mBuilder != null){	
+			}// end for
+			if (mBuilder != null) {
 				mBuilder.setProgress(0, 0, false);
 				mBuilder.setContentText("Hoàn thành");
 				mBuilder.setContentInfo("");
+				mBuilder.setOngoing(false);
 				mNotifyMgr.notify(mNotificationId, mBuilder.build());
 			}
 		}

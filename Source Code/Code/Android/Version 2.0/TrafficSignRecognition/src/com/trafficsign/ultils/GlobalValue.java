@@ -9,13 +9,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-public class GlobalValue {
+public class GlobalValue {	
 	private static String appFolder = "";
-	private static boolean isCreated = false;
-	public static boolean isUploading = false;
+	private static boolean isCreated = false;	
 	private static String serviceAddress = "";
 	private static boolean showFPS = false;
-
+	
+	public static boolean isUploading = false;
+	public static boolean isUpdating = false;
+	
 	public static void initAppFolder(String externalPath)
 	{
 		appFolder = externalPath + Properties.APP_FOLDER;
