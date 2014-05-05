@@ -100,13 +100,13 @@ CREATE TABLE `result` (
 )  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `account` VALUES ('guest','827ccbeea8a706c4c34a16891f84e7b','guest@gmail.com','Guest','user','2014-01-01 00:00:00',1);
-INSERT INTO `account` VALUES ('user1','827ccbeea8a706c4c34a16891f84e7b','user1@gmail.com','User1','user','2014-01-01 00:00:00',1);
-INSERT INTO `account` VALUES ('staff1','827ccbeea8a706c4c34a16891f84e7b','staff1@gmail.com','Staff1','staff','2014-01-01 00:00:00',1);
-INSERT INTO `account` VALUES ('admin1','827ccbeea8a706c4c34a16891f84e7b','admin1@gmail.com','Admin1','admin','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('guest','e1adc3949ba59abbe56e057f2f883e','guest@gmail.com','Guest','user','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('user1','e1adc3949ba59abbe56e057f2f883e','user1@gmail.com','User1','user','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('staff1','e1adc3949ba59abbe56e057f2f883e','staff1@gmail.com','Staff1','staff','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('admin1','e1adc3949ba59abbe56e057f2f883e','admin1@gmail.com','Admin1','admin','2014-01-01 00:00:00',1);
 
-INSERT INTO `account` VALUES ('user2','827ccbeea8a706c4c34a16891f84e7b','user2@gmail.com','User2','user','2014-01-01 00:00:00',1);
-INSERT INTO `account` VALUES ('staff2','827ccbeea8a706c4c34a16891f84e7b','staff2@gmail.com','Staff2','staff','2014-01-01 00:00:00',1);
-INSERT INTO `account` VALUES ('admin2','827ccbeea8a706c4c34a16891f84e7b','admin2@gmail.com','Admin2','admin','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('user2','e1adc3949ba59abbe56e057f2f883e','user2@gmail.com','User2','user','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('staff2','e1adc3949ba59abbe56e057f2f883e','staff2@gmail.com','Staff2','staff','2014-01-01 00:00:00',1);
+INSERT INTO `account` VALUES ('admin2','e1adc3949ba59abbe56e057f2f883e','admin2@gmail.com','Admin2','admin','2014-01-01 00:00:00',1);
 
 INSERT INTO `category` VALUES (1,'Biển báo cấm'),(2,'Biển báo nguy hiểm'),(3,'Biển hiệu lệnh'),(4,'Biển chỉ dẫn'),(5,'Biển phụ');
