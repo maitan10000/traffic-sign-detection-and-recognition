@@ -1,0 +1,11 @@
+<form position="0 0 242 77"
+	backgroundimage="keyface.bmp"
+	clipcolor="FF00FF"
+	hoverimage="keyselect.bmp"
+	selectimage="keyselect.bmp"> 
+	
+	<button id="104" text="Close" command="Close" position="212 0 32 16"></button>
+
+	<control id="200" text="MobileView" position="3 16 236 58" zoom="100"> </control>
+	
+</form>

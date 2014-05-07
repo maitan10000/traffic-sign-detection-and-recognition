@@ -1,0 +1,13 @@
+<form position="0 0 480 800"
+	backgroundimage="face.bmp"
+	clipcolor="FF00FF"
+	hoverimage="select.bmp"
+	selectimage="select.bmp"> 
+
+	<button id="101" text="Menu" command="Menu" position="71 824 85 22"></button>
+	<button id="102" text="Home" command="Home" position="169 824 85 22"></button>
+	<button id="103" text="Back" command="Back" position="266 824 85 22"></button>
+	<button id="104" text="Close" command="Close" position="362 824 85 22"></button>
+	
+	<control id="200" text="MobileView" position="5 10 480 800" zoom="100"> </control>
+</form>
