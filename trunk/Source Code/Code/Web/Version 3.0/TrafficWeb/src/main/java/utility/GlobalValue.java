@@ -23,6 +23,14 @@ public class GlobalValue {
 				
 				//map value
 				serviceAddress = prop.getProperty("ServiceAddress").trim();
+				java.net.InetAddress localMachine = java.net.InetAddress
+						.getLocalHost();
+				System.out.println("Hostname of local machine: "
+						+ localMachine.getHostName());
+				if (localMachine.getHostName().equals("everything-pc")) {
+					serviceAddress = prop.getProperty("ServiceAddress1").trim();
+				}
+				
 				try{
 					showMobile = Boolean.parseBoolean(prop.getProperty("ShowMobile").trim());
 				}catch(Exception e)

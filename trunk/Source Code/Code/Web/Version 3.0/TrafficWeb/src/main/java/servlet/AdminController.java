@@ -519,7 +519,7 @@ public class AdminController extends HttpServlet {
 				// list traffic info by category
 				url = GlobalValue.getServiceAddress()
 						+ Constants.TRAFFIC_SEARCH_MANUAL + "?" + "&cateID="
-						+ cateID;
+						+ cateID+"&countTrainImage=true";
 				WebResource webRsource = client.resource(url);
 				clientResponse = webRsource.accept("application/json").get(
 						ClientResponse.class);
