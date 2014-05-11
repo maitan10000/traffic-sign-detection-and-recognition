@@ -345,4 +345,41 @@ public class TrafficInfoDAOImpl implements TrafficInfoDAO {
 		return false;
 	}
 
+	@Override
+	public int countTrainImage(String id) {
+		Connection connection = null;
+		PreparedStatement stm = null;
+		try {
+			connection = BaseDAO.getConnect();
+			stm = connection
+					.prepareStatement("SELECT COUNT(trafficID) as numTrainImage FROM trainimage WHERE trafficID = ? GROUP BY trafficID");
+			stm.setString(1, id);
+			ResultSet rs = stm.executeQuery();
+			if (rs.next()) {
+				 return rs.getInt("numTrainImage");				
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			if (stm != null) {
+				try {
+					stm.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (connection != null) {
+				try {
+					connection.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		return 0;
+	}
+
 }

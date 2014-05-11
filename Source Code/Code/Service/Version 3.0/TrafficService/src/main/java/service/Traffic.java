@@ -121,7 +121,8 @@ public class Traffic {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String searchManual(@QueryParam("name") String name,
 			@QueryParam("cateID") Integer cateID,
-			@QueryParam("limit") Integer limit) {
+			@QueryParam("limit") Integer limit,
+			@QueryParam("countTrainImage") Boolean countTrainImage) {
 		if (cateID == null) {
 			// search in all category
 			cateID = 0;
@@ -132,6 +133,10 @@ public class Traffic {
 		}
 		if (name == null) {
 			name = "";
+		}
+		if(countTrainImage == null)
+		{
+			countTrainImage = false;			
 		}
 
 		// search
@@ -152,6 +157,11 @@ public class Traffic {
 			trafficInfoShortJSON.setCategoryID(trafficInfo.getCategoryID());
 			trafficInfoShortJSON.setCategoryName(cateDao
 					.getCategoryName(trafficInfo.getCategoryID()));
+			if(countTrainImage == true)
+			{				
+				trafficInfoShortJSON.setNumberTrainImage(trafficDAO.countTrainImage(trafficInfo.getTrafficID()));
+			}
+			
 			listTrafficInfoShortJSON.add(trafficInfoShortJSON);
 		}
 		return GsonUtils.toJson(listTrafficInfoShortJSON);
@@ -649,11 +659,11 @@ public class Traffic {
 			if (result == true) {
 				File delete = new File(location, imageName);
 				if (delete.delete() == true) {
-					return "Success";
+					return Constants.SUCCESS;
 				}
 			}
 		}
-		return "Fail";
+		return Constants.FAIL;
 	}
 
 	/**
@@ -755,15 +765,22 @@ public class Traffic {
 	 */
 	@GET
 	@Path("/ReTrainAll")
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public String reTrainAll() {
 		String result = "Server is training new DB";
 		if (GlobalValue.isReTraining == false) {
 			GlobalValue.isReTraining = true;
 			result = Helper.trainSVM(GlobalValue.getWorkPath());
 			GlobalValue.isReTraining = false;
-
 		}
+		
+		if(result.length()==0)
+		{
+			result = Constants.SUCCESS;
+		}else if( result.contains("Killed"))
+		{
+			result = Constants.FAIL;
+		}
+		
 		return result;
 	}
 }

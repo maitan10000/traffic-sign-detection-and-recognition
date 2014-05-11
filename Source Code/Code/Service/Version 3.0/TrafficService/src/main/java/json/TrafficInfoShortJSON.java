@@ -6,6 +6,7 @@ public class TrafficInfoShortJSON {
 	private String image;
 	private int categoryID;
 	private String categoryName;
+	private int numberTrainImage;
 	
 	public String getTrafficID() {
 		return trafficID;
@@ -37,4 +38,11 @@ public class TrafficInfoShortJSON {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	public int getNumberTrainImage() {
+		return numberTrainImage;
+	}
+	public void setNumberTrainImage(int numberTrainImage) {
+		this.numberTrainImage = numberTrainImage;
+	}
+	
 }

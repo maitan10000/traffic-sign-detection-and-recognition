@@ -20,4 +20,6 @@ public interface TrafficInfoDAO {
 	public boolean delete(String id);
 
 	public ArrayList<String> listAllID();
+	
+	public int countTrainImage(String id);
 }

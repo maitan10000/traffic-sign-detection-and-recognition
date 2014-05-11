@@ -17,4 +17,7 @@ public class Constants {
 	public final static String TEMP_FOLDER = "Data/Temp/";
 	public final static String EXCEL_PATH = "Data/Info.xlsx";	
 	
+	public final static String SUCCESS = "Success";
+	public final static String FAIL = "Fail";
+	
 }
