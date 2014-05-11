@@ -118,11 +118,41 @@
 {
 	z-index: 99999;
 }
+
+#action-panel
+{
+	width: 700px;
+	margin: auto;
+}
+.btnMoveResult
+{
+	width: 100px;
+}
+
+#previous-result
+{
+/*  	float: left;  */
+}
+
+#next-result
+{
+	float: right; 
+}
+
 </style>
 
 </head>
 <%
 	String role = (String) session.getAttribute(Constants.SESSION_ROLE);
+	String resultIDString = (String) request.getAttribute("resultID");
+	int resultID = 0;
+	try
+	{
+		resultID = Integer.parseInt(resultIDString);
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}
 %>
 <body>
 
@@ -211,7 +241,9 @@
 		</div>
 		
 		<div id="action-panel">
-					<button id="delete-report" class="btn btn-danger" href="#" onclick="deteleReport(); return false;"><i class="icon-trash"></i> Xóa phản hồi</button>
+<!-- 					<button id="delete-report" class="btn btn-danger" href="#" onclick="deteleReport(); return false;"><i class="icon-trash"></i> Xóa phản hồi</button> -->
+					<button id="previous-result" class="btnMoveResult btn btn-primary" href="#" onclick="viewResult('<%= resultID-1%>'); return false;"><i class="icon-backward"></i> Trước</button>
+					<button id="next-result" class="btnMoveResult btn btn-primary" href="#" onclick="viewResult('<%= resultID+1%>'); return false;">Sau <i class="icon-forward"></i></button>
 		</div>	
 		<div class="container-fluid">
 		<div id="train-new-area">
@@ -317,7 +349,7 @@ $(document).ready(function() {
 // 	{
 // 		$('#action-panel').hide();
 // 	}
-	$('#action-panel').hide();
+	//$('#action-panel').hide();
 	$.ajax({
 		url : server + '<%=Constants.MANAGE_REPORT_MARK_EXTRA%>',
 			type : "GET",
@@ -328,7 +360,7 @@ $(document).ready(function() {
 				console.log(result);
 			}
 		});
-});
+	});
 
 	function showResult(resultID)
 	{
@@ -576,6 +608,12 @@ $(document).ready(function() {
     	addMainImage.src = dataAddNewImage;
     	$('#isNormalAddNew').val("false");    	
     });
+    
+    function viewResult(resultId)
+    {
+    	var url = '<%=Constants.CONTROLLER_ADMIN%>?action=addTrainImageFromReport&resultID='+resultId;
+    	window.location.href = url;
+    }
     
 </script>
 </body>

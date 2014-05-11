@@ -240,6 +240,7 @@
 							<th width="7%">Hình ảnh</th>
 							<th width="7%">Số Hiệu</th>
 							<th>Tên Biển Báo</th>
+							<th>Ảnh nhận dạng</th>
 							<th>Loại biển báo</th>
 							<th colspan="1"></th>
 							<th colspan="1"></th>
@@ -255,6 +256,7 @@
 								<td style="text-align: center;padding: 3px 2px 3px 2px; "><img style="width: 30px; height: 30px;" src="<%=GlobalValue.getServiceAddress()%><%=listTraffic.get(i).getImage()%>?size=small"/></td>
 								<td style="text-align: center;"><%=listTraffic.get(i).getTrafficID()%></td>
 								<td><%=listTraffic.get(i).getName()%></td>
+								<td style="text-align: center;"><%=listTraffic.get(i).getNumberTrainImage()%></td>
 								<td style="text-align: center;"><%=listTraffic.get(i).getCategoryName()%></td>
 								<td style="text-align: center;"><button class="btn btn-primary btn-mini" href="#" data-toggle="modal"
 									onclick="showEditTrafficModal('<%=listTraffic.get(i).getTrafficID()%>'); return false;"><i class="icon-edit"></i> Sửa</button></td>
