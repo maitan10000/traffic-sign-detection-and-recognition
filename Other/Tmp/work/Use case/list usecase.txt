@@ -1,0 +1,31 @@
+Tuan
+login
+register *
+active account 
+deactive acount
+train new traffic sign *
+
+Phong
+
+modify traffic sign *
+train traffic sign from exsiting DB
+add to favourite *
+remove from favourite 
+
+Tan
+
+view history *
+delete history <---
+search auto *
+search manually *
+
+Nghia
+
+send rport 
+view report
+delete report 
+config system *
+make stastistic *
+
+
+deadline sáng th? 5.
